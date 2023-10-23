@@ -1,11 +1,14 @@
+"use client";
+import React from "react";
 import { Button } from "@nextui-org/button";
 import { Input } from "@nextui-org/input";
 import { Link } from "@nextui-org/link";
 import { Navbar, NavbarBrand, NavbarContent, NavbarItem } from "@nextui-org/navbar";
 import { Bell, CalendarRange, Compass, GraduationCap, Ticket } from "lucide-react";
-import React from "react";
 import { SearchIcon } from "./icons";
 import { Avatar } from "@nextui-org/avatar";
+import { Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@nextui-org/dropdown";
+import {Divider} from "@nextui-org/divider";
 
 export default function NavbarComponents() {
 	return (
@@ -65,18 +68,72 @@ export default function NavbarComponents() {
 						startContent={<SearchIcon size={18} />}
 						type="search"
 					/>
-					<Button className="lux-menu-trigger-wrapper	cursor-pointer notification-bell-button relative text-black-blur-light-theme transition-all duration-300 ease-in-out inline-flex min-w-0 font-medium rounded-lg bg-transparent border border-solid border-transparent leading-6 text-inherit">
-						<NavbarContent as={"div"} className="cursor-pointer inline-flex min-w-0">
-							<NavbarItem as={"div"} className="inline-flex relative">
-								<NavbarItem as={"div"} className="icon">
-									<Bell className="block w-4 h-4 align-middle"/>
-									{/* <NavbarItem as={"div"} className="unread-dot"></NavbarItem> */}
-								</NavbarItem>
-							</NavbarItem>
-						</NavbarContent>
-					</Button>
+					<Dropdown>
+						<DropdownTrigger>
+							<Button className="lux-menu-trigger-wrapper	cursor-pointer notification-bell-button relative text-black-blur-light-theme transition-all duration-300 ease-in-out inline-flex min-w-0 font-medium rounded-lg bg-transparent border border-solid border-transparent leading-6 text-inherit">
+								<NavbarContent as={"div"} className="cursor-pointer inline-flex min-w-0">
+									<NavbarItem as={"div"} className="inline-flex relative">
+										<NavbarItem as={"div"} className="icon">
+											<Bell className="block w-4 h-4 align-middle" />
+										</NavbarItem>
+									</NavbarItem>
+								</NavbarContent>
+							</Button>
+						</DropdownTrigger>
+						<DropdownMenu className="w-80 max-w-[300px] min-h-[300px] max-h-[60vh] overflow-auto">
+							<DropdownItem className="text-sm">
+								<div className="noti-row relative p-[0.875rem_1rem]">
+									<Link href="/my-calendars" className="text-inherit transition-all duration-300 ease-in-out cursor-pointer" underline="none">
+										<div className="gap-3 flex items-start">
+											<div className="icon-wrapper relative mt-0.5">
+												<div className="avatar">
+													<Avatar radius="full" src="https://avatars.githubusercontent.com/u/143386751?s=200&v=4" name="Donace" className="relative" />
+												</div>
+											</div>
+											<div className="main break-words min-w-0 flex-1 flex flex-col">
+												<div>
+													<span>
+														<strong>Donace </strong>
+														registered for
+														<br />
+														<strong className="font-medium">Do an Tot Nghiep</strong>
+													</span>
+													<br />
+													<span className="text-black-blur-light-theme">Sep 5</span>
+												</div>
+											</div>
+										</div>
+									</Link>
+								</div>
+							</DropdownItem>
+						</DropdownMenu>
+					</Dropdown>
 					<NavbarItem as={"div"} className="avatar-wrapper -m-2 p-2 cursor-pointer transition-all duration-300 ease-in-out inline-flex min-w-0 items-center">
-						<Avatar src="https://avatars.githubusercontent.com/u/143386751?s=200&v=4" radius="full" name="Donace" isBordered className="w-[28px] h-[28px] bg-center bg-cover bg-white relative"/>
+						<Dropdown className="shadow-sm relative rounded-lg border border-solid border-[rgba(19,21,23,0.08)] bg-[#fffd] overflow-auto">
+							<DropdownTrigger>
+								<Avatar src="https://avatars.githubusercontent.com/u/143386751?s=200&v=4" radius="full" name="Donace" isBordered className="w-[28px] h-[28px] bg-center bg-cover bg-white relative" />
+							</DropdownTrigger>
+							<DropdownMenu as={"div"} className="switcher-menu">
+								<DropdownItem as={"div"}>
+									<Link href="/home" className="transition-all duration-300 ease-in-out cursor-pointer" underline="none">
+										<div className="switcher-row cursor-pointer transition-all duration-300 ease-in-out flex items-center">
+											<div className="avatar-wrapper">
+												<Avatar src="https://avatars.githubusercontent.com/u/143386751?s=200&v=4" radius="full" name="Donace" className="w-[32px] h-[32px] bg-center bg-cover bg-[#fff] relative" />
+											</div>
+											<div className="min-w-0 flex-1">
+												<div className="light light:text-[rgba(19,21,23)] name font-medium overflow-hidden text-ellipsis whitespace-nowrap">Donace</div>
+												<div className="dark dark:text-white desc text-xs gap-1 flex text-[rgba(19,21,23,0.36)]">
+													<div className="gap-1 min-w-0 flex items-center">
+														<div className="overflow-hidden text-ellipsis whitespace-nowrap min-w-0 flex-1">Personal</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</Link>
+								</DropdownItem>
+								<Divider orientation="horizontal"/>
+							</DropdownMenu>
+						</Dropdown>
 					</NavbarItem>
 				</NavbarContent>
 			</NavbarBrand>

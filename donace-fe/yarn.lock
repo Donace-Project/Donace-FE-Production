@@ -381,7 +381,7 @@
     "@nextui-org/system-rsc" "2.0.6"
     "@nextui-org/theme" "2.1.9"
 
-"@nextui-org/divider@2.0.20":
+"@nextui-org/divider@^2.0.20", "@nextui-org/divider@2.0.20":
   version "2.0.20"
   resolved "https://registry.npmjs.org/@nextui-org/divider/-/divider-2.0.20.tgz"
   integrity sha512-q4pg+T0krjZiETBk2ZnV5icg7X88GHIaIyi7uT7ZdpJalMiN4+V9pxWDpvqV383B7W3tp8splIY1Hjb2e4bdLA==
