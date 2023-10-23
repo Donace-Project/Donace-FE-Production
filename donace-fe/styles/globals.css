@@ -27,3 +27,33 @@
 .button-reset {
     all: unset;
 }
+
+.max-width-global {
+    max-width: 820px;
+}
+
+.donace-button {
+    font-weight: 500;
+    border-radius: 0.5rem;
+    position: relative;
+    text-wrap: nowrap;
+    white-space-collapse: collapse;
+    justify-content: center;
+    outline-offset: .125rem;
+    outline: 2px;
+    outline-style: solid;
+    outline-color: transparent;
+    max-width: 100%;
+    font-size: 1rem;
+    padding: 0.625rem 0.875rem;
+    height: calc(2.25rem + 2 * 1px);
+    width: fit-content;
+}
+
+.label {
+    line-height: 1;
+    margin: -4px 0;
+    padding: 4px 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

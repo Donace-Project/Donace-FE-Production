@@ -39,7 +39,7 @@ export const Navbar = () => {
 	);
 
 	return (
-		<NextUINavbar position='sticky' shouldHideOnScroll maxWidth="full" isBordered className="spread p-[0.75rem_1rem] z-[200] flex justify-between items-center">
+		<NextUINavbar position='sticky' maxWidth="full" isBordered className="spread p-[0.75rem_1rem] z-[200] flex justify-between items-center">
 			<NavbarContent className="basis-1/5 sm:basis-full">
 				<NavbarBrand as="li" className="gap-3 max-w-fit">
 					<NextLink className="relative z-[1] transition-global cursor-pointer no-underline" href="/">
