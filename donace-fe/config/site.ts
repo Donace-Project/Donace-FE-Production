@@ -1,68 +1,60 @@
 export type SiteConfig = typeof siteConfig;
 
 export const siteConfig = {
-	name: "Next.js + NextUI",
+	name: "Donace",
 	description: "Make beautiful websites regardless of your design experience.",
 	navItems: [
 		{
-			label: "Home",
-			href: "/",
-		},
-    {
-      label: "Docs",
-      href: "/docs",
-    },
-    {
-      label: "Pricing",
-      href: "/pricing",
-    },
-    {
-      label: "Blog",
-      href: "/blog",
-    },
-    {
-      label: "About",
-      href: "/about",
-    }
-	],
-	navMenuItems: [
-		{
-			label: "Profile",
-			href: "/profile",
+			label: "Events",
+			href: "/home",
 		},
 		{
-			label: "Dashboard",
-			href: "/dashboard",
+			label: "Calendars",
+			href: "/calendars"
 		},
 		{
-			label: "Projects",
-			href: "/projects",
-		},
-		{
-			label: "Team",
-			href: "/team",
-		},
-		{
-			label: "Calendar",
-			href: "/calendar",
-		},
-		{
-			label: "Settings",
-			href: "/settings",
-		},
-		{
-			label: "Help & Feedback",
-			href: "/help-feedback",
-		},
-		{
-			label: "Logout",
-			href: "/logout",
+			label: "Explore",
+			href: "/calendars"
 		},
 	],
+	// navMenuItems: [
+	// 	{
+	// 		label: "Profile",
+	// 		href: "/profile",
+	// 	},
+	// 	{
+	// 		label: "Dashboard",
+	// 		href: "/dashboard",
+	// 	},
+	// 	{
+	// 		label: "Projects",
+	// 		href: "/projects",
+	// 	},
+	// 	{
+	// 		label: "Team",
+	// 		href: "/team",
+	// 	},
+	// 	{
+	// 		label: "Calendar",
+	// 		href: "/calendar",
+	// 	},
+	// 	{
+	// 		label: "Settings",
+	// 		href: "/settings",
+	// 	},
+	// 	{
+	// 		label: "Help & Feedback",
+	// 		href: "/help-feedback",
+	// 	},
+	// 	{
+	// 		label: "Logout",
+	// 		href: "/logout",
+	// 	},
+	// ],
 	links: {
-		github: "https://github.com/nextui-org/nextui",
+		github: "https://github.com/Donace-Project",
 		twitter: "https://twitter.com/getnextui",
-		docs: "https://nextui.org",
+		docs: "https://www.notion.so/Donace-T-ng-quan-29499fa07cac4c098c0bf42cff887173",
 		discord: "https://discord.gg/9b6yyZKmH4",
     sponsor: "https://patreon.com/jrgarciadev"
 	},
