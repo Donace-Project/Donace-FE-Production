@@ -4,11 +4,12 @@ import { Button } from "@nextui-org/button";
 import { Input } from "@nextui-org/input";
 import { Link } from "@nextui-org/link";
 import { Navbar, NavbarBrand, NavbarContent, NavbarItem } from "@nextui-org/navbar";
-import { Bell, CalendarRange, Compass, GraduationCap, Ticket } from "lucide-react";
+import { Bell, CalendarRange, Compass, Contact2, GraduationCap, LogOut, Settings, Ticket } from "lucide-react";
 import { SearchIcon } from "./icons";
 import { Avatar } from "@nextui-org/avatar";
-import { Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@nextui-org/dropdown";
-import {Divider} from "@nextui-org/divider";
+import { Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger } from "@nextui-org/dropdown";
+import { Divider } from "@nextui-org/divider";
+import { ThemeSwitch } from "./theme-switch";
 
 export default function NavbarComponents() {
 	return (
@@ -114,24 +115,57 @@ export default function NavbarComponents() {
 								<Avatar src="https://avatars.githubusercontent.com/u/143386751?s=200&v=4" radius="full" name="Donace" isBordered className="w-[28px] h-[28px] bg-center bg-cover bg-white relative" />
 							</DropdownTrigger>
 							<DropdownMenu as={"div"} className="switcher-menu">
-								<DropdownItem as={"div"}>
-									<Link href="/home" className="transition-all duration-300 ease-in-out cursor-pointer" underline="none">
-										<div className="switcher-row cursor-pointer transition-all duration-300 ease-in-out flex items-center">
-											<div className="avatar-wrapper">
-												<Avatar src="https://avatars.githubusercontent.com/u/143386751?s=200&v=4" radius="full" name="Donace" className="w-[32px] h-[32px] bg-center bg-cover bg-[#fff] relative" />
-											</div>
-											<div className="min-w-0 flex-1">
-												<div className="light light:text-[rgba(19,21,23)] name font-medium overflow-hidden text-ellipsis whitespace-nowrap">Donace</div>
-												<div className="dark dark:text-white desc text-xs gap-1 flex text-[rgba(19,21,23,0.36)]">
-													<div className="gap-1 min-w-0 flex items-center">
-														<div className="overflow-hidden text-ellipsis whitespace-nowrap min-w-0 flex-1">Personal</div>
+								<DropdownSection as={"div"} showDivider>
+									<DropdownItem as={"div"}>
+										<Link href="/home" className="transition-all duration-300 ease-in-out cursor-pointer" underline="none">
+											<div className="switcher-row cursor-pointer transition-all duration-300 ease-in-out flex items-center">
+												<div className="avatar-wrapper">
+													<Avatar src="https://avatars.githubusercontent.com/u/143386751?s=200&v=4" radius="full" name="Donace" className="w-[32px] h-[32px] bg-center bg-cover bg-[#fff] relative" />
+												</div>
+												<div className="min-w-0 flex-1">
+													<div className="light light:text-[rgba(19,21,23)] name font-medium overflow-hidden text-ellipsis whitespace-nowrap">Donace</div>
+													<div className="dark dark:text-white desc text-xs gap-1 flex text-[rgba(19,21,23,0.36)]">
+														<div className="gap-1 min-w-0 flex items-center">
+															<div className="overflow-hidden text-ellipsis whitespace-nowrap min-w-0 flex-1">Personal</div>
+														</div>
 													</div>
 												</div>
 											</div>
+										</Link>
+									</DropdownItem>
+								</DropdownSection>
+								<DropdownItem as={"div"}>
+									<div className="transition-all duration-300 ease-in-out cursor-pointer">
+										<div className="menu-row transition-all duration-300 ease-in-out text-sm gap-4 flex items-center text-black-more-blur-light-theme">
+											<ThemeSwitch className="right-0.5"/>
+											<span className="flex-1 font-medium">Positive Contrast Polarity</span>
+										</div>
+									</div>
+								</DropdownItem>
+								<DropdownItem>
+									<Link href="/my-calendars" className="transition-all duration-300 ease-in-out cursor-pointer" underline="none">
+										<div className="menu-row transition-all duration-300 ease-in-out text-sm gap-4 flex items-center text-black-more-blur-light-theme">
+											<Settings className="w-4 h-4 align-middle block mt-0.5" />
+											<span className="flex-1 font-medium">Settings</span>
 										</div>
 									</Link>
 								</DropdownItem>
-								<Divider orientation="horizontal"/>
+								<DropdownItem>
+									<Link href="/my-calendars" className="transition-all duration-300 ease-in-out cursor-pointer" underline="none">
+										<div className="menu-row transition-all duration-300 ease-in-out text-sm gap-4 flex items-center text-black-more-blur-light-theme">
+											<Contact2 className="w-4 h-4 align-middle block mt-0.5"/>
+											<span className="flex-1 font-medium">View Profile</span>
+										</div>
+									</Link>
+								</DropdownItem>
+								<DropdownItem>
+									<Link href="/my-calendars" className="transition-all duration-300 ease-in-out cursor-pointer" underline="none">
+										<div className="menu-row transition-all duration-300 ease-in-out text-sm gap-4 flex items-center text-black-more-blur-light-theme">
+											<LogOut className="w-4 h-4 align-middle block mt-0.5"/>
+											<span className="flex-1 font-medium">Logout</span>
+										</div>
+									</Link>
+								</DropdownItem>
 							</DropdownMenu>
 						</Dropdown>
 					</NavbarItem>

@@ -93,3 +93,9 @@
     position: relative;
     z-index: 1;
 }
+
+.menu-row{
+    cursor: pointer;
+    padding: 0.375rem 0.75rem;
+    border-radius: 0.5rem;
+}
