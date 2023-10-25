@@ -8,8 +8,8 @@ import "@/styles/globals.css";
 export default function HomeEvents() {
     return (
         <div className="page-content">
-            <div className="page-header opacity-[1] pt-12 pl-[1rem!important] pr-[1rem!important] max-w-4xl m-[0_auto]">
-                <div className="spread gap-2 mb-[.5rem!important] flex justify-between items-center">
+            <div className="page-header opacity-[1] pt-12 pl-4 pr-4 max-width-global margin-global">
+                <div className="spread gap-2 mb-2 flex justify-between items-center">
                     <h1 className="tab-title text-4xl font-semibold mb-0 mt-0">Events</h1>
                     <div className="light lux-button min-w-[auto] p-0.5 overflow-hidden rounded-lg">
                         <ButtonGroup className="seggments relative grid grid-cols-2">

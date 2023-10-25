@@ -42,6 +42,10 @@
     max-width: 820px;
 }
 
+.margin-global{
+    margin: 0 auto;
+}
+
 .donace-button {
     font-weight: 500;
     border-radius: 0.5rem;
@@ -119,3 +123,7 @@
     background-color: transparent;
     width: 100%;
 }
+
+.grid-auto-cols {
+    grid-template-columns: repeat(auto-fill, minmax(12.5rem, 1fr));
+  }
