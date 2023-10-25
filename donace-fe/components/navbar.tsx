@@ -8,7 +8,7 @@ import { Bell, CalendarRange, Compass, Contact2, GraduationCap, LogOut, Settings
 import { SearchIcon } from "./icons";
 import { Avatar } from "@nextui-org/avatar";
 import { Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger } from "@nextui-org/dropdown";
-import { ThemeSwitch } from "./theme-switch";
+import { ThemeSwitch, ThemeSwitchWithText } from "./theme-switch";
 
 export default function NavbarComponents() {
 	return (
@@ -141,15 +141,7 @@ export default function NavbarComponents() {
 									</div>
 								</DropdownItem>
 								<DropdownItem>
-									<Link href="/my-calendars" className="transition-all duration-300 ease-in-out cursor-pointer" underline="none">
-										<div className="dark:text-[hsla(0,0%,100%,.79)] menu-row transition-all duration-300 ease-in-out text-sm gap-4 flex items-center text-black-more-blur-light-theme">
-											<Settings className="w-4 h-4 align-middle block mt-0.5" />
-											<span className=" flex-1 font-medium">Settings</span>
-										</div>
-									</Link>
-								</DropdownItem>
-								<DropdownItem>
-									<Link href="/my-calendars" className="transition-all duration-300 ease-in-out cursor-pointer" underline="none">
+									<Link href="/profile" className="transition-all duration-300 ease-in-out cursor-pointer" underline="none">
 										<div className="dark:text-[hsla(0,0%,100%,.79)] menu-row transition-all duration-300 ease-in-out text-sm gap-4 flex items-center text-black-more-blur-light-theme">
 											<Contact2 className="w-4 h-4 align-middle block mt-0.5"/>
 											<span className=" flex-1 font-medium">View Profile</span>
@@ -158,6 +150,14 @@ export default function NavbarComponents() {
 								</DropdownItem>
 								<DropdownItem>
 									<Link href="/my-calendars" className="transition-all duration-300 ease-in-out cursor-pointer" underline="none">
+										<div className="dark:text-[hsla(0,0%,100%,.79)] menu-row transition-all duration-300 ease-in-out text-sm gap-4 flex items-center text-black-more-blur-light-theme">
+											<Settings className="w-4 h-4 align-middle block mt-0.5" />
+											<span className=" flex-1 font-medium">Settings</span>
+										</div>
+									</Link>
+								</DropdownItem>
+								<DropdownItem>
+									<Link href="/" className="transition-all duration-300 ease-in-out cursor-pointer" underline="none">
 										<div className="dark:text-[hsla(0,0%,100%,.79)] menu-row transition-all duration-300 ease-in-out text-sm gap-4 flex items-center text-black-more-blur-light-theme">
 											<LogOut className="w-4 h-4 align-middle block mt-0.5" />
 											<span className=" flex-1 font-medium ">Logout</span>
