@@ -569,7 +569,7 @@
     "@react-types/menu" "^3.9.4"
     "@react-types/shared" "^3.20.0"
 
-"@nextui-org/modal@2.0.23":
+"@nextui-org/modal@^2.0.23", "@nextui-org/modal@2.0.23":
   version "2.0.23"
   resolved "https://registry.npmjs.org/@nextui-org/modal/-/modal-2.0.23.tgz"
   integrity sha512-D6+iXe62beRtSNQqryAE0un+4uoAHDD80CeCBmpne2vrE+nM5o2cMz6n1q4ww/7HWh+Sp5fXCyjl7jZ1aO8Eeg==

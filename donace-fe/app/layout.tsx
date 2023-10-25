@@ -5,7 +5,6 @@ import { fontSans } from "@/config/fonts";
 import { Providers } from "./providers";
 import clsx from "clsx";
 import NavbarComponents from "@/components/navbar";
-// import { Navbar } from "@/components/navbar";
 
 export const metadata: Metadata = {
 	title: {
@@ -42,7 +41,7 @@ export default function RootLayout({
 					<div className="relative flex flex-col h-screen">
 						{/* <Navbar /> */}
 						<NavbarComponents/>
-						<main className="container mx-auto">
+						<main className="container max-w-full mx-auto">
 							{children}
 						</main>
 						{/* <footer className="w-full flex items-center justify-center py-3">

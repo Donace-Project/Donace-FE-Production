@@ -9,6 +9,7 @@ import { SearchIcon } from "./icons";
 import { Avatar } from "@nextui-org/avatar";
 import { Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger } from "@nextui-org/dropdown";
 import { ThemeSwitch } from "./theme-switch";
+import "@/styles/globals.css";
 
 export default function NavbarComponents() {
 	return (
@@ -116,7 +117,7 @@ export default function NavbarComponents() {
 							<DropdownMenu as={"div"} className="switcher-menu">
 								<DropdownSection as={"div"} showDivider>
 									<DropdownItem as={"div"}>
-										<Link href="/profile" className="transition-all duration-300 ease-in-out cursor-pointer" underline="none">
+										<Link href="/home" className="transition-all duration-300 ease-in-out cursor-pointer" underline="none">
 											<div className="switcher-row cursor-pointer transition-all duration-300 ease-in-out flex items-center">
 												<div className="avatar-wrapper">
 													<Avatar isBordered src="https://avatars.githubusercontent.com/u/143386751?s=200&v=4" radius="full" name="Donace" className="w-[32px] h-[32px] bg-center bg-cover bg-[#fff] relative" />
@@ -142,15 +143,7 @@ export default function NavbarComponents() {
 									</div>
 								</DropdownItem>
 								<DropdownItem>
-									<Link href="/my-calendars" className="transition-all duration-300 ease-in-out cursor-pointer" underline="none">
-										<div className="dark:text-[hsla(0,0%,100%,.79)] menu-row transition-all duration-300 ease-in-out text-sm gap-4 flex items-center text-black-more-blur-light-theme">
-											<Settings className="w-4 h-4 align-middle block mt-0.5" />
-											<span className=" flex-1 font-medium">Settings</span>
-										</div>
-									</Link>
-								</DropdownItem>
-								<DropdownItem>
-									<Link href="/my-calendars" className="transition-all duration-300 ease-in-out cursor-pointer" underline="none">
+									<Link href="/profile" className="transition-all duration-300 ease-in-out cursor-pointer" underline="none">
 										<div className="dark:text-[hsla(0,0%,100%,.79)] menu-row transition-all duration-300 ease-in-out text-sm gap-4 flex items-center text-black-more-blur-light-theme">
 											<Contact2 className="w-4 h-4 align-middle block mt-0.5"/>
 											<span className=" flex-1 font-medium">View Profile</span>
@@ -158,7 +151,15 @@ export default function NavbarComponents() {
 									</Link>
 								</DropdownItem>
 								<DropdownItem>
-									<Link href="/my-calendars" className="transition-all duration-300 ease-in-out cursor-pointer" underline="none">
+									<Link href="/settings" className="transition-all duration-300 ease-in-out cursor-pointer" underline="none">
+										<div className="dark:text-[hsla(0,0%,100%,.79)] menu-row transition-all duration-300 ease-in-out text-sm gap-4 flex items-center text-black-more-blur-light-theme">
+											<Settings className="w-4 h-4 align-middle block mt-0.5" />
+											<span className=" flex-1 font-medium">Settings</span>
+										</div>
+									</Link>
+								</DropdownItem>
+								<DropdownItem>
+									<Link href="" className="transition-all duration-300 ease-in-out cursor-pointer" underline="none">
 										<div className="dark:text-[hsla(0,0%,100%,.79)] menu-row transition-all duration-300 ease-in-out text-sm gap-4 flex items-center text-black-more-blur-light-theme">
 											<LogOut className="w-4 h-4 align-middle block mt-0.5"/>
 											<span className=" flex-1 font-medium">Logout</span>
