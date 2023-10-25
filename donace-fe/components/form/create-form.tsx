@@ -18,7 +18,7 @@ export default function CreateForm() {
         isOverCapacity: true,
         name: '',
         theme: '',
-        color: '',
+        color: '#f6b73c',
         fontSize: 0,
         instructions: '',
         isMultiSection: true,
@@ -63,7 +63,13 @@ export default function CreateForm() {
                 <input type="time" id="time" value={time} onChange={(e) => setTime(e.target.value)} />
 
                 <label htmlFor="addressName">Địa chỉ:</label>
+                <input type="text" id="addressName" name='addressName' value={formData.addressName} onChange={handleChange} />
 
+                <label htmlFor='color' id='color'>Color</label>
+                <input type="color" id='color' name='color' value={formData.color} onChange={handleChange} />
+
+                <label htmlFor='capacity' id='capacity'>Capacity</label>
+                <input type="number" id='capacity' name='capacity' placeholder='Số lượng chổ ngồi' value={formData.capacity} onChange={handleChange} />
                 <button type="submit">Gửi</button>
             </form>
         </div>
