@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+.page-wrapper{
+    min-height: 100dvh;
+    padding-bottom: 4rem;
+}
+
 .bg-gradient-navbar {
     /* Mã CSS */
     background: linear-gradient(rgba(126, 60, 142, 0.2) 0%, rgba(223, 140, 97, 0.1) 52.58%, rgba(249, 230, 203, 0) 100%);
