@@ -42,7 +42,7 @@
     max-width: 820px;
 }
 
-.margin-global{
+.margin-global {
     margin: 0 auto;
 }
 
@@ -126,4 +126,32 @@
 
 .grid-auto-cols {
     grid-template-columns: repeat(auto-fill, minmax(12.5rem, 1fr));
-  }
+}
+
+.gradient-background {
+    background: linear-gradient(281deg, #918872, #5ce3e1, #b61dac, #879978, #ec5988, #c5139c);
+    background-size: 360% 360%;
+    animation: gradient-animation 18s ease infinite;
+}
+
+@keyframes gradient-animation {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.onboarding-page {
+     padding-top: 15vh;
+     padding-left: 1rem;
+     padding-right: 1rem;
+     display: flex;
+     justify-content: center;
+}
