@@ -1,9 +1,16 @@
 import HomeEvents from "@/components/home/home";
-export default function HomePage(){
-    return(
+import NavbarComponents from "@/components/navbar";
+export default function HomePage() {
+    return (
         <div className="page-wrapper">
             <div className="">
-                <HomeEvents/>
+                <div>
+                    {/* <NavbarComponents /> */}
+                </div>
+                <div>
+
+                    <HomeEvents />
+                </div>
             </div>
         </div>
     )

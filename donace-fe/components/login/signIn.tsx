@@ -1,16 +1,38 @@
 "use client";
 import "@/styles/globals.css";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@nextui-org/button";
 import { Card, CardHeader, CardBody, CardFooter } from "@nextui-org/card";
 import { Input } from "@nextui-org/input";
-import { ArrowLeft, DoorOpen, LogIn, Smartphone } from "lucide-react";
-import { EyeFilledIcon } from "@/components/icon/EyeFilledIcon";
-import { EyeSlashFilledIcon } from "@/components/icon/EyeSlashFilledIcon";
+import { ArrowLeft, DoorOpen, Smartphone } from "lucide-react";
 import { FaGoogle } from "react-icons/fa";
+import { Link } from "@nextui-org/link";
+import PropTypes from 'prop-types';
+import axios from "axios";
 
+async function loginUser(credentials: any) {
+    return fetch('http://localhost:8080/signIn', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(credentials)
+    })
+        .then(data => data.json())
+}
 
-export default function SignIn() {
+export default function SignIn({ setToken }: { setToken: React.Dispatch<React.SetStateAction<any>> }) {
+    const [username, setUserName] = useState<string>('');
+    const [password, setPassword] = useState<string>('');
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        const token = await loginUser({
+            username,
+            password
+        });
+        setToken(token);
+    }
+
     const placements = [
         "inside"
     ];
@@ -43,11 +65,10 @@ export default function SignIn() {
                                 <div className="text-secondary pt-0.5 pb-1 text-sm text-black-more-blur-light-theme">Please sign in or sign up below.</div>
                             </div>
                             <div>
-                                <form action={"#"}>
+                                <form action={"#"}
+                                    onSubmit={handleSubmit}
+                                >
                                     <div className="spread flex justify-end items-center">
-                                        {/* <label className="text-sm cursor-pointer block font-medium text-black-more-blur-light-theme transition-all duration-300 ease-in-out pb-2 pt-1 mb-0">
-                                            <div>Email</div>
-                                        </label> */}
                                         <Button className="text-black-blur-light-theme bg-transparent p-0 h-auto border-none outline-offset-[.375rem] cursor-pointer transition-all duration-300 ease-in-out donace-button pb-2 pt-1 flex items-center m-0 leading-6" radius="none">
                                             <Smartphone className="w-3.5 h-3.5 mr-1 mt-0.5 stroke-2 flex-shrink-0 block align-middle" />
                                             <div className="label">Use Phone Number</div>
@@ -67,6 +88,7 @@ export default function SignIn() {
                                             isClearable
                                             placeholder="your@email.com"
                                             className="text-base h-auto transition-all duration-300 leading-4 rounded-lg w-full m-0"
+                                            onChange={e => setUserName(e.target.value)}
                                         />
                                     ))}
                                     <Input
@@ -75,8 +97,9 @@ export default function SignIn() {
                                         placeholder="yoursecretpassword"
                                         className="pt-2 text-base h-auto transition-all duration-300 leading-4 rounded-lg w-full m- mb-6"
                                         type={isVisible ? "text" : "password"}
+                                        onChange={e => setPassword(e.target.value)}
                                     />
-                                    <Button className="mb-12 text-[#fff] bg-[#333537] border-[#333537] border border-solid w-full cursor-pointer transition-all duration-300 ease-in-out font-medium rounded-lg relative whitespace-nowrap justify-center outline-none max-w-full text-base p-[0.625rem_0.875rem] h-[calc(2.25rem+2*1px)] flex items-center m-0 leading-6">
+                                    <Button type="submit" className="mb-12 text-[#fff] bg-[#333537] border-[#333537] border border-solid w-full cursor-pointer transition-all duration-300 ease-in-out font-medium rounded-lg relative whitespace-nowrap justify-center outline-none max-w-full text-base p-[0.625rem_0.875rem] h-[calc(2.25rem+2*1px)] flex items-center m-0 leading-6">
                                         <div className="label">Continue with Email</div>
                                     </Button>
                                 </form>
@@ -84,7 +107,7 @@ export default function SignIn() {
                         </CardBody>
                         <CardFooter className="-mb-2 border-t border-solid border-[rgba(19,21,23,0.08)]">
                             <Button className="mb-12 text-text-black-more-blur-light-theme bg-[rgba(19,21,23,0.04)] border-[rgba(19,21,23,0.04)] border border-solid w-full cursor-pointer transition-all duration-300 ease-in-out font-medium rounded-lg relative whitespace-nowrap justify-center outline-none max-w-full text-base p-[0.625rem_0.875rem] h-[calc(2.25rem+2*1px)] flex items-center m-0 leading-6">
-                                <FaGoogle className="mr-2 stroke-2 w-4 h-4 flex-shrink-0 block align-middle"/>
+                                <FaGoogle className="mr-2 stroke-2 w-4 h-4 flex-shrink-0 block align-middle" />
                                 <div className="label">Sign in with Google</div>
                             </Button>
                         </CardFooter>
@@ -94,3 +117,7 @@ export default function SignIn() {
         </div>
     )
 }
+SignIn.propTypes = {
+    setToken: PropTypes.func.isRequired
+}
+

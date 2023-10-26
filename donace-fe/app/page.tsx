@@ -1,3 +1,4 @@
+"use client";
 import NextLink from "next/link";
 import { Link } from "@nextui-org/link";
 import { Snippet } from "@nextui-org/snippet";
@@ -7,11 +8,19 @@ import { siteConfig } from "@/config/site";
 import { title, subtitle } from "@/components/primitives";
 import { GithubIcon } from "@/components/icons";
 import NavbarComponents from "@/components/navbar";
+import React, { useState } from 'react'
+import SignIn from '@/components/login/signIn'
+import useToken from './useToken';
 
 export default function Home() {
+	const { token, setToken } = useToken();
+	if (!token) {
+		return <SignIn setToken={setToken} />
+	}
+
 	return (
 		<div>
-			<NavbarComponents />
+			{/* <NavbarComponents /> */}
 			<section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
 				<div className="inline-block max-w-lg text-center justify-center">
 					<h1 className={title()}>Make&nbsp;</h1>
