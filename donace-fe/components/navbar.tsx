@@ -9,6 +9,7 @@ import { SearchIcon } from "./icons";
 import { Avatar } from "@nextui-org/avatar";
 import { Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger } from "@nextui-org/dropdown";
 import { ThemeSwitch, ThemeSwitchWithText } from "./theme-switch";
+import ThoiGian from "./clock/clock";
 
 export default function NavbarComponents() {
 	return (
@@ -49,7 +50,9 @@ export default function NavbarComponents() {
 					</NavbarItem>
 				</NavbarContent>
 				<NavbarContent as={"div"} className="right-wrapper flex items-center gap-4" justify="end">
-					<NavbarItem as={"div"} className="dark:text-[hsla(0,0%,100%,.5)] text-black-blur-light-theme text-sm">ĐÂY LÀ THỜI GIAN</NavbarItem>
+					<NavbarItem as={"div"} className="dark:text-[hsla(0,0%,100%,.5)] text-black-blur-light-theme text-sm">
+						<ThoiGian/>
+					</NavbarItem>
 					<Link href="/create" className="dark:text-[hsla(0,0%,100%,.79)] text-black-more-blur-light-theme relative transition-all duration-300 ease-in-out font-medium rounded-lg justify-center flex items-center cursor-pointer" underline="none">
 						<NavbarItem as={"div"} className="text-sm whitespace-nowrap">
 							Create
