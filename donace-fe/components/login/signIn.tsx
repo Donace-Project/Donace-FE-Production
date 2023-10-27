@@ -9,29 +9,19 @@ import { FaGoogle } from "react-icons/fa";
 import { Link } from "@nextui-org/link";
 import PropTypes from 'prop-types';
 import axios from "axios";
+import {signIn, signOut} from "next-auth/react";
 
-async function loginUser(credentials: any) {
-    return fetch('http://localhost:8080/signIn', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(credentials)
-    })
-        .then(data => data.json())
-}
-
-export default function SignIn({ setToken }: { setToken: React.Dispatch<React.SetStateAction<any>> }) {
-    const [username, setUserName] = useState<string>('');
-    const [password, setPassword] = useState<string>('');
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        const token = await loginUser({
-            username,
-            password
-        });
-        setToken(token);
-    }
+export default function SignIn() {
+    // const [username, setUserName] = useState<string>('');
+    // const [password, setPassword] = useState<string>('');
+    // const handleSubmit = async (e: React.FormEvent) => {
+    //     e.preventDefault();
+    //     const token = await loginUser({
+    //         username,
+    //         password
+    //     });
+    //     setToken(token);
+    // }
 
     const placements = [
         "inside"
@@ -66,7 +56,7 @@ export default function SignIn({ setToken }: { setToken: React.Dispatch<React.Se
                             </div>
                             <div>
                                 <form action={"#"}
-                                    onSubmit={handleSubmit}
+                                    // onSubmit={handleSubmit}
                                 >
                                     <div className="spread flex justify-end items-center">
                                         <Button className="text-black-blur-light-theme bg-transparent p-0 h-auto border-none outline-offset-[.375rem] cursor-pointer transition-all duration-300 ease-in-out donace-button pb-2 pt-1 flex items-center m-0 leading-6" radius="none">
@@ -88,7 +78,7 @@ export default function SignIn({ setToken }: { setToken: React.Dispatch<React.Se
                                             isClearable
                                             placeholder="your@email.com"
                                             className="text-base h-auto transition-all duration-300 leading-4 rounded-lg w-full m-0"
-                                            onChange={e => setUserName(e.target.value)}
+                                            // onChange={e => setUserName(e.target.value)}
                                         />
                                     ))}
                                     <Input
@@ -97,9 +87,9 @@ export default function SignIn({ setToken }: { setToken: React.Dispatch<React.Se
                                         placeholder="yoursecretpassword"
                                         className="pt-2 text-base h-auto transition-all duration-300 leading-4 rounded-lg w-full m- mb-6"
                                         type={isVisible ? "text" : "password"}
-                                        onChange={e => setPassword(e.target.value)}
+                                        // onChange={e => setPassword(e.target.value)}
                                     />
-                                    <Button type="submit" className="mb-12 text-[#fff] bg-[#333537] border-[#333537] border border-solid w-full cursor-pointer transition-all duration-300 ease-in-out font-medium rounded-lg relative whitespace-nowrap justify-center outline-none max-w-full text-base p-[0.625rem_0.875rem] h-[calc(2.25rem+2*1px)] flex items-center m-0 leading-6">
+                                    <Button  type="submit" className="mb-12 text-[#fff] bg-[#333537] border-[#333537] border border-solid w-full cursor-pointer transition-all duration-300 ease-in-out font-medium rounded-lg relative whitespace-nowrap justify-center outline-none max-w-full text-base p-[0.625rem_0.875rem] h-[calc(2.25rem+2*1px)] flex items-center m-0 leading-6">
                                         <div className="label">Continue with Email</div>
                                     </Button>
                                 </form>
@@ -117,7 +107,7 @@ export default function SignIn({ setToken }: { setToken: React.Dispatch<React.Se
         </div>
     )
 }
-SignIn.propTypes = {
-    setToken: PropTypes.func.isRequired
-}
+// SignIn.propTypes = {
+//     setToken: PropTypes.func.isRequired
+// }
 

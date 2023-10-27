@@ -23,6 +23,6 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "components/icon/searchIcon.jsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "components/icon/searchIcon.jsx", "src/lib/auth.js", "app/api/auth/[...nextauth]/route.js"],
   "exclude": ["node_modules"]
 }

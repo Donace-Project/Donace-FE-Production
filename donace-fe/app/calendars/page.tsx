@@ -5,10 +5,9 @@ export default function Page() {
     return (
         <div className="page-wrapper">
             <div className="navbar">
-                <NavbarComponents />
+                {/* <NavbarComponents /> */}
             </div>
             <div className="main">
-
                 <CalendarPage />
             </div>
         </div>
