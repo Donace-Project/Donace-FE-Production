@@ -13,10 +13,10 @@ export default function HomeEvents() {
                     <h1 className="tab-title text-4xl font-semibold mb-0 mt-0">Events</h1>
                     <div className="light lux-button min-w-[auto] p-0.5 overflow-hidden rounded-lg">
                         <ButtonGroup className="seggments relative grid grid-cols-2">
-                            <Button type="button" className="text-sm text-black-light-theme relative rounded-none justify-center cursor-pointer transition-all duration-300 ease-in-out font-medium flex items-center bg-[#fff] dark:text-[#fff] dark:bg-[#fff2] shadow-xl">
+                            <Button as={Link} href="" type="button" className="text-sm text-black-light-theme relative rounded-none justify-center cursor-pointer transition-all duration-300 ease-in-out font-medium flex items-center bg-[#fff] dark:text-[#fff] dark:bg-[#fff2] shadow-xl">
                                 <div className="">Upcoming</div>
                             </Button>
-                            <Button type="button" className="text-sm relative text-black-blur-light-theme rounded-none justify-center cursor-pointer transition-all duration-300 ease-in-out font-medium flex items-center bg-[rgba(19,21,23,0.04)] dark:text-[hsla(0,0%,100%,.5)] dark:bg-[rgba(255,255,255,0.08)]">
+                            <Button as={Link} href="/home-past-event" type="button" className="text-sm relative text-black-blur-light-theme rounded-none justify-center cursor-pointer transition-all duration-300 ease-in-out font-medium flex items-center bg-[rgba(19,21,23,0.04)] dark:text-[hsla(0,0%,100%,.5)] dark:bg-[rgba(255,255,255,0.08)]">
                                 <div className="">Past</div>
                             </Button>
                         </ButtonGroup>

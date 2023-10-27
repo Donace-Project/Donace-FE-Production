@@ -1,16 +1,15 @@
-import CalendarPage from "@/components/calendars-page/calendars-page";
 import FooterPage from "@/components/footerInPage";
-import NavbarComponents from "@/components/navbar";
+import HomePastEvent from "@/components/home/past-event";
 
 export default function Page() {
     return (
         <div className="page-wrapper">
             <div className="main">
-                <CalendarPage />
+                <HomePastEvent/>
             </div>
             <div className="footer">
                 <FooterPage/>
             </div>
         </div>
-    )
+)
 }

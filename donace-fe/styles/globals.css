@@ -149,10 +149,31 @@
 }
 
 .onboarding-page {
-     padding-top: 15vh;
-     padding-left: 1rem;
-     padding-right: 1rem;
-     display: flex;
-     justify-content: center;
+    padding-top: 15vh;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    display: flex;
+    justify-content: center;
 }
 
+.global-footer-content {
+    border-top: 1px;
+    border-top: solid;
+    border-top-color: rgba(19, 21, 23, 0.08);
+    margin: 1rem 1rem 0px 1rem;
+    padding-top: 1rem;
+    justify-content: space-between;
+}
+
+.line {
+    position: absolute;
+    top: 0.5rem;
+    bottom: 0px;
+    border-left: 0.125rem;
+    border-left: dashed;
+    border-left-color: rgba(19, 21, 23, 0.04);
+}
+
+.card-wrapper {
+    padding: 0.75rem 0.75rem 0.75rem 1rem;
+}
