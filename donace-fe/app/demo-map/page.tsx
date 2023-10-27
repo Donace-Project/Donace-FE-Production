@@ -5,7 +5,6 @@ import {
     MarkerF,
     CircleF,
 } from '@react-google-maps/api';
-import type { NextPage } from 'next';
 import { useMemo, useState } from 'react';
 import usePlacesAutocomplete, {
     getGeocode,
