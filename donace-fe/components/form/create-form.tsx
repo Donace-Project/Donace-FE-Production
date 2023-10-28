@@ -5,6 +5,7 @@ import {
     MarkerF,
     CircleF,
 } from '@react-google-maps/api';
+import axios from 'axios';
 import { useMemo, useState } from 'react';
 import usePlacesAutocomplete, {
     getGeocode,
@@ -19,6 +20,7 @@ export default function CreateForm() {
     const [endDate, setEndDate] = useState('');
     const [endTime, setEndTime] = useState('');
 
+    const [selectedImage, setSelectedImage] = useState<File | null>(null);
     const [result, setResult] = useState('');
 
     const [lat, setLat] = useState(10.8537915);
@@ -67,13 +69,27 @@ export default function CreateForm() {
         formData.long = lng.toString();
         formData.lat = lat.toString();
 
+        axios.post('http://localhost:8000/api/Common/upload-file', formData.cover, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+                "Accept": "text/plain"
+            }
+        })
+            .then(response => {
+                console.log(response.data);
+            })
+            .catch(error => {
+                console.log(error);
+            });
 
         console.log(formData);
     };
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
+        setSelectedImage(file || null);
         if (!file) return;
+
         const reader = new FileReader();
         reader.readAsDataURL(file);
         reader.onloadend = () => {
@@ -94,7 +110,6 @@ export default function CreateForm() {
             [name]: value,
         });
     };
-
 
     const { isLoaded } = useLoadScript({
         googleMapsApiKey: "AIzaSyA6tRumkn2d-0HeK3ektor7FvHFSceVduk" as string,
@@ -235,3 +250,6 @@ const PlacesAutocomplete = ({
         </div>
     );
 };
+
+
+

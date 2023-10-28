@@ -177,3 +177,8 @@
 .card-wrapper {
     padding: 0.75rem 0.75rem 0.75rem 1rem;
 }
+
+.cover-event-image {
+    background: no-repeat center url("https://app.requestly.io/delay/500/https://cdn.lu.ma/cdn-cgi/image/format=auto,fit=cover,dpr=1,quality=75,width=360/event-defaults/retro2.jpg");
+
+}
