@@ -1,8 +1,9 @@
 import NavbarComponents from "@/components/navbar";
 import FooterPage from "@/components/footerInPage";
 import Explore from "@/components/explore/explore";
+import ExploreEdit from "@/components/explore/explore";
 
-export default function ExploreEdit() {
+export default function Page() {
   return (
     <div className="page-wrapper">
       <NavbarComponents />
