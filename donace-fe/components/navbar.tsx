@@ -4,11 +4,12 @@ import { Button } from "@nextui-org/button";
 import { Input } from "@nextui-org/input";
 import { Link } from "@nextui-org/link";
 import { Navbar, NavbarBrand, NavbarContent, NavbarItem } from "@nextui-org/navbar";
+import { NavLink } from "react-router-dom";
 import { Bell, CalendarRange, Compass, Contact2, GraduationCap, LogOut, Settings, Ticket } from "lucide-react";
 import { SearchIcon } from "./icons";
 import { Avatar } from "@nextui-org/avatar";
 import { Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger } from "@nextui-org/dropdown";
-import { ThemeSwitch, ThemeSwitchWithText } from "./theme-switch";
+import { ThemeSwitchWithText } from "./theme-switch";
 import ThoiGian from "./clock/clock";
 
 export default function NavbarComponents() {
@@ -173,5 +174,5 @@ export default function NavbarComponents() {
 				</NavbarContent>
 			</NavbarBrand>
 		</Navbar>
-	);
+	)
 }

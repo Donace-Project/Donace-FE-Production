@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { Button, ButtonGroup } from "@nextui-org/button";
 import { Link } from "@nextui-org/link";
@@ -20,8 +21,6 @@ export default function HomeEvents() {
                                 <div className="">Past</div>
                             </Button>
                         </ButtonGroup>
-                        {/* <div className="seggments relative dark:bg-white">
-                        </div> */}
                     </div>
                 </div>
                 <div></div>

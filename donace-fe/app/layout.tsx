@@ -7,6 +7,7 @@ import clsx from "clsx";
 import NavbarComponents from "@/components/navbar";
 import { CustomProviders } from './provider'
 import { Link } from "@nextui-org/link";
+import { useRouter } from 'next/navigation';
 
 export const metadata: Metadata = {
 	title: {
@@ -25,11 +26,13 @@ export const metadata: Metadata = {
 	},
 };
 
+
 export default function RootLayout({
 	children,
 }: {
 	children: React.ReactNode;
 }) {
+
 	return (
 		<html lang="en" suppressHydrationWarning>
 			<head />
@@ -44,7 +47,7 @@ export default function RootLayout({
 				</CustomProviders> */}
 				<Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
 					<div className="relative flex flex-col h-screen">
-						<NavbarComponents/>
+						{/* <NavbarComponents/> */}
 						<main className="container max-w-full mx-auto">
 							{children}
 						</main>
