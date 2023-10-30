@@ -1,5 +1,5 @@
 import NavbarComponents from "@/components/navbar";
-import SettingLandingPage from "@/components/settings-page/settings";
+import SettingLandingPage from "@/components/settings-page/settings-ladingpage";
 
 export default function Page(){
     return(
