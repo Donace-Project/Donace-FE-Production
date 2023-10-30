@@ -180,5 +180,8 @@
 
 .cover-event-image {
     background: no-repeat center url("https://app.requestly.io/delay/500/https://cdn.lu.ma/cdn-cgi/image/format=auto,fit=cover,dpr=1,quality=75,width=360/event-defaults/retro2.jpg");
+}
 
+.margin-hr {
+    margin: 0.875rem -1rem 0.875rem 1.75rem;
 }

@@ -1,11 +1,13 @@
-import React from 'react';
+import NavbarComponents from "@/components/navbar";
+import SettingLandingPage from "@/components/settings-page/settings";
 
-const SettingsPage = () => {
-    return (
-        <div>
-            <h1>Your Page Title</h1>
+export default function Page(){
+    return(
+        <div className="page-wrapper">
+            <NavbarComponents/>
+            <div className="main">
+                <SettingLandingPage/>
+            </div>
         </div>
-    );
-};
-
-export default SettingsPage;
+    )
+}
