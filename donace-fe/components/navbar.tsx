@@ -164,7 +164,7 @@ export default function NavbarComponents() {
 									</Link>
 								</DropdownItem>
 								<DropdownItem>
-									<Link href="/" className="transition-all duration-300 ease-in-out cursor-pointer" underline="none">
+									<Link href="/auth/login" className="transition-all duration-300 ease-in-out cursor-pointer" underline="none">
 										<div className="dark:text-[hsla(0,0%,100%,.79)] menu-row transition-all duration-300 ease-in-out text-sm gap-4 flex items-center text-black-more-blur-light-theme">
 											<LogOut className="w-4 h-4 align-middle block mt-0.5" />
 											<span className=" flex-1 font-medium ">Logout</span>

@@ -2,8 +2,6 @@
 import {
     useLoadScript,
     GoogleMap,
-    MarkerF,
-    CircleF,
 } from '@react-google-maps/api';
 import axios from 'axios';
 import { useMemo, useState } from 'react';
