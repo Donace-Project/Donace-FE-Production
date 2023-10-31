@@ -77,7 +77,7 @@ export default function HomePastEvent() {
                             <Button as={Link} href="/home" type="button" className="text-sm text-black-blur-light-theme relative rounded-none justify-center cursor-pointer transition-all duration-300 ease-in-out font-medium flex items-center bg-[rgba(19,21,23,0.04)] dark:text-[hsla(0,0%,100%,.5)] dark:bg-[rgba(255,255,255,0.08)] ">
                                 <div className="">Upcoming</div>
                             </Button>
-                            <Button as={Link} href="/home-past-event" type="button" className="text-sm relative text-black-light-theme  rounded-none justify-center cursor-pointer transition-all duration-300 ease-in-out font-medium flex items-center bg-[#fff] dark:text-[#fff] dark:bg-[#fff2] shadow-xl">
+                            <Button as={Link} href="" type="button" className="text-sm relative text-black-light-theme  rounded-none justify-center cursor-pointer transition-all duration-300 ease-in-out font-medium flex items-center bg-[#fff] dark:text-[#fff] dark:bg-[#fff2] shadow-xl">
                                 <div className="">Past</div>
                             </Button>
                         </ButtonGroup>

@@ -1,12 +1,14 @@
 "use client";
 import "@/styles/globals.css";
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "@nextui-org/button";
-import { Card, CardHeader, CardBody } from "@nextui-org/card";
+import { Card, CardHeader, CardBody, CardFooter } from "@nextui-org/card";
 import { Input } from "@nextui-org/input";
-import { ArrowLeft, DoorOpen } from "lucide-react";
+import { ArrowLeft, DoorOpen, UserCircle2 } from "lucide-react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { Divider } from "@nextui-org/divider";
+import { Link } from "@nextui-org/link";
 
 export default function SignIn() {
   const router = useRouter();
@@ -24,6 +26,8 @@ export default function SignIn() {
     return validateEmail(email) ? false : true;
   }, [email]);
 
+  const [error, setError] = useState("");
+
   const onSubmit = async () => {
     const result = await signIn("credentials", {
       email: email,
@@ -31,24 +35,25 @@ export default function SignIn() {
       redirect: false,
     });
 
-    if (result?.ok) router.push("/home");
-    // TODO: Xử lý hiển thị lỗi sai tk & mk lên form
-    console.log(result);
+    if (result?.ok) {
+      router.push("/home");
+    } else {
+      // Xử lý hiển thị lỗi
+      setError("Incorrect username or password. Please try again.");
+    }
   };
 
   return (
     <div className="onboarding-page">
       <Card className="opacity-[1] relative flex-1 p-6 bg-[rgba(255,255,255,0.8)] backdrop-blur-lg max-w-sm rounded-2xl h-fit">
-        <div className="relative h-[380px]">
+        <div className="relative h-[480px]">
           <div className="animated-container absolute top-0 w-full">
-            {/* Icon */}
             <CardHeader className="opacity-[1] transform-none">
               <div className="icon relative w-16 h-16 flex items-center justify-center bg-[rgba(19,21,23,0.04)] rounded-full">
                 <DoorOpen className="w-8 h-8 text-[#939597] block align-middle" />
                 <ArrowLeft className="top-6 right-2.5 absolute text-[#939597] block w-4 h-4 align-middle" />
               </div>
             </CardHeader>
-
             <CardBody className="opacity-[1] transform-none">
               <div className="gap-2 pt-1 mb-4 flex flex-col">
                 <h1 className="font-semibold text-2xl mb-0 mt-0 leading-5">
@@ -71,16 +76,20 @@ export default function SignIn() {
                   placeholder="your@email.com"
                   className="text-base h-auto transition-all duration-300 leading-4 rounded-lg w-full m-0"
                 />
-
                 <Input
                   label="Password"
                   value={password}
                   onValueChange={setPassword}
                   labelPlacement={"inside"}
                   placeholder="your secret password"
-                  className="pt-2 text-base h-auto transition-all duration-300 leading-4 rounded-lg w-full m- mb-6"
+                  className="pt-2 text-base h-auto transition-all duration-300 leading-4 rounded-lg w-full m-0 mb-3"
                   type={isVisible ? "text" : "password"}
                 />
+                <div className="mb-5">
+                  {error && <div className="text-red-500">
+                    <div className="label break-words">{error}</div>
+                  </div>}
+                </div>
                 <Button
                   onClick={onSubmit}
                   type="button"
@@ -90,32 +99,17 @@ export default function SignIn() {
                 </Button>
               </div>
             </CardBody>
+            <Divider />
+            <CardFooter className="-mb-2 flex justify-center items-center">
+              <div className="">Don't have an account?</div>
+              <div>&nbsp;</div>
+              <Link href="/auth/register" underline="hover">
+                Sign up here.
+              </Link>
+            </CardFooter>
           </div>
         </div>
       </Card>
     </div>
   );
-}
-
-// UnUse Code
-// -----------------------------------------------------------------------------------------------------
-{
-  /* <CardFooter className="-mb-2 border-t border-solid border-[rgba(19,21,23,0.08)]">
-              <Button className="mb-12 text-text-black-more-blur-light-theme bg-[rgba(19,21,23,0.04)] border-[rgba(19,21,23,0.04)] border border-solid w-full cursor-pointer transition-all duration-300 ease-in-out font-medium rounded-lg relative whitespace-nowrap justify-center outline-none max-w-full text-base p-[0.625rem_0.875rem] h-[calc(2.25rem+2*1px)] flex items-center m-0 leading-6">
-                <FaGoogle className="mr-2 stroke-2 w-4 h-4 flex-shrink-0 block align-middle" />
-                <div className="label">Sign in with Google</div>
-              </Button>
-            </CardFooter> */
-}
-
-{
-  /* <div className="spread flex justify-end items-center">
-                    <Button
-                      className="text-black-blur-light-theme bg-transparent p-0 h-auto border-none outline-offset-[.375rem] cursor-pointer transition-all duration-300 ease-in-out donace-button pb-2 pt-1 flex items-center m-0 leading-6"
-                      radius="none"
-                    >
-                      <Smartphone className="w-3.5 h-3.5 mr-1 mt-0.5 stroke-2 flex-shrink-0 block align-middle" />
-                      <div className="label">Use Phone Number</div>
-                    </Button>
-                  </div> */
 }

@@ -6,28 +6,9 @@ import { CalendarX, Plus } from "lucide-react";
 import { Image } from "@nextui-org/image";
 import { Avatar } from "@nextui-org/avatar";
 import { Button } from "@nextui-org/button";
-import axios from "axios";
 
 export default function CalendarPage() {
-    // const [data, setData] = useState([])
-    // useEffect(() => {
-    //     axios.get('https://reqres.in/api/users', {
-    //         "name": "GiaBao",
-    //         "job": "FE"
-    //     })
-    //     .then(res => setData(res.data.data))
-    //     .catch(err => console.log(err));
-    // }, [])
-
     return (
-        // <div>
-        //     <h2>Axios Library in React JS</h2>
-        //     {
-        //         data.map((d, i) => {
-        //             return <p key={i}>{d.email}</p> 
-        //         })
-        //     }
-        // </div>
         <div className="page-content">
             <div className="page-header opacity-[1] pt-12 pl-4 pr-4 max-width-global margin-global">
                 <div className="spread gap-2 mb-2 flex justify-between items-center">
@@ -81,7 +62,7 @@ export default function CalendarPage() {
                             <Link
                                 className="p-[1rem_1rem_0.875rem] cursor-pointer transition-all duration-300 ease-in-out block relative rounded-xl bg-[#f3f4f5] dark:bg-[rgba(255,255,255,0.04)] border border-solid border-[#fff] dark:border-[rgba(255,255,255,0.04)] overflow-hidden"
                                 underline="none"
-                            >
+                                >
                                 <div className="spread min-h-full flex justify-between flex-col">
                                     <div>
                                         <Image
