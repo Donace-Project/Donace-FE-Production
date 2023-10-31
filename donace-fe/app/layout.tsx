@@ -4,12 +4,15 @@ import "@/styles/globals.css";
 import { fontSans } from "@/config/fonts";
 import { Providers } from "./providers";
 import clsx from "clsx";
+import { Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
 
 export default function RootLayout({
   children,
+  session,
 }: {
   children: React.ReactNode;
+  session: Session | null;
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
@@ -20,7 +23,7 @@ export default function RootLayout({
           fontSans.variable
         )}
       >
-        <SessionProvider>
+        <SessionProvider  session={session}>
           <Providers themeProps={{ attribute: "class", defaultTheme: "light" }}>
             <div className="relative flex flex-col h-screen">
               <main className="container max-w-full mx-auto">{children}</main>
