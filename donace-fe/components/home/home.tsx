@@ -4,13 +4,8 @@ import { Button, ButtonGroup } from "@nextui-org/button";
 import { Link } from "@nextui-org/link";
 import { CalendarClock, Plus } from "lucide-react";
 import "@/styles/globals.css";
-import { fetchWrapper } from "../../helpers/fetch-wrapper";
 
-export default function HomeEvents() {
-  useEffect(() => {
-    fetchWrapper.get("http://34.97.29.83/api/User/profile");
-  });
-  
+export default function HomeEvents() {  
   return (
     <div className="page-content">
       <div className="page-header opacity-[1] pt-12 pl-4 pr-4 max-width-global margin-global">
