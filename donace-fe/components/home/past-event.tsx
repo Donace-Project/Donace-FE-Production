@@ -4,7 +4,7 @@ import { Link } from "@nextui-org/link";
 import { Image } from "@nextui-org/image";
 import { ArrowRight, MapPin, Users2 } from "lucide-react";
 import { Avatar } from "@nextui-org/avatar";
-import axios from "axios";
+import { fetchWrapper } from '../../helpers/fetch-wrapper'
 import { useState, useEffect } from "react";
 
 
@@ -48,24 +48,12 @@ const DayOfWeek = (date: string) => {
 }
 
 export default function HomePastEvent() {
-
     const [events, setEvents] = useState<Events | null>(null);
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await axios.get('http://localhost:8000/api/Event?PageSize=10');
-                const data: Events = response.data;
-                setEvents(data);
-                console.log(data)
-            } catch (error) {
-                console.error('Lỗi khi gọi API:', error);
-            }
-        };
-
-        fetchData();
+        fetchWrapper.get('/api/Event?PageSize=10')
+            .then(data => setEvents(data));
     }, []); // Thêm mảng rỗng để đảm bảo useEffect chỉ chạy sau khi component được hiển thị lần đầu
-
 
     return (
         <div className="page-content">

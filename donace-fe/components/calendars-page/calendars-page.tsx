@@ -4,10 +4,33 @@ import "@/styles/globals.css";
 import { Link } from "@nextui-org/link";
 import { CalendarX, Plus } from "lucide-react";
 import { Image } from "@nextui-org/image";
-import { Avatar } from "@nextui-org/avatar";
 import { Button } from "@nextui-org/button";
+import { fetchWrapper } from '../../helpers/fetch-wrapper'
+
+export type Calendar = {
+    code: string
+    success: boolean
+    result: Result[]
+    pageInfo: any
+}
+
+export type Result = {
+    id: string
+    name: string
+    totalSubcriber: number
+    avatar: string
+    userId: string
+    sorted: number
+}
 
 export default function CalendarPage() {
+    var [calendars, setCalendar] = useState<Calendar | null>(null);
+
+    useEffect(() => {
+        fetchWrapper.post('/api/Calendar/get-list', { pageNumber: 1, pageSize: 10 })
+            .then(data => setCalendar(data))
+    }, [])
+
     return (
         <div className="page-content">
             <div className="page-header opacity-[1] pt-12 pl-4 pr-4 max-width-global margin-global">
@@ -38,57 +61,30 @@ export default function CalendarPage() {
                     </div>
                     <div className="gap-3 flex flex-col">
                         <div className="calendar-grid grid grid-auto-cols gap-3">
-                            <Link
-                                className="p-[1rem_1rem_0.875rem] cursor-pointer transition-all duration-300 ease-in-out block relative rounded-xl bg-[#f3f4f5] dark:bg-[rgba(255,255,255,0.04)] border border-solid border-[#fff] dark:border-[rgba(255,255,255,0.04)] overflow-hidden"
-                                underline="none"
-                            >
-                                <div className="spread min-h-full flex justify-between flex-col">
-                                    <div>
-                                        <Image
-                                            width={48}
-                                            height={48}
-                                            radius="full"
-                                            alt="Donace"
-                                            src="https://app.requestly.io/delay/1000/https://avatars.githubusercontent.com/u/143386751?s=200&v=4"
-                                        />
-                                        <div className="title font-medium text-lg mt-3 mb-1 text-black-light-theme dark:text-[#fff]">Donace</div>
-                                        <div className="text-tertiary-alpha text-sm text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)]">1 Subscriber</div>
-                                    </div>
-                                    <div className="spread gap-2 mt-4 flex justify-between flex-wrap items-center">
-                                        <div className="text-sm text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)]">Personal</div>
-                                    </div>
-                                </div>
-                            </Link>
-                            <Link
-                                className="p-[1rem_1rem_0.875rem] cursor-pointer transition-all duration-300 ease-in-out block relative rounded-xl bg-[#f3f4f5] dark:bg-[rgba(255,255,255,0.04)] border border-solid border-[#fff] dark:border-[rgba(255,255,255,0.04)] overflow-hidden"
-                                underline="none"
+                            {calendars?.result.map((calendar, index) => (
+                                <Link
+                                    className="p-[1rem_1rem_0.875rem] cursor-pointer transition-all duration-300 ease-in-out block relative rounded-xl bg-[#f3f4f5] dark:bg-[rgba(255,255,255,0.04)] border border-solid border-[#fff] dark:border-[rgba(255,255,255,0.04)] overflow-hidden"
+                                    underline="none"
                                 >
-                                <div className="spread min-h-full flex justify-between flex-col">
-                                    <div>
-                                        <Image
-                                            width={48}
-                                            height={48}
-                                            radius="full"
-                                            alt="Donace"
-                                            src="https://app.requestly.io/delay/1000/https://avatars.githubusercontent.com/u/143386751?s=200&v=4"
-                                        />
-                                        <div className="title font-medium text-lg mt-3 mb-1 text-black-light-theme dark:text-[#fff]">Donace</div>
-                                        <div className="text-tertiary-alpha text-sm text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)]">1 Subscriber</div>
-                                    </div>
-                                    <div className="spread gap-2 mt-4 flex justify-between flex-wrap items-center">
-                                        <div className="gap-2 flex items-center">
-                                            <div className="flex items-center">
-                                                <div className="head relative flex items-start">
-                                                    <div className="avatar-wrapper small">
-                                                        <Avatar radius="full" src="https://avatars.githubusercontent.com/u/143386751?s=200&v=4" name="Donace" className="w-4 h-4 bg-center bg-cover bg-[#fff] relative" />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div className="whitespace-nowrap text-sm text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)]">1 Admin</div>
+                                    <div className="spread min-h-full flex justify-between flex-col">
+                                        <div>
+                                            <Image
+                                                width={48}
+                                                height={48}
+                                                radius="full"
+                                                alt="Donace"
+                                                src="https://app.requestly.io/delay/1000/https://avatars.githubusercontent.com/u/143386751?s=200&v=4"
+                                            />
+                                            <div className="title font-medium text-lg mt-3 mb-1 text-black-light-theme dark:text-[#fff]">{calendar.name}</div>
+                                            <div className="text-tertiary-alpha text-sm text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)]">1 Subscriber</div>
+                                        </div>
+                                        <div className="spread gap-2 mt-4 flex justify-between flex-wrap items-center">
+                                            <div className="text-sm text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)]">Personal</div>
+                                            {index}
                                         </div>
                                     </div>
-                                </div>
-                            </Link>
+                                </Link>
+                            ))}
                         </div>
                     </div>
                 </div>
