@@ -198,7 +198,7 @@ export default function SettingLandingPage() {
                                 </Button>
                             </div>
                         </form>
-                        {/* <form action={"#"}>
+                        <form action={"#"}>
                             <div className="input-wrapper max-width-global flex items-baseline">
                                 <div className="lux-input-wrapper max-width-global mr-4 flex-1">
                                     <div className="inner-wrapper inline-block w-full">
@@ -226,7 +226,7 @@ export default function SettingLandingPage() {
                                     <div className="label">Update</div>
                                 </Button>
                             </div>
-                        </form> */}
+                        </form>
                     </div>
                     <div className="text-secondary-alpha text-sm text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)] pt-4">
                         For your security, we will send you a code to verify any change to your email.
