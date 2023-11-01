@@ -1,23 +1,47 @@
 "use client";
+
 import React from "react";
 import { Button } from "@nextui-org/button";
 import { Input } from "@nextui-org/input";
 import { Link } from "@nextui-org/link";
-import { Navbar, NavbarBrand, NavbarContent, NavbarItem } from "@nextui-org/navbar";
-import { Bell, CalendarRange, Compass, Contact2, GraduationCap, LogOut, Settings, Ticket } from "lucide-react";
+import {
+	Navbar,
+	NavbarBrand,
+	NavbarContent,
+	NavbarItem,
+} from "@nextui-org/navbar";
+import {
+	Bell,
+	CalendarRange,
+	Compass,
+	Contact2,
+	GraduationCap,
+	LogOut,
+	Settings,
+	Ticket,
+} from "lucide-react";
 import { SearchIcon } from "./icons";
 import { Avatar } from "@nextui-org/avatar";
-import { Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger } from "@nextui-org/dropdown";
+import {
+	Dropdown,
+	DropdownItem,
+	DropdownMenu,
+	DropdownSection,
+	DropdownTrigger,
+} from "@nextui-org/dropdown";
 import { ThemeSwitchWithText } from "./theme-switch";
 import ThoiGian from "./clock/clock";
+import { authHelper } from "../helpers/authHelper";
 import { useSession } from "next-auth/react";
 
 export default function NavbarComponents() {
-	const { data: session } = useSession();
-	console.log({ session });
-	
+	if (authHelper.getToken() === null) {
+		const { data: session } = useSession();
+		authHelper.saveToken(session?.token);
+	}
+
 	return (
-		<Navbar position="sticky" isBordered maxWidth="full" className="backdrop-blur-lg p-[0.75rem_1rem] flex justify-between items-center" >
+		<Navbar position="sticky" maxWidth="full" className="backdrop-blur-lg p-[0.75rem_1rem] flex justify-between items-center bg-transparent">
 			<NavbarBrand as={"div"}>
 				<Link href="/home" aria-label="Donace Home" underline="none" className="relative z-[1] transition-global cursor-pointer">
 					<NavbarContent className="logo-light transition-all duration-300 ease-in-out flex items-center">
@@ -55,7 +79,7 @@ export default function NavbarComponents() {
 				</NavbarContent>
 				<NavbarContent as={"div"} className="right-wrapper flex items-center gap-4" justify="end">
 					<NavbarItem as={"div"} className="dark:text-[hsla(0,0%,100%,.5)] text-black-blur-light-theme text-sm">
-						<ThoiGian/>
+						<ThoiGian />
 					</NavbarItem>
 					<Link href="/create" className="dark:text-[hsla(0,0%,100%,.79)] text-black-more-blur-light-theme relative transition-all duration-300 ease-in-out font-medium rounded-lg justify-center flex items-center cursor-pointer" underline="none">
 						<NavbarItem as={"div"} className="text-sm whitespace-nowrap">
@@ -150,7 +174,7 @@ export default function NavbarComponents() {
 								<DropdownItem>
 									<Link href="/profile" className="transition-all duration-300 ease-in-out cursor-pointer" underline="none">
 										<div className="dark:text-[hsla(0,0%,100%,.79)] menu-row transition-all duration-300 ease-in-out text-sm gap-4 flex items-center text-black-more-blur-light-theme">
-											<Contact2 className="w-4 h-4 align-middle block mt-0.5"/>
+											<Contact2 className="w-4 h-4 align-middle block mt-0.5" />
 											<span className=" flex-1 font-medium">View Profile</span>
 										</div>
 									</Link>
@@ -164,7 +188,7 @@ export default function NavbarComponents() {
 									</Link>
 								</DropdownItem>
 								<DropdownItem>
-									<Link href="/" className="transition-all duration-300 ease-in-out cursor-pointer" underline="none">
+									<Link href="/auth/login" className="transition-all duration-300 ease-in-out cursor-pointer" underline="none">
 										<div className="dark:text-[hsla(0,0%,100%,.79)] menu-row transition-all duration-300 ease-in-out text-sm gap-4 flex items-center text-black-more-blur-light-theme">
 											<LogOut className="w-4 h-4 align-middle block mt-0.5" />
 											<span className=" flex-1 font-medium ">Logout</span>

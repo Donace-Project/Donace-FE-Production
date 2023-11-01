@@ -1,4 +1,3 @@
-// "use client";
 import NextLink from "next/link";
 import { Link } from "@nextui-org/link";
 import { Snippet } from "@nextui-org/snippet";
@@ -7,31 +6,10 @@ import { button as buttonStyles } from "@nextui-org/theme";
 import { siteConfig } from "@/config/site";
 import { title, subtitle } from "@/components/primitives";
 import { GithubIcon } from "@/components/icons";
-import NavbarComponents from "@/components/navbar";
-import React, { useState } from 'react'
-import SignIn from '@/components/login/signIn'
-import useToken from './useToken';
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/src/lib/auth";
+import React from 'react'
 
 export default function Home() {
-	// const { token, setToken } = useToken();
-	// if (!token) {
-	// 	return <SignIn setToken={setToken} />
-	// }
-	// const session = await getServerSession(authOptions);
 	return (
-		// <>
-		// 	{session ?
-		// 		<>
-
-		// 		</>
-		// 		:
-		// 		<>
-		// 			<SignIn />
-		// 		</>
-		// 	}
-		// </>
 		<div>
 			{/* <NavbarComponents /> */}
 			<section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
@@ -66,7 +44,6 @@ export default function Home() {
 						GitHub
 					</Link>
 				</div>
-
 				<div className="mt-8">
 					<Snippet hideSymbol hideCopyButton variant="flat">
 						<span>

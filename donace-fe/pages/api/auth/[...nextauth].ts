@@ -38,8 +38,6 @@ export const authOptions: NextAuthOptions = {
 
                 const user = await res.json();
 
-                console.log({ user });
-
                 if (res.ok && user) {
                     return user;
                 } else return null;
@@ -53,7 +51,10 @@ export const authOptions: NextAuthOptions = {
         },
         async session({ session, token, user }) {
             // Send properties to the client, like an access_token from a provider.
-            session.user = token;
+
+            const userRes = token as any;
+            session.user = { ...userRes.user }
+            session.token = userRes?.token;
 
             return session;
         },
