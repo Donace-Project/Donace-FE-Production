@@ -33,26 +33,20 @@ export default function ExploreEdit() {
         <h1 className="text-[1.75rem] font-normal text-[rgba(19,21,23,0.36)] leading-[1.2] mt-0 mb-4">
           Tech Events in Your City
         </h1>
-        {/* <div className="cities grid grid-rows-2 grid-flow-col p-0 gap-6 justify-center items-center pt-4">
-          <HCM />
-          <DL />
-          <DN />
-          <CN />
-        </div> */}
 
         <div className="grid grid-cols-2 justify-center items-center gap-5">
           <div className="w-full h-full">
             <Link href="/route">
-              <Card isFooterBlurred radius="lg" className="border-none">
+              <Card isFooterBlurred radius="lg" className="border-none h-[500]">
                 <Image
                   alt="Woman listing to music"
                   className="object-cover"
                   height={500}
-                  src="https://media.vneconomy.vn/images/upload/2023/05/13/dbscl-4604.jpg"
+                  src="https://file1.dangcongsan.vn/data/0/images/2021/04/27/vuongle/ttxxvnktvn.jpg"
                   width={500}
                 />
                 <CardFooter className="justify-between before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
-                  <p className="text-tiny text-white/80">Cần Thơ</p>
+                  <p className="text-tiny text-white/80">Hồ Chí Minh</p>
                   <Button
                     className="text-tiny text-white bg-black/20"
                     variant="flat"
@@ -73,11 +67,11 @@ export default function ExploreEdit() {
                   alt="Woman listing to music"
                   className="object-cover"
                   height={500}
-                  src="https://media.vneconomy.vn/images/upload/2023/05/13/dbscl-4604.jpg"
+                  src="https://cdnimg.vietnamplus.vn/uploaded/ivpycivo/2023_07_13/pho_co_hoi_an.png"
                   width={500}
                 />
                 <CardFooter className="justify-between before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
-                  <p className="text-tiny text-white/80">Cần Thơ</p>
+                  <p className="text-tiny text-white/80">Huế</p>
                   <Button
                     className="text-tiny text-white bg-black/20"
                     variant="flat"
