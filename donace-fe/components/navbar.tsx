@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@nextui-org/button";
 import { Input } from "@nextui-org/input";
 import { Link } from "@nextui-org/link";
@@ -35,10 +35,9 @@ import { authHelper } from "../helpers/authHelper";
 import { useSession } from "next-auth/react";
 import { usePathname } from 'next/navigation';
 
-// active: text-[rgb(19,21,23)]
 
 export default function NavbarComponents() {
-   const page = usePathname()?.split('/')[1];
+  const page = usePathname()?.split('/')[1];
   if (authHelper.getToken() === null) {
     const { data: session } = useSession();
     authHelper.saveToken(session?.token);
@@ -47,9 +46,8 @@ export default function NavbarComponents() {
   return (
     <Navbar
       position="sticky"
-      isBordered
       maxWidth="full"
-      className="backdrop-blur-lg p-[0.75rem_1rem] flex justify-between items-center"
+      className="backdrop-blur-lg p-[0.75rem_1rem] flex justify-between items-center h-20 bg-transparent"
     >
       <NavbarBrand as={"div"}>
         <Link
@@ -76,7 +74,7 @@ export default function NavbarComponents() {
             >
               <NavbarContent
                 as={"div"}
-                className={`${page === "home" ? 'text-[rgb(19,21,23)]':''} dark:hover:text-[#fff] gap-2 flex items-center transition-all duration-300 ease-in-out hover:text-[rgb(19,21,23)] `}
+                className={`${page === "home" ? 'text-[rgb(19,21,23)]' : ''} dark:hover:text-[#fff] gap-2 flex items-center transition-all duration-300 ease-in-out hover:text-[rgb(19,21,23)] `}
               >
                 <NavbarItem as={"div"} className="icon">
                   <Ticket className="block w-4 h-4 align-middle mt-0.5" />
@@ -88,7 +86,7 @@ export default function NavbarComponents() {
             </Link>
             <Link
               href="/calendars"
-              className={` dark:text-[hsla(0,0%,100%,.5)] text-black-blur-light-theme font-medium` }
+              className={` dark:text-[hsla(0,0%,100%,.5)] text-black-blur-light-theme font-medium`}
             >
               <NavbarContent
                 as={"div"}

@@ -6,7 +6,7 @@ import { Link } from "@nextui-org/link";
 import { CalendarClock, Plus } from "lucide-react";
 import "@/styles/globals.css";
 import { fetchWrapper } from "@/helpers/fetch-wrapper";
-import { authHelper } from "../../helpers/authHelper";
+import { Tabs, Tab } from "@nextui-org/tabs";
 
 export default function HomeEvents() {
   useEffect(() => {
@@ -17,13 +17,39 @@ export default function HomeEvents() {
     });
   }, []);
 
+  const [selected, setSelected] = React.useState("home");
+
   return (
     <div className="page-content">
       <div className="page-header opacity-[1] pt-12 pl-4 pr-4 max-width-global margin-global">
         <div className="spread gap-2 mb-2 flex justify-between items-center">
           <h1 className="tab-title text-4xl font-semibold mb-0 mt-0">Events</h1>
           <div className="light lux-button min-w-[auto] p-0.5 overflow-hidden rounded-lg">
-            <ButtonGroup className="seggments relative grid grid-cols-2">
+            <Tabs
+              fullWidth
+              size="md"
+              aria-label="Tabs form"
+              selectedKey={selected}
+              // onSelectionChange={setSelected}
+            >
+              <Tab key="Home" title="Home" className="text-sm justify-center cursor-pointer transition-all duration-300 ease-in-out font-medium flex items-center">
+                <Link href=""
+                  className=""
+                >
+
+                </Link>
+              </Tab>
+              <Tab key="Past" title="Past"
+                className="text-sm justify-center cursor-pointer transition-all duration-300 ease-in-out font-medium flex items-center"
+              >
+                <Link href=""
+                  className=""
+                >
+
+                </Link>
+              </Tab>
+            </Tabs>
+            {/* <ButtonGroup className="seggments relative grid grid-cols-2">
               <Button
                 as={Link}
                 href=""
@@ -40,7 +66,7 @@ export default function HomeEvents() {
               >
                 <div className="">Past</div>
               </Button>
-            </ButtonGroup>
+            </ButtonGroup> */}
           </div>
         </div>
         <div></div>
