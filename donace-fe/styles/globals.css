@@ -189,3 +189,10 @@
 .top-card-content {
     padding: 1.375rem 1.125rem 0.75rem 1.125rem;
 }
+
+.start-here {
+    display: inline-block;
+    background: radial-gradient(circle at 0% 0%, #099ef1 0%, #6863f8 18.82%, #d84ffa 32.6%, #f058c5 52.83%, #ff4f90 68.03%, #ff6558 87.66%, #ff891f 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}

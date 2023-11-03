@@ -43,6 +43,11 @@ export default function NavbarComponents() {
     authHelper.saveToken(session?.token);
   }
 
+  const handleLogout = () => {
+    localStorage.clear();
+    window.location.reload();
+  }
+
   return (
     <Navbar
       position="sticky"
@@ -289,8 +294,9 @@ export default function NavbarComponents() {
                     </div>
                   </Link>
                 </DropdownItem>
-                <DropdownItem>
+                <DropdownItem >
                   <Link
+                    onClick={handleLogout}
                     href="/auth/login"
                     className="transition-all duration-300 ease-in-out cursor-pointer"
                     underline="none"
