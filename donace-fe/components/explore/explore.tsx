@@ -6,7 +6,7 @@ import { Card, CardHeader, CardBody, CardFooter } from "@nextui-org/react";
 import { Image } from "@nextui-org/react";
 import { Button } from "@nextui-org/button";
 
-export default function ExploreEdit() {
+export default function Explore() {
   return (
     <div id="page-content" className="pt-[calc(3.25rem)+1px]">
       <div
@@ -36,7 +36,7 @@ export default function ExploreEdit() {
 
         <div className="grid grid-cols-2 justify-center items-center gap-5">
           <div className="w-full h-full">
-            <Link href="/route">
+            <Link href="/explore-detail">
               <Card isFooterBlurred radius="lg" className="border-none h-[500]">
                 <Image
                   alt="Woman listing to music"

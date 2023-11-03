@@ -1,13 +1,13 @@
 import NavbarComponents from "@/components/navbar";
 import FooterPage from "@/components/footerInPage";
-import Explore from "@/components/explore/explore";
+import ExploreDetail from "@/components/explore-detail/explore-detail";
 
-export default function Page() {
+export default function page() {
   return (
     <div className="page-wrapper">
       <NavbarComponents />
       <div className="main">
-        <Explore />
+        <ExploreDetail />
       </div>
       <div className="footer">
         <FooterPage />
