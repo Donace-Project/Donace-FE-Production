@@ -1,13 +1,11 @@
 "use client";
-import React, { Suspense, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import "@/styles/globals.css";
 import { Link } from "@nextui-org/link";
 import { CalendarX, Plus } from "lucide-react";
 import { Image } from "@nextui-org/image";
 import { Button } from "@nextui-org/button";
 import { fetchWrapper } from '../../helpers/fetch-wrapper'
-import { data } from "autoprefixer";
-import { error } from "console";
 import { Card } from "@nextui-org/card";
 import { Skeleton } from "@nextui-org/skeleton";
 
