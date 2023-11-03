@@ -2,7 +2,7 @@
 import { Button, ButtonGroup } from "@nextui-org/button";
 import { Link } from "@nextui-org/link";
 import { Image } from "@nextui-org/image";
-import { ArrowRight, MapPin, Users2 } from "lucide-react";
+import { ArrowRight, CalendarX, MapPin, Users2 } from "lucide-react";
 import { Avatar } from "@nextui-org/avatar";
 import { fetchWrapper } from '../../helpers/fetch-wrapper'
 import { useState, useEffect } from "react";
@@ -78,8 +78,6 @@ export default function HomePastEvent() {
 
 
             <div className="zm-container p-[2rem_1rem_1rem] max-width-global margin-global">
-
-
                 {events ? (
                     <div className="timeline">
                         {events.items.map((event, index) => (
@@ -100,7 +98,6 @@ export default function HomePastEvent() {
                                         </div>
                                     </div>
                                 </div>
-
                                 <div className="min-w-0 flex-1">
                                     <div className="card-wrapper">
                                         <div className="card-wrapper content-card cursor-pointer transition-all duration-300 ease-in-out relative rounded-xl bg-[#f3f4f5] dark:bg-[rgba(255,255,255,0.04)] border border-solid border-[#f3f4f5] dark:border-[rgba(255,255,255,0.04)]">
@@ -165,9 +162,16 @@ export default function HomePastEvent() {
 
                     </div>
                 ) : (
-                    <p>Đang tải...</p>
+                    <div className="lux-empty-state text-center mt-16 flex flex-col items-center">
+                        <div className="icon justify-center flex items-center">
+                            <div className="mb-0.5">
+                                <CalendarX className="w-64 h-auto block align-middle text-foreground-300"/>
+                            </div>
+                        </div>
+                        <h3 className="text-2xl font-medium text-black-more-blur-light-theme p-0 mt-6 mb-0">No Past Events</h3>
+                        <div className="desc pl-12 pr-12 text-black-blur-light-theme mt-2">You have not hosted or attended any event.</div>
+                    </div>
                 )}
-
             </div>
         </div>
     )

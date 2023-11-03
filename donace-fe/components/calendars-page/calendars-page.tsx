@@ -176,7 +176,7 @@ export default function CalendarPage() {
                                                 />
                                                 <div className="title font-medium text-lg mt-3 mb-1 text-black-light-theme dark:text-[#fff]"></div>
                                                 <div className="text-tertiary-alpha text-sm text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)]">
-                                                    
+                                                    {subcribed.name}
                                                 </div>
                                                 <div className="spread gap-2 mt-4 flex justify-between flex-wrap items-center">
                                                     <div className="text-sm text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)]">Personal</div>
@@ -214,44 +214,6 @@ export default function CalendarPage() {
                             </div>
                         </Card>
                     )}
-                    {/* {subscribeds ? (
-                        <div className="calendar-grid grid grid-auto-cols gap-3">
-                            {subscribeds?.result.map((subcribed, index) => (
-                                <div className="content-card p-4 relative rounded-xl bg-[#f3f4f5] dark:bg-[rgba(255,255,255,0.04)] border border-solid border-[#fff] dark:border-[rgba(255,255,255,0.04)] overflow-hidden">
-                                    <div className="icon">
-                                        <div className="mb-0">
-                                            <CalendarX className="w-auto h-12 block align-middle dark:text-[#9E9E9E]" />
-                                        </div>
-                                    </div>
-                                    <div className="title font-medium text-lg mt-3 mb-1 text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)]">{subcribed.name}</div>
-                                    <div className="desc text-sm text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)]">
-                                        {subcribed.totalSubcriber !== 0 ? (
-                                            <p>{subcribed.totalSubcriber} Subscribers</p>
-                                        ) : (
-                                            <p>No Subscribers</p>
-                                        )}
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    ) : (
-                        <Card className="w-[200px] space-y-5 p-4" radius="lg">
-                            <Skeleton className="rounded-lg">
-                                <div className="h-24 rounded-lg bg-default-300"></div>
-                            </Skeleton>
-                            <div className="space-y-3">
-                                <Skeleton className="w-3/5 rounded-lg">
-                                    <div className="h-3 w-3/5 rounded-lg bg-default-200"></div>
-                                </Skeleton>
-                                <Skeleton className="w-4/5 rounded-lg">
-                                    <div className="h-3 w-4/5 rounded-lg bg-default-200"></div>
-                                </Skeleton>
-                                <Skeleton className="w-2/5 rounded-lg">
-                                    <div className="h-3 w-2/5 rounded-lg bg-default-300"></div>
-                                </Skeleton>
-                            </div>
-                        </Card>
-                    )} */}
                 </div >
             </div >
         </div >

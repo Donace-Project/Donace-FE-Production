@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import "@/styles/globals.css";
 import { Avatar } from "@nextui-org/avatar";
 import { Button } from "@nextui-org/button";
@@ -10,8 +10,17 @@ import { Input } from "@nextui-org/input";
 import { Textarea } from "@nextui-org/input";
 import { FaTiktok } from 'react-icons/fa';
 import { Checkbox } from "@nextui-org/checkbox";
+import { fetchWrapper } from "@/helpers/fetch-wrapper";
 
 export default function ProfilePage() {
+    useEffect(() => {
+        // Demo gọi api profile
+        fetchWrapper.get("api/User/profile");
+        fetchWrapper.get("/api/Event").then((data) => {
+          console.log(data);
+        });
+      }, []);
+
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
     const [scrollBehavior, setScrollBehavior] = React.useState<ModalProps["scrollBehavior"]>("inside");
     const placements = [

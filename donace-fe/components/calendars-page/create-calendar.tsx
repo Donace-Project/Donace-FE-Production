@@ -1,9 +1,81 @@
+"use client";
+import { fetchWrapper } from "@/helpers/fetch-wrapper";
 import { Avatar } from "@nextui-org/avatar";
 import { Button } from "@nextui-org/button";
-import { Input, Textarea } from "@nextui-org/input";
+import { Input } from "@nextui-org/input";
 import { ArrowUp, CheckCircle } from "lucide-react";
+import { useState } from "react";
+
+
+
+export type CreateCalendar = {
+    code: string
+    success: boolean
+    result: CalendarModel[]
+    pageInfo: any
+}
+
+export type CalendarModel = {
+    name: string
+    cover: string
+    avatar: string
+    color: string
+    publicURL: string
+    lat: string
+    long: string
+    addressName: string
+}
 
 export default function CreateCalendar() {
+
+    const [formData, setFormData] = useState({
+        name: "",
+        cover: "",
+        avatar: "",
+        color: "",
+        publicURL: "",
+        lat: "",
+        long: "",
+        addressName: ""
+        // Thêm các trường dữ liệu khác của form nếu có
+    });
+
+    const handleSubmit = (e: any) => {
+        e.preventDefault();
+
+        // Xây dựng đối tượng dữ liệu từ formData
+        const dataToSend = {
+            name: formData.name,
+            cover: formData.cover,
+            avatar: formData.avatar,
+            color: formData.color,
+            publicURL: formData.publicURL,
+            lat: formData.lat,
+            long: formData.long,
+            addressName: formData.addressName,
+        };
+
+        if (!dataToSend.name) {
+            // Hiển thị thông báo lỗi
+            console.error("Name field is required.");
+        } else {
+            // Gửi yêu cầu POST lên API.
+            fetchWrapper.post("/api/Calendar/create-calendar", dataToSend)
+                .then((response) => {
+                    if (response.success) {
+                        // Cập nhật giao diện người dùng hoặc hiển thị thông báo thành công
+                        console.log("Calendar created successfully.");
+
+                    } else {
+                        // Xử lý lỗi từ API và hiển thị thông báo lỗi
+                        console.error("Error creating calendar:", response.message);
+                    }
+                })
+                .catch((error) => {
+                    console.error(error);
+                });
+        }
+    };
     return (
         <div className="page-content">
             <div className="page-header opacity-[1] pt-12 pl-4 pr-4 max-width-global margin-global">
@@ -12,11 +84,20 @@ export default function CreateCalendar() {
                 </div>
             </div>
             <div id="zm-container" className="pt-[1.5rem!important] p-[1rem!important] max-w-[820px] m-[0_auto]">
-                <form action={'#'} className="gap-6 flex flex-col">
+                <form action={'#'} onSubmit={handleSubmit} className="gap-6 flex flex-col">
                     <div id="content-card-1" className="p-0 relative rounded-[0.75rem] bg-[rgba(255,255,255,0.8)] dark:bg-[rgba(255,255,255,0.04)] border border-solid border-[#fff] dark:border-[rgba(255,255,255,0.04)] overflow-hidden">
                         <div id="top-card">
                             <div role="button" className="aspect-[3.5] bg-[#ebeced] dark:bg-[#333537] overflow-hidden transition-all duration-300 ease-in-out relative cursor-pointer">
-                                <Input accept="image/*,.jpg,.jpeg,.png,.gif,.webp" type="file" tabIndex={-1} className="hidden m-0" />
+                                <Input
+                                    value={formData.cover}
+                                    onChange={(e) =>
+                                        setFormData({ ...formData, cover: e.target.value })
+                                    }
+                                    accept="image/*,.jpg,.jpeg,.png,.gif,.webp"
+                                    type="file"
+                                    tabIndex={-1}
+                                    className="hidden m-0"
+                                />
                                 <div id="overlay animated" className="hover:bg-gray-300 absolute top-0 left-0 right-0 bottom-0 bg-transparent transition-all duration-300 ease-in-out"></div>
                                 <div id="animated image" className="transition-all duration-300 ease-in-out">
                                     <div id="placeholder" className="pb-[calc(100%/(3/5))]"></div>
@@ -31,7 +112,15 @@ export default function CreateCalendar() {
                                 <div id="avatar-container" className="absolute transform translate-y-[-50%] border-[0.25rem] border-solid border-[#fff] dark:border-[#212325] rounded-[0.75rem] ml-[0.875rem]">
                                     <div>
                                         <div role="presentation" id="avatar-wrapper" className="w-[64px] h-[64px] relative cursor-pointer">
-                                            <Input accept="image/*,.jpg,.jpeg,.png,.gif,.webp" type="file" tabIndex={-1} className="hidden m-0" />
+                                            <Input
+                                                value={formData.avatar}
+                                                onChange={(e) =>
+                                                    setFormData({ ...formData, avatar: e.target.value })
+                                                }
+                                                accept="image/*,.jpg,.jpeg,.png,.gif,.webp"
+                                                type="file"
+                                                tabIndex={-1}
+                                                className="hidden m-0" />
                                             <div id="upload-icon" className="rounded-[0.5rem] bg-center bg-cover flex justify-center items-center text-[#fff] dark:text-[#212325] bg-[rgb(19,21,23)] dark:bg-[#fff] hover:bg-red-500 w-[35%] h-[35%] min-w-[24px] min-h-[24px] border-2 border-solid border-[#fff] dark:border-[#212325] absolute right-[-1px] bottom-[-1px] origin-center transition-all duration-300 ease-in-out">
                                                 <ArrowUp className="stroke-[2.5] w-[65%] h-[65%] block align-middle" />
                                             </div>
@@ -44,7 +133,15 @@ export default function CreateCalendar() {
                             </div>
                             <div id="input-container" className="p-[0.5rem_1rem] pb-0 flex flex-col">
                                 <div id="name-input" className="text-[1.5rem] font-medium p-2 h-12">
-                                    <textarea id="lux-naked-input bordered mounted" spellCheck="false" autoCapitalize="words" placeholder="Calendar Name" className="h-[47.8px!important] p-2 border-b border-solid outline-none border-b-[#ebeced] transition-all duration-300 ease-in-out height-0 text-[rgb(19,21,23)] dark:text-[#fff] leading-[1.3] overflow-hidden bg-transparent text-[1.5rem] font-medium w-full resize-none m-0 focus:border-b-2 focus:border-gray-400 hover:border-b-2 hover:border-gray-400"></textarea>
+                                    <textarea
+                                        value={formData.name}
+                                        onChange={(e) =>
+                                            setFormData({ ...formData, name: e.target.value })
+                                        }
+                                        id="lux-naked-input bordered mounted"
+                                        spellCheck="false" autoCapitalize="words"
+                                        placeholder="Calendar Name"
+                                        className="h-[47.8px!important] p-2 border-b border-solid outline-none border-b-[#ebeced] transition-all duration-300 ease-in-out height-0 text-[rgb(19,21,23)] dark:text-[#fff] leading-[1.3] overflow-hidden bg-transparent text-[1.5rem] font-medium w-full resize-none m-0 focus:border-b-2 focus:border-gray-400 hover:border-b-2 hover:border-gray-400"></textarea>
                                 </div>
                                 <div id="desc-input" className="p-2">
                                     <textarea id="lux-naked-input mounted" spellCheck="false" autoCapitalize="sentences" placeholder="Add a short description." maxLength={200} className="h-[37px!important] p-2 outline-none transition-all duration-300 ease-in-out height-0 text-[rgb(19,21,23)] dark:text-[#fff] leading-[1.3] overflow-hidden bg-transparent text-[1rem] font-normal w-full resize-none m-0"></textarea>
