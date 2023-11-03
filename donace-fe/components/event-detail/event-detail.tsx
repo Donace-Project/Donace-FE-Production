@@ -1,11 +1,45 @@
+import { fetchWrapper } from "@/helpers/fetch-wrapper";
 import { Avatar } from "@nextui-org/avatar";
 import { Button } from "@nextui-org/button";
 import { Divider } from "@nextui-org/divider";
 import { Image } from "@nextui-org/image";
 import { Link } from "@nextui-org/link";
 import { ArrowUpRight, MapPin, MapPinned, Users } from "lucide-react";
+import { useEffect } from "react";
+
+export type EventDetails = {
+    totalCount: number
+    items: Item[]
+}
+
+export type Item = {
+    id: string
+    startDate: string
+    endDate: string
+    addressName: string
+    lat: string
+    long: string
+    capacity: number
+    isOverCapacity: boolean
+    cover: string
+    name: string
+    theme: string
+    color: string
+    fontSize: number
+    instructions: string
+    isMultiSection: true
+    duration: number
+    totalGuest: number,
+    calendarId: string
+    isLive: boolean
+}
 
 export default function EventDetails() {
+    
+    useEffect(() => {
+        fetchWrapper.get('api/Event/detail')
+    })
+
     return (
         <div className="page-content min-h-[100dvh] mt-5 relative bg-transparent">
             <div></div>
