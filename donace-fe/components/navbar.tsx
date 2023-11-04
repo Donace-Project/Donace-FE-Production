@@ -52,7 +52,7 @@ export default function NavbarComponents() {
     <Navbar
       position="sticky"
       maxWidth="full"
-      className="backdrop-blur-lg p-[0.75rem_1rem] flex justify-between items-center h-20 bg-transparent"
+      className="backdrop-blur-lg container shadow-2xl p-[0.75rem_1rem] flex justify-between items-center h-20 bg-transparent"
     >
       <NavbarBrand as={"div"}>
         <Link

@@ -65,7 +65,8 @@ export default function Home() {
 									repeat={Infinity}
 								/>
 							</div>
-							<div className="start-here font-sans mt-2 ml-2 pb-4">bắt đầu ngay.</div>
+							<div className=" start-here font-sans mt-2 ml-2 pb-4">Bắt đầu ngay.</div>
+
 						</h1>
 						<div className="desc mt-2 text-xl max-w-sm text-[hsla(0,0%,100%,.79)]">
 							Tạo một sự kiện, mời bạn bè và cùng nhau tham dự. Hãy cùng nhau tạo kỷ niệm ngay hôm nay.
@@ -76,7 +77,7 @@ export default function Home() {
 							className="text-[rgb(19,21,23)] bg-[#fff] border-[#fff] border border-solid mt-8 transition-all duration-300 ease-in-out donace-button flex items-center cursor-pointer"
 							underline="none"
 						>
-							<div className="label">Tạo mới một event ngay</div>
+							<div className="label">Tạo một event mới</div>
 						</Link>
 					</div>
 					<div className="phone flex-shrink-0 relative -mr-36">

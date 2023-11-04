@@ -129,7 +129,7 @@
 }
 
 .gradient-background {
-    background: linear-gradient(281deg, #918872, #5ce3e1, #b61dac, #879978, #ec5988, #c5139c);
+    background: linear-gradient(to right bottom, #2a0944, #651652, #992f57, #c55357, #e67f56, #ec8656, #f28e57, #f79657, #eb7658, #d9575d, #c03b63, #a12568);
     background-size: 360% 360%;
     animation: gradient-animation 18s ease infinite;
 }
@@ -192,7 +192,47 @@
 
 .start-here {
     display: inline-block;
-    background: radial-gradient(circle at 0% 0%, #099ef1 0%, #6863f8 18.82%, #d84ffa 32.6%, #f058c5 52.83%, #ff4f90 68.03%, #ff6558 87.66%, #ff891f 100%);
+    background-image: linear-gradient(to right bottom, #36ae7c, #00a58c, #009b98, #00909e, #00849e, #0680a9, #2e7ab1, #5072b3, #8769b6, #ba5ba4, #dd4e81, #eb5353);
+    text-shadow: rgb(34, 34, 34)(255, 204, 0, 0.471) 1px 1px 10px;
     -webkit-background-clip: text;
+    background-size: 360% 360%;
+    animation: gradient-animation 10s ease infinite;
     -webkit-text-fill-color: transparent;
+}
+
+
+/*  */
+
+
+/* CSS */
+.button-52 {
+    font-size: 16px;
+    font-weight: 200;
+    letter-spacing: 1px;
+    padding: 13px 20px 13px;
+    outline: 0;
+    border: 1px solid black;
+    cursor: pointer;
+    position: relative;
+    background-color: rgba(0, 0, 0, 0);
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+}
+
+.button-52:after {
+    content: "";
+    background-color: #ffe54c;
+    width: 100%;
+    z-index: -1;
+    position: absolute;
+    height: 100%;
+    top: 7px;
+    left: 7px;
+    transition: 0.2s;
+}
+
+.button-52:hover:after {
+    top: 0px;
+    left: 0px;
 }

@@ -67,18 +67,18 @@ export default function CreateForm() {
         formData.long = lng.toString();
         formData.lat = lat.toString();
 
-        axios.post('http://localhost:8000/api/Common/upload-file', formData.cover, {
-            headers: {
-                "Content-Type": "multipart/form-data",
-                "Accept": "text/plain"
-            }
-        })
-            .then(response => {
-                console.log(response.data);
-            })
-            .catch(error => {
-                console.log(error);
-            });
+        // axios.post('http://118.71.175.86/api/', formData.cover, {
+        //     headers: {
+        //         "Content-Type": "multipart/form-data",
+        //         "Accept": "text/plain"
+        //     }
+        // })
+        //     .then(response => {
+        //         console.log(response.data);
+        //     })
+        //     .catch(error => {
+        //         console.log(error);
+        //     });
 
         console.log(formData);
     };
