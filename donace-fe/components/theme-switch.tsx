@@ -135,7 +135,7 @@ export const ThemeSwitchWithText: FC<ThemeSwitchProps> = ({
 			>
 				{!isSelected || isSSR ? <SunFilledIcon size={22} /> : <MoonFilledIcon size={22} />}
 			</div>
-			<span className="dark:text-[hsla(0,0%,100%,.79)] flex-1 font-medium">Switch appearance</span>
+			<span className="dark:text-[hsla(0,0%,100%,.79)] flex-1 font-medium">Đổi giao diện</span>
 		</Component>
 	);
 };

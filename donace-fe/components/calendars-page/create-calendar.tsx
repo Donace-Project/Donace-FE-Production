@@ -80,7 +80,7 @@ export default function CreateCalendar() {
         <div className="page-content">
             <div className="page-header opacity-[1] pt-12 pl-4 pr-4 max-width-global margin-global">
                 <div className="spread gap-2 mb-2 flex justify-between items-center">
-                    <h1 className="tab-title text-4xl font-semibold text-black-light-theme mb-0 mt-0 dark:text-[#fff]">Create Calendars</h1>
+                    <h1 className="tab-title text-4xl font-semibold text-black-light-theme mb-0 mt-0 dark:text-[#fff]">Tạo Lịch</h1>
                 </div>
             </div>
             <div id="zm-container" className="pt-[1.5rem!important] p-[1rem!important] max-w-[820px] m-[0_auto]">
@@ -104,7 +104,7 @@ export default function CreateCalendar() {
                                 </div>
                                 <div id="change-cover-container" className="absolute top-2 right-2 backdrop-blur-xl backdrop-contrast-[50%] backdrop-brightness-[130%] border border-solid border-[rgba(19,21,23,0.08)] rounded-[0.5rem] overflow-hidden">
                                     <Button type="button" className="hover:text-[#fff] hover:bg-gray-800 text-[rgba(19,21,23,0.64)] dark:text-[rgba(255,255,255,0.64)] bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)] border-transparent border border-solid cursor-pointer transition-[all 0.3s cubic-bezier(0.4,0,0.2,1)] outline-[0s] font-medium rounded-[0.5rem] relative whitespace-nowrap justify-center outline-offset-[.125rem] outline-none max-w-full text-[0.875rem] p-[0.4375rem_0.625rem] h-[calc(1.75rem+2*1px)] w-fit flex items-center m-0 leading-[1.5]">
-                                        <div id="label" className="leading-[1] m-[-4px_0] p-[4px_0] overflow-hidden text-ellipsis">Change Cover</div>
+                                        <div id="label" className="leading-[1] m-[-4px_0] p-[4px_0] overflow-hidden text-ellipsis">Thay đổi ảnh bìa</div>
                                     </Button>
                                 </div>
                             </div>
@@ -140,18 +140,18 @@ export default function CreateCalendar() {
                                         }
                                         id="lux-naked-input bordered mounted"
                                         spellCheck="false" autoCapitalize="words"
-                                        placeholder="Calendar Name"
+                                        placeholder="Tên lịch"
                                         className="h-[47.8px!important] p-2 border-b border-solid outline-none border-b-[#ebeced] transition-all duration-300 ease-in-out height-0 text-[rgb(19,21,23)] dark:text-[#fff] leading-[1.3] overflow-hidden bg-transparent text-[1.5rem] font-medium w-full resize-none m-0 focus:border-b-2 focus:border-gray-400 hover:border-b-2 hover:border-gray-400"></textarea>
                                 </div>
                                 <div id="desc-input" className="p-2">
-                                    <textarea id="lux-naked-input mounted" spellCheck="false" autoCapitalize="sentences" placeholder="Add a short description." maxLength={200} className="h-[37px!important] p-2 outline-none transition-all duration-300 ease-in-out height-0 text-[rgb(19,21,23)] dark:text-[#fff] leading-[1.3] overflow-hidden bg-transparent text-[1rem] font-normal w-full resize-none m-0"></textarea>
+                                    <textarea id="lux-naked-input mounted" spellCheck="false" autoCapitalize="sentences" placeholder="Một vài dòng mô tả ngắn về lịch của bạn." maxLength={200} className="h-[37px!important] p-2 outline-none transition-all duration-300 ease-in-out height-0 text-[rgb(19,21,23)] dark:text-[#fff] leading-[1.3] overflow-hidden bg-transparent text-[1rem] font-normal w-full resize-none m-0"></textarea>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <Button type="submit" className="text-[#fff] dark:text-[rgb(19,21,23)] bg-[#333537] dark:bg-[#fff] hover:bg-gray-700 border-[#333537] dark:border-[#fff] border border-solid cursor-pointer transition-[all 0.3s cubic-bezier(0.4,0,0.2,1)] outline-[0s] font-medium rounded-[0.5rem] relative whitespace-nowrap justify-center outline-offset-[.125rem] outline-none max-w-full text-[1rem] p-[0.625rem_0.875rem] w-fit flex items-center m-0 leading-[1.5]">
                         <CheckCircle className="mr-2 stroke-[2.5] w-4 h-4 flex-shrink-0 block align-middle" />
-                        <div id="label" className="leading-[1] m-[-4px_0] p-[4px_0] overflow-hidden text-ellipsis">Create Calendar</div>
+                        <div id="label" className="leading-[1] m-[-4px_0] p-[4px_0] overflow-hidden text-ellipsis">Tạo lịch</div>
                     </Button>
                 </form>
             </div>

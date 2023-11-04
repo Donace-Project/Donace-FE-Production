@@ -1,11 +1,14 @@
+"use client";
 import { fetchWrapper } from "@/helpers/fetch-wrapper";
 import { Avatar } from "@nextui-org/avatar";
 import { Button } from "@nextui-org/button";
 import { Divider } from "@nextui-org/divider";
 import { Image } from "@nextui-org/image";
 import { Link } from "@nextui-org/link";
-import { ArrowUpRight, MapPin, MapPinned, Users } from "lucide-react";
+import { Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure, useDisclosureUserJoin } from "@nextui-org/modal";
+import { ArrowUpRight, MapPin, MapPinned, Send, Users } from "lucide-react";
 import { useEffect } from "react";
+import { Textarea } from "@nextui-org/input";
 
 export type EventDetails = {
     totalCount: number
@@ -35,10 +38,13 @@ export type Item = {
 }
 
 export default function EventDetails() {
-    
-    useEffect(() => {
-        fetchWrapper.get('api/Event/detail')
-    })
+    const { isOpen, onOpen, onOpenChange } = useDisclosure();
+    // const { isOpenUserJoin, onOpenUserJoin, onOpenChangeUserJoin } = useDisclosureUserJoin();
+
+
+    // useEffect(() => {
+    //     fetchWrapper.get('api/Event/detail')
+    // })
 
     return (
         <div className="page-content min-h-[100dvh] mt-5 relative bg-transparent">
@@ -58,12 +64,12 @@ export default function EventDetails() {
                                             <div className="flex items-center">
                                                 <Avatar radius="full" src="https://avatars.githubusercontent.com/u/88397960?v=4" name="Donace" className="relative w-5 h-5" />
                                             </div>
-                                            <div className="overflow-hidden text-ellipsis whitespace-nowrap">Hosted by Trần Phú Đạt</div>
+                                            <div className="overflow-hidden text-ellipsis whitespace-nowrap">Điều phối bởi Trần Phú Đạt</div>
                                         </div>
                                     </div>
                                 </div>
                                 <div className="calendar-card w-16 rounded-lg overflow-hidden border border-solid border-[rgba(255,255,255,0.08)] text-[#fff] text-center min-h-full flex-shrink-0">
-                                    <div className="month text-sm p-[0.25rem_0] font-semibold uppercase tracking-[0.5px]">Aug</div>
+                                    <div className="month text-sm p-[0.25rem_0] font-semibold uppercase tracking-[0.5px]">8</div>
                                     <div className="day text-3xl p-2 pt-1.5 bg-[rgba(255,255,255,0.08)] font-medium">30</div>
                                 </div>
                             </div>
@@ -73,13 +79,13 @@ export default function EventDetails() {
                                         <div className="icon-row gap-4 flex items-center">
                                             <div className="icon-container w-10 h-10 border border-solid border-[rgba(255,255,255,0.08)] text-[hsla(0,0%,100%,.79)] m-[0.125rem_0] flex-shrink-0 justify-center flex items-center overflow-hidden rounded-lg">
                                                 <div className="calendar-card w-full text-center min-h-full">
-                                                    <div className="month bg-[rgba(255,255,255,0.08)] text-xs font-semibold uppercase p-0.5">Aug</div>
+                                                    <div className="month bg-[rgba(255,255,255,0.08)] text-xs font-semibold uppercase p-0.5">8</div>
                                                     <div className="day -translate-y-px font-medium">30</div>
                                                 </div>
                                             </div>
                                             <div className="min-w-0 flex-1">
-                                                <div className="title text-[#fff] font-serif font-medium overflow-hidden text-ellipsis whitespace-nowrap">Wednesday, August 30</div>
-                                                <div className="desc text-[hsla(0,0%,100%,.79)] text-sm mt-px overflow-hidden text-ellipsis whitespace-nowrap">6:00 PM to 9:00 PM</div>
+                                                <div className="title text-[#fff] font-serif font-medium overflow-hidden text-ellipsis whitespace-nowrap">Thứ Tư, 30 tháng 8</div>
+                                                <div className="desc text-[hsla(0,0%,100%,.79)] text-sm mt-px overflow-hidden text-ellipsis whitespace-nowrap">6:00 PM đến 9:00 PM</div>
                                             </div>
                                         </div>
                                     </div>
@@ -127,8 +133,8 @@ export default function EventDetails() {
                                                             <Avatar src="https://avatars.githubusercontent.com/u/143386751?s=200&v=4" name="Donace" className="w-10 h-10 bg-center bg-cover relative" radius="full" />
                                                         </div>
                                                     </div>
-                                                    <div className="text-[#fff] text-xl font-semibold font-serif mt-2">Thank You for Joining</div>
-                                                    <div className="desc text-[hsla(0,0%,100%,.79)]">We hope you enjoyed the event!</div>
+                                                    <div className="text-[#fff] text-xl font-semibold font-serif mt-2">Cảm ơn bạn vì đã tham dự</div>
+                                                    <div className="desc text-[hsla(0,0%,100%,.79)]">Chúng tôi hi vọng bạn sẽ tận hưởng sự kiện này!</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -143,7 +149,7 @@ export default function EventDetails() {
                                         <div className="title-icon text-[hsla(0,0%,100%,.79)] translate-y-0.5 justify-center flex items-center">
                                             <MapPin className="block w-4 h-4 align-middle" />
                                         </div>
-                                        <div className="title-label text-[#fff] text-lg font-semibold font-serif">Location</div>
+                                        <div className="title-label text-[#fff] text-lg font-semibold font-serif">Vị trí</div>
                                     </div>
                                 </div>
                                 <div className="content p-[0.75rem_1rem]">
@@ -162,12 +168,12 @@ export default function EventDetails() {
                                         <div className="title-icon text-[hsla(0,0%,100%,.79)] translate-y-0.5 justify-center flex items-center">
                                             <Users className="block w-4 h-4 align-middle" />
                                         </div>
-                                        <div className="title-label text-[#fff] text-lg font-semibold font-serif">People</div>
+                                        <div className="title-label text-[#fff] text-lg font-semibold font-serif">Mọi người</div>
                                     </div>
                                 </div>
                                 <Divider />
                                 <div className="content p-[0.75rem_1rem]">
-                                    <div className="title text-[#fff] font-semibold mb-2">Hosts</div>
+                                    <div className="title text-[#fff] font-semibold mb-2">Quản trị</div>
                                     <div>
                                         <div className="hosts gap-3 mt-2 flex flex-col">
                                             <div className="gap-2 flex items-center">
@@ -186,11 +192,62 @@ export default function EventDetails() {
                                         </div>
                                         <div className="gap-2 mt-4 mb-1 flex items-center">
                                             <Button
+                                                onPress={onOpen}
                                                 className="backdrop-blur-lg text-[rgba(255,255,255,0.64)] bg-[rgba(255,255,255,0.08)] border-transparent border border-solid cursor-pointer transition-all duration-300 ease-in-out donace-button flex items-center m-0"
                                                 type="button"
                                             >
-                                                <div className="label">Contact</div>
+                                                <div className="label">Liên lạc</div>
                                             </Button>
+                                            <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+                                                <ModalContent>
+                                                    {(onClose) => (
+                                                        <>
+                                                            <ModalHeader
+                                                                className="p-[0.75rem_1.25rem] bg-[#333537] text-[#fff] flex justify-between items-center"
+
+                                                            >
+                                                                <div className="text-lg font-semibold">Liên lạc với Quản trị</div>
+                                                            </ModalHeader>
+                                                            <Divider className="bg-[rgba(19,21,23,0.48)]" />
+                                                            <ModalBody className="w-full p-[1rem_1.25rem] overflow-auto ">
+                                                                <div>
+                                                                    <form action="#">
+                                                                        <div>
+                                                                            <div className="text-sm mb-4">
+                                                                                Chúng tôi sẽ gửi tin nhắn đến cho Quản trị từ <b>(Nguyễn Gia Bảo).</b>
+                                                                            </div>
+                                                                            <div className="lux-input-wrapper max-width-global">
+                                                                                <div className="inner-wrapper inline-block w-full">
+                                                                                    <Textarea
+                                                                                        variant="bordered"
+                                                                                        label="Mô tả"
+                                                                                        labelPlacement="outside"
+                                                                                        placeholder="Bạn có câu hỏi gì dành cho Quản trị không?"
+                                                                                        className="text-base align-top transition-all duration-300 ease-in-out"
+                                                                                    />
+                                                                                </div>
+                                                                            </div>
+                                                                            <div className="text-sm mt-4">
+                                                                                Quản trị sẽ gửi tin nhắn đến email
+                                                                                <b> nguyenhiengiabao12@gmail.com</b>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div className="mt-4">
+                                                                            <Button
+                                                                                type="submit"
+                                                                                className="transition-all duration-300 ease-in-out donace-button mt-4 flex items-center cursor-pointer bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)]"
+                                                                            >
+                                                                                <Send className="mr-2 stroke-2 w-4 h-4 flex-shrink-0 block align-middle" />
+                                                                                <div className="label">Gửi tin nhắn</div>
+                                                                            </Button>
+                                                                        </div>
+                                                                    </form>
+                                                                </div>
+                                                            </ModalBody>
+                                                        </>
+                                                    )}
+                                                </ModalContent>
+                                            </Modal>
                                         </div>
                                     </div>
                                     <div>
@@ -200,12 +257,11 @@ export default function EventDetails() {
                                                 4&nbsp;
                                                 {/*  */}
                                                 {/*  */}
-                                                Guests
+                                                Khách
                                             </div>
                                         </div>
-                                        <div
-                                            className="cursor-pointer m-0 bg-transparent border border-solid border-transparent leading-6 text-inherit"
-                                            role="button"
+                                        <Button
+                                            className="pl-0 pr-0 h-auto cursor-pointer m-0 bg-transparent border border-solid border-transparent leading-6 text-inherit"
                                         >
                                             <div className="guest pb-2 flex items-center">
                                                 <div className="heads flex items-center">
@@ -226,8 +282,8 @@ export default function EventDetails() {
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div className="text-tined text-[hsla(0,0%,100%,.79)] transition-all duration-300 ease-in-out text-sm">Tiếp, Tùng, Hướng and 2 others</div>
-                                        </div>
+                                        </Button>
+                                        <div className="text-tined text-[hsla(0,0%,100%,.79)] transition-all duration-300 ease-in-out text-sm">Tiếp, Tùng, Hướng và 2 người khác</div>
                                     </div>
                                 </div>
                             </div>

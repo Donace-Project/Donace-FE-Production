@@ -63,7 +63,7 @@ export default function ProfilePage() {
                                                         {(onClose) => (
                                                             <>
                                                                 <ModalHeader className="p-[0.75rem_1.25rem] border-b border-solid border-[#eff3f5] dark:border-[#0005] flex justify-between items-center">
-                                                                    <div className="text-[#002f45] dark:text-white text-lg font-semibold">Edit Profile</div>
+                                                                    <div className="text-[#002f45] dark:text-white text-lg font-semibold">Chỉnh sửa trang cá nhân</div>
                                                                 </ModalHeader>
                                                                 <ModalBody className="w-full p-[1rem_1.25rem] overflow-auto dark:bg-[#0e151d]">
                                                                     <div className="edit-profile-modal pb-2">
@@ -78,7 +78,7 @@ export default function ProfilePage() {
                                                                                     <Input
                                                                                         key={placement}
                                                                                         type="text"
-                                                                                        label="Name"
+                                                                                        label="Tên"
                                                                                         labelPlacement={"outside"}
                                                                                         autoCorrect="off"
                                                                                         spellCheck="false"
@@ -87,7 +87,7 @@ export default function ProfilePage() {
                                                                                         autoFocus
                                                                                         autoComplete="disable"
                                                                                         variant="bordered"
-                                                                                        placeholder="Your name"
+                                                                                        placeholder="Tên của bạn là gì?"
                                                                                     />
                                                                                 ))}
                                                                             </div>
@@ -96,16 +96,16 @@ export default function ProfilePage() {
                                                                                     <Textarea
                                                                                         key={variant}
                                                                                         variant={"bordered"}
-                                                                                        label="Description"
+                                                                                        label="Mô tả"
                                                                                         labelPlacement={"outside"}
-                                                                                        placeholder="Short Bio"
+                                                                                        placeholder="Một chút gì đó về bạn"
                                                                                         maxLength={140}
                                                                                         autoCapitalize="on"
                                                                                         className="bg-transparent font-semibold mt-2 mb-2 pl-3 text-lg h-auto p-[0.375rem_0.75rem] transition-all duration-300 ease-in-out text-[#002f45] dark:text-white leading-6 rounded-lg w-full"
                                                                                     />
                                                                                 ))}
                                                                             </div>
-                                                                            <div className="social-label dark:text-[#aec1ca]">Social Links</div>
+                                                                            <div className="social-label dark:text-[#aec1ca]">Liên kết mạng xã hội</div>
                                                                             <div className="gap-2 flex flex-col">
                                                                                 <div className="w-96 max-w-full gap-4 flex items-baseline">
                                                                                     <Instagram className="dark:text-[hsla(0,0%,100%,.5)] translate-y-0.5 flex-shrink-0 text-black-blur-light-theme block w-4 h-4 align-middle" />
@@ -244,7 +244,7 @@ export default function ProfilePage() {
                                                                                             <div>&nbsp;</div>
                                                                                             <div className="input-inner-wrapper relative flex-1">
                                                                                                 <Input
-                                                                                                    placeholder="Your website"
+                                                                                                    placeholder="Website của bạn"
                                                                                                     type="url"
                                                                                                     autoCapitalize="off"
                                                                                                     autoCorrect="off"
@@ -264,8 +264,8 @@ export default function ProfilePage() {
                                                                                         <Checkbox />
                                                                                     </label>
                                                                                     <label className="text-label flex-1 cursor-pointer leading-6 mb-0">
-                                                                                        <div className="checkbox-title font-medium text-base mb-0.5 ml-2">Compact Bio</div>
-                                                                                        <div className="text-teriaty checkbox-desc text-sm ml-2 text-[#a2b7bf]">Show your avatar to the left of your name</div>
+                                                                                        <div className="checkbox-title font-medium text-base mb-0.5 ml-2">Tóm tắt tiểu sử</div>
+                                                                                        <div className="text-teriaty checkbox-desc text-sm ml-2 text-[#a2b7bf]">Hiển thị avatar bên trái tên của bạn</div>
                                                                                     </label>
                                                                                 </div>
                                                                             </div>
@@ -274,8 +274,8 @@ export default function ProfilePage() {
                                                                     </div>
                                                                 </ModalBody>
                                                                 <ModalFooter className="border-t border-solid border-t-[#eff3f5]">
-                                                                    <Button className="text-[#fff] bg-[#0099dd] border-[#0099dd] border border-solid w-full cursor-pointer transition-all duration-300 ease-in-out donace-button mt-6 flex items-center m-0 leading-6">
-                                                                        <div className="label">Save Changes</div>
+                                                                    <Button type="submit" className="text-[#fff] bg-[#0099dd] border-[#0099dd] border border-solid w-full cursor-pointer transition-all duration-300 ease-in-out donace-button mt-6 flex items-center m-0 leading-6">
+                                                                        <div className="label">Lưu thay đổi</div>
                                                                     </Button>
                                                                 </ModalFooter>
                                                             </>
@@ -284,7 +284,7 @@ export default function ProfilePage() {
                                                 </Modal>
                                                 <Button onPress={onOpen} type="button" className="bg-[#a2b7bf] text-white dark:bg-[#122935] dark:text-[white] p-[0.25rem_0.75rem] font-medium border-none cursor-pointer transition-all duration-300 ease-in-out inline-flex items-center m-0" radius="full">
                                                     <Pen className="mr-1 w-3 h-3 block align-middle" />
-                                                    <span className="text-base">Edit Bio</span>
+                                                    <span className="text-base">Tiểu sử</span>
                                                 </Button>
                                             </div>
                                         </div>
@@ -299,25 +299,25 @@ export default function ProfilePage() {
                                                 <div>
                                                     <div className="profile-events-wrapper">
                                                         <div className="mb-4 overflow-hidden flex justify-between align-baseline">
-                                                            <h2 className="font-semibold text-xl mb-0 overflow-hidden text-ellipsis mt-0">Events</h2>
+                                                            <h2 className="font-semibold text-xl mb-0 overflow-hidden text-ellipsis mt-0">Sự kiện</h2>
                                                             <div className="whitespace-nowrap pl-2">
                                                                 <Link href={"/create"} className="block-action pl-0 pr-0 text-[#0099dd] dark:text-[#0099dd] inline-flex items-center justify-center transition-all duration-300 ease-in-out cursor-pointer" underline="none">
                                                                     <Plus className="mr-1 h-4 w-4 block align-middle mt-0.5" />
-                                                                    <span>Create New</span>
+                                                                    <span>Tạo mới</span>
                                                                 </Link>
                                                             </div>
                                                         </div>
                                                         <div className="block">
                                                             <div className="profile-event-empty w-full text-center p-[2rem_1rem_2rem_1rem] text-[#a2b7bf] dark:text-[#939597] border border-solid border-[#eff3f5] dark:border-[#151719] rounded-lg flex flex-col items-center">
                                                                 <Calendar className="w-8 h-8 mb-4 block align-middle" />
-                                                                <div className="font-semibold mb-1">Nothing Upcoming</div>
-                                                                <div className="text-sm">Subscribe to hear about what&apos;s coming up</div>
+                                                                <div className="font-semibold mb-1">Không có gì sắp diễn ra</div>
+                                                                <div className="text-sm">Đăng ký ngay để theo dõi những thông tin mới nhất</div>
                                                             </div>
                                                         </div>
                                                         <div className="bottom-action mt-4">
                                                             <div id="block-action" className="inline-block p-0 text-[#a2b7bf]">
                                                                 <Link href={"/"} className="transition-all duration-300 ease-in-out text-[#0099dd] dark:text-[#0099dd] cursor-pointer" underline="none">
-                                                                    View Past
+                                                                    Sự kiện đã qua
                                                                 </Link>
                                                             </div>
                                                         </div>
@@ -327,7 +327,7 @@ export default function ProfilePage() {
                                             <div className="pt-4">
                                                 <Button type="button" className="bg-[#a2b7bf] dark:bg-[#122935] rounded-full p-[0.25rem_0.75rem] font-medium border-none cursor-pointer transition-all duration-300 ease-in-out inline-flex items-center m-0 leading-6 text-inherit">
                                                     <Pen className="mr-1 w-3 h-3 block align-middle text-white dark:text-white" />
-                                                    <span className="text-white dark:text-white text-sm">Edit Block</span>
+                                                    <span className="text-white dark:text-white text-sm">Chỉnh sửa block</span>
                                                 </Button>
                                             </div>
                                         </div>

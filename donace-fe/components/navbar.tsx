@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Button } from "@nextui-org/button";
 import { Input } from "@nextui-org/input";
 import { Link } from "@nextui-org/link";
@@ -34,6 +34,8 @@ import ThoiGian from "./clock/clock";
 import { authHelper } from "../helpers/authHelper";
 import { useSession } from "next-auth/react";
 import { usePathname } from 'next/navigation';
+import { Badge } from "@nextui-org/react";
+import { NotificationIcon } from './icon/NotificationIcon'
 
 
 export default function NavbarComponents() {
@@ -52,7 +54,7 @@ export default function NavbarComponents() {
     <Navbar
       position="sticky"
       maxWidth="full"
-      className="backdrop-blur-lg container shadow-2xl p-[0.75rem_1rem] flex justify-between items-center h-20 bg-transparent"
+      className="backdrop-blur-lg p-[0.75rem_1rem] flex justify-between items-center h-20 bg-transparent"
     >
       <NavbarBrand as={"div"}>
         <Link
@@ -85,7 +87,7 @@ export default function NavbarComponents() {
                   <Ticket className="block w-4 h-4 align-middle mt-0.5" />
                 </NavbarItem>
                 <NavbarItem as={"div"} className="label">
-                  Events
+                  Sự kiện
                 </NavbarItem>
               </NavbarContent>
             </Link>
@@ -101,7 +103,7 @@ export default function NavbarComponents() {
                   <CalendarRange className="block w-4 h-4 align-middle mt-0.5" />
                 </NavbarItem>
                 <NavbarItem as={"div"} className="label">
-                  Calendars
+                  Lịch
                 </NavbarItem>
               </NavbarContent>
             </Link>
@@ -117,7 +119,7 @@ export default function NavbarComponents() {
                   <Compass className="block w-4 h-4 align-middle mt-0.5" />
                 </NavbarItem>
                 <NavbarItem as={"div"} className="label">
-                  Explore
+                  Khám phá
                 </NavbarItem>
               </NavbarContent>
             </Link>
@@ -140,8 +142,8 @@ export default function NavbarComponents() {
             underline="none"
           >
             <NavbarItem as={"div"} className="text-sm whitespace-nowrap">
-              Create
-              <span> Event</span>
+              Tạo
+              <span> Sự kiện</span>
             </NavbarItem>
           </Link>
           <Input
@@ -152,7 +154,7 @@ export default function NavbarComponents() {
               inputWrapper:
                 "h-full font-normal text-default-500 bg-default-400/20 dark:bg-default-500/20",
             }}
-            placeholder="Type to search..."
+            placeholder="Tìm kiếm..."
             size="sm"
             startContent={<SearchIcon size={18} />}
             type="search"
@@ -197,15 +199,15 @@ export default function NavbarComponents() {
                         <div>
                           <span>
                             <strong>Donace </strong>
-                            registered for
+                            đã đăng ký
                             <br />
                             <strong className="font-medium">
-                              Do an Tot Nghiep
+                              Đồ án tốt nghiệp
                             </strong>
                           </span>
                           <br />
                           <span className="dark:text-[hsla(0,0%,100%,.5)] text-black-blur-light-theme">
-                            Sep 5
+                            5 tháng 9
                           </span>
                         </div>
                       </div>
@@ -254,7 +256,7 @@ export default function NavbarComponents() {
                           <div className="desc text-xs gap-1 flex text-[rgba(19,21,23,0.36)]">
                             <div className="gap-1 min-w-0 flex items-center">
                               <div className="dark:text-[hsla(0,0%,100%,.5)] overflow-hidden text-ellipsis whitespace-nowrap min-w-0 flex-1">
-                                Personal
+                                Cá nhân
                               </div>
                             </div>
                           </div>
@@ -278,7 +280,7 @@ export default function NavbarComponents() {
                   >
                     <div className="dark:text-[hsla(0,0%,100%,.79)] menu-row transition-all duration-300 ease-in-out text-sm gap-4 flex items-center text-black-more-blur-light-theme">
                       <Contact2 className="w-4 h-4 align-middle block mt-0.5" />
-                      <span className=" flex-1 font-medium">View Profile</span>
+                      <span className=" flex-1 font-medium">Trang cá nhân</span>
                     </div>
                   </Link>
                 </DropdownItem>
@@ -290,7 +292,7 @@ export default function NavbarComponents() {
                   >
                     <div className="dark:text-[hsla(0,0%,100%,.79)] menu-row transition-all duration-300 ease-in-out text-sm gap-4 flex items-center text-black-more-blur-light-theme">
                       <Settings className="w-4 h-4 align-middle block mt-0.5" />
-                      <span className=" flex-1 font-medium">Settings</span>
+                      <span className=" flex-1 font-medium">Cài đặt</span>
                     </div>
                   </Link>
                 </DropdownItem>
@@ -303,7 +305,7 @@ export default function NavbarComponents() {
                   >
                     <div className="dark:text-[hsla(0,0%,100%,.79)] menu-row transition-all duration-300 ease-in-out text-sm gap-4 flex items-center text-black-more-blur-light-theme">
                       <LogOut className="w-4 h-4 align-middle block mt-0.5" />
-                      <span className=" flex-1 font-medium ">Logout</span>
+                      <span className=" flex-1 font-medium">Đăng xuất</span>
                     </div>
                   </Link>
                 </DropdownItem>

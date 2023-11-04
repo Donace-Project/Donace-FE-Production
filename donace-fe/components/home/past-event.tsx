@@ -59,24 +59,19 @@ export default function HomePastEvent() {
         <div className="page-content">
             <div className="page-header opacity-[1] pt-12 pl-4 pr-4 max-width-global margin-global">
                 <div className="spread gap-2 mb-2 flex justify-between items-center">
-                    <h1 className="tab-title text-4xl font-semibold mb-0 mt-0">Events</h1>
+                    <h1 className="tab-title text-4xl font-semibold mb-0 mt-0">Sự kiện</h1>
                     <div className="light lux-button min-w-[auto] p-0.5 overflow-hidden rounded-lg">
                         <ButtonGroup className="seggments relative grid grid-cols-2">
                             <Button as={Link} href="/home" type="button" className="text-sm text-black-blur-light-theme relative rounded-none justify-center cursor-pointer transition-all duration-300 ease-in-out font-medium flex items-center bg-[rgba(19,21,23,0.04)] dark:text-[hsla(0,0%,100%,.5)] dark:bg-[rgba(255,255,255,0.08)] ">
-                                <div className="">Upcoming</div>
+                                <div className="">Sắp tới</div>
                             </Button>
                             <Button as={Link} href="" type="button" className="text-sm relative text-black-light-theme  rounded-none justify-center cursor-pointer transition-all duration-300 ease-in-out font-medium flex items-center bg-[#fff] dark:text-[#fff] dark:bg-[#fff2] shadow-xl">
-                                <div className="">Past</div>
+                                <div className="">Đã qua</div>
                             </Button>
                         </ButtonGroup>
                     </div>
                 </div>
             </div>
-
-
-
-
-
             <div className="zm-container p-[2rem_1rem_1rem] max-width-global margin-global">
                 {events ? (
                     <div className="timeline">
@@ -168,8 +163,8 @@ export default function HomePastEvent() {
                                 <CalendarX className="w-64 h-auto block align-middle text-foreground-300"/>
                             </div>
                         </div>
-                        <h3 className="text-2xl font-medium text-black-more-blur-light-theme p-0 mt-6 mb-0">No Past Events</h3>
-                        <div className="desc pl-12 pr-12 text-black-blur-light-theme mt-2">You have not hosted or attended any event.</div>
+                        <h3 className="text-2xl font-medium text-black-more-blur-light-theme p-0 mt-6 mb-0">Không có những sự kiện đã qua</h3>
+                        <div className="desc pl-12 pr-12 text-black-blur-light-theme mt-2">Bạn chưa tạo hoặc tham gia một sự kiện nào.</div>
                     </div>
                 )}
             </div>

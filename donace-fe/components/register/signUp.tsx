@@ -52,6 +52,7 @@ export default function SignUp() {
                                     color={isInvalidEmail ? "danger" : "success"}
                                     errorMessage={isInvalidEmail && "Please enter a valid email"}
                                     onValueChange={setEmail}
+                                    isRequired
                                     isClearable
                                     placeholder="your@email.com"
                                     className="text-base h-auto transition-all duration-300 leading-4 rounded-lg w-full m-0"
@@ -60,6 +61,7 @@ export default function SignUp() {
                                     label="Password"
                                     value={password}
                                     onValueChange={setPassword}
+                                    isRequired
                                     labelPlacement={"inside"}
                                     placeholder="your secret password"
                                     className="pt-2 text-base h-auto transition-all duration-300 leading-4 rounded-lg w-full m- mb-6"

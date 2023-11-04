@@ -27,7 +27,7 @@ export default function SettingLandingPage() {
         <div className="page-content">
             <div className="page-header opacity-[1] pt-12 pl-4 pr-4 max-width-global margin-global">
                 <div className="spread gap-2 mb-2 flex justify-between items-center">
-                    <h1 className="tab-title text-4xl font-semibold mb-0 mt-0">Settings</h1>
+                    <h1 className="tab-title text-4xl font-semibold mb-0 mt-0">Cài đặt</h1>
                 </div>
             </div>
             <div className="tab-wrapper m-auto pt-2">
@@ -39,19 +39,19 @@ export default function SettingLandingPage() {
                                 className="text-black-light-theme dark:text-[#fff] border-b-2 border-solid border-[rgb(19,21,23)] dark:border-[#fff] whitespace-nowrap inline-block pb-2 transition-all duration-300 ease-in-out cursor-pointer"
                                 underline="none"
                             >
-                                Account
+                                Tài khoản
                             </Link>
                             <Link href="/preferences"
                                 className="text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)] border-b-2 border-solid border-transparent whitespace-nowrap inline-block pb-2 transition-all duration-300 ease-in-out cursor-pointer"
                                 underline="none"
                             >
-                                Preferences
+                                Tùy chọn
                             </Link>
                             <Link href="/payment"
                                 className="text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)] border-b-2 border-solid border-transparent whitespace-nowrap inline-block pb-2 transition-all duration-300 ease-in-out cursor-pointer"
                                 underline="none"
                             >
-                                Payment
+                                Thanh toán
                             </Link>
                             <div className="side-padding pl-0.5"></div>
                         </div>
@@ -63,15 +63,15 @@ export default function SettingLandingPage() {
                 <div className="can-divider with-divider medium">
                     <div className="section-title-wrapper medium">
                         <div className="spread mb-5 flex justify-between items-center">
-                            <h2 className="text-xl font-semibold text-black-light-theme dark:text-[#fff] mb-0 mt-0">Your Profile</h2>
+                            <h2 className="text-xl font-semibold text-black-light-theme dark:text-[#fff] mb-0 mt-0">Tài khoản của bạn</h2>
                             <div className="right-element m-[-0.25rem_0]"></div>
                         </div>
-                        <div className="-mt-3.5 mb-5 text-[#737577] dark:text-[#d2d4d7] text-base">Choose how you are displayed as a host or guest.</div>
+                        <div className="-mt-3.5 mb-5 text-[#737577] dark:text-[#d2d4d7] text-base">Hãy xem cách bạn hiển thị với tư cách là Quản trị hay là Người tham dự.</div>
                     </div>
                     <div className="wrapper flex items-start flex-row-reverse gap-16">
                         <div className="avatar-section flex-1">
                             <label className="text-sm block mb-1.5 font-medium text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)] transition-all duration-300 ease-in-out">
-                                <div>Profile Picture</div>
+                                <div className="ml-1">Ảnh cá nhân</div>
                             </label>
                             <div role="presentation" className="relative w-24 h-24 cursor-pointer">
                                 <input accept="image/*,.jpg,.jpeg,.png,.gif,.webp" multiple type="file" tabIndex={-1} className="hidden text-inherit m-0" />
@@ -90,9 +90,9 @@ export default function SettingLandingPage() {
                                                 <Input
                                                     key={placement}
                                                     type="text"
-                                                    label="Name"
+                                                    label="Tên"
                                                     labelPlacement={"outside"}
-                                                    placeholder="Enter your name"
+                                                    placeholder="Tên của bạn là gì?"
                                                     autoCorrect="off"
                                                     spellCheck="false"
                                                     autoCapitalize="words"
@@ -118,9 +118,9 @@ export default function SettingLandingPage() {
                                                 <Textarea
                                                     key={placement}
                                                     type="text"
-                                                    label="Bio"
+                                                    label="Tiểu sử"
                                                     labelPlacement={"outside"}
-                                                    placeholder="Share a little about your background and interests."
+                                                    placeholder="Hãy cùng chia sẻ một chút về thông tin hoặc sở thích của bạn."
                                                     autoCorrect="off"
                                                     spellCheck="false"
                                                     autoCapitalize="words"
@@ -140,9 +140,9 @@ export default function SettingLandingPage() {
                                         </div>
                                     </div>
                                     <div className="mt-6">
-                                        <Button className="text-[#fff] dark:text-[rgb(19,21,23)] bg-[#333537] dark:bg-[#fff] border-[#333537] dark:border-[#fff] border border-solid cursor-pointer transition-all duration-300 ease-in-out donace-button flex items-center m-0">
+                                        <Button type="submit" className="text-[#fff] dark:text-[rgb(19,21,23)] bg-[#333537] dark:bg-[#fff] border-[#333537] dark:border-[#fff] border border-solid cursor-pointer transition-all duration-300 ease-in-out donace-button flex items-center m-0">
                                             <UserCheck2 className="mr-2 stroke-2 w-4 h-4 flex-shrink-0 block align-middle" />
-                                            <div className="label">Save Changes</div>
+                                            <div className="label">Lưu thay đổi</div>
                                         </Button>
                                     </div>
                                 </div>
@@ -153,10 +153,10 @@ export default function SettingLandingPage() {
                 <div className="can-divider with-divider medium mt-8 pt-8 border-t border-solid border-[rgba(19,21,23,0.08)] dark:border-[rgba(255,255,255,0.16)]">
                     <div className="section-title-wrapper medium">
                         <div className="spread mb-5 flex justify-between items-center">
-                            <h2 className="text-xl font-semibold text-black-light-theme dark:text-[#fff] mb-0 mt-0">Email and Phone</h2>
+                            <h2 className="text-xl font-semibold text-black-light-theme dark:text-[#fff] mb-0 mt-0">Email và Số điện thoại</h2>
                             <div className="right-element m-[-0.25rem_0]"></div>
                         </div>
-                        <div className="-mt-3.5 mb-5 text-[#737577] dark:text-[#d2d4d7] text-base">Manage the email and phone you use to sign into Donace and receive notifications.</div>
+                        <div className="-mt-3.5 mb-5 text-[#737577] dark:text-[#d2d4d7] text-base">Quản lý email và số điện thoại bạn sử dụng để đăng nhập vào Donace và nhận những thông báo mới.</div>
                     </div>
                     <div className="grid grid-cols-[1fr_1fr] gap-16">
                         <form action={"#"}>
@@ -174,7 +174,7 @@ export default function SettingLandingPage() {
                                                 type="email"
                                                 label="Email"
                                                 labelPlacement={"outside"}
-                                                placeholder="Enter your email"
+                                                placeholder="Điền email của bạn"
                                                 autoCorrect="off"
                                                 spellCheck="false"
                                                 autoCapitalize="words"
@@ -193,8 +193,8 @@ export default function SettingLandingPage() {
                                         ))}
                                     </div>
                                 </div>
-                                <Button type="submit" className="text-[#fff] dark:text-[rgb(19,21,23)] bg-[#333537] dark:bg-[#fff] border-[#333537] dark:border-[rgba(255,255,255,0.16)] border border-solid cursor-pointer transition-all duration-300 ease-in-out donace-button flex items-center m-0 top-[2.35rem]">
-                                    <div className="label">Update</div>
+                                <Button type="submit" className="text-[#fff] dark:text-[rgb(19,21,23)] bg-[#333537] dark:bg-[#fff] border-[#333537] dark:border-[rgba(255,255,255,0.16)] border border-solid cursor-pointer transition-all duration-300 ease-in-out font-medium rounded-lg whitespace-nowrap justify-center outline-offset-[.125rem] outline-none max-w-full text-base p-[0.625rem_0.875rem] h-auto w-fit flex items-center m-0 top-[2.35rem]">
+                                    <div className="label">Cập nhật</div>
                                 </Button>
                             </div>
                         </form>
@@ -206,7 +206,7 @@ export default function SettingLandingPage() {
                                             <Input
                                                 key={placement}
                                                 type="tel"
-                                                label="Phone Number"
+                                                label="Số điện thoại"
                                                 labelPlacement={"outside"}
                                                 placeholder="+84 123 456 789"
                                                 variant="faded"
@@ -222,23 +222,23 @@ export default function SettingLandingPage() {
                                         ))}
                                     </div>
                                 </div>
-                                <Button type="submit" className="text-[#fff] bg-[#333537] border-[#333537] border border-solid cursor-pointer transition-all duration-300 ease-in-out donace-button flex items-center m-0 top-[2.35rem]">
-                                    <div className="label">Update</div>
+                                <Button type="submit" className="text-[#fff] bg-[#333537] border-[#333537] border border-solid cursor-pointer transition-all duration-300 ease-in-out font-medium rounded-lg whitespace-nowrap justify-center outline-offset-[.125rem] outline-none max-w-full text-base p-[0.625rem_0.875rem] h-auto w-fit flex items-center m-0 top-[2.35rem]">
+                                    <div className="label">Cập nhật</div>
                                 </Button>
                             </div>
                         </form>
                     </div>
                     <div className="text-secondary-alpha text-sm text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)] pt-4">
-                        For your security, we will send you a code to verify any change to your email.
+                        Vì bảo mật, chúng tôi sẽ gửi mã xác minh thông qua email của bạn.
                     </div>
                 </div>
                 <div className="can-divider with-divider medium mt-8 pt-8 border-t border-solid border-[rgba(19,21,23,0.08)] dark:border-[rgba(255,255,255,0.16)]">
                     <div className="section-title-wrapper medium">
                         <div className="spread mb-5 flex justify-between items-center">
-                            <h2 className="text-xl font-semibold text-black-light-theme dark:text-[#fff] mb-0 mt-0">Password & Security</h2>
+                            <h2 className="text-xl font-semibold text-black-light-theme dark:text-[#fff] mb-0 mt-0">Mật khẩu & Bảo mật</h2>
                             <div className="right-element m-[-0.25rem_0]"></div>
                         </div>
-                        <div className="-mt-3.5 mb-5 text-[#737577] dark:text-[#d2d4d7] text-base">Secure your account with password and two-factor authentication.</div>
+                        <div className="-mt-3.5 mb-5 text-[#737577] dark:text-[#d2d4d7] text-base">Bảo mật tài khoản của bạn bằng cách xác minh password.</div>
                     </div>
                     <div className="content-card p-[0.875rem_1rem] relative rounded-xl bg-[#F2f3f4] dark:bg-[rgba(255,255,255,0.04)] border border-solid border-[#f3f4f5] dark:border-[rgba(255,255,255,0.04)] overflow-hidden">
                         <div className="spread gap-2 flex justify-between items-center">
@@ -247,13 +247,13 @@ export default function SettingLandingPage() {
                                     <Lock className="block w-4 h-4 align-middle" />
                                 </div>
                                 <div className="content">
-                                    <div className="font-medium">Account Password</div>
-                                    <div className="desc mt-px text-sm text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)]">Please follow the instructions in the email to finish setting your password.</div>
+                                    <div className="font-medium">Mật khẩu tài khoản</div>
+                                    <div className="desc mt-px text-sm text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)]">Vui lòng hoàn thành các bước trong email để hoàn tất thiết lập mật khẩu của bạn.</div>
                                 </div>
                             </div>
                             <div className="right">
                                 <Button type="submit" className="text-[#fff] dark:text-[rgb(19,21,23)] bg-[#333537] dark:bg-[#fff] border-[#333537] dark:border-[rgba(255,255,255,0.16)] border border-solid cursor-pointer transition-all duration-300 ease-in-out donace-button flex items-center m-0">
-                                    <div className="label">Set Password</div>
+                                    <div className="label">Đặt mật khẩu</div>
                                 </Button>
                             </div>
                         </div>

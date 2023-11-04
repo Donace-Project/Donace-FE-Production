@@ -1,9 +1,13 @@
 import CreateCalendar from "@/components/calendars-page/create-calendar";
+import NavbarComponents from "@/components/navbar";
 
-export default function Page(){
-    return(
+export default function Page() {
+    return (
         <div className="page-wrapper">
-            <CreateCalendar/>
+            <NavbarComponents/>
+            <div className="main">
+                <CreateCalendar />
+            </div>
         </div>
     )
 }
