@@ -34,8 +34,6 @@ import ThoiGian from "./clock/clock";
 import { authHelper } from "../helpers/authHelper";
 import { useSession } from "next-auth/react";
 import { usePathname } from 'next/navigation';
-import { Badge } from "@nextui-org/react";
-import { NotificationIcon } from './icon/NotificationIcon'
 
 
 export default function NavbarComponents() {
@@ -168,7 +166,7 @@ export default function NavbarComponents() {
                 >
                   <NavbarItem as={"div"} className="inline-flex relative">
                     <NavbarItem as={"div"} className="icon">
-                      <Bell className="block w-4 h-4 align-middle" />
+                        <Bell className="block w-4 h-4 align-middle" />
                     </NavbarItem>
                   </NavbarItem>
                 </NavbarContent>
