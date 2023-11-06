@@ -1,13 +1,13 @@
 import NavbarComponents from "@/components/navbar";
 import FooterPage from "@/components/footerInPage";
-import ExploreDetail from "@/components/explore-detail/explore-detail";
+import HoChiMinh from "@/components/explore/cities/hochiminh";
 
 export default function page() {
   return (
     <div className="page-wrapper">
       <NavbarComponents />
       <div className="main">
-        <ExploreDetail />
+        <HoChiMinh />
       </div>
       <div className="footer">
         <FooterPage />

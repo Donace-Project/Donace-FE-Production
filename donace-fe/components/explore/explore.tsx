@@ -21,7 +21,7 @@ export default function Explore() {
             id="title"
             className="text-[2rem] font-semibold text-[rgb(19,21,23)] mb-0 leading-[1.2] mt-0"
           >
-            Explore
+            Khám phá
           </h1>
         </div>
         <div></div>
@@ -31,12 +31,12 @@ export default function Explore() {
         className="pl-[1rem!important] pr-[1rem!important] max-w-[820px] m-[0_auto]"
       >
         <h1 className="text-[1.75rem] font-normal text-[rgba(19,21,23,0.36)] leading-[1.2] mt-0 mb-4">
-          Tech Events in Your City
+          Những sự kiện xung quanh thành phố bạn
         </h1>
 
         <div className="grid grid-cols-2 justify-center items-center gap-5">
           <div className="w-full h-full">
-            <Link href="/explore-detail">
+            <Link href="/explore/cities/hochiminh">
               <Card isFooterBlurred radius="lg" className="border-none h-[500]">
                 <Image
                   alt="Woman listing to music"
@@ -61,7 +61,7 @@ export default function Explore() {
             </Link>
           </div>
           <div className="w-full h-full">
-            <Link href="/route">
+            <Link href="/explore/cities/hue">
               <Card isFooterBlurred radius="lg" className="border-none">
                 <Image
                   alt="Woman listing to music"
@@ -86,7 +86,7 @@ export default function Explore() {
             </Link>
           </div>
           <div className="w-full h-full">
-            <Link href="/route">
+            <Link href="/explore/cities/cantho">
               <Card isFooterBlurred radius="lg" className="border-none">
                 <Image
                   alt="Woman listing to music"

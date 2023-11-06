@@ -3,7 +3,7 @@
 import { Image } from "@nextui-org/image";
 import React from "react";
 
-export default function ExploreDetail() {
+export default function Hue() {
   return (
     <div className="panel ">
       <Image
