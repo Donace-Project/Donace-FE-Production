@@ -1,13 +1,14 @@
 "use client";
 import "@/styles/globals.css";
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "@nextui-org/button";
 import { Card, CardHeader, CardBody, CardFooter } from "@nextui-org/card";
 import { Input } from "@nextui-org/input";
 import { Link } from "@nextui-org/link";
-import { ArrowLeft, DoorOpen, UserCircle2, UserPlus } from "lucide-react";
+import { UserPlus } from "lucide-react";
 import { Divider } from "@nextui-org/divider";
-import { Checkbox } from "@nextui-org/checkbox";
+import { signIn } from "next-auth/react";
+import router from "next/router";
 
 export default function SignUp() {
     const [isVisible, setIsVisible] = React.useState(false);
@@ -23,6 +24,9 @@ export default function SignUp() {
 
         return validateEmail(email) ? false : true;
     }, [email]);
+
+
+    
 
     return (
         <div className="onboarding-page">

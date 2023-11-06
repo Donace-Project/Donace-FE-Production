@@ -46,7 +46,7 @@ export default function CalendarPage() {
     var [subscribeds, setSubscribed] = useState<CalendarSub | null>(null);
 
     useEffect(() => {
-        fetchWrapper.post('/api/Calendar/get-list', { pageNumber: 1, pageSize: 999 })
+        fetchWrapper.post('/api/Calendar/get-list', { pageNumber: 1, pageSize: 1000 })
             .then(data => setCalendar(data))
     }, []);
 
@@ -119,17 +119,22 @@ export default function CalendarPage() {
                                         </Link>
                                     ))
                                 ) : (
-                                    <div
-                                        className="p-[1rem_1rem_0.875rem] cursor-pointer transition-all duration-300 ease-in-out block relative rounded-xl bg-[#f3f4f5] dark:bg-[rgba(255,255,255,0.04)] border border-solid border-[#fff] dark:border-[rgba(255,255,255,0.04)] overflow-hidden"
-                                    >
-                                        <div className="icon">
-                                            <div className="mb-0">
-                                                <CalendarX className="w-auto h-12 block align-middle text-foreground-500" />
-                                            </div>
+                                    <Card className="w-[200px] space-y-5 p-4" radius="lg">
+                                        <Skeleton className="rounded-lg">
+                                            <div className="h-24 rounded-lg bg-default-300"></div>
+                                        </Skeleton>
+                                        <div className="space-y-3">
+                                            <Skeleton className="w-3/5 rounded-lg">
+                                                <div className="h-3 w-3/5 rounded-lg bg-default-200"></div>
+                                            </Skeleton>
+                                            <Skeleton className="w-4/5 rounded-lg">
+                                                <div className="h-3 w-4/5 rounded-lg bg-default-200"></div>
+                                            </Skeleton>
+                                            <Skeleton className="w-2/5 rounded-lg">
+                                                <div className="h-3 w-2/5 rounded-lg bg-default-300"></div>
+                                            </Skeleton>
                                         </div>
-                                        <div className="title font-medium text-lg mt-3 mb-1 text-black-more-blur-light-theme dark:text-[#fff]">Không có lịch</div>
-                                        <div className="text-tertiary-alpha text-sm text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)]">Bạn không phải là quản trị của lịch sự kiện.</div>
-                                    </div>
+                                    </Card>
                                 )
                             ) : (
                                 <div
@@ -188,6 +193,7 @@ export default function CalendarPage() {
                                     </Link>
                                 ))
                             ) : (
+
                                 <div
                                     className="p-[1rem_1rem_0.875rem] cursor-pointer transition-all duration-300 ease-in-out block relative rounded-xl bg-[#f3f4f5] dark:bg-[rgba(255,255,255,0.04)] border border-solid border-[#fff] dark:border-[rgba(255,255,255,0.04)] overflow-hidden"
                                 >
@@ -201,33 +207,22 @@ export default function CalendarPage() {
                                 </div>
                             )
                         ) : (
-                            <div
-                                className="p-[1rem_1rem_0.875rem] cursor-pointer transition-all duration-300 ease-in-out block relative rounded-xl bg-[#f3f4f5] dark:bg-[rgba(255,255,255,0.04)] border border-solid border-[#fff] dark:border-[rgba(255,255,255,0.04)] overflow-hidden"
-                            >
-                                <div className="icon">
-                                    <div className="mb-0">
-                                        <CalendarX className="w-auto h-12 block align-middle text-foreground-500" />
-                                    </div>
+                            <Card className="w-[200px] space-y-5 p-4" radius="lg">
+                                <Skeleton className="rounded-lg">
+                                    <div className="h-24 rounded-lg bg-default-300"></div>
+                                </Skeleton>
+                                <div className="space-y-3">
+                                    <Skeleton className="w-3/5 rounded-lg">
+                                        <div className="h-3 w-3/5 rounded-lg bg-default-200"></div>
+                                    </Skeleton>
+                                    <Skeleton className="w-4/5 rounded-lg">
+                                        <div className="h-3 w-4/5 rounded-lg bg-default-200"></div>
+                                    </Skeleton>
+                                    <Skeleton className="w-2/5 rounded-lg">
+                                        <div className="h-3 w-2/5 rounded-lg bg-default-300"></div>
+                                    </Skeleton>
                                 </div>
-                                <div className="title font-medium text-lg mt-3 mb-1 text-black-more-blur-light-theme dark:text-[#fff]">Không có lịch đăng ký</div>
-                                <div className="text-tertiary-alpha text-sm text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)]">Bạn chưa đăng ký lịch nào.</div>
-                            </div>
-                            // <Card className="w-[200px] space-y-5 p-4" radius="lg">
-                            //     <Skeleton className="rounded-lg">
-                            //         <div className="h-24 rounded-lg bg-default-300"></div>
-                            //     </Skeleton>
-                            //     <div className="space-y-3">
-                            //         <Skeleton className="w-3/5 rounded-lg">
-                            //             <div className="h-3 w-3/5 rounded-lg bg-default-200"></div>
-                            //         </Skeleton>
-                            //         <Skeleton className="w-4/5 rounded-lg">
-                            //             <div className="h-3 w-4/5 rounded-lg bg-default-200"></div>
-                            //         </Skeleton>
-                            //         <Skeleton className="w-2/5 rounded-lg">
-                            //             <div className="h-3 w-2/5 rounded-lg bg-default-300"></div>
-                            //         </Skeleton>
-                            //     </div>
-                            // </Card>
+                            </Card>
                         )}
                     </div>
                 </div >
