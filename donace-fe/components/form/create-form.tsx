@@ -12,114 +12,113 @@ import usePlacesAutocomplete, {
     getGeocode,
     getLatLng,
 } from 'use-places-autocomplete';
+const CreateForm = () => {
 
-export default function CreateForm() {
+    // const [startDate, setStartDate] = useState('');
+    // const [startTime, setStartTime] = useState('');
 
-    const [startDate, setStartDate] = useState('');
-    const [startTime, setStartTime] = useState('');
+    // const [endDate, setEndDate] = useState('');
+    // const [endTime, setEndTime] = useState('');
 
-    const [endDate, setEndDate] = useState('');
-    const [endTime, setEndTime] = useState('');
+    // const [selectedImage, setSelectedImage] = useState<File | null>(null);
+    // const [result, setResult] = useState('');
 
-    const [selectedImage, setSelectedImage] = useState<File | null>(null);
-    const [result, setResult] = useState('');
+    // const [lat, setLat] = useState(10.8537915);
+    // const [lng, setLng] = useState(106.6234887);
 
-    const [lat, setLat] = useState(10.8537915);
-    const [lng, setLng] = useState(106.6234887);
+    // const libraries = useMemo(() => ['places'], []);
+    // const mapCenter = useMemo(() => ({ lat: lat, lng: lng }), [lat, lng]);
 
-    const libraries = useMemo(() => ['places'], []);
-    const mapCenter = useMemo(() => ({ lat: lat, lng: lng }), [lat, lng]);
+    // const mapOptions = useMemo<google.maps.MapOptions>(
+    //     () => ({
+    //         disableDefaultUI: true,
+    //         clickableIcons: true,
+    //         scrollwheel: false,
+    //     }),
+    //     []
+    // );
 
-    const mapOptions = useMemo<google.maps.MapOptions>(
-        () => ({
-            disableDefaultUI: true,
-            clickableIcons: true,
-            scrollwheel: false,
-        }),
-        []
-    );
+    // const [formData, setFormData] = useState({
+    //     sorted: 0,
+    //     id: '',
+    //     startDate: '',
+    //     endDate: '',
+    //     addressName: '',
+    //     lat: '',
+    //     long: '',
+    //     cover: "",
+    //     capacity: 0,
+    //     isOverCapacity: true,
+    //     name: '',
+    //     theme: '',
+    //     color: '#f6b73c',
+    //     fontSize: 0,
+    //     instructions: '',
+    //     isMultiSection: true,
+    //     duration: 0,
+    //     totalGuest: 0,
+    //     calendarId: '',
+    // });
 
-    const [formData, setFormData] = useState({
-        sorted: 0,
-        id: '',
-        startDate: '',
-        endDate: '',
-        addressName: '',
-        lat: '',
-        long: '',
-        cover: "",
-        capacity: 0,
-        isOverCapacity: true,
-        name: '',
-        theme: '',
-        color: '#f6b73c',
-        fontSize: 0,
-        instructions: '',
-        isMultiSection: true,
-        duration: 0,
-        totalGuest: 0,
-        calendarId: '',
-    });
+    // const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    //     e.preventDefault();
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
+    //     formData.endDate = `${endDate} ${endTime}`;
+    //     formData.startDate = `${startDate} ${startTime}`;
 
-        formData.endDate = `${endDate} ${endTime}`;
-        formData.startDate = `${startDate} ${startTime}`;
+    //     formData.long = lng.toString();
+    //     formData.lat = lat.toString();
 
-        formData.long = lng.toString();
-        formData.lat = lat.toString();
+    //     // axios.post('http://118.71.175.86/api/', formData.cover, {
+    //     //     headers: {
+    //     //         "Content-Type": "multipart/form-data",
+    //     //         "Accept": "text/plain"
+    //     //     }
+    //     // })
+    //     //     .then(response => {
+    //     //         console.log(response.data);
+    //     //     })
+    //     //     .catch(error => {
+    //     //         console.log(error);
+    //     //     });
 
-        // axios.post('http://118.71.175.86/api/', formData.cover, {
-        //     headers: {
-        //         "Content-Type": "multipart/form-data",
-        //         "Accept": "text/plain"
-        //     }
-        // })
-        //     .then(response => {
-        //         console.log(response.data);
-        //     })
-        //     .catch(error => {
-        //         console.log(error);
-        //     });
+    //     console.log(formData);
+    // };
 
-        console.log(formData);
-    };
+    // const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    //     const file = e.target.files?.[0];
+    //     setSelectedImage(file || null);
+    //     if (!file) return;
 
-    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        setSelectedImage(file || null);
-        if (!file) return;
+    //     const reader = new FileReader();
+    //     reader.readAsDataURL(file);
+    //     reader.onloadend = () => {
+    //         const result = reader.result;
+    //         if (typeof result === 'string') {
+    //             setFormData({
+    //                 ...formData,
+    //                 cover: result,
+    //             });
+    //         }
+    //     };
+    // };
 
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onloadend = () => {
-            const result = reader.result;
-            if (typeof result === 'string') {
-                setFormData({
-                    ...formData,
-                    cover: result,
-                });
-            }
-        };
-    };
+    // const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    //     const { name, value } = e.target;
+    //     setFormData({
+    //         ...formData,
+    //         [name]: value,
+    //     });
+    // };
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        const { name, value } = e.target;
-        setFormData({
-            ...formData,
-            [name]: value,
-        });
-    };
+    // const { isLoaded } = useLoadScript({
+    //     googleMapsApiKey: "AIzaSyA6tRumkn2d-0HeK3ektor7FvHFSceVduk",
+    //     libraries: libraries as any,
+    // });
 
-    const { isLoaded } = useLoadScript({
-        googleMapsApiKey: "AIzaSyA6tRumkn2d-0HeK3ektor7FvHFSceVduk" as string,
-        libraries: libraries as any,
-    });
-
-    if (!isLoaded) {
-        return <p>Loading...</p>;
-    }
+    // if (!isLoaded) {
+    //     return <p>Loading...</p>;
+    // }
 
     return (
         <div className='page-content'>
@@ -151,7 +150,7 @@ export default function CreateForm() {
                                         </div>
                                     </div>
                                     <div className='name-input-wrapper -ml-2 m-6 flex'>
-                                        <Textarea 
+                                        <Textarea
                                             className='transition-all duration-300 ease-in-out text-black-light-theme overflow-hidden bg-transparent p-0 font-semibold w-full resize-none m-0'
                                             placeholder='Event Name'
                                             spellCheck="false"
@@ -257,63 +256,4 @@ export default function CreateForm() {
     );
 };
 
-
-const PlacesAutocomplete = ({
-    onAddressSelect,
-}: {
-    onAddressSelect?: (address: string) => void;
-}) => {
-    const {
-        ready,
-        value,
-        suggestions: { status, data },
-        setValue,
-        clearSuggestions,
-    } = usePlacesAutocomplete({
-        requestOptions: { componentRestrictions: { country: 'vn' } },
-        debounce: 500,
-        cache: 86400,
-    });
-
-    const renderSuggestions = () => {
-        return data.map((suggestion) => {
-            const {
-                place_id,
-                structured_formatting: { main_text, secondary_text },
-                description,
-            } = suggestion;
-
-            return (
-                <li
-                    key={place_id}
-                    onClick={() => {
-                        setValue(description, false);
-                        clearSuggestions();
-                        onAddressSelect && onAddressSelect(description);
-                    }}
-                >
-                    <strong>{main_text}</strong> <small>{secondary_text}</small>
-                </li>
-            );
-        });
-    };
-
-    return (
-        <div >
-            <input
-                value={value}
-
-                disabled={!ready}
-                onChange={(e) => setValue(e.target.value)}
-                placeholder="FPT Polytechnic HCM"
-            />
-
-            {status === 'OK' && (
-                <ul >{renderSuggestions()}</ul>
-            )}
-        </div>
-    );
-};
-
-
-
+export default CreateForm;

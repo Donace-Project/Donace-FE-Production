@@ -1,10 +1,11 @@
 "use client"
 import CreateForm from "@/components/form/create-form";
-export const createPage = () => {
+
+function CreatePage() {
     return (
-        <>
+        <div>
             <CreateForm />
-        </>)
+        </div>)
 }
 
-export default createPage;
+export default CreatePage;
