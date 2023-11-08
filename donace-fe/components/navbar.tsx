@@ -79,7 +79,7 @@ export default function NavbarComponents() {
             >
               <NavbarContent
                 as={"div"}
-                className={`${page === "home" ? 'text-[rgb(19,21,23)]' : ''} dark:hover:text-[#fff] gap-2 flex items-center transition-all duration-300 ease-in-out hover:text-[rgb(19,21,23)] `}
+                className={`${page === "home" ? 'text-[rgb(19,21,23)] dark:text-[#fff]' : ''} dark:hover:text-[#fff] gap-2 flex items-center transition-all duration-300 ease-in-out hover:text-[rgb(19,21,23)] `}
               >
                 <NavbarItem as={"div"} className="icon">
                   <Ticket className="block w-4 h-4 align-middle mt-0.5" />
@@ -95,7 +95,7 @@ export default function NavbarComponents() {
             >
               <NavbarContent
                 as={"div"}
-                className={`${page === "calendars" ? 'text-[rgb(19,21,23)]' : ''} dark:hover:text-[#fff] gap-2 flex items-center transition-all duration-300 ease-in-out hover:text-[rgb(19,21,23)]`}
+                className={`${page === "calendars" ? 'text-[rgb(19,21,23)] dark:text-[#fff]' : ''} dark:hover:text-[#fff] gap-2 flex items-center transition-all duration-300 ease-in-out hover:text-[rgb(19,21,23)]`}
               >
                 <NavbarItem as={"div"} className="icon">
                   <CalendarRange className="block w-4 h-4 align-middle mt-0.5" />
@@ -111,7 +111,7 @@ export default function NavbarComponents() {
             >
               <NavbarContent
                 as={"div"}
-                className={`${page === "explore" ? 'text-[rgb(19,21,23)]' : ''} dark:hover:text-[#fff] gap-2 flex items-center transition-all duration-300 ease-in-out hover:text-[rgb(19,21,23)]`}
+                className={`${page === "explore" ? 'text-[rgb(19,21,23)] dark:text-[#fff]' : ''} dark:hover:text-[#fff] gap-2 flex items-center transition-all duration-300 ease-in-out hover:text-[rgb(19,21,23)]`}
               >
                 <NavbarItem as={"div"} className="icon">
                   <Compass className="block w-4 h-4 align-middle mt-0.5" />
