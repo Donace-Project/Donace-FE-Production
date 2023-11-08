@@ -5,21 +5,21 @@ import {
     useLoadScript,
     GoogleMap,
 } from '@react-google-maps/api';
-import axios from 'axios';
-import { ArrowUp10, ChevronDown, MapPin, Pen } from 'lucide-react';
-import { useEffect, useMemo, useState } from 'react';
+import { ArrowUp10, ChevronDown, ChevronsUpDown, FileImage, MapPin, Pen } from 'lucide-react';
+import { useMemo, useState } from 'react';
 import usePlacesAutocomplete, {
     getGeocode,
     getLatLng,
 } from 'use-places-autocomplete';
-import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure } from "@nextui-org/modal";
+import { Modal, ModalContent, ModalHeader, ModalBody, useDisclosure, ModalFooter } from "@nextui-org/modal";
 import { Button } from '@nextui-org/button';
 import { Divider } from '@nextui-org/divider';
-import { SearchIcon } from "../icon/searchIcon";
+import { Popover, PopoverTrigger, PopoverContent, Checkbox, Image } from "@nextui-org/react";
 
 export default function CreateForm() {
 
-    const { isOpen, onOpen, onOpenChange } = useDisclosure();
+    const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
+
 
     const [startDate, setStartDate] = useState('');
     const [startTime, setStartTime] = useState('');
@@ -76,19 +76,6 @@ export default function CreateForm() {
         formData.long = lng.toString();
         formData.lat = lat.toString();
 
-        // axios.post('http://118.71.175.86/api/', formData.cover, {
-        //     headers: {
-        //         "Content-Type": "multipart/form-data",
-        //         "Accept": "text/plain"
-        //     }
-        // })
-        //     .then(response => {
-        //         console.log(response.data);
-        //     })
-        //     .catch(error => {
-        //         console.log(error);
-        //     });
-
         console.log(formData);
     };
 
@@ -134,7 +121,7 @@ export default function CreateForm() {
                 <div className='page-container relative bg-transparent'>
                     <div className='zm-container p-[1.5rem_1rem] max-width-global margin-global'>
                         <div className='outer-wrapper -m-5'>
-                            <div className='content-card p-[1rem_1.25rem] relative rounded-xl bg-[#f2f3f4] border border-solid border-[#f2f3f4] backdrop-blur-none shadow-none overflow-hidden'>
+                            <div className='content-card p-[1rem_1.25rem] relative rounded-xl bg-[#f2f3f4] dark:bg-[#212325] border border-solid border-[#f2f3f4] dark:border-[rgba(255,255,255,0.04)] backdrop-blur-none shadow-none overflow-hidden'>
                                 <div className='content-container grid grid-cols-2 gap-10'>
                                     <div className='left min-w-0'>
                                         <div>
@@ -148,19 +135,19 @@ export default function CreateForm() {
                                                     />
                                                 </div>
                                                 <div className='min-w-0 flex-1'>
-                                                    <div className='text-xs text-black-blur-light-theme'>Create under</div>
+                                                    <div className='text-xs text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)]'>Create under</div>
                                                     <div className='gap-1 flex items-center'>
                                                         <div className='font-medium overflow-hidden text-ellipsis whitespace-nowrap text-sm'>Personal Calendar</div>
                                                     </div>
                                                 </div>
-                                                <div className='chevron text-black-blur-light-theme'>
+                                                <div className='chevron text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)]'>
                                                     <ChevronDown className='block w-4 h-4 align-middle' />
                                                 </div>
                                             </div>
                                         </div>
                                         <div className='name-input-wrapper -ml-2 m-6 flex'>
                                             <Textarea
-                                                className='transition-all duration-300 ease-in-out text-black-light-theme overflow-hidden bg-transparent p-0 font-semibold w-full resize-none m-0'
+                                                className='transition-all duration-300 ease-in-out text-black-light-theme dark:text-[#fff] overflow-hidden bg-transparent p-0 font-semibold w-full resize-none m-0'
                                                 placeholder='Event Name'
                                                 spellCheck="false"
                                                 autoCapitalize='words'
@@ -171,6 +158,7 @@ export default function CreateForm() {
                                                         "text-4xl",
                                                     ],
                                                     inputWrapper: [
+                                                        
                                                         "shadow-none"
                                                     ]
                                                 }}
@@ -178,13 +166,13 @@ export default function CreateForm() {
                                         </div>
                                         <div>
                                             <div className='attribute-row w-full gap-3 mb-4 flex items-start'>
-                                                <div className='icon-container w-10 h-10 border border-solid border-[rgba(19,21,23,0.1)] text-black-blur-light-theme rounded-lg flex-shrink-0 mt-2 overflow-hidden justify-center flex items-center'>
+                                                <div className='icon-container w-10 h-10 border border-solid border-[rgba(19,21,23,0.1)] dark:border-[rgba(255,255,255,0.08)] text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)] rounded-lg flex-shrink-0 mt-2 overflow-hidden justify-center flex items-center'>
                                                     <div className='text-center w-full'>
-                                                        <div className='month bg-[rgba(19,21,23,0.1)] text-[0.5rem] font-semibold uppercase p-px'>Nov</div>
+                                                        <div className='month bg-[rgba(19,21,23,0.1)] dark:bg-[rgba(255,255,255,0.08)] text-[0.5rem] font-semibold uppercase p-px'>Nov</div>
                                                         <div className='day -translate-y-px font-medium'>6</div>
                                                     </div>
                                                 </div>
-                                                <div className='time-picker bg-[rgba(19,21,23,0.04)] rounded-lg overflow-hidden flex-1'>
+                                                <div className='time-picker bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)] rounded-lg overflow-hidden flex-1'>
                                                     <div className='start-row p-[0.25rem_0.25rem_0.25rem_0.75rem] flex justify-between items-baseline'>
                                                         <div className='label w-12'>Start</div>
                                                         <div className='pr-12 p-0'>
@@ -192,14 +180,12 @@ export default function CreateForm() {
                                                                 <div className='datetime-input max-w-[13.5rem] flex items-stretch transition-all duration-300 ease-in-out'>
                                                                     <div className='date-input border-r-0 rounded-tl rounded-tr-none rounded-br-none rounded-lr border-transparent transition-all duration-300 ease-in-out flex-1 flex items-center'>
                                                                         <div className='wrapper flex-1 relative flex items-center'>
-                                                                            {/* <div className='h-auto min-w-0 flex bg-transparent text-base outline-none text-black-light-theme w-full border-0 border-solid border-transparent rounded-md text-left appearance-none items-center transition-all duration-300 ease-in-out'>
-                                                                        </div> */}
                                                                             <Input
                                                                                 type="date"
                                                                                 id="date"
                                                                                 value={startDate}
                                                                                 onChange={(e) => setStartDate(e.target.value)}
-                                                                                className='bg-transparent'
+                                                                                className='bg-transparent dark:bg-[rgba(255,255,255,0.08)] dark:text-[#fff]'
                                                                                 variant='flat'
                                                                                 radius='none' />
                                                                         </div>
@@ -212,7 +198,7 @@ export default function CreateForm() {
                                                                                 id="time"
                                                                                 value={startTime}
                                                                                 onChange={(e) => setStartTime(e.target.value)}
-                                                                                className='bg-transparent'
+                                                                                className='bg-transparent dark:bg-[rgba(255,255,255,0.08)] dark:text-[#fff]'
                                                                                 variant='flat'
                                                                                 radius='none' />
                                                                         </div>
@@ -233,7 +219,7 @@ export default function CreateForm() {
                                                                                 id="date"
                                                                                 value={endDate}
                                                                                 onChange={(e) => setEndDate(e.target.value)}
-                                                                                className='bg-transparent'
+                                                                                className='bg-transparent dark:bg-[rgba(255,255,255,0.08)] dark:text-[#fff]'
                                                                                 variant='flat'
                                                                                 radius='none' />
                                                                         </div>
@@ -246,9 +232,9 @@ export default function CreateForm() {
                                                                                 id="time"
                                                                                 value={endTime}
                                                                                 onChange={(e) => setEndTime(e.target.value)}
-                                                                                className='bg-transparent'
+                                                                                className='bg-transparent dark:bg-[rgba(255,255,255,0.08)] dark:text-[#fff]'
                                                                                 variant='flat'
-                                                                                radius='none' />
+                                                                                radius='none'/>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -258,13 +244,13 @@ export default function CreateForm() {
                                                 </div>
                                             </div>
                                             <div className='w-full gap-3 mb-4 flex items-start'>
-                                                <div className='icon-container w-10 h-10 border border-solid border-[rgba(19,21,23,0.1)] text-black-blur-light-theme rounded-lg flex-shrink-0 mt-2 overflow-hidden justify-center flex items-center'>
+                                                <div className='icon-container w-10 h-10 border border-solid border-[rgba(19,21,23,0.1)] dark:border-[rgba(255,255,255,0.08)] text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)] rounded-lg flex-shrink-0 mt-2 overflow-hidden justify-center flex items-center'>
                                                     <MapPin className='w-5 h-5 block align-middle' />
                                                 </div>
                                                 <div className='location-picker-wrapper min-w-0 flex-1'>
                                                     <div className='lux-menu-trigger-wrapper cursor-pointer inline-flex min-w-0 w-full'>
                                                         <Button
-                                                            className='mt-2 bg-[rgba(19,21,23,0.04)] min-w-0 transition-all duration-300 ease-in-out w-full'
+                                                            className='mt-2 bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)] min-w-0 transition-all duration-300 ease-in-out w-full'
                                                             radius='sm'
                                                             type='button'
                                                             onPress={onOpen}
@@ -273,8 +259,8 @@ export default function CreateForm() {
                                                                 <div>
                                                                     <div>
                                                                         <div className='min-w-0'>
-                                                                            <div className='text-black-more-blur-light-theme font-medium overflow-hidden text-ellipsis whitespace-nowrap'>Add Event Location</div>
-                                                                            <div className='overflow-hidden text-ellipsis whitespace-nowrap text-sm text-black-more-blur-light-theme'>Event location or pick via Maps</div>
+                                                                            <div className='text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)] font-medium overflow-hidden text-ellipsis whitespace-nowrap'>Add Event Location</div>
+                                                                            <div className='overflow-hidden text-ellipsis whitespace-nowrap text-sm text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)]'>Event location or pick via Maps</div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -307,14 +293,14 @@ export default function CreateForm() {
                                                                                     }}
 
                                                                                 />
-                                                                                <div className='pt-4 font-medium text-base text-black-light-theme'>Or pick your location via Maps:</div>
+                                                                                <div className='pt-4 font-medium text-base text-black-light-theme dark:text-[#fff]'>Or pick your location via Maps:</div>
                                                                                 <div className='pt-4'>
                                                                                     <GoogleMap
                                                                                         options={mapOptions}
                                                                                         zoom={14}
                                                                                         center={mapCenter}
                                                                                         mapTypeId={google.maps.MapTypeId.ROADMAP}
-                                                                                        mapContainerStyle={{ width: '690px', height: '400px' }}
+                                                                                        mapContainerStyle={{ width: '690px', height: '400px', borderRadius: '0.5rem' }}
                                                                                         onLoad={(map) => console.log('Map Loaded')}
                                                                                     >
                                                                                     </GoogleMap>
@@ -330,27 +316,155 @@ export default function CreateForm() {
                                             </div>
                                         </div>
                                         <div className='advanced-optiions mt-6'>
-                                            <div className='lux-input-label medium text-sm block mb-1.5 font-medium text-black-more-blur-light-theme transition-all duration-300 ease-in-out'>
+                                            <div className='lux-input-label medium text-sm block mb-1.5 font-medium text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)] transition-all duration-300 ease-in-out'>
                                                 <div>Event Options</div>
                                             </div>
                                             <div className='options-card mt-2 rounded-lg overflow-hidden'>
-                                                <div className='option-row w-full p-[0.5rem_0.75rem] transition-all duration-300 ease-in-out relative overflow-hidden bg-[rgba(19,21,23,0.04)]'>
+                                                <div className='option-row w-full p-[0.5rem_0.75rem] transition-all duration-300 ease-in-out relative overflow-hidden bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)]'>
                                                     <div className='gap-2 flex items-center'>
-                                                        <div className='icon text-[rgba(19,21,23,0.2)] m-[0px_0.25rem]'>
+                                                        <div className='icon text-[rgba(19,21,23,0.2)] dark:text-[hsla(0,0%,100%,.32)] m-[0px_0.25rem]'>
                                                             <ArrowUp10 className='block w-4 h-4 align-middle' />
                                                         </div>
-                                                        <div className='text-black-more-blur-light-theme select-none flex-1' id='capacity'>Capacity</div>
+                                                        <div className='text-black-more-blur-light-them dark:text-[hsla(0,0%,100%,.79)]e select-none flex-1' id='capacity'>Capacity</div>
                                                         <div className='gap-1 flex items-center'>
-                                                            <Button
-                                                                aria-label='Edit'
-                                                                type='button'
-                                                                className='m-[-1px_-0.25rem_-1px_0px] text-black-blur-light-theme bg-transparent border-transparent border border-solid flex-shrink-0 cursor-pointer transition-all duration-300 ease-in-out donace-button-w-fit flex items-center'
-                                                            >
-                                                                <div className='text-black-blur-light-theme font-medium capitalize'>Unlimited</div>
-                                                                <Pen className='stroke-2 w-3.5 h-3.5 flex-shrink-0 block align-middle mt-0.5' />
-                                                            </Button>
+                                                            <Popover placement="bottom" showArrow offset={10}>
+                                                                <PopoverTrigger>
+                                                                    <Button
+                                                                        aria-label='Edit'
+                                                                        type='button'
+                                                                        className='m-[-1px_-0.25rem_-1px_0px] text-black-blur-light-theme bg-transparent border-transparent border border-solid flex-shrink-0 cursor-pointer transition-all duration-300 ease-in-out donace-button-w-fit flex items-center'
+                                                                    >
+                                                                        <div className='text-black-blur-light-theme font-medium capitalize dark:text-[hsla(0,0%,100%,.5)]'>Unlimited</div>
+                                                                        <Pen className='stroke-2 w-3.5 h-3.5 flex-shrink-0 block align-middle mt-0.5 dark:text-[hsla(0,0%,100%,.5)]' />
+                                                                    </Button>
+                                                                </PopoverTrigger>
+                                                                <PopoverContent className="w-[240px]">
+
+                                                                    {(titleProps) => (
+                                                                        <div className="px-1 py-2 w-full">
+                                                                            <p className="text-small font-bold text-foreground" id='capacity' {...titleProps}>
+                                                                                Capacity
+                                                                            </p>
+                                                                            <div className="mt-2 flex flex-col gap-2 w-full">
+                                                                                <Input
+                                                                                    type="number"
+                                                                                    inputMode='numeric'
+                                                                                    id='capacity'
+                                                                                    value={formData.capacity}
+                                                                                    onChange={handleChange}
+
+                                                                                    placeholder="0"
+                                                                                    labelPlacement="outside"
+                                                                                    variant="bordered"
+                                                                                />
+                                                                                <div className='mt-2'>
+                                                                                    <Checkbox className='label text-base font-medium'>Over-Capacity Waitlist</Checkbox>
+                                                                                </div>
+                                                                                <div className='mt-2 gap-2 flex justify-between items-center'>
+                                                                                    <Button
+                                                                                        type='submit'
+                                                                                        className='text-[#fff] dark:text-[rgb(19,21,23)] bg-[#333537] dark:bg-[#fff] border-[#333537] dark:border-[#fff] border border-solid cursor-pointer transition-all duration-300 ease-in-out donace-button flex items-center m-0'
+                                                                                    >
+                                                                                        <div className='label'>Đồng ý</div>
+                                                                                    </Button>
+                                                                                    <Button
+                                                                                        type='submit'
+                                                                                        className='text-black-more-blur-light-theme dark:text-[rgba(255,255,255,0.64)] bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)] border-transparent border border-solid cursor-pointer transition-all duration-300 ease-in-out donace-button flex items-center m-0'
+                                                                                    >
+                                                                                        <div className='label'>Xóa</div>
+                                                                                    </Button>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    )}
+                                                                </PopoverContent>
+                                                            </Popover>
                                                         </div>
                                                     </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className='pt-2 mt-6'>
+                                            <Button
+                                                type='submit'
+                                                className='text-[#fff] dark:text-[rgb(19,21,23)] bg-[#333537] dark:bg-[#fff] border-[#333537] dark:border-[#fff] border border-solid cursor-pointer transition-all duration-300 ease-in-out donace-button flex items-center m-0'
+                                            >
+                                                <div className='label'>Tạo Sự kiện</div>
+                                            </Button>
+                                        </div>
+                                    </div>
+                                    <div className='right min-w-0'>
+                                        <div>
+                                            <div>
+                                                <div
+                                                    role='button'
+                                                    className='photo-container bg-[rgba(19,21,23,0.04)] rounded-lg overflow-hidden outline-offset-2 outline-none transition-all duration-300 ease-in-out relative cursor-pointer'
+                                                >
+                                                    <Input
+                                                        type='file'
+                                                        id="image" name="image"
+                                                        accept='image/*,.jpg,.jpeg,.png,.gif,.webp'
+                                                        onChange={handleImageChange}
+                                                        tabIndex={-1}
+                                                        className='hidden text-inherit m-0'
+                                                    />
+                                                    <div className='image has-image transition-all duration-300 ease-in-out'>
+                                                        <div className='img-aspect-ratio w-full bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)] overflow-hidden relative rounded-lg'>
+                                                            <Image
+                                                                src='https://cdn.lu.ma/cdn-cgi/image/format=auto,fit=cover,dpr=2,quality=75,width=400,height=400/event-defaults/1-1/standard1.png'
+                                                                className='cursor-pointer top-0 left-0 w-full h-full object-cover align-middle'
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                    {/* phần hình ảnh chỗ này thì tui chưa làm được làm thế nào để nó mở file lên */}
+                                                    <div className='z-20 absolute bottom-[-2px] right-[-2px] w-[calc(2rem+2px)] h-[calc(2rem+2px)] text-[#fff] dark:text-[rgb(19,21,23)] bg-[rgb(19,21,23)] dark:bg-[#fff] border-2 border-solid border-[#fff] dark:border-[rgb(19,21,23)] rounded-lg transition-all duration-300 ease-in-out justify-center flex items-center'>
+                                                        <FileImage className='block w-4 h-4 align-middle' />
+                                                        <input type="file" id="image" name="image" className='-z-0 hidden' accept="image/*" onChange={handleImageChange} />
+                                                        {formData.cover && <img src={formData.cover} alt="Preview" />}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className='pt-4'>
+                                            <div className='theme-control-card rounded-lg overflow-hidden'>
+                                                <div className='h-auto block filter-none'>
+                                                    <Popover placement="bottom" showArrow={true}>
+                                                        <PopoverTrigger>
+                                                            <div className='lux-menu-trigger-wrapper color cursor-pointer inline-flex min-w-0 w-full'>
+                                                                <div className='option-row w-full p-[0.5rem_0.75rem] flex-1 transition-all duration-300 ease-in-out relative overflow-hidden bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)]'>
+                                                                    <div className='divider'></div>
+                                                                    <div className='gap-2 flex items-center'>
+                                                                        <div>
+                                                                            <div className='dot bg-[#939597] dark:bg-[#d2d4d7] w-6 h-6 rounded-full'></div>
+                                                                        </div>
+                                                                        <div className='text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)] select-none flex-1'>Color</div>
+                                                                        <div className='gap-1 flex items-center'>
+                                                                            <div className='value text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)] font-medium capitalize'>Gray</div>
+                                                                            <div className='accessory flex items-center justify-center text-[rgba(19,21,23,0.2)] dark:text-[hsla(0,0%,100%,.32)] w-[calc(0.3125rem*2+0.875rem+2px)] -mr-1 transition-all duration-300 ease-in-out'>
+                                                                                <ChevronsUpDown className='block w-4 h-4 align-middle mt-0.5' />
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </PopoverTrigger>
+                                                        {/* content này là về bảng màu á, chỉ cần ông muốn thêm màu là copy dot-container là được */}
+                                                        <PopoverContent
+                                                            className='shadow-md relative rounded-lg border border-solid border-[rgba(19,21,23,0.08)] dark:border-[rgba(255,255,255,0.08)] bg-[#fffd] dark:bg-[rgba(33,35,37,0.8)] overflow-auto'
+                                                        >
+                                                            <div className='max-w-[95vw] p-4'>
+                                                                <div>
+                                                                    <div className='dots gap-1 flex flex-wrap items-center'>
+                                                                        <div className='dot-container'>
+                                                                            <div className='dot-ring opacity-[1] border-[#939597] dark:border-[#d2d4d7] border-[0.125rem] border-solid rounded-full p-0.5 transition-all duration-300 ease-in-out cursor-pointer' role='button'>
+                                                                                <div className='bg-[#939597] dark:bg-[#d2d4d7] w-5 h-5 rounded-full flex items-center transition-all duration-300 ease-in-out'></div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </PopoverContent>
+                                                    </Popover>
                                                 </div>
                                             </div>
                                         </div>
@@ -497,6 +611,5 @@ const PlacesAutocomplete = ({
         </div>
     );
 };
-
 
 
