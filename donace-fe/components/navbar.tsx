@@ -34,6 +34,7 @@ import ThoiGian from "./clock/clock";
 import { authHelper } from "../helpers/authHelper";
 import { useSession } from "next-auth/react";
 import { usePathname } from 'next/navigation';
+import {Kbd} from "@nextui-org/react";
 
 
 export default function NavbarComponents() {
@@ -155,6 +156,9 @@ export default function NavbarComponents() {
             placeholder="Tìm kiếm..."
             size="sm"
             startContent={<SearchIcon size={18} />}
+            endContent={
+              <Kbd keys={["shift"]}>K</Kbd>
+            }
             type="search"
           />
           <Dropdown>
