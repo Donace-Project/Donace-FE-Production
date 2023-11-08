@@ -216,13 +216,15 @@ export default function SettingLandingPage() {
                                                         "h-auto",
                                                         "w-full",
                                                         "p-[0.625rem_0.875rem]",
+                                                        "dark:text-[#fff]",
+                                                        "dark:bg-[rgb(19,21,23)]",
                                                     ]
                                                 }}
                                             />
                                         ))}
                                     </div>
                                 </div>
-                                <Button type="submit" className="text-[#fff] bg-[#333537] border-[#333537] border border-solid cursor-pointer transition-all duration-300 ease-in-out font-medium rounded-lg whitespace-nowrap justify-center outline-offset-[.125rem] outline-none max-w-full text-base p-[0.625rem_0.875rem] h-auto w-fit flex items-center m-0 top-[2.35rem]">
+                                <Button type="submit" className="text-[#fff] dark:text-[rgb(19,21,23)] bg-[#333537] dark:bg-[#fff] border-[#333537] dark:border-[rgba(255,255,255,0.16)] border border-solid cursor-pointer transition-all duration-300 ease-in-out font-medium rounded-lg whitespace-nowrap justify-center outline-offset-[.125rem] outline-none max-w-full text-base p-[0.625rem_0.875rem] h-auto w-fit flex items-center m-0 top-[2.35rem]">
                                     <div className="label">Cập nhật</div>
                                 </Button>
                             </div>

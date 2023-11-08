@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { Button, ButtonGroup } from "@nextui-org/button";
 import { Link } from "@nextui-org/link";
-import { ArrowRight, CalendarClock, MapPin, Plus, Users2 } from "lucide-react";
+import { ArrowRight, CalendarClock, Fullscreen, MapPin, Plus, Users2 } from "lucide-react";
 import "@/styles/globals.css";
 import { fetchWrapper } from "@/helpers/fetch-wrapper";
 import { Avatar } from "@nextui-org/avatar";
@@ -66,12 +66,12 @@ export default function HomeEvents() {
             <ButtonGroup className="seggments relative grid grid-cols-2">
               <Button as={Link} href="" type="button"
                 className="text-sm relative text-black-light-theme  rounded-none justify-center cursor-pointer transition-all duration-300 ease-in-out font-medium flex items-center bg-[#fff] dark:text-[#fff] dark:bg-[#fff2] shadow-xl"
-                >
+              >
                 <div className="">Sắp tới</div>
               </Button>
-              <Button as={Link} href="/home/pastevents" type="button" 
+              <Button as={Link} href="/home/pastevents" type="button"
                 className="text-sm text-black-blur-light-theme relative rounded-none justify-center cursor-pointer transition-all duration-300 ease-in-out font-medium flex items-center bg-[rgba(19,21,23,0.04)] dark:text-[hsla(0,0%,100%,.5)] dark:bg-[rgba(255,255,255,0.08)]"
-                >
+              >
                 <div className="">Đã qua</div>
               </Button>
             </ButtonGroup>
@@ -141,12 +141,18 @@ export default function HomeEvents() {
                         </div>
                         <div className="event-bottom-bar flex justify-between items-center">
                           <div className="gap-2 flex items-center">
-                            <div className="status-or-price flex">
-                              <Button as={Link} href="my-calendar" className="text-black-more-blur-light-theme dark:text-[rgba(255,255,255,0.64)] bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)] border-transparent border border-solid transition-all duration-300 ease-in-out donace-button flex items-center cursor-pointer">
-                                <div className="label">Manage Event</div>
-                                <ArrowRight className="mr-1.5 stroke-2 w-3.5 h-3.5 flex-shrink-0 block align-middle" />
-                              </Button>
-                            </div>
+                            <Button
+                              as={Link}
+                              href="/user/user-join-event"
+                              className="text-black-more-blur-light-theme dark:text-[rgba(255,255,255,0.64)] bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)] border-transparent border border-solid transition-all duration-300 ease-in-out donace-button flex items-center cursor-pointer"
+                            >
+                              <Fullscreen className="mr-1.5 stroke-2 w-3.5 h-3.5 flex-shrink-0 block align-middle mt-0.5" />
+                              <div className="label">Check In</div>
+                            </Button>
+                            <Button as={Link} href="my-event" className="text-black-more-blur-light-theme dark:text-[rgba(255,255,255,0.64)] bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)] border-transparent border border-solid transition-all duration-300 ease-in-out donace-button flex items-center cursor-pointer">
+                              <div className="label">Quản lý sự kiện</div>
+                              <ArrowRight className="mr-1.5 stroke-2 w-3.5 h-3.5 flex-shrink-0 block align-middle" />
+                            </Button>
                             <div className="flex items-center">
                               <div className="head relative flex items-start">
                                 <Avatar radius="full" src="https://avatars.githubusercontent.com/u/143386751?s=200&v=4" name="Donace" className="relative w-5 h-5 dark:border dark:border-solid dark:border-[hsla(0,0%,100%,.5)]" />

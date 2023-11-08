@@ -137,7 +137,7 @@ export default function HomePastEvent() {
                                                     <div className="gap-2 flex items-center">
                                                         <div className="status-or-price flex">
                                                             <Button as={Link} href="my-calendar" className="text-black-more-blur-light-theme dark:text-[rgba(255,255,255,0.64)] bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)] border-transparent border border-solid transition-all duration-300 ease-in-out donace-button flex items-center cursor-pointer">
-                                                                <div className="label">Manage Event</div>
+                                                                <div className="label">Quản lý sự kiện</div>
                                                                 <ArrowRight className="mr-1.5 stroke-2 w-3.5 h-3.5 flex-shrink-0 block align-middle" />
                                                             </Button>
                                                         </div>
