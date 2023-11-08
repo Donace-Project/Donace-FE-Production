@@ -1,16 +1,15 @@
 "use client"
 import CreateForm from "@/components/form/create-form";
 import NavbarComponents from "@/components/navbar";
-export const createPage = () => {
+
+function CreatePage() {
     return (
-        <>
-            <div className="page-wrapper">
-                <NavbarComponents />
-                <div className="main">
-                    <CreateForm />
-                </div>
+        <div className="page-wrapper">
+            <NavbarComponents />
+            <div className="main">
+                <CreateForm />
             </div>
-        </>)
+        </div>)
 }
 
-export default createPage;
+export default CreatePage;
