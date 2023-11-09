@@ -109,7 +109,7 @@ export default function CalendarPage() {
                                                     {calendar.totalSubcriber !== 0 ? (
                                                         <p>{calendar.totalSubcriber} đăng ký</p>
                                                     ) : (
-                                                        <p>Không có lịch</p>
+                                                        <p>Không có người đăng ký</p>
                                                     )}
                                                 </div>
                                                 <div className="spread gap-2 mt-4 flex justify-between flex-wrap items-center">

@@ -42,7 +42,6 @@ export type Item = {
 
 export default function EventDetails() {
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
-    // const { isOpenUserJoin, onOpenUserJoin, onOpenChangeUserJoin } = useDisclosureUserJoin();
 
     var [eventDetail, setEventDetail] = useState<EventDetails | null>(null);
 
