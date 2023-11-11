@@ -11,6 +11,7 @@ import { Textarea } from "@nextui-org/input";
 import { FaTiktok } from 'react-icons/fa';
 import { Checkbox } from "@nextui-org/checkbox";
 import { fetchWrapper } from "@/helpers/fetch-wrapper";
+import { Image } from "@nextui-org/image";
 
 export type Profile = {
     code: string;
@@ -57,6 +58,7 @@ export default function ProfilePage() {
         "outside"
     ];
     const variants = ["bordered"];
+    const imageUrl = "https://cdn.lu.ma/cdn-cgi/image/format=auto,fit=cover,dpr=2,quality=75,width=400/event-defaults/1-1/standard3.png";
 
     return (
         <div className="page-content">
@@ -90,92 +92,82 @@ export default function ProfilePage() {
                                             {userProfile && userProfile.result ? (
                                                 <div>
                                                     <div className="social-link large">
-                                                        <Link
-                                                            defaultValue={userProfile?.result.instagram}
-                                                            href=""
-                                                            target="_blank"
-                                                            rel="nofollow noopener"
-                                                            className="lux-menu-trigger p-2 text-black-blur-light-theme block min-w-0 transition-all duration-300 ease-in-out cursor-pointer"
-                                                            underline="none"
-                                                        >
-                                                            <Instagram className="dark:text-[hsla(0,0%,100%,.5)] flex-shrink-0 block w-5 h-5 align-middle" />
-                                                        </Link>
                                                     </div>
                                                 </div>
                                             ) : (
-                                                <div className="social-links -ml-2 -mr-2 flex items-center">
-                                                    <div className="social-link large">
-                                                        <Link
-                                                            defaultValue={userProfile?.result.instagram}
-                                                            href=""
-                                                            target="_blank"
-                                                            rel="nofollow noopener"
-                                                            className="lux-menu-trigger p-2 text-black-blur-light-theme block min-w-0 transition-all duration-300 ease-in-out cursor-pointer"
-                                                            underline="none"
-                                                        >
-                                                            <Instagram className="dark:text-[hsla(0,0%,100%,.5)] flex-shrink-0 block w-5 h-5 align-middle" />
+                                                // <div className="social-links -ml-2 -mr-2 flex items-center">
+                                                //     <div className="social-link large">
+                                                //         <Link
+                                                //             defaultValue={userProfile?.result.instagram}
+                                                //             href=""
+                                                //             target="_blank"
+                                                //             rel="nofollow noopener"
+                                                //             className="lux-menu-trigger p-2 text-black-blur-light-theme block min-w-0 transition-all duration-300 ease-in-out cursor-pointer"
+                                                //             underline="none"
+                                                //         >
+                                                //             <Instagram className="dark:text-[hsla(0,0%,100%,.5)] flex-shrink-0 block w-5 h-5 align-middle" />
 
-                                                        </Link>
-                                                    </div>
-                                                    <div className="social-link large">
-                                                        <Link
-                                                            href=""
-                                                            target="_blank"
-                                                            rel="nofollow noopener"
-                                                            className="lux-menu-trigger p-2 text-black-blur-light-theme block min-w-0 transition-all duration-300 ease-in-out cursor-pointer"
-                                                            underline="none"
-                                                        >
-                                                            <Twitter className="dark:text-[hsla(0,0%,100%,.5)] flex-shrink-0 block w-5 h-5 align-middle" />
-                                                        </Link>
-                                                    </div>
-                                                    <div className="social-link large">
-                                                        <Link
-                                                            href=""
-                                                            target="_blank"
-                                                            rel="nofollow noopener"
-                                                            className="lux-menu-trigger p-2 text-black-blur-light-theme block min-w-0 transition-all duration-300 ease-in-out cursor-pointer"
-                                                            underline="none"
-                                                        >
-                                                            <Youtube className="dark:text-[hsla(0,0%,100%,.5)] flex-shrink-0 block w-5 h-5 align-middle" />
+                                                //         </Link>
+                                                //     </div>
+                                                //     <div className="social-link large">
+                                                //         <Link
+                                                //             href=""
+                                                //             target="_blank"
+                                                //             rel="nofollow noopener"
+                                                //             className="lux-menu-trigger p-2 text-black-blur-light-theme block min-w-0 transition-all duration-300 ease-in-out cursor-pointer"
+                                                //             underline="none"
+                                                //         >
+                                                //             <Twitter className="dark:text-[hsla(0,0%,100%,.5)] flex-shrink-0 block w-5 h-5 align-middle" />
+                                                //         </Link>
+                                                //     </div>
+                                                //     <div className="social-link large">
+                                                //         <Link
+                                                //             href=""
+                                                //             target="_blank"
+                                                //             rel="nofollow noopener"
+                                                //             className="lux-menu-trigger p-2 text-black-blur-light-theme block min-w-0 transition-all duration-300 ease-in-out cursor-pointer"
+                                                //             underline="none"
+                                                //         >
+                                                //             <Youtube className="dark:text-[hsla(0,0%,100%,.5)] flex-shrink-0 block w-5 h-5 align-middle" />
 
-                                                        </Link>
-                                                    </div>
-                                                    <div className="social-link large">
-                                                        <Link
-                                                            href=""
-                                                            target="_blank"
-                                                            rel="nofollow noopener"
-                                                            className="lux-menu-trigger p-2 text-black-blur-light-theme block min-w-0 transition-all duration-300 ease-in-out cursor-pointer"
-                                                            underline="none"
-                                                        >
-                                                            <FaTiktok className="dark:text-[hsla(0,0%,100%,.5)] flex-shrink-0 block w-5 h-5 align-middle" />
+                                                //         </Link>
+                                                //     </div>
+                                                //     <div className="social-link large">
+                                                //         <Link
+                                                //             href=""
+                                                //             target="_blank"
+                                                //             rel="nofollow noopener"
+                                                //             className="lux-menu-trigger p-2 text-black-blur-light-theme block min-w-0 transition-all duration-300 ease-in-out cursor-pointer"
+                                                //             underline="none"
+                                                //         >
+                                                //             <FaTiktok className="dark:text-[hsla(0,0%,100%,.5)] flex-shrink-0 block w-5 h-5 align-middle" />
 
-                                                        </Link>
-                                                    </div>
-                                                    <div className="social-link large">
-                                                        <Link
-                                                            href=""
-                                                            target="_blank"
-                                                            rel="nofollow noopener"
-                                                            className="lux-menu-trigger p-2 text-black-blur-light-theme block min-w-0 transition-all duration-300 ease-in-out cursor-pointer"
-                                                            underline="none"
-                                                        >
-                                                            <Linkedin className="dark:text-[hsla(0,0%,100%,.5)] flex-shrink-0 block w-5 h-5 align-middle" />
+                                                //         </Link>
+                                                //     </div>
+                                                //     <div className="social-link large">
+                                                //         <Link
+                                                //             href=""
+                                                //             target="_blank"
+                                                //             rel="nofollow noopener"
+                                                //             className="lux-menu-trigger p-2 text-black-blur-light-theme block min-w-0 transition-all duration-300 ease-in-out cursor-pointer"
+                                                //             underline="none"
+                                                //         >
+                                                //             <Linkedin className="dark:text-[hsla(0,0%,100%,.5)] flex-shrink-0 block w-5 h-5 align-middle" />
 
-                                                        </Link>
-                                                    </div>
-                                                    <div className="social-link large">
-                                                        <Link
-                                                            href=""
-                                                            target="_blank"
-                                                            rel="nofollow noopener"
-                                                            className="lux-menu-trigger p-2 text-black-blur-light-theme block min-w-0 transition-all duration-300 ease-in-out cursor-pointer"
-                                                            underline="none"
-                                                        >
-                                                            <Globe className="dark:text-[hsla(0,0%,100%,.5)] flex-shrink-0 block w-5 h-5 align-middle" />
-                                                        </Link>
-                                                    </div>
+                                                //         </Link>
+                                                //     </div>
+                                                <div className="social-link large">
+                                                    <Link
+                                                        href=""
+                                                        target="_blank"
+                                                        rel="nofollow noopener"
+                                                        className="lux-menu-trigger p-2 text-black-blur-light-theme block min-w-0 transition-all duration-300 ease-in-out cursor-pointer"
+                                                        underline="none"
+                                                    >
+                                                        <Globe className="dark:text-[hsla(0,0%,100%,.5)] flex-shrink-0 block w-5 h-5 align-middle" />
+                                                    </Link>
                                                 </div>
+                                                // </div>
                                             )}
                                         </div>
                                         <div className="pt-4">
@@ -406,7 +398,12 @@ export default function ProfilePage() {
                                                     )}
                                                 </ModalContent>
                                             </Modal>
-                                            <Button onPress={onOpen} type="button" className="bg-[#a2b7bf] text-white dark:bg-[#122935] dark:text-[white] p-[0.25rem_0.75rem] font-medium border-none cursor-pointer transition-all duration-300 ease-in-out inline-flex items-center m-0" radius="full">
+                                            <Button
+                                                onPress={onOpen}
+                                                type="button"
+                                                className="bg-[#a2b7bf] text-white dark:bg-[#122935] dark:text-[white] p-[0.25rem_0.75rem] font-medium border-none cursor-pointer transition-all duration-300 ease-in-out inline-flex items-center m-0 hover:text-white hover:bg-[#0099dd]"
+                                                radius="full"
+                                            >
                                                 <Pen className="mr-1 w-3 h-3 block align-middle" />
                                                 <span className="text-base">Tiểu sử</span>
                                             </Button>
@@ -431,16 +428,47 @@ export default function ProfilePage() {
                                                             </Link>
                                                         </div>
                                                     </div>
-                                                    <div className="block">
+                                                    <div className="profile-events-content-wrapper">
+                                                        <div className="profile-event-wrapper pb-0">
+                                                            <Link
+                                                                href=""
+                                                                className="profile-event relative flex items-center m-[-0.75rem_-1.5rem] p-[0.75rem_1.5rem] rounded-lg transition-all duration-300 ease-in-out text-[#0099dd] cursor-pointer hover:bg-[#f0f7fb] hover:opacity-[1]"
+                                                                underline="none"
+                                                            >
+                                                                <div className="event-time-left w-14 text-center mr-6 border border-solid border-[#f0f8fd] rounded-lg bg-white overflow-hidden transition-all duration-300 ease-in-out">
+                                                                    <div className="event-month uppercase text-xs font-semibold text-[#82aad8] bg-[#f0f8fd] p-[0.125rem_0px] transition-all duration-300 ease-in-out">Nov</div>
+                                                                    <div className="event-date text-2xl font-light m-[0.375rem_0px] text-[#002f45]">11</div>
+                                                                </div>
+                                                                <div className="event-cover-wrapper w-40 mr-6 relative">
+                                                                    <div
+                                                                        className="pb-[50%] bg-cover bg-center rounded-md"
+                                                                        style={{ backgroundImage: `url(${imageUrl})` }}
+                                                                    ></div>
+                                                                    <div className="bg-cover bg-center rounded-md absolute left-0 top-0 w-full transition-all duration-300 ease-in-out"></div>
+                                                                </div>
+                                                                <div className="event-info flex-1 min-w-0">
+                                                                    <div>
+                                                                        <span className="event-name text-lg mr-2 font-medium text-[#002f45]">vcl fpt</span>
+                                                                    </div>
+                                                                    <div className="text-sm flex-wrap mt-1 flex items-center">
+                                                                        <div className="event-time-wrapper text-[#849ba4] mr-2">
+                                                                            <div className="event-time starting-soon text-[#ec660d]">Starting Soon</div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </Link>
+                                                        </div>
+                                                    </div>
+                                                    {/* <div className="block">
                                                         <div className="profile-event-empty w-full text-center p-[2rem_1rem_2rem_1rem] text-[#a2b7bf] dark:text-[#939597] border border-solid border-[#eff3f5] dark:border-[#151719] rounded-lg flex flex-col items-center">
                                                             <Calendar className="w-8 h-8 mb-4 block align-middle" />
                                                             <div className="font-semibold mb-1">Không có gì sắp diễn ra</div>
                                                             <div className="text-sm">Đăng ký ngay để theo dõi những thông tin mới nhất</div>
                                                         </div>
-                                                    </div>
+                                                    </div> */}
                                                     <div className="bottom-action mt-4">
                                                         <div id="block-action" className="inline-block p-0 text-[#a2b7bf]">
-                                                            <Link href={"/"} className="transition-all duration-300 ease-in-out text-[#0099dd] dark:text-[#0099dd] cursor-pointer" underline="none">
+                                                            <Link href={"/home/pastevents"} className="transition-all duration-300 ease-in-out text-[#0099dd] dark:text-[#0099dd] cursor-pointer" underline="none">
                                                                 Sự kiện đã qua
                                                             </Link>
                                                         </div>
