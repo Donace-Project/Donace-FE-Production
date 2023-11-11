@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { Button } from "@nextui-org/button";
 import { Input } from "@nextui-org/input";
 import { Link } from "@nextui-org/link";
@@ -32,22 +32,30 @@ import {
 import { ThemeSwitchWithText } from "./theme-switch";
 import ThoiGian from "./clock/clock";
 import { authHelper } from "../helpers/authHelper";
-import { useSession } from "next-auth/react";
-import { usePathname } from 'next/navigation';
-import {Kbd} from "@nextui-org/react";
-
+import { useSession, signOut } from "next-auth/react";
+import { usePathname } from "next/navigation";
+import { Kbd } from "@nextui-org/react";
 
 export default function NavbarComponents() {
-  const page = usePathname()?.split('/')[1];
-  if (authHelper.getToken() === null) {
-    const { data: session } = useSession();
-    authHelper.saveToken(session?.token);
-  }
+  const page = usePathname()?.split("/")[1];
+
+  const { data: session, status: status } = useSession();
+  useEffect(() => {
+    if (status === "authenticated") {
+      authHelper.saveToken(session?.token);
+      console.log(status);
+      console.log(session);
+    }
+  }, [status]);
 
   const handleLogout = () => {
     localStorage.clear();
-    window.location.reload();
-  }
+
+    signOut({
+      redirect: true,
+      callbackUrl: "auth/login",
+    });
+  };
 
   return (
     <Navbar
@@ -80,7 +88,9 @@ export default function NavbarComponents() {
             >
               <NavbarContent
                 as={"div"}
-                className={`${page === "home" ? 'text-[rgb(19,21,23)] dark:text-[#fff]' : ''} dark:hover:text-[#fff] gap-2 flex items-center transition-all duration-300 ease-in-out hover:text-[rgb(19,21,23)] `}
+                className={`${
+                  page === "home" ? "text-[rgb(19,21,23)] dark:text-[#fff]" : ""
+                } dark:hover:text-[#fff] gap-2 flex items-center transition-all duration-300 ease-in-out hover:text-[rgb(19,21,23)] `}
               >
                 <NavbarItem as={"div"} className="icon">
                   <Ticket className="block w-4 h-4 align-middle mt-0.5" />
@@ -96,7 +106,11 @@ export default function NavbarComponents() {
             >
               <NavbarContent
                 as={"div"}
-                className={`${page === "calendars" ? 'text-[rgb(19,21,23)] dark:text-[#fff]' : ''} dark:hover:text-[#fff] gap-2 flex items-center transition-all duration-300 ease-in-out hover:text-[rgb(19,21,23)]`}
+                className={`${
+                  page === "calendars"
+                    ? "text-[rgb(19,21,23)] dark:text-[#fff]"
+                    : ""
+                } dark:hover:text-[#fff] gap-2 flex items-center transition-all duration-300 ease-in-out hover:text-[rgb(19,21,23)]`}
               >
                 <NavbarItem as={"div"} className="icon">
                   <CalendarRange className="block w-4 h-4 align-middle mt-0.5" />
@@ -112,7 +126,11 @@ export default function NavbarComponents() {
             >
               <NavbarContent
                 as={"div"}
-                className={`${page === "explore" ? 'text-[rgb(19,21,23)] dark:text-[#fff]' : ''} dark:hover:text-[#fff] gap-2 flex items-center transition-all duration-300 ease-in-out hover:text-[rgb(19,21,23)]`}
+                className={`${
+                  page === "explore"
+                    ? "text-[rgb(19,21,23)] dark:text-[#fff]"
+                    : ""
+                } dark:hover:text-[#fff] gap-2 flex items-center transition-all duration-300 ease-in-out hover:text-[rgb(19,21,23)]`}
               >
                 <NavbarItem as={"div"} className="icon">
                   <Compass className="block w-4 h-4 align-middle mt-0.5" />
@@ -156,9 +174,7 @@ export default function NavbarComponents() {
             placeholder="Tìm kiếm..."
             size="sm"
             startContent={<SearchIcon size={18} />}
-            endContent={
-              <Kbd keys={["shift"]}>K</Kbd>
-            }
+            endContent={<Kbd keys={["shift"]}>K</Kbd>}
             type="search"
           />
           <Dropdown>
@@ -170,7 +186,7 @@ export default function NavbarComponents() {
                 >
                   <NavbarItem as={"div"} className="inline-flex relative">
                     <NavbarItem as={"div"} className="icon">
-                        <Bell className="block w-4 h-4 align-middle" />
+                      <Bell className="block w-4 h-4 align-middle" />
                     </NavbarItem>
                   </NavbarItem>
                 </NavbarContent>
@@ -298,7 +314,7 @@ export default function NavbarComponents() {
                     </div>
                   </Link>
                 </DropdownItem>
-                <DropdownItem >
+                <DropdownItem>
                   <Link
                     onClick={handleLogout}
                     href="/auth/login"
