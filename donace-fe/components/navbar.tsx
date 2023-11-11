@@ -164,7 +164,7 @@ export default function NavbarComponents() {
               <span> Sự kiện</span>
             </NavbarItem>
           </Link>
-          <Input
+          {/* <Input
             classNames={{
               base: "max-w-full sm:max-w-[10rem] h-10",
               mainWrapper: "h-full",
@@ -239,7 +239,7 @@ export default function NavbarComponents() {
                 </div>
               </DropdownItem>
             </DropdownMenu>
-          </Dropdown>
+          </Dropdown> */}
           <NavbarItem
             as={"div"}
             className="avatar-wrapper -m-2 p-2 cursor-pointer transition-all duration-300 ease-in-out inline-flex min-w-0 items-center"
