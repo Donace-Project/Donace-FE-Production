@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@nextui-org/button";
 import { Input } from "@nextui-org/input";
 import { Link } from "@nextui-org/link";
@@ -35,14 +35,17 @@ import { authHelper } from "../helpers/authHelper";
 import { useSession, signOut } from "next-auth/react";
 import { usePathname } from "next/navigation";
 import { Kbd } from "@nextui-org/react";
+import { AppUser } from "../types/DonaceType";
 
 export default function NavbarComponents() {
   const page = usePathname()?.split("/")[1];
 
-  const { data: session, status: status } = useSession();
+  let { data: session, status: status } = useSession();
+  let [user, setUser] = useState<null | AppUser>(null);
   useEffect(() => {
     if (status === "authenticated") {
       authHelper.saveToken(session?.token);
+      setUser(session?.user as any);
     }
   }, [status]);
 
@@ -205,7 +208,11 @@ export default function NavbarComponents() {
                             isBordered
                             color="primary"
                             radius="full"
-                            src="https://avatars.githubusercontent.com/u/143386751?s=200&v=4"
+                            src={
+                              user?.avatar?.trim()
+                                ? user.avatar
+                                : "https://avatars.githubusercontent.com/u/143386751?s=200&v=4"
+                            }
                             name="Donace"
                             className="relative"
                           />
@@ -240,7 +247,11 @@ export default function NavbarComponents() {
             <Dropdown className="dark:bg-[rgba(33,35,37,0.8)] shadow-sm relative rounded-lg border border-solid border-[rgba(19,21,23,0.08)] overflow-auto">
               <DropdownTrigger>
                 <Avatar
-                  src="https://avatars.githubusercontent.com/u/143386751?s=200&v=4"
+                  src={
+                    user?.avatar?.trim()
+                      ? user.avatar
+                      : "https://avatars.githubusercontent.com/u/143386751?s=200&v=4"
+                  }
                   radius="full"
                   name="Donace"
                   isBordered
@@ -259,15 +270,19 @@ export default function NavbarComponents() {
                         <div className="avatar-wrapper">
                           <Avatar
                             isBordered
-                            src="https://avatars.githubusercontent.com/u/143386751?s=200&v=4"
                             radius="full"
+                            src={
+                              user?.avatar?.trim()
+                                ? user.avatar
+                                : "https://avatars.githubusercontent.com/u/143386751?s=200&v=4"
+                            }
                             name="Donace"
                             className="w-[32px] h-[32px] bg-center bg-cover bg-[#fff] relative"
                           />
                         </div>
                         <div className="min-w-0 flex-1">
                           <div className="name dark:text-[#fff] font-medium overflow-hidden text-ellipsis whitespace-nowrap text-black-light-theme">
-                            Donace
+                            {user?.userName}
                           </div>
                           <div className="desc text-xs gap-1 flex text-[rgba(19,21,23,0.36)]">
                             <div className="gap-1 min-w-0 flex items-center">
