@@ -11,7 +11,6 @@ import { Textarea } from "@nextui-org/input";
 import { FaTiktok } from 'react-icons/fa';
 import { Checkbox } from "@nextui-org/checkbox";
 import { fetchWrapper } from "@/helpers/fetch-wrapper";
-import { Image } from "@nextui-org/image";
 
 export type Profile = {
     code: string;
