@@ -39,7 +39,7 @@ export default function SignIn() {
       router.push("/home");
     } else {
       // Xử lý hiển thị lỗi
-      setError("Sai tài khoản hoặc mật khẩu. Vui lòng thử lại sau.");
+      setError("Sai tài khoản hoặc mật khẩu");
     }
   };
 
