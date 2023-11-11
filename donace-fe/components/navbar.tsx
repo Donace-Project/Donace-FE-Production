@@ -43,8 +43,6 @@ export default function NavbarComponents() {
   useEffect(() => {
     if (status === "authenticated") {
       authHelper.saveToken(session?.token);
-      console.log(status);
-      console.log(session);
     }
   }, [status]);
 
