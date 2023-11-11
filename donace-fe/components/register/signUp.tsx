@@ -72,7 +72,7 @@ export default function SignUp() {
                   Đăng ký
                 </h1>
                 <div className="text-secondary pt-0.5 pb-1 text-sm text-black-more-blur-light-theme">
-                  Tạo tài khoản mới
+                  Tạo tài khoản mới để sử dụng dịch vụ.
                 </div>
               </div>
               <div>
@@ -86,16 +86,16 @@ export default function SignUp() {
                   onValueChange={setEmail}
                   isRequired
                   isClearable
-                  placeholder="your@email.com"
+                  placeholder="Email của bạn"
                   className="text-base h-auto transition-all duration-300 leading-4 rounded-lg w-full m-0"
                 />
                 <Input
-                  label="Password"
+                  label="Mật khẩu"
                   value={password}
                   onValueChange={setPassword}
                   isRequired
                   labelPlacement={"inside"}
-                  placeholder="your secret password"
+                  placeholder="Password của bạn"
                   className="pt-2 text-base h-auto transition-all duration-300 leading-4 rounded-lg w-full m- mb-6"
                   type={isVisible ? "text" : "password"}
                 />

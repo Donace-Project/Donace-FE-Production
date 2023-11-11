@@ -39,7 +39,7 @@ export default function SignIn() {
       router.push("/home");
     } else {
       // Xử lý hiển thị lỗi
-      setError("Incorrect username or password. Please try again.");
+      setError("Sai tài khoản hoặc mật khẩu. Vui lòng thử lại sau.");
     }
   };
 
@@ -57,10 +57,10 @@ export default function SignIn() {
             <CardBody className="opacity-[1] transform-none">
               <div className="gap-2 pt-1 mb-4 flex flex-col">
                 <h1 className="font-semibold text-2xl mb-0 mt-0 leading-5">
-                  Welcome to Donace
+                  Chào mừng đến Donace
                 </h1>
                 <div className="text-secondary pt-0.5 pb-1 text-sm text-black-more-blur-light-theme">
-                  Please sign in or sign up below.
+                  Vui lòng đăng ký hoặc đăng nhập bên dưới.
                 </div>
               </div>
               <div>
@@ -70,19 +70,19 @@ export default function SignIn() {
                   label="Email"
                   isInvalid={isInvalidEmail}
                   color={isInvalidEmail ? "danger" : "success"}
-                  errorMessage={isInvalidEmail && "Please enter a valid email"}
+                  errorMessage={isInvalidEmail && "Vui lòng điền đúng email"}
                   onValueChange={setEmail}
                   isClearable
-                  placeholder="your@email.com"
+                  placeholder="Email của bạn"
                   className="text-base h-auto transition-all duration-300 leading-4 rounded-lg w-full m-0"
                 />
                 <Input
-                  label="Password"
+                  label="Mật khẩu"
                   value={password}
                   onValueChange={setPassword}
                   labelPlacement={"inside"}
-                  placeholder="your secret password"
-                  className="pt-2 text-base h-auto transition-all duration-300 leading-4 rounded-lg w-full m-0 mb-3"
+                  placeholder="Mật khẩu của bạn"
+                  className="pt-2 text-base h-auto transition-all duration-300 leading-4 rounded-lg w-full m-0 mb-3 transparentInput"
                   type={isVisible ? "text" : "password"}
                 />
                 <div className="mb-5">
@@ -95,16 +95,16 @@ export default function SignIn() {
                   type="button"
                   className="mb-12 text-[#fff] bg-[#333537] border-[#333537] border border-solid w-full cursor-pointer transition-all duration-300 ease-in-out font-medium rounded-lg relative whitespace-nowrap justify-center outline-none max-w-full text-base p-[0.625rem_0.875rem] h-[calc(2.25rem+2*1px)] flex items-center m-0 leading-6"
                 >
-                  <div className="label">Login</div>
+                  <div className="label">Đăng nhập</div>
                 </Button>
               </div>
             </CardBody>
             <Divider />
             <CardFooter className="-mb-2 flex justify-center items-center">
-              <div className="">Don't have an account?</div>
+              <div className="">Bạn không có tài khoản?</div>
               <div>&nbsp;</div>
               <Link href="/auth/register" underline="hover">
-                Sign up here.
+                Đăng ký ngay
               </Link>
             </CardFooter>
           </div>
