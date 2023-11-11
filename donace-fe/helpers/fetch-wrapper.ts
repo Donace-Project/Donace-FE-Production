@@ -1,7 +1,7 @@
 import { authHelper } from "./authHelper";
 
 // TODO: Move config này ra setting
-const baseUrl = "http://34.97.29.83/";
+const baseUrl = "http://127.0.0.1:3008/";
 
 export const fetchWrapper = {
   get,
@@ -68,9 +68,8 @@ function handleResponse(response: Response) {
         // auto logout if 401 Unauthorized or 403 Forbidden response returned from api
         // TODO: Handle chuyển trang sang màn login
       }
-
-      const error = (data && data.message) || response.statusText;
-      return Promise.reject(error);
+      
+      return Promise.reject(data);
     }
 
     return data;
