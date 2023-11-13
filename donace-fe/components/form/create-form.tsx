@@ -54,7 +54,7 @@ export default function CreateForm() {
         lat: '',
         long: '',
         cover: "",
-        capacity: 0,
+        capacity: "",
         isOverCapacity: true,
         name: '',
         theme: '',
@@ -158,7 +158,7 @@ export default function CreateForm() {
                                                         "text-4xl",
                                                     ],
                                                     inputWrapper: [
-                                                        
+
                                                         "shadow-none"
                                                     ]
                                                 }}
@@ -234,7 +234,7 @@ export default function CreateForm() {
                                                                                 onChange={(e) => setEndTime(e.target.value)}
                                                                                 className='bg-transparent dark:bg-[rgba(255,255,255,0.08)] dark:text-[#fff]'
                                                                                 variant='flat'
-                                                                                radius='none'/>
+                                                                                radius='none' />
                                                                         </div>
                                                                     </div>
                                                                 </div>
