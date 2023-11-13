@@ -41,6 +41,58 @@ export type Item = {
   isLive: boolean;
 }
 
+
+const demo_event: Events = {
+  totalCount: 2,
+  items: [
+    {
+      id: "1",
+      startDate: "2022-02-01T10:00:00.000Z",
+      endDate: "2022-02-01T12:00:00.000Z",
+      addressName: "123 Main St, New York, NY",
+      lat: "40.7128",
+      long: "-74.0060",
+      capacity: 50,
+      isOverCapacity: false,
+      cover: "https://example.com/event1.jpg",
+      name: "Event 1",
+      theme: "light",
+      color: "#ffffff",
+      fontSize: 16,
+      instructions: "Please bring your own water bottle.",
+      isMultiSection: false,
+      duration: 120,
+      totalGuest: 30,
+      calendarId: "1",
+      isLive: false,
+    },
+    {
+      id: "2",
+      startDate: "2022-02-15T14:00:00.000Z",
+      endDate: "2022-02-15T16:00:00.000Z",
+      addressName: "456 Elm St, Los Angeles, CA",
+      lat: "34.0522",
+      long: "-118.2437",
+      capacity: 100,
+      isOverCapacity: true,
+      cover: "https://example.com/event2.jpg",
+      name: "Event 2",
+      theme: "dark",
+      color: "#000000",
+      fontSize: 18,
+      instructions: "Please arrive 15 minutes early.",
+      isMultiSection: true,
+      duration: 180,
+      totalGuest: 120,
+      calendarId: "2",
+      isLive: true,
+    },
+  ],
+
+}
+
+
+
 const CovertDate = (date: string) => {
   return date.split("T");
 }
@@ -65,21 +117,9 @@ export default function HomeEvents() {
       <div className="page-header opacity-[1] pt-12 pl-4 pr-4 max-width-global margin-global">
         <div className="spread gap-2 mb-2 flex justify-between items-center">
           <h1 className="tab-title text-4xl font-semibold mb-0 mt-0">Sự kiện</h1>
-          {/* <div className="light lux-button min-w-[auto] p-0.5 overflow-hidden rounded-lg">
-            <ButtonGroup className="seggments relative grid grid-cols-2">
-              <Button as={Link} href="" type="button"
-                className="text-sm relative text-black-light-theme  rounded-none justify-center cursor-pointer transition-all duration-300 ease-in-out font-medium flex items-center bg-[#fff] dark:text-[#fff] dark:bg-[#fff2] shadow-xl"
-              >
-                <div className="">Sắp tới</div>
-              </Button>
-              <Button as={Link} href="/home/pastevents" type="button"
-                className="text-sm text-black-blur-light-theme relative rounded-none justify-center cursor-pointer transition-all duration-300 ease-in-out font-medium flex items-center bg-[rgba(19,21,23,0.04)] dark:text-[hsla(0,0%,100%,.5)] dark:bg-[rgba(255,255,255,0.08)]"
-              >
-                <div className="">Đã qua</div>
-              </Button>
-            </ButtonGroup>
-          </div> */}
-          <Tabs aria-label="Options">
+        </div>
+        <div className="flex-col flex gap-2">
+          <Tabs aria-label="Options" >
             <Tab key="future" title="Sắp tới">
               {/* <Card>
                 <CardBody>
@@ -87,9 +127,9 @@ export default function HomeEvents() {
                 </CardBody>
               </Card> */}
               <div className="zm-container p-[2rem_1rem_1rem] max-width-global margin-global">
-                {events ? (
+                {demo_event ? (
                   <div className="timeline">
-                    {events.items.map((event, index) => (
+                    {demo_event.items.map((event, index) => (
                       <div key={index} className="timeline-section relative flex w-full gap-16 pb-12">
                         <div className="line left-[calc(7rem+4rem/2)] dark:border-[rgba(255,255,255,0.08)]"></div>
                         <div className="title always relative w-28">
@@ -205,9 +245,9 @@ export default function HomeEvents() {
             </Tab>
             <Tab key="past" title="Đã qua">
               <div className="zm-container p-[2rem_1rem_1rem] max-width-global margin-global">
-                {events ? (
+                {demo_event ? (
                   <div className="timeline">
-                    {events.items.map((event, index) => (
+                    {demo_event.items.map((event, index) => (
                       <div key={index} className="timeline-section relative flex w-full gap-16 pb-12">
                         <div className="line left-[calc(7rem+4rem/2)] dark:border-[rgba(255,255,255,0.08)]"></div>
                         <div className="title always relative w-28">
