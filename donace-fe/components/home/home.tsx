@@ -137,11 +137,6 @@ export default function HomeEvents() {
         <div className="flex-col flex gap-2">
           <Tabs aria-label="Options" >
             <Tab key="future" title="Sắp tới">
-              {/* <Card>
-                <CardBody>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                </CardBody>
-              </Card> */}
               <div className="zm-container p-[2rem_1rem_1rem] max-width-global margin-global">
                 {demo_event ? (
                   <div className="timeline">
@@ -323,14 +318,6 @@ export default function HomeEvents() {
                                 </div>
                                 <div className="event-bottom-bar flex justify-between items-center">
                                   <div className="gap-2 flex items-center">
-                                    <Button
-                                      as={Link}
-                                      href="/user/user-join-event"
-                                      className="text-black-more-blur-light-theme dark:text-[rgba(255,255,255,0.64)] bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)] border-transparent border border-solid transition-all duration-300 ease-in-out donace-button flex items-center cursor-pointer"
-                                    >
-                                      <Fullscreen className="mr-1.5 stroke-2 w-3.5 h-3.5 flex-shrink-0 block align-middle mt-0.5" />
-                                      <div className="label">Check In</div>
-                                    </Button>
                                     <Button as={Link} href="my-event" className="text-black-more-blur-light-theme dark:text-[rgba(255,255,255,0.64)] bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)] border-transparent border border-solid transition-all duration-300 ease-in-out donace-button flex items-center cursor-pointer">
                                       <div className="label">Quản lý sự kiện</div>
                                       <ArrowRight className="mr-1.5 stroke-2 w-3.5 h-3.5 flex-shrink-0 block align-middle" />
