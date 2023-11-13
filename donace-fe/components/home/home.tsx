@@ -68,7 +68,7 @@ const demo_event: Events = {
     },
     {
       id: "2",
-      startDate: "2022-02-15T14:00:00.000Z",
+      startDate: "2024-02-15T14:00:00.000Z",
       endDate: "2022-02-15T16:00:00.000Z",
       addressName: "456 Elm St, Los Angeles, CA",
       lat: "34.0522",
@@ -93,6 +93,7 @@ const demo_event: Events = {
 
 
 
+
 const CovertDate = (date: string) => {
   return date.split("T");
 }
@@ -103,13 +104,28 @@ const DayOfWeek = (date: string) => {
 }
 
 export default function HomeEvents() {
+  var [pastEvents, setPastEvents] = useState<Item[]>();
+  var [futureEvents, setFutureEvents] = useState<Item[]>();
 
-  var [events, setEvents] = useState<Events | null>(null);
+  function filterEvents(events: Events) {
+    const now = new Date();
+    const pastEvents = events.items.filter(event => new Date(event.startDate) < now);
+    const futureEvents = events.items.filter(event => new Date(event.startDate) >= now);
+
+    setPastEvents(pastEvents);
+    setFutureEvents(futureEvents);
+  }
 
   useEffect(() => {
-    fetchWrapper.get('/api/Event?PageSize=10')
-      .then(data => setEvents(data));
-    console.log(events);
+    // uncomment khi có dữ liệu từ api
+    // fetchWrapper.get('/api/Event?PageSize=9999')
+    //   .then(data => filterEvents(data));
+
+
+    // Xóa khi có dữ liệu từ api
+    filterEvents(demo_event);
+    console.log(futureEvents);
+    console.log(pastEvents);
   }, []);
 
   return (
@@ -129,7 +145,7 @@ export default function HomeEvents() {
               <div className="zm-container p-[2rem_1rem_1rem] max-width-global margin-global">
                 {demo_event ? (
                   <div className="timeline">
-                    {demo_event.items.map((event, index) => (
+                    {futureEvents?.map((event, index) => (
                       <div key={index} className="timeline-section relative flex w-full gap-16 pb-12">
                         <div className="line left-[calc(7rem+4rem/2)] dark:border-[rgba(255,255,255,0.08)]"></div>
                         <div className="title always relative w-28">
@@ -247,7 +263,7 @@ export default function HomeEvents() {
               <div className="zm-container p-[2rem_1rem_1rem] max-width-global margin-global">
                 {demo_event ? (
                   <div className="timeline">
-                    {demo_event.items.map((event, index) => (
+                    {pastEvents?.map((event, index) => (
                       <div key={index} className="timeline-section relative flex w-full gap-16 pb-12">
                         <div className="line left-[calc(7rem+4rem/2)] dark:border-[rgba(255,255,255,0.08)]"></div>
                         <div className="title always relative w-28">
