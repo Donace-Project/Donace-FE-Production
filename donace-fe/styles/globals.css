@@ -262,3 +262,12 @@ input:-webkit-autofill:active{
     -webkit-background-clip: text;
     transition: background-color 5000s ease-in-out 0s;
 }
+
+/* MANAGE -> CALENDARS -> PEOPLE */
+.simple-table-wrapper {
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgba( 19,21,23 ,0.08);
+    border-radius: 0.5rem;
+    overflow: hidden;
+}

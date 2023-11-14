@@ -1,6 +1,8 @@
+"use client";
 import { Avatar } from "@nextui-org/avatar";
-import { Button, ButtonGroup } from "@nextui-org/button";
+import { Button } from "@nextui-org/button";
 import { Link } from "@nextui-org/link";
+import { Tab, Tabs } from "@nextui-org/tabs";
 import { ArrowUpRight, CalendarX2, Plus } from "lucide-react";
 
 export default function CalendarManage() {
@@ -27,7 +29,7 @@ export default function CalendarManage() {
                         className="text-black-more-blur-light-theme bg-[rgba(19,21,23,0.04)] border-transparent border border-solid transition-all duration-300 ease-in-out donace-button-w-fit flex items-center cursor-pointer"
                         underline="none"
                     >
-                        <div className="label">Calendar Page</div>
+                        <div className="label">Lịch</div>
                         <ArrowUpRight className="ml-1.5 stroke-2 w-3.5 h-3.5 flex-shrink-0 block align-middle" />
                     </Link>
                 </div>
@@ -38,39 +40,18 @@ export default function CalendarManage() {
                         <div className="tabs flex max-w-full overflow-auto min-w-0 gap-4 flex-1">
                             <div className="side-padding"></div>
                             <Link
-                                href="/calendar/manage"
+                                href="/calendars/manage"
                                 className="text-black-light-theme border-b-2 border-solid border-[rgb(19,21,23)] whitespace-nowrap inline-block pb-2 transition-all duration-300 ease-in-out cursor-pointer"
                                 underline="none"
                             >
-                                Events
+                                Sự kiện
                             </Link>
                             <Link
-                                href="/calendar/manage"
+                                href="/calendars/manage/audience"
                                 className="text-black-blur-light-theme border-b-2 border-solid border-transparent whitespace-nowrap inline-block pb-2 transition-all duration-300 ease-in-out cursor-pointer"
                                 underline="none"
                             >
-                                People
-                            </Link>
-                            <Link
-                                href="/calendar/manage"
-                                className="text-black-blur-light-theme border-b-2 border-solid border-transparent whitespace-nowrap inline-block pb-2 transition-all duration-300 ease-in-out cursor-pointer"
-                                underline="none"
-                            >
-                                Newletters
-                            </Link>
-                            <Link
-                                href="/calendar/manage"
-                                className="text-black-blur-light-theme border-b-2 border-solid border-transparent whitespace-nowrap inline-block pb-2 transition-all duration-300 ease-in-out cursor-pointer"
-                                underline="none"
-                            >
-                                Insights
-                            </Link>
-                            <Link
-                                href="/calendar/manage"
-                                className="text-black-blur-light-theme border-b-2 border-solid border-transparent whitespace-nowrap inline-block pb-2 transition-all duration-300 ease-in-out cursor-pointer"
-                                underline="none"
-                            >
-                                Settings
+                                Người tham gia
                             </Link>
                         </div>
                     </div>
@@ -80,62 +61,57 @@ export default function CalendarManage() {
             <div className="zm-container pl-4 pr-4 max-width-global margin-global">
                 <div className="can-divide with-divider medium">
                     <div className="section-title-wrapper">
-                        <div className="section-title-row mb-5 flex justify-between items-center">
-                            <h2 className="text-xl font-semibold text-black-light-theme mb-0 mt-0">
-                                <div className="section-title gap-2 flex items-center">
-                                    <span>Events</span>
-                                    <Button
-                                        aria-label="Add Event"
-                                        type="button"
-                                        className="text-black-more-blur-light-theme bg-[rgba(19,21,23,0.04)] p-[0.1875rem] border-transparent border border-solid flex-shrink-0 cursor-pointer transition-all duration-300 ease-in-out donace-button-w-fit flex items-center m-0"
-                                        size="sm"
-                                    >
-                                        <Plus className="stroke-2 w-3.5 h-3.5 block align-middle" />
-                                    </Button>
-                                </div>
-                            </h2>
-                            <div className="right-element m-[-.25rem_0]">
-                                <div className="lux-button min-w-[auto] p-0.5 overflow-hidden rounded-lg">
-                                    <ButtonGroup className="seggments relative grid grid-cols-2">
-                                        <Button
-                                            as={Link}
-                                            href=""
-                                            type="button"
-                                            className="text-sm text-black-light-theme relative rounded-none justify-center cursor-pointer transition-all duration-300 ease-in-out font-medium flex items-center bg-[#fff] dark:text-[#fff] dark:bg-[#fff2] shadow-xl"
-                                        >
-                                            <div className="">Sắp tới</div>
-                                        </Button>
-                                        <Button
-                                            as={Link}
-                                            href=""
-                                            type="button"
-                                            className="text-sm relative text-black-blur-light-theme rounded-none justify-center cursor-pointer transition-all duration-300 ease-in-out font-medium flex items-center bg-[rgba(19,21,23,0.04)] dark:text-[hsla(0,0%,100%,.5)] dark:bg-[rgba(255,255,255,0.08)]"
-                                        >
-                                            <div>Đã qua</div>
-                                        </Button>
-                                    </ButtonGroup>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="timeline-container">
-                        <div className="lux-empty-state text-center mt-16 flex flex-col items-center">
-                            <div className="icon justify-center flex items-center">
-                                <div className="mb-2">
-                                    <CalendarX2 className="w-64 h-auto block align-middle text-foreground-200" />
-                                </div>
-                            </div>
-                            <h3 className="text-2xl font-medium text-black-more-blur-light-theme p-0 mt-6 mb-0">No Events</h3>
-                            <div className="desc pl-12 pr-12 text-black-blur-light-theme">This calendar has no upcoming events.</div>
-                            <div className="mt-6 justify-center flex items-center">
-                                <Button
-                                    type="button"
-                                    className="text-black-more-blur-light-theme bg-[rgba(19,21,23,0.04)] border-transparent border border-solid cursor-pointer transition-all duration-300 ease-in-out donace-button-w-fit flex items-center m-0"
-                                >
-                                    <Plus className="mr-1.5 stroke-2 w-3.5 h-3.5 flex-shrink-0 block align-middle"/>
-                                    <div className="label">Add Event</div>
-                                </Button>
-                            </div>
+                        <div className="flex-col flex gap-2">
+                            <Tabs aria-label="Options" >
+                                <Tab key="future" title="Sắp tới">
+                                    <div className="timeline-container">
+                                        <div className="lux-empty-state text-center mt-16 flex flex-col items-center">
+                                            <div className="icon justify-center flex items-center">
+                                                <div className="mb-2">
+                                                    <CalendarX2 className="w-64 h-auto block align-middle text-foreground-200" />
+                                                </div>
+                                            </div>
+                                            <h3 className="text-2xl font-medium text-black-more-blur-light-theme p-0 mt-6 mb-0">Không có sự kiện</h3>
+                                            <div className="desc pl-12 pr-12 text-black-blur-light-theme mt-2">Lịch này không có sự kiện gì sắp diễn ra.</div>
+                                            <div className="mt-6 justify-center flex items-center">
+                                                <Button
+                                                    as={Link}
+                                                    href="/create"
+                                                    type="button"
+                                                    className="text-black-more-blur-light-theme bg-[rgba(19,21,23,0.04)] border-transparent border border-solid cursor-pointer transition-all duration-300 ease-in-out donace-button-w-fit flex items-center m-0"
+                                                >
+                                                    <Plus className="mr-1.5 stroke-2 w-3.5 h-3.5 flex-shrink-0 block align-middle" />
+                                                    <div className="label">Tạo sự kiện mới</div>
+                                                </Button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </Tab>
+                                <Tab key="past" title="Đã qua">
+                                    <div className="timeline-container">
+                                        <div className="lux-empty-state text-center mt-16 flex flex-col items-center">
+                                            <div className="icon justify-center flex items-center">
+                                                <div className="mb-2">
+                                                    <CalendarX2 className="w-64 h-auto block align-middle text-foreground-200" />
+                                                </div>
+                                            </div>
+                                            <h3 className="text-2xl font-medium text-black-more-blur-light-theme p-0 mt-6 mb-0">Không có sự kiện</h3>
+                                            <div className="desc pl-12 pr-12 text-black-blur-light-theme mt-2">Lịch này không có sự kiện gì đã diễn ra.</div>
+                                            <div className="mt-6 justify-center flex items-center">
+                                                <Button
+                                                    as={Link}
+                                                    href="/create"
+                                                    type="button"
+                                                    className="text-black-more-blur-light-theme bg-[rgba(19,21,23,0.04)] border-transparent border border-solid cursor-pointer transition-all duration-300 ease-in-out donace-button-w-fit flex items-center m-0"
+                                                >
+                                                    <Plus className="mr-1.5 stroke-2 w-3.5 h-3.5 flex-shrink-0 block align-middle" />
+                                                    <div className="label">Tạo sự kiện mới</div>
+                                                </Button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </Tab>
+                            </Tabs>
                         </div>
                     </div>
                 </div>

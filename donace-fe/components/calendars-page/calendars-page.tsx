@@ -115,6 +115,7 @@ export default function CalendarPage() {
                                                     key={index}
                                                     className="p-[1rem_1rem_0.875rem] cursor-pointer transition-all duration-300 ease-in-out block relative rounded-xl bg-[#f3f4f5] dark:bg-[rgba(255,255,255,0.04)] border border-solid border-[#fff] dark:border-[rgba(255,255,255,0.04)] overflow-hidden"
                                                     underline="none"
+                                                    href="/calendars/manage"
                                                 >
                                                     <div className="spread min-h-full flex justify-between flex-col">
                                                         <Image
