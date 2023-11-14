@@ -101,19 +101,15 @@ const DayOfWeek = (date: string) => {
   return daysOfWeek[currentDate]
 }
 
+const currentDate = new Date();
+const currentDateFormatted = currentDate.toLocaleDateString('en-US').replace(/\//g, '-');
+currentDate.setDate(currentDate.getDate() - 1)
+const pastDateFormatted = currentDate.toLocaleString('en-US').replace(/\//g, '-');
+
 export default function HomeEvents() {
   var [pastEvents, setPastEvents] = useState<Item[]>();
   var [futureEvents, setFutureEvents] = useState<Item[]>();
   const [isOnline, setIsOnline] = useState(true);
-
-  function filterEvents(events: Events) {
-    const now = new Date();
-    const pastEvents = events.items.filter(event => new Date(event.startDate) < now);
-    const futureEvents = events.items.filter(event => new Date(event.startDate) >= now);
-
-    setPastEvents(pastEvents);
-    setFutureEvents(futureEvents);
-  }
 
   useEffect(() => {
     const handleOnline = () => {
@@ -138,14 +134,11 @@ export default function HomeEvents() {
 
   useEffect(() => {
     // uncomment khi có dữ liệu từ api
-    // fetchWrapper.get('/api/Event?PageSize=9999')
-    //   .then(data => filterEvents(data));
+    fetchWrapper.get(`/api/Event?FromDate=${currentDateFormatted}&ToDate=12-31-9998&PageNumber=1&PageSize=9999`)
+      .then(data => setFutureEvents(data.items));
 
-
-    // // Xóa khi có dữ liệu từ api
-    filterEvents(demo_event);
-    console.log(futureEvents);
-    console.log(pastEvents);
+    fetchWrapper.get(`/api/Event?FromDate=01-01-1996&ToDate=${pastDateFormatted}&PageNumber=1&PageSize=9999`)
+      .then(data => setPastEvents(data.items));
   }, []);
 
   return (
@@ -159,7 +152,7 @@ export default function HomeEvents() {
             <Tabs aria-label="Options" >
               <Tab key="future" title="Sắp tới">
                 <div className="zm-container p-[2rem_1rem_1rem] max-width-global margin-global">
-                  {demo_event ? (
+                  {futureEvents ? (
                     <div className="timeline">
                       {futureEvents?.map((event, index) => (
                         <div key={index} className="timeline-section relative flex w-full gap-16 pb-12">
@@ -277,7 +270,7 @@ export default function HomeEvents() {
               </Tab>
               <Tab key="past" title="Đã qua">
                 <div className="zm-container p-[2rem_1rem_1rem] max-width-global margin-global">
-                  {demo_event ? (
+                  {pastEvents ? (
                     <div className="timeline">
                       {pastEvents?.map((event, index) => (
                         <div key={index} className="timeline-section relative flex w-full gap-16 pb-12">
@@ -392,7 +385,7 @@ export default function HomeEvents() {
         <div className="lux-empty-state text-center mt-16 flex flex-col items-center">
           <div className="icon justify-center flex items-center">
             <div className="">
-              <Frown className="w-64 h-auto align-middle text-gray-300 dark:text-gray-400"/>
+              <Frown className="w-64 h-auto align-middle text-gray-300 dark:text-gray-400" />
             </div>
           </div>
           <h3 className="text-2xl font-medium text-black-more-blur-light-theme p-0 mt-4 mb-0">Bị lỗi mạng</h3>
