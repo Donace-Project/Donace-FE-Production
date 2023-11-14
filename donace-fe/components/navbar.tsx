@@ -77,7 +77,7 @@ export default function NavbarComponents() {
         </Link>
         <NavbarContent
           as={"div"}
-          className="center-wrapper flex justify-between items-center flex-1 max-w-[820px] min-w-0"
+          className="center-wrapper flex justify-between items-center flex-1 max-w-[820px] min-w-0 pl-11"
         >
           <NavbarItem className="center-links gap-6 p-[0px_1rem] text-sm flex items-baseline max-width-global m-[0_auto]">
             <Link
