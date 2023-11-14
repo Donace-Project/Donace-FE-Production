@@ -1,8 +1,6 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Button } from "@nextui-org/button";
-import { Input } from "@nextui-org/input";
 import { Link } from "@nextui-org/link";
 import {
   Navbar,
@@ -11,7 +9,6 @@ import {
   NavbarItem,
 } from "@nextui-org/navbar";
 import {
-  Bell,
   CalendarRange,
   Compass,
   Contact2,
@@ -20,7 +17,6 @@ import {
   Settings,
   Ticket,
 } from "lucide-react";
-import { SearchIcon } from "./icons";
 import { Avatar } from "@nextui-org/avatar";
 import {
   Dropdown,
@@ -34,10 +30,10 @@ import ThoiGian from "./clock/clock";
 import { authHelper } from "../helpers/authHelper";
 import { useSession, signOut } from "next-auth/react";
 import { usePathname } from "next/navigation";
-import { Kbd } from "@nextui-org/react";
 import { AppUser } from "../types/DonaceType";
 
 export default function NavbarComponents() {
+
   const page = usePathname()?.split("/")[1];
 
   let { data: session, status: status } = useSession();
@@ -48,6 +44,7 @@ export default function NavbarComponents() {
       setUser(session?.user as any);
     }
   }, [status]);
+
 
   const handleLogout = () => {
     localStorage.clear();

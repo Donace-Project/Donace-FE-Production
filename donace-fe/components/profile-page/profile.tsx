@@ -9,116 +9,31 @@ import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure
 import { Input } from "@nextui-org/input";
 import { Textarea } from "@nextui-org/input";
 import { FaTiktok } from 'react-icons/fa';
-import { Checkbox } from "@nextui-org/checkbox";
 import { fetchWrapper } from "@/helpers/fetch-wrapper";
-
-export type Profile = {
-    code: string;
-    success: boolean;
-    result: Result;
-    pageInfo: any;
-}
-
-export type Result = {
-    id: string
-    userName: string
-    email: string
-    avatar: string
-    bio: string
-    instagram: string
-    twitter: string
-    youtube: string
-    tiktok: string
-    linkedIn: string
-    website: string
-}
-
-export type Events = {
-    totalCount: number;
-    items: Item[];
-}
-
-export type Item = {
-    id: string;
-    startDate: string;
-    endDate: string;
-    addressName: string;
-    lat: string;
-    long: string;
-    capacity: number;
-    isOverCapacity: boolean;
-    cover: string;
-    name: string;
-    theme: string;
-    color: string;
-    fontSize: number;
-    instructions: string;
-    isMultiSection: boolean;
-    duration: number;
-    totalGuest: number;
-    calendarId: string;
-    isLive: boolean;
-}
-
-const demo_event: Events = {
-    totalCount: 1,
-    items: [
-        {
-            id: "1",
-            startDate: "2022-02-01T10:00:00.000Z",
-            endDate: "2022-02-01T12:00:00.000Z",
-            addressName: "123 Main St, New York, NY",
-            lat: "40.7128",
-            long: "-74.0060",
-            capacity: 50,
-            isOverCapacity: false,
-            cover: "https://example.com/event1.jpg",
-            name: "Event 1",
-            theme: "light",
-            color: "#ffffff",
-            fontSize: 16,
-            instructions: "Please bring your own water bottle.",
-            isMultiSection: false,
-            duration: 120,
-            totalGuest: 30,
-            calendarId: "1",
-            isLive: false,
-        },
-    ],
-}
+import { EventsProfile, UserProfile } from "@/types/DonaceType";
 
 export default function ProfilePage() {
 
-    const [userProfile, setUserProfile] = useState<Profile | null>(null);
-    var [futureEvents, setFutureEvents] = useState<Item[]>();
-
-    function filterEvents(events: Events) {
-        const now = new Date();
-        const futureEvents = events.items.filter(event => new Date(event.startDate) >= now);
-
-        setFutureEvents(futureEvents);
-    }
+    let [userProfile, setUserProfile] = useState<null | UserProfile>(null);
+    const [futureEvents, setFutureEvents] = useState<EventsProfile | null>();
 
     useEffect(() => {
         // Gọi API profile và gán dữ liệu cho biến profile
         fetchWrapper.get('/api/User/profile')
-            .then((data: Profile) => {
+            .then((data: UserProfile) => {
                 console.log(data); // Xem dữ liệu được trả về từ API
                 setUserProfile(data);
             })
             .catch(error => console.error('Lỗi khi gọi API:', error));
-        // fetchWrapper.get("/api/Event").then((data) => {
-        //     console.log(data);
-        // });
+    }, []);
 
-
-        // uncomment khi có dữ liệu từ api
-        // fetchWrapper.get('/api/Event?PageSize=9999')
-        //   .then(data => filterEvents(data));
-
-        // Xóa khi có dữ liệu từ api
-        filterEvents(demo_event);
-        console.log(futureEvents);
+    useEffect(() => {
+        fetchWrapper.get('/api/Event?PageSize=9999')
+            .then((data: EventsProfile) => {
+                console.log(data); // Xem dữ liệu được trả về từ API
+                setFutureEvents(data);
+            })
+            .catch(error => console.error('Lỗi khi gọi API:', error));
     }, []);
 
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -140,7 +55,11 @@ export default function ProfilePage() {
                                     <div className="image-container w-32 m-auto">
                                         <Link href="/my-calendar" className="transition-all duration-300 ease-in-out cursor-pointer" underline="none">
                                             <div className="avatar-wrapper">
-                                                <Avatar src="https://avatars.githubusercontent.com/u/143386751?s=200&v=4" radius="full" name="Donace" className="w-32 h-32 bg-[#fff] relative" />
+                                                <Avatar 
+                                                    src={userProfile?.result.avatar.trim() ? userProfile.result.avatar : "https://avatars.githubusercontent.com/u/143386751?s=200&v=4" }
+                                                    radius="full" 
+                                                    name="Donace" 
+                                                    className="w-32 h-32 bg-[#fff] relative" />
                                             </div>
                                         </Link>
                                     </div>
@@ -479,7 +398,9 @@ export default function ProfilePage() {
                                                             </Link>
                                                         </div>
                                                     </div>
-                                                        <div className="profile-events-content-wrapper">
+                                                    {futureEvents ? (
+                                                        futureEvents.items.map((event, index) => (
+                                                            <div key={index} className="profile-events-content-wrapper">
                                                                 <div className="profile-event-wrapper pb-0">
                                                                     <Link
                                                                         href="/events/detail"
@@ -499,24 +420,28 @@ export default function ProfilePage() {
                                                                         </div>
                                                                         <div className="event-info flex-1 min-w-0">
                                                                             <div>
-                                                                                <span className="event-name text-lg mr-2 font-medium text-[#002f45]">vcl fpt</span>
+                                                                                <span className="event-name text-lg mr-2 font-medium text-[#002f45]">{event.name}</span>
                                                                             </div>
                                                                             <div className="text-sm flex-wrap mt-1 flex items-center">
-                                                                                <div className="event-time-wrapper text-[#849ba4] mr-2">
-                                                                                    <div className="event-time starting-soon text-[#ec660d]">Starting Soon</div>
+                                                                                <div className={`event-time ${event.isLive ? 'starting-soon text-[#ec660d]' : 'not-starting text-[#82aad8]'}`}>
+                                                                                    {event.isLive ? 'Starting Soon' : 'Not Starting'}
                                                                                 </div>
                                                                             </div>
                                                                         </div>
                                                                     </Link>
                                                                 </div>
-                                                        </div>
-                                                        {/* <div className="block">
+                                                            </div>
+                                                        ))
+                                                    ) : (
+                                                        <div className="block">
                                                             <div className="profile-event-empty w-full text-center p-[2rem_1rem_2rem_1rem] text-[#a2b7bf] dark:text-[#939597] border border-solid border-[#eff3f5] dark:border-[#151719] rounded-lg flex flex-col items-center">
                                                                 <Calendar className="w-8 h-8 mb-4 block align-middle" />
                                                                 <div className="font-semibold mb-1">Không có gì sắp diễn ra</div>
                                                                 <div className="text-sm">Đăng ký ngay để theo dõi những thông tin mới nhất</div>
                                                             </div>
-                                                        </div> */}
+                                                        </div>
+                                                    )}
+
                                                     <div className="bottom-action mt-4">
                                                         <div id="block-action" className="inline-block p-0 text-[#a2b7bf]">
                                                             <Link href={"/home"} className="transition-all duration-300 ease-in-out text-[#0099dd] dark:text-[#0099dd] cursor-pointer" underline="none">
