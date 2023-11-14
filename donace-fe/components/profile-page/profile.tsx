@@ -53,7 +53,7 @@ export default function ProfilePage() {
                             <div className="user-header-wrapper p-[0_1rem] w-full max-w-2xl m-auto">
                                 <div className="user-header pr-0 pb-8 pl-0 pt-8 block text-center">
                                     <div className="image-container w-32 m-auto">
-                                        <Link href="/my-calendar" className="transition-all duration-300 ease-in-out cursor-pointer" underline="none">
+                                        <Link className="transition-all duration-300 ease-in-out cursor-pointer" underline="none">
                                             <div className="avatar-wrapper">
                                                 <Avatar 
                                                     src={userProfile?.result.avatar.trim() ? userProfile.result.avatar : "https://avatars.githubusercontent.com/u/143386751?s=200&v=4" }

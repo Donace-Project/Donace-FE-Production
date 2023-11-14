@@ -277,7 +277,7 @@ export default function NavbarComponents() {
                           />
                         </div>
                         <div className="min-w-0 flex-1">
-                          <div className="name dark:text-[#fff] font-medium overflow-hidden text-ellipsis whitespace-nowrap text-black-light-theme">
+                          <div className="name dark:text-[#fff] font-medium overflow-hidden text-ellipsis whitespace-nowrap text-black-light-theme max-w-[180px]">
                             {user?.userName}
                           </div>
                           <div className="desc text-xs gap-1 flex text-[rgba(19,21,23,0.36)]">
