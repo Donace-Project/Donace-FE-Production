@@ -1,7 +1,6 @@
 "use client";
-
 import React, { useEffect, useState } from "react";
-import { Button, ButtonGroup } from "@nextui-org/button";
+import { Button } from "@nextui-org/button";
 import { Link } from "@nextui-org/link";
 import { ArrowRight, CalendarClock, Frown, Fullscreen, MapPin, Plus, Users2 } from "lucide-react";
 import "@/styles/globals.css";
@@ -9,7 +8,7 @@ import { fetchWrapper } from "@/helpers/fetch-wrapper";
 import { Avatar } from "@nextui-org/avatar";
 import { Image } from "@nextui-org/image";
 
-import { Tabs, Tab, Card, CardBody } from "@nextui-org/react";
+import { Tabs, Tab } from "@nextui-org/react";
 
 export type Events = {
   totalCount: number;
@@ -40,57 +39,6 @@ export type Item = {
   calendarId: string;
   isLive: boolean;
 }
-
-
-const demo_event: Events = {
-  totalCount: 2,
-  items: [
-    {
-      id: "1",
-      startDate: "2022-02-01T10:00:00.000Z",
-      endDate: "2022-02-01T12:00:00.000Z",
-      addressName: "123 Main St, New York, NY",
-      lat: "40.7128",
-      long: "-74.0060",
-      capacity: 50,
-      isOverCapacity: false,
-      cover: "https://example.com/event1.jpg",
-      name: "Event 1",
-      theme: "light",
-      color: "#ffffff",
-      fontSize: 16,
-      instructions: "Please bring your own water bottle.",
-      isMultiSection: false,
-      duration: 120,
-      totalGuest: 30,
-      calendarId: "1",
-      isLive: false,
-    },
-    {
-      id: "2",
-      startDate: "2024-02-15T14:00:00.000Z",
-      endDate: "2022-02-15T16:00:00.000Z",
-      addressName: "456 Elm St, Los Angeles, CA",
-      lat: "34.0522",
-      long: "-118.2437",
-      capacity: 100,
-      isOverCapacity: true,
-      cover: "https://example.com/event2.jpg",
-      name: "Event 2",
-      theme: "dark",
-      color: "#000000",
-      fontSize: 18,
-      instructions: "Please arrive 15 minutes early.",
-      isMultiSection: true,
-      duration: 180,
-      totalGuest: 120,
-      calendarId: "2",
-      isLive: true,
-    },
-  ],
-
-}
-
 
 const CovertDate = (date: string) => {
   return date.split("T");

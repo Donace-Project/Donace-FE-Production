@@ -68,15 +68,14 @@ export default function CalendarPage() {
     }, []);
 
     useEffect(() => {
-        fetchWrapper.post('/api/Calendar/get-list', { pageNumber: 1, pageSize: 1000 })
+        fetchWrapper.post('/api/Calendar/get-list', { pageNumber: 1, pageSize: 9999 })
             .then(data => setCalendar(data))
     }, []);
 
     useEffect(() => {
-        fetchWrapper.post('/api/Calendar/get-list-subcribed', { pageNumber: 1, pageSize: 999 })
+        fetchWrapper.post('/api/Calendar/get-list-subcribed', { pageNumber: 1, pageSize: 9999 })
             .then(data => setSubscribed(data))
     }, []);
-
 
     return (
         <div className="page-content">
@@ -85,7 +84,7 @@ export default function CalendarPage() {
                     <div className="spread gap-2 mb-2 flex justify-between items-center">
                         <h1 className="tab-title text-4xl font-semibold text-black-light-theme mb-0 mt-0 dark:text-[#fff]">Lịch</h1>
                     </div>
-                    <div className="zm-container pt-8 pl-4 pr-4 max-width-global margin-global">
+                    <div className="zm-container pt-8 pl-0.5 pr-4 max-width-global margin-global">
                         <div className="can-divide with-divider medium">
                             <div className="section-title-wrapper">
                                 <div className="section-title-row mb-5 flex justify-between items-center">
