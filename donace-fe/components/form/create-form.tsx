@@ -256,8 +256,9 @@ export default function CreateForm() {
 
                                                                                 <div className='pt-4 font-medium text-base text-black-light-theme dark:text-[#fff]'>Or pick your location via Maps:</div>
                                                                                 <div className='pt-4'>
-                                                                                    <MapComponent lngv={lng} latv={lat} setLngFc={setLng} setLatFc={setLat} />
+                                                                                    <MapComponent lngv={lng} latv={lat} />
                                                                                 </div>
+                                                                                {/* setLngFc={setLng} setLatFc={setLat} */}
                                                                             </div>
                                                                         </ModalBody>
                                                                     </>

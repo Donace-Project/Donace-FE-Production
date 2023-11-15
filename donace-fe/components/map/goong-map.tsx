@@ -8,13 +8,13 @@ import GoongGeocoder from '@goongmaps/goong-geocoder'
 interface MapComponentProps {
   lngv: number;
   latv: number;
-  setLngFc: (newValue: number) => void;
-  setLatFc: (newValue: number) => void;
+  // setLngFc: (newValue: number) => void;
+  // setLatFc: (newValue: number) => void;
 }
-
+//, setLatFc, setLngFc 
 let map: any;
 
-const MapComponent = ({ lngv, latv, setLatFc, setLngFc }: MapComponentProps) => {
+const MapComponent = ({ lngv, latv }: MapComponentProps) => {
   let geocoder = new GoongGeocoder({
     accessToken: 'sbRzCkkevuDa7mTtXzH1mE1i3CZGdFjGAcG01XqF',
     goongjs: goongjs
@@ -32,8 +32,8 @@ const MapComponent = ({ lngv, latv, setLatFc, setLngFc }: MapComponentProps) => 
       geocoder
     );
     geocoder.on('result', function (e: any) {
-      setLatFc(e.result.result.geometry.location.lat);
-      setLngFc(e.result.result.geometry.location.lng);
+      // setLatFc(e.result.result.geometry.location.lat);
+      // setLngFc(e.result.result.geometry.location.lng);
       // console.log(e.result.result.geometry.location.lng);
       console.log(e.result.result.formatted_address); // log the place name
       // console.log(ev.result.geometry); // log the coordinates [longitude, latitude]
