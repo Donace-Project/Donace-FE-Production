@@ -98,7 +98,7 @@ export default function HomeEvents() {
           </div>
           <div className="flex-col flex gap-2">
             <Tabs aria-label="Options" >
-              <Tab key="future" title="Sắp tới">
+              <Tab key="future" title="Sắp tới" className="font-semibold">
                 <div className="zm-container p-[2rem_1rem_1rem] max-width-global margin-global">
                   {futureEvents && futureEvents.length > 0 ? (
                     <div className="timeline">
@@ -216,7 +216,7 @@ export default function HomeEvents() {
                   )}
                 </div>
               </Tab>
-              <Tab key="past" title="Đã qua">
+              <Tab key="past" title="Đã qua" className="font-semibold">
                 <div className="zm-container p-[2rem_1rem_1rem] max-width-global margin-global">
                   {pastEvents && pastEvents.length > 0 ? (
                     <div className="timeline">

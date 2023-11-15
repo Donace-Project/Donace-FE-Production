@@ -63,3 +63,32 @@ export type ItemEventsProfile = {
 }
 
 // ***** END EXPORT PROFILE
+
+// CALENDAR MANAGER
+
+export type CalendarManageEvents = {
+    totalCount: number;
+    items: ItemsCalendarManage[];
+}
+
+export type ItemsCalendarManage = {
+    id: string;
+    startDate: string;
+    endDate: string;
+    addressName: string;
+    lat: string;
+    long: string;
+    capacity: number;
+    isOverCapacity: boolean;
+    cover: string;
+    name: string;
+    theme: string;
+    color: string;
+    fontSize: number;
+    instructions: string;
+    isMultiSection: boolean;
+    duration: number;
+    totalGuest: number;
+    calendarId: string;
+    isLive: boolean;
+}
