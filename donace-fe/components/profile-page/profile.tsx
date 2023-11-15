@@ -10,12 +10,33 @@ import { Input } from "@nextui-org/input";
 import { Textarea } from "@nextui-org/input";
 import { FaTiktok } from 'react-icons/fa';
 import { fetchWrapper } from "@/helpers/fetch-wrapper";
-import { EventsProfile, UserProfile } from "@/types/DonaceType";
+import { UserProfile, ItemEventsProfile } from "@/types/DonaceType";
+
+interface DateInfo {
+    year: string;
+    month: string;
+    day: string;
+}
+
+const ConvertDate = (date: string): DateInfo => {
+    const dateArray = date.split("-");
+    const year = dateArray[0]; // Lấy thông tin về năm từ phần tử đầu tiên trong mảng
+    const month = dateArray[1]; // Lấy thông tin về tháng từ phần tử thứ hai trong mảng
+    const day = dateArray[2].split("T")[0]; // Lấy thông tin về ngày từ phần tử thứ ba và loại bỏ phần giờ nếu có
+
+    return { year, month, day };
+};
+
+const currentDate = new Date();
+const currentDateFormatted = currentDate.toLocaleDateString('en-US').replace(/\//g, '-');
+currentDate.setDate(currentDate.getDate() - 1)
+const pastDateFormatted = currentDate.toLocaleString('en-US').replace(/\//g, '-');
 
 export default function ProfilePage() {
 
     let [userProfile, setUserProfile] = useState<null | UserProfile>(null);
-    const [futureEvents, setFutureEvents] = useState<EventsProfile | null>();
+    var [pastEvents, setPastEvents] = useState<ItemEventsProfile[]>();
+
 
     useEffect(() => {
         // Gọi API profile và gán dữ liệu cho biến profile
@@ -28,12 +49,9 @@ export default function ProfilePage() {
     }, []);
 
     useEffect(() => {
-        fetchWrapper.get('/api/Event?PageSize=9999')
-            .then((data: EventsProfile) => {
-                console.log(data); // Xem dữ liệu được trả về từ API
-                setFutureEvents(data);
-            })
-            .catch(error => console.error('Lỗi khi gọi API:', error));
+        // uncomment khi có dữ liệu từ api
+        fetchWrapper.get(`/api/Event?FromDate=01-01-1996&ToDate=${pastDateFormatted}&PageNumber=1&PageSize=9999`)
+            .then(data => setPastEvents(data.items));
     }, []);
 
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -55,10 +73,10 @@ export default function ProfilePage() {
                                     <div className="image-container w-32 m-auto">
                                         <Link className="transition-all duration-300 ease-in-out cursor-pointer" underline="none">
                                             <div className="avatar-wrapper">
-                                                <Avatar 
-                                                    src={userProfile?.result.avatar.trim() ? userProfile.result.avatar : "https://avatars.githubusercontent.com/u/143386751?s=200&v=4" }
-                                                    radius="full" 
-                                                    name="Donace" 
+                                                <Avatar
+                                                    src={userProfile?.result.avatar.trim() ? userProfile.result.avatar : "https://avatars.githubusercontent.com/u/143386751?s=200&v=4"}
+                                                    radius="full"
+                                                    name="Donace"
                                                     className="w-32 h-32 bg-[#fff] relative" />
                                             </div>
                                         </Link>
@@ -398,8 +416,8 @@ export default function ProfilePage() {
                                                             </Link>
                                                         </div>
                                                     </div>
-                                                    {futureEvents ? (
-                                                        futureEvents.items.map((event, index) => (
+                                                    {pastEvents ? (
+                                                        pastEvents.map((event, index) => (
                                                             <div key={index} className="profile-events-content-wrapper">
                                                                 <div className="profile-event-wrapper pb-0">
                                                                     <Link
@@ -408,8 +426,8 @@ export default function ProfilePage() {
                                                                         underline="none"
                                                                     >
                                                                         <div className="event-time-left w-14 text-center mr-6 border border-solid border-[#f0f8fd] rounded-lg bg-white overflow-hidden transition-all duration-300 ease-in-out">
-                                                                            <div className="event-month uppercase text-xs font-semibold text-[#82aad8] bg-[#f0f8fd] p-[0.125rem_0px] transition-all duration-300 ease-in-out">Nov</div>
-                                                                            <div className="event-date text-2xl font-light m-[0.375rem_0px] text-[#002f45]">11</div>
+                                                                            <div className="event-month uppercase text-xs font-semibold text-[#82aad8] bg-[#f0f8fd] p-[0.125rem_0px] transition-all duration-300 ease-in-out">{ConvertDate(event.endDate).month}</div>
+                                                                            <div className="event-date text-2xl font-light m-[0.375rem_0px] text-[#002f45]">{ConvertDate(event.endDate).day}</div>
                                                                         </div>
                                                                         <div className="event-cover-wrapper w-40 mr-6 relative">
                                                                             <div
@@ -441,7 +459,6 @@ export default function ProfilePage() {
                                                             </div>
                                                         </div>
                                                     )}
-
                                                     <div className="bottom-action mt-4">
                                                         <div id="block-action" className="inline-block p-0 text-[#a2b7bf]">
                                                             <Link href={"/home"} className="transition-all duration-300 ease-in-out text-[#0099dd] dark:text-[#0099dd] cursor-pointer" underline="none">
