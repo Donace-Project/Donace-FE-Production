@@ -100,7 +100,7 @@ export default function HomeEvents() {
             <Tabs aria-label="Options" >
               <Tab key="future" title="Sắp tới">
                 <div className="zm-container p-[2rem_1rem_1rem] max-width-global margin-global">
-                  {futureEvents ? (
+                  {futureEvents && futureEvents.length > 0 ? (
                     <div className="timeline">
                       {futureEvents?.map((event, index) => (
                         <div key={index} className="timeline-section relative flex w-full gap-16 pb-12">
@@ -218,7 +218,7 @@ export default function HomeEvents() {
               </Tab>
               <Tab key="past" title="Đã qua">
                 <div className="zm-container p-[2rem_1rem_1rem] max-width-global margin-global">
-                  {pastEvents ? (
+                  {pastEvents && pastEvents.length > 0 ? (
                     <div className="timeline">
                       {pastEvents?.map((event, index) => (
                         <div key={index} className="timeline-section relative flex w-full gap-16 pb-12">
