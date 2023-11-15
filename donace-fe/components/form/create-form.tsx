@@ -16,7 +16,6 @@ export default function CreateForm() {
 
     const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
 
-
     const [startDate, setStartDate] = useState('');
     const [startTime, setStartTime] = useState('');
 
@@ -257,7 +256,7 @@ export default function CreateForm() {
 
                                                                                 <div className='pt-4 font-medium text-base text-black-light-theme dark:text-[#fff]'>Or pick your location via Maps:</div>
                                                                                 <div className='pt-4'>
-                                                                                    <MapComponent lng={lng} lat={lat} setLng={setLng} setLat={setLat} />
+                                                                                    <MapComponent lngv={lng} latv={lat} setLngFc={setLng} setLatFc={setLat} />
                                                                                 </div>
                                                                             </div>
                                                                         </ModalBody>
