@@ -6,8 +6,6 @@ import { Input } from "@nextui-org/input";
 import { ArrowUp, CheckCircle } from "lucide-react";
 import { useState } from "react";
 
-
-
 export type CreateCalendar = {
     code: string
     success: boolean
