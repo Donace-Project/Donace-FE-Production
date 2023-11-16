@@ -202,8 +202,7 @@ export default function ProfilePage() {
                                                                                     autoFocus
                                                                                     autoComplete="disable"
                                                                                     variant="bordered"
-                                                                                    placeholder="Tên của bạn là gì?"
-                                                                                    value={userProfile?.result.userName}
+                                                                                    placeholder={userProfile?.result.userName ? userProfile.result.userName : "Tên của bạn là gì?"}
                                                                                 />
                                                                             ))}
                                                                         </div>
@@ -214,11 +213,10 @@ export default function ProfilePage() {
                                                                                     variant={"bordered"}
                                                                                     label="Mô tả"
                                                                                     labelPlacement={"outside"}
-                                                                                    placeholder="Một chút gì đó về bạn"
+                                                                                    placeholder={userProfile?.result.bio ? userProfile.result.bio : "Một chút gì đó về bản thân bạn?"}
                                                                                     maxLength={140}
                                                                                     autoCapitalize="on"
                                                                                     className="bg-transparent font-semibold mt-2 mb-2 pl-3 text-lg h-auto p-[0.375rem_0.75rem] transition-all duration-300 ease-in-out text-[#002f45] dark:text-white leading-6 rounded-lg w-full"
-                                                                                    value={userProfile?.result.bio}
                                                                                 />
                                                                             ))}
                                                                         </div>

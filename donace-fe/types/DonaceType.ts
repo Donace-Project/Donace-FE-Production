@@ -92,3 +92,10 @@ export type ItemsCalendarManage = {
     calendarId: string;
     isLive: boolean;
 }
+
+// *************
+
+// Upload Image in CREATE CALENDAR
+export type UploadImage = {
+    file: string;
+}

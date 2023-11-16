@@ -7,6 +7,16 @@ import { Input } from "@nextui-org/input";
 import { ArrowUp, CheckCircle } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useRouter } from 'next/navigation';
+import toast, { Toast, Toaster } from 'react-hot-toast';
+
+// const notify = () => toast.promise(
+//     saveSettings(settings),
+//     {
+//         loading: 'Saving...',
+//         success: <b>Settings saved!</b>,
+//         error: <b>Could not save.</b>,
+//     }
+// );
 
 
 export type CreateCalendar = {
@@ -32,10 +42,13 @@ export default function CreateCalendar() {
     const router = useRouter();
 
     const handleClick = () => {
-        // Thực hiện các thao tác cần thiết
+        handleSubmit
 
         // Sau khi thực hiện hành động, điều hướng đến trang khác
-        router.push('/calendars'); // hoặc router.replace('/other-page') nếu bạn không muốn lịch sử trình duyệt
+        setTimeout(() => {
+            // Sau khi đợi, điều hướng đến trang khác
+            router.push('/calendars');
+        }, 1000);
     };
 
     const handleFileUpload = async (event: any) => {
@@ -102,27 +115,53 @@ export default function CreateCalendar() {
 
         if (!dataToSend.name) {
             // Hiển thị thông báo lỗi
-            console.error("Name field is required.");
-        } else {
-            // Gửi yêu cầu POST lên API.
-            fetchWrapper.post("/api/Calendar/create-calendar", dataToSend)
-                .then((response) => {
-                    if (response.success) {
-                        // Cập nhật giao diện người dùng hoặc hiển thị thông báo thành công
-                        console.log("Calendar created successfully.");
-
-                    } else {
-                        // Xử lý lỗi từ API và hiển thị thông báo lỗi
-                        console.error("Error creating calendar:", response.message);
-                    }
-                })
-                .catch((error) => {
-                    console.error(error);
-                });
+            toast.error("Name field is required.");
+            return
         }
+        toast.promise(
+            fetchWrapper.post("/api/Calendar/create-calendar", dataToSend),
+            {
+                loading: 'Đang tạo lịch...', // Thông báo khi đang xử lý
+                success: <b>Lịch đã tạo thành công!</b>, // Thông báo khi Promise thành công
+                error: <b>Bị lỗi khi tạo lịch!</b>, // Thông báo khi Promise thất bại
+            }
+        )
+            .then((response) => {
+                if (!response.success) {
+                    // Xử lý lỗi từ API và hiển thị thông báo lỗi
+                    toast.error(`Lỗi khi tạo lịch: ${response.error}`);
+                    return;
+                }
+
+                // Cập nhật giao diện người dùng hoặc thực hiện các hành động khác
+            })
+            .catch((error) => {
+                // Xử lý lỗi trong quá trình gửi yêu cầu và hiển thị thông báo lỗi bằng toast
+                toast.error(`Lỗi: ${error.message}`);
+            });
+
+
+        // else {
+        //     // Gửi yêu cầu POST lên API.
+        //     fetchWrapper.post("/api/Calendar/create-calendar", dataToSend)
+        //         .then((response) => {
+        //             if (response.success) {
+        //                 // Cập nhật giao diện người dùng hoặc hiển thị thông báo thành công
+        //                 toast.success("Calendar created successfully.");
+
+        //             } else {
+        //                 // Xử lý lỗi từ API và hiển thị thông báo lỗi
+        //                 toast.error("Error creating calendar:", response.message);
+        //             }
+        //         })
+        //         .catch((error) => {
+        //             toast.error(error);
+        //         });
+        // }
     };
     return (
         <div className="page-content">
+            <Toaster />
             <div className="page-header opacity-[1] pt-12 pl-4 pr-4 max-width-global margin-global">
                 <div className="spread gap-2 mb-2 flex justify-between items-center">
                     <h1 className="tab-title text-4xl font-semibold text-black-light-theme mb-0 mt-0 dark:text-[#fff]">Tạo Lịch</h1>
@@ -217,3 +256,4 @@ export default function CreateCalendar() {
         </div>
     )
 }
+
