@@ -1,10 +1,13 @@
 "use client";
 import { fetchWrapper } from "@/helpers/fetch-wrapper";
+import { UploadImage } from "@/types/DonaceType";
 import { Avatar } from "@nextui-org/avatar";
 import { Button } from "@nextui-org/button";
 import { Input } from "@nextui-org/input";
 import { ArrowUp, CheckCircle } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useRouter } from 'next/navigation';
+
 
 export type CreateCalendar = {
     code: string
@@ -25,6 +28,50 @@ export type CalendarModel = {
 }
 
 export default function CreateCalendar() {
+
+    const router = useRouter();
+
+    const handleClick = () => {
+        // Thực hiện các thao tác cần thiết
+
+        // Sau khi thực hiện hành động, điều hướng đến trang khác
+        router.push('/calendars'); // hoặc router.replace('/other-page') nếu bạn không muốn lịch sử trình duyệt
+    };
+
+    const handleFileUpload = async (event: any) => {
+        const selectedFile = event.target.files[0];
+        const formData = new FormData();
+        formData.append('file', selectedFile);
+
+        try {
+            const response = await fetch('/api/Common/upload-file', {
+                method: 'POST',
+                body: formData,
+                // Đảm bảo rằng headers được cấu hình đúng
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                console.log('Upload thành công:', data);
+            } else {
+                console.error('Upload thất bại:', response.statusText);
+            }
+        } catch (error) {
+            console.error('Lỗi:', error);
+        }
+    };
+
+
+    var [images, setImages] = useState<UploadImage | null>(null);
+
+    useEffect(() => {
+        fetchWrapper.post('/api/Common/upload-file', { pageNumber: 1, pageSize: 9999 })
+            .then(data => setImages(data))
+    }, []);
+
 
     const [formData, setFormData] = useState({
         name: "",
@@ -101,7 +148,17 @@ export default function CreateCalendar() {
                                     <div id="placeholder" className="pb-[calc(100%/(3/5))]"></div>
                                 </div>
                                 <div id="change-cover-container" className="absolute top-2 right-2 backdrop-blur-xl backdrop-contrast-[50%] backdrop-brightness-[130%] border border-solid border-[rgba(19,21,23,0.08)] rounded-[0.5rem] overflow-hidden">
-                                    <Button type="button" className="hover:text-[#fff] hover:bg-gray-800 text-[rgba(19,21,23,0.64)] dark:text-[rgba(255,255,255,0.64)] bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)] border-transparent border border-solid cursor-pointer transition-[all 0.3s cubic-bezier(0.4,0,0.2,1)] outline-[0s] font-medium rounded-[0.5rem] relative whitespace-nowrap justify-center outline-offset-[.125rem] outline-none max-w-full text-[0.875rem] p-[0.4375rem_0.625rem] h-[calc(1.75rem+2*1px)] w-fit flex items-center m-0 leading-[1.5]">
+                                    <input type="file" id="coverImage" className="hidden" onChange={handleFileUpload} />
+                                    <Button
+                                        type="button"
+                                        className="hover:text-[#fff] hover:bg-gray-800 text-[rgba(19,21,23,0.64)] dark:text-[rgba(255,255,255,0.64)] bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)] border-transparent border border-solid cursor-pointer transition-[all 0.3s cubic-bezier(0.4,0,0.2,1)] outline-[0s] font-medium rounded-[0.5rem] relative whitespace-nowrap justify-center outline-offset-[.125rem] outline-none max-w-full text-[0.875rem] p-[0.4375rem_0.625rem] h-[calc(1.75rem+2*1px)] w-fit flex items-center m-0 leading-[1.5]"
+                                        onClick={() => {
+                                            const fileInput = document.getElementById('coverImage');
+                                            if (fileInput) {
+                                                fileInput.click();
+                                            }
+                                        }}
+                                    >
                                         <div id="label" className="leading-[1] m-[-4px_0] p-[4px_0] overflow-hidden text-ellipsis">Thay đổi ảnh bìa</div>
                                     </Button>
                                 </div>
@@ -147,7 +204,11 @@ export default function CreateCalendar() {
                             </div>
                         </div>
                     </div>
-                    <Button type="submit" className="text-[#fff] dark:text-[rgb(19,21,23)] bg-[#333537] dark:bg-[#fff] hover:bg-gray-700 border-[#333537] dark:border-[#fff] border border-solid cursor-pointer transition-[all 0.3s cubic-bezier(0.4,0,0.2,1)] outline-[0s] font-medium rounded-[0.5rem] relative whitespace-nowrap justify-center outline-offset-[.125rem] outline-none max-w-full text-[1rem] p-[0.625rem_0.875rem] w-fit flex items-center m-0 leading-[1.5]">
+                    <Button
+                        type="submit"
+                        className="text-[#fff] dark:text-[rgb(19,21,23)] bg-[#333537] dark:bg-[#fff] hover:bg-gray-700 border-[#333537] dark:border-[#fff] border border-solid cursor-pointer transition-[all 0.3s cubic-bezier(0.4,0,0.2,1)] outline-[0s] font-medium rounded-[0.5rem] relative whitespace-nowrap justify-center outline-offset-[.125rem] outline-none max-w-full text-[1rem] p-[0.625rem_0.875rem] w-fit flex items-center m-0 leading-[1.5]"
+                        onClick={handleClick}
+                    >
                         <CheckCircle className="mr-2 stroke-[2.5] w-4 h-4 flex-shrink-0 block align-middle" />
                         <div id="label" className="leading-[1] m-[-4px_0] p-[4px_0] overflow-hidden text-ellipsis">Tạo lịch</div>
                     </Button>
