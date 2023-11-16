@@ -10,6 +10,25 @@ import { Image } from "@nextui-org/image";
 
 import { Tabs, Tab } from "@nextui-org/react";
 
+interface DateTimeInfo {
+  year: string;
+  month: string;
+  day: string;
+  hour: string;
+  minute: string;
+}
+
+const ConvertDateTime = (dateTime: string): DateTimeInfo => {
+  const date = new Date(dateTime);
+  const year = date.getFullYear().toString();
+  const month = (date.getMonth() + 1).toString().padStart(2, '0');
+  const day = date.getDate().toString().padStart(2, '0');
+  const hour = date.getHours().toString().padStart(2, '0');
+  const minute = date.getMinutes().toString().padStart(2, '0');
+
+  return { year, month, day, hour, minute };
+};
+
 export type Events = {
   totalCount: number;
   items: Item[];
@@ -40,6 +59,7 @@ export type Item = {
   isLive: boolean;
 }
 
+
 const CovertDate = (date: string) => {
   return date.split("T");
 }
@@ -55,6 +75,7 @@ currentDate.setDate(currentDate.getDate() - 1)
 const pastDateFormatted = currentDate.toLocaleString('en-US').replace(/\//g, '-');
 
 export default function HomeEvents() {
+
   var [pastEvents, setPastEvents] = useState<Item[]>();
   var [futureEvents, setFutureEvents] = useState<Item[]>();
   const [isOnline, setIsOnline] = useState(true);
@@ -136,7 +157,9 @@ export default function HomeEvents() {
                                     <div className="info gap-2 min-w-0 flex-1 flex flex-col">
                                       <div className="event-time gap-2 flex items-center">
                                         <div className="overflow-hidden text-ellipsis whitespace-nowrap text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)]">
-                                          <span>{CovertDate(event.startDate)[1]}</span>
+                                          <span>
+                                          {ConvertDateTime(event.startDate).hour}:{ConvertDateTime(event.startDate).minute}
+                                          </span>
                                         </div>
                                       </div>
                                       <div className="text-xl">
@@ -254,7 +277,9 @@ export default function HomeEvents() {
                                     <div className="info gap-2 min-w-0 flex-1 flex flex-col">
                                       <div className="event-time gap-2 flex items-center">
                                         <div className="overflow-hidden text-ellipsis whitespace-nowrap text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)]">
-                                          <span>{CovertDate(event.startDate)[1]}</span>
+                                          <span>
+                                          {ConvertDateTime(event.startDate).hour}:{ConvertDateTime(event.startDate).minute}
+                                          </span>
                                         </div>
                                       </div>
                                       <div className="text-xl">
