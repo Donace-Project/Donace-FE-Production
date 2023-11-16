@@ -38,16 +38,10 @@ export type CalendarModel = {
 
 export default function CreateCalendar() {
   const router = useRouter();
-  const [backgrounUrl, setBackgrounUrl] = useState<string | null>(null);
   const backgroundRef = useRef<HTMLDivElement | null>(null);
-  const handleClick = () => {
-    handleSubmit;
-
-    // Sau khi thực hiện hành động, điều hướng đến trang khác
-    setTimeout(() => {
-      // Sau khi đợi, điều hướng đến trang khác
-      router.push("/calendars");
-    }, 3000);
+  const handleClick = async () => {
+    await handleSubmit;
+    router.push("/calendars");
   };
 
   const [calendarReq, setCalendarReq] = useState({
@@ -71,10 +65,7 @@ export default function CreateCalendar() {
     const formData = new FormData();
     formData.append("file", selectedFile);
 
-    const url = await fetchWrapper.postFile(
-      "api/Common/upload-file",
-      formData
-    );
+    const url = await fetchWrapper.postFile("api/Common/upload-file", formData);
     // setBackgrounUrl(text);
 
     if (backgroundRef.current && url) {
