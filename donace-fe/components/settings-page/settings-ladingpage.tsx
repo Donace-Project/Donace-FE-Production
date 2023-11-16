@@ -1,17 +1,21 @@
 "use client"
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Avatar } from "@nextui-org/avatar";
 import { Button } from "@nextui-org/button";
 import { Input, Textarea } from "@nextui-org/input";
 import { Link } from "@nextui-org/link";
-import { ArrowUp, UserCheck2, Lock, ShieldCheck, Github } from "lucide-react";
-import { FaGoogle } from "react-icons/fa";
+import { ArrowUp, UserCheck2, Lock } from "lucide-react";
+import { UserProfile } from "@/types/DonaceType";
+import { fetchWrapper } from "@/helpers/fetch-wrapper";
 
 export default function SettingLandingPage() {
     const placements = [
         "outside",
     ];
-    //committ
+
+    const handleClick = () => {
+        location.reload(); // Làm mới trang khi nút được nhấn
+    };
 
     const [value, setValue] = React.useState("");
 
@@ -23,6 +27,68 @@ export default function SettingLandingPage() {
         return validateEmail(value) ? false : true;
     }, [value]);
 
+    let [userProfile, setUsersProfile] = useState<null | UserProfile>(null);
+
+    useEffect(() => {
+        // Gọi API profile và gán dữ liệu cho biến profile
+        fetchWrapper.get('/api/User/profile')
+            .then((data: UserProfile) => {
+                console.log(data); // Xem dữ liệu được trả về từ API
+                setUsersProfile(data);
+            })
+            .catch(error => console.error('Lỗi khi gọi API:', error));
+    }, []);
+
+    const [formData, setFormData] = useState({
+        userName: "",
+        avatar: "",
+        bio: "",
+        instagram: "",
+        twitter: "",
+        youtube: "",
+        tiktok: "",
+        linkedIn: "",
+        website: ""
+        // Thêm các trường dữ liệu khác của form nếu có
+    });
+
+    const handleSubmit = (e: any) => {
+        e.preventDefault();
+
+        // Xây dựng đối tượng dữ liệu từ formData
+        const dataToSend = {
+            userName: formData.userName,
+            avatar: formData.avatar,
+            bio: formData.bio,
+            instagram: formData.instagram,
+            twitter: formData.twitter,
+            youtube: formData.youtube,
+            tiktok: formData.tiktok,
+            linkedIn: formData.linkedIn,
+            website: formData.website
+        };
+
+        if (!dataToSend.userName) {
+            // Hiển thị thông báo lỗi
+            console.error("User Name field is required.");
+        } else {
+            // Gửi yêu cầu POST lên API.
+            fetchWrapper.put("/api/User/update-profile", dataToSend)
+                .then((response) => {
+                    if (response.success) {
+                        // Cập nhật giao diện người dùng hoặc hiển thị thông báo thành công
+                        console.log("User updated successfully.");
+
+                    } else {
+                        // Xử lý lỗi từ API và hiển thị thông báo lỗi
+                        console.error("Error updated User:", response.message);
+                    }
+                })
+                .catch((error) => {
+                    console.error(error);
+                });
+        }
+    };
     return (
         <div className="page-content">
             <div className="page-header opacity-[1] pt-12 pl-4 pr-4 max-width-global margin-global">
@@ -82,21 +148,120 @@ export default function SettingLandingPage() {
                             </div>
                         </div>
                         <div className="form w-80 max-w-[320px]">
-                            <form action={"#"}>
-                                <div>
-                                    <div className="lux-input-wrapper max-width-global mb-4">
+                            {userProfile && userProfile.result ? (
+                                <form action={"#"} onSubmit={handleSubmit}>
+                                    <div>
+                                        <div className="lux-input-wrapper max-width-global mb-4">
+                                            <div className="inner-wrapper inline-block w-full">
+                                                {placements.map((placement) => (
+                                                    <Input
+                                                        key={placement}
+                                                        type="text"
+                                                        label="Tên"
+                                                        labelPlacement={"outside"}
+                                                        // placeholder="Tên của bạn là gì?"
+                                                        placeholder={userProfile?.result.userName ? userProfile.result.userName : "Tên của bạn là gì?"}
+                                                        autoCorrect="off"
+                                                        spellCheck="false"
+                                                        autoCapitalize="words"
+                                                        isInvalid={true}
+                                                        variant="faded"
+                                                        classNames={{
+                                                            inputWrapper: ["bg-[#fff]",
+                                                                "text-base",
+                                                                "h-auto",
+                                                                "w-full",
+                                                                "p-[0.625rem_0.875rem]",
+                                                                "dark:text-[#fff]",
+                                                                "dark:bg-[rgb(19,21,23)]",
+                                                            ]
+                                                        }}
+                                                        value={formData.userName}
+                                                        onChange={(e) =>
+                                                            setFormData({ ...formData, userName: e.target.value })
+                                                        }
+                                                    />
+                                                ))}
+                                            </div>
+                                        </div>
+                                        <div className="lux-input-wrapper max-width-global mb-4">
+                                            <div className="inner-wrapper inline-block w-full">
+                                                {placements.map((placement) => (
+                                                    <Textarea
+                                                        key={placement}
+                                                        type="text"
+                                                        label="Tiểu sử"
+                                                        labelPlacement={"outside"}
+                                                        placeholder={userProfile?.result.bio ? userProfile.result.bio : "Hãy cùng chia sẻ một chút về thông tin hoặc sở thích của bạn."}
+                                                        autoCorrect="off"
+                                                        spellCheck="false"
+                                                        autoCapitalize="words"
+                                                        variant="faded"
+                                                        minRows={2}
+                                                        classNames={{
+                                                            inputWrapper: ["bg-[#fff]",
+                                                                "text-base",
+                                                                "h-auto",
+                                                                "w-full",
+                                                                "dark:text-[#fff]",
+                                                                "dark:bg-[rgb(19,21,23)]",
+                                                            ]
+                                                        }}
+                                                        value={formData.bio}
+                                                        onChange={(e) =>
+                                                            setFormData({ ...formData, bio: e.target.value })
+                                                        }
+                                                    />
+                                                ))}
+                                            </div>
+                                        </div>
+                                        <div className="mt-6">
+                                            <Button
+                                                type="submit"
+                                                className="text-[#fff] dark:text-[rgb(19,21,23)] bg-[#333537] dark:bg-[#fff] border-[#333537] dark:border-[#fff] border border-solid cursor-pointer transition-all duration-300 ease-in-out donace-button flex items-center m-0"
+                                                onClick={handleClick}
+                                            >
+                                                <UserCheck2 className="mr-2 stroke-2 w-4 h-4 flex-shrink-0 block align-middle" />
+                                                <div className="label">Lưu thay đổi</div>
+                                            </Button>
+                                        </div>
+                                    </div>
+                                </form>
+                            ) : (
+                                <div></div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+                {userProfile && userProfile.result ? (
+                    <div className="can-divider with-divider medium mt-8 pt-8 border-t border-solid border-[rgba(19,21,23,0.08)] dark:border-[rgba(255,255,255,0.16)]">
+                        <div className="section-title-wrapper medium">
+                            <div className="spread mb-5 flex justify-between items-center">
+                                <h2 className="text-xl font-semibold text-black-light-theme dark:text-[#fff] mb-0 mt-0">Email và Số điện thoại</h2>
+                                <div className="right-element m-[-0.25rem_0]"></div>
+                            </div>
+                            <div className="-mt-3.5 mb-5 text-[#737577] dark:text-[#d2d4d7] text-base">Quản lý email và số điện thoại bạn sử dụng để đăng nhập vào Donace và nhận những thông báo mới.</div>
+                        </div>
+                        <div className="grid grid-cols-[1fr_1fr] gap-16">
+                            <form action={"#"} onSubmit={handleSubmit}>
+                                <div className="input-wrapper max-width-global flex items-baseline">
+                                    <div className="lux-input-wrapper max-width-global mr-4 flex-1">
                                         <div className="inner-wrapper inline-block w-full">
                                             {placements.map((placement) => (
                                                 <Input
+                                                    value={value}
+                                                    isInvalid={isInvalid}
+                                                    color={isInvalid ? "danger" : "default"}
+                                                    errorMessage={isInvalid && "Please enter a valid email"}
+                                                    onValueChange={setValue}
                                                     key={placement}
-                                                    type="text"
-                                                    label="Tên"
+                                                    type="email"
+                                                    label="Email"
                                                     labelPlacement={"outside"}
-                                                    placeholder="Tên của bạn là gì?"
+                                                    placeholder={userProfile?.result.email ? userProfile.result.email : "Điền email của bạn."}
                                                     autoCorrect="off"
                                                     spellCheck="false"
                                                     autoCapitalize="words"
-                                                    isInvalid={true}
                                                     variant="faded"
                                                     classNames={{
                                                         inputWrapper: ["bg-[#fff]",
@@ -112,25 +277,29 @@ export default function SettingLandingPage() {
                                             ))}
                                         </div>
                                     </div>
-                                    <div className="lux-input-wrapper max-width-global mb-4">
+                                    <Button type="submit" className="text-[#fff] dark:text-[rgb(19,21,23)] bg-[#333537] dark:bg-[#fff] border-[#333537] dark:border-[rgba(255,255,255,0.16)] border border-solid cursor-pointer transition-all duration-300 ease-in-out font-medium rounded-lg whitespace-nowrap justify-center outline-offset-[.125rem] outline-none max-w-full text-base p-[0.625rem_0.875rem] h-auto w-fit flex items-center m-0 top-[2.35rem]">
+                                        <div className="label">Cập nhật</div>
+                                    </Button>
+                                </div>
+                            </form>
+                            <form action={"#"} onSubmit={handleSubmit}>
+                                <div className="input-wrapper max-width-global flex items-baseline">
+                                    <div className="lux-input-wrapper max-width-global mr-4 flex-1">
                                         <div className="inner-wrapper inline-block w-full">
                                             {placements.map((placement) => (
-                                                <Textarea
+                                                <Input
                                                     key={placement}
-                                                    type="text"
-                                                    label="Tiểu sử"
+                                                    type="tel"
+                                                    label="Số điện thoại"
                                                     labelPlacement={"outside"}
-                                                    placeholder="Hãy cùng chia sẻ một chút về thông tin hoặc sở thích của bạn."
-                                                    autoCorrect="off"
-                                                    spellCheck="false"
-                                                    autoCapitalize="words"
+                                                    placeholder="+84 123 456 789"
                                                     variant="faded"
-                                                    minRows={2}
                                                     classNames={{
                                                         inputWrapper: ["bg-[#fff]",
                                                             "text-base",
                                                             "h-auto",
                                                             "w-full",
+                                                            "p-[0.625rem_0.875rem]",
                                                             "dark:text-[#fff]",
                                                             "dark:bg-[rgb(19,21,23)]",
                                                         ]
@@ -139,101 +308,19 @@ export default function SettingLandingPage() {
                                             ))}
                                         </div>
                                     </div>
-                                    <div className="mt-6">
-                                        <Button type="submit" className="text-[#fff] dark:text-[rgb(19,21,23)] bg-[#333537] dark:bg-[#fff] border-[#333537] dark:border-[#fff] border border-solid cursor-pointer transition-all duration-300 ease-in-out donace-button flex items-center m-0">
-                                            <UserCheck2 className="mr-2 stroke-2 w-4 h-4 flex-shrink-0 block align-middle" />
-                                            <div className="label">Lưu thay đổi</div>
-                                        </Button>
-                                    </div>
+                                    <Button type="submit" className="text-[#fff] dark:text-[rgb(19,21,23)] bg-[#333537] dark:bg-[#fff] border-[#333537] dark:border-[rgba(255,255,255,0.16)] border border-solid cursor-pointer transition-all duration-300 ease-in-out font-medium rounded-lg whitespace-nowrap justify-center outline-offset-[.125rem] outline-none max-w-full text-base p-[0.625rem_0.875rem] h-auto w-fit flex items-center m-0 top-[2.35rem]">
+                                        <div className="label">Cập nhật</div>
+                                    </Button>
                                 </div>
                             </form>
                         </div>
-                    </div>
-                </div>
-                <div className="can-divider with-divider medium mt-8 pt-8 border-t border-solid border-[rgba(19,21,23,0.08)] dark:border-[rgba(255,255,255,0.16)]">
-                    <div className="section-title-wrapper medium">
-                        <div className="spread mb-5 flex justify-between items-center">
-                            <h2 className="text-xl font-semibold text-black-light-theme dark:text-[#fff] mb-0 mt-0">Email và Số điện thoại</h2>
-                            <div className="right-element m-[-0.25rem_0]"></div>
+                        <div className="text-secondary-alpha text-sm text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)] pt-4">
+                            Vì bảo mật, chúng tôi sẽ gửi mã xác minh thông qua email của bạn.
                         </div>
-                        <div className="-mt-3.5 mb-5 text-[#737577] dark:text-[#d2d4d7] text-base">Quản lý email và số điện thoại bạn sử dụng để đăng nhập vào Donace và nhận những thông báo mới.</div>
                     </div>
-                    <div className="grid grid-cols-[1fr_1fr] gap-16">
-                        <form action={"#"}>
-                            <div className="input-wrapper max-width-global flex items-baseline">
-                                <div className="lux-input-wrapper max-width-global mr-4 flex-1">
-                                    <div className="inner-wrapper inline-block w-full">
-                                        {placements.map((placement) => (
-                                            <Input
-                                                value={value}
-                                                isInvalid={isInvalid}
-                                                color={isInvalid ? "danger" : "default"}
-                                                errorMessage={isInvalid && "Please enter a valid email"}
-                                                onValueChange={setValue}
-                                                key={placement}
-                                                type="email"
-                                                label="Email"
-                                                labelPlacement={"outside"}
-                                                placeholder="Điền email của bạn"
-                                                autoCorrect="off"
-                                                spellCheck="false"
-                                                autoCapitalize="words"
-                                                variant="faded"
-                                                classNames={{
-                                                    inputWrapper: ["bg-[#fff]",
-                                                        "text-base",
-                                                        "h-auto",
-                                                        "w-full",
-                                                        "p-[0.625rem_0.875rem]",
-                                                        "dark:text-[#fff]",
-                                                        "dark:bg-[rgb(19,21,23)]",
-                                                    ]
-                                                }}
-                                            />
-                                        ))}
-                                    </div>
-                                </div>
-                                <Button type="submit" className="text-[#fff] dark:text-[rgb(19,21,23)] bg-[#333537] dark:bg-[#fff] border-[#333537] dark:border-[rgba(255,255,255,0.16)] border border-solid cursor-pointer transition-all duration-300 ease-in-out font-medium rounded-lg whitespace-nowrap justify-center outline-offset-[.125rem] outline-none max-w-full text-base p-[0.625rem_0.875rem] h-auto w-fit flex items-center m-0 top-[2.35rem]">
-                                    <div className="label">Cập nhật</div>
-                                </Button>
-                            </div>
-                        </form>
-                        <form action={"#"}>
-                            <div className="input-wrapper max-width-global flex items-baseline">
-                                <div className="lux-input-wrapper max-width-global mr-4 flex-1">
-                                    <div className="inner-wrapper inline-block w-full">
-                                        {placements.map((placement) => (
-                                            <Input
-                                                key={placement}
-                                                type="tel"
-                                                label="Số điện thoại"
-                                                labelPlacement={"outside"}
-                                                placeholder="+84 123 456 789"
-                                                variant="faded"
-                                                classNames={{
-                                                    inputWrapper: ["bg-[#fff]",
-                                                        "text-base",
-                                                        "h-auto",
-                                                        "w-full",
-                                                        "p-[0.625rem_0.875rem]",
-                                                        "dark:text-[#fff]",
-                                                        "dark:bg-[rgb(19,21,23)]",
-                                                    ]
-                                                }}
-                                            />
-                                        ))}
-                                    </div>
-                                </div>
-                                <Button type="submit" className="text-[#fff] dark:text-[rgb(19,21,23)] bg-[#333537] dark:bg-[#fff] border-[#333537] dark:border-[rgba(255,255,255,0.16)] border border-solid cursor-pointer transition-all duration-300 ease-in-out font-medium rounded-lg whitespace-nowrap justify-center outline-offset-[.125rem] outline-none max-w-full text-base p-[0.625rem_0.875rem] h-auto w-fit flex items-center m-0 top-[2.35rem]">
-                                    <div className="label">Cập nhật</div>
-                                </Button>
-                            </div>
-                        </form>
-                    </div>
-                    <div className="text-secondary-alpha text-sm text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)] pt-4">
-                        Vì bảo mật, chúng tôi sẽ gửi mã xác minh thông qua email của bạn.
-                    </div>
-                </div>
+                ) : (
+                    <div></div>
+                )}
                 <div className="can-divider with-divider medium mt-8 pt-8 border-t border-solid border-[rgba(19,21,23,0.08)] dark:border-[rgba(255,255,255,0.16)]">
                     <div className="section-title-wrapper medium">
                         <div className="spread mb-5 flex justify-between items-center">
