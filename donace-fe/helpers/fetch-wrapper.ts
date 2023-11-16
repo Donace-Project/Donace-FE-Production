@@ -47,7 +47,7 @@ async function postFile(url: string, body: any) {
   } as RequestInit;
 
   const response = await fetchRelative(url, requestOptions);
-  return response;
+  return await response.text();;
 }
 
 async function put(url: string, body: any) {

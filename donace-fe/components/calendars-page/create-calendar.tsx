@@ -71,20 +71,18 @@ export default function CreateCalendar() {
     const formData = new FormData();
     formData.append("file", selectedFile);
 
-    const response = await fetchWrapper.postFile(
+    const url = await fetchWrapper.postFile(
       "api/Common/upload-file",
       formData
     );
-
-    const text = await response.text();
     // setBackgrounUrl(text);
 
-    if (backgroundRef.current && text) {
-      backgroundRef.current.style.backgroundImage = `url(${text})`;
+    if (backgroundRef.current && url) {
+      backgroundRef.current.style.backgroundImage = `url(${url})`;
 
       setCalendarReq({
         ...calendarReq,
-        cover: text,
+        cover: url,
       });
     }
   };
