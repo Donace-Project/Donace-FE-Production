@@ -48,7 +48,7 @@ export default function CreateCalendar() {
         setTimeout(() => {
             // Sau khi đợi, điều hướng đến trang khác
             router.push('/calendars');
-        }, 1000);
+        }, 3000);
     };
 
     const handleFileUpload = async (event: any) => {
