@@ -6,6 +6,7 @@ import { ArrowUp, CheckCircle } from "lucide-react";
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import toast, { Toaster } from "react-hot-toast";
+import { Spinner } from "@nextui-org/react";
 
 // const notify = () => toast.promise(
 //     saveSettings(settings),
@@ -38,11 +39,10 @@ export default function CreateCalendar() {
     const router = useRouter();
     const backgroundRef = useRef<HTMLDivElement | null>(null);
     const iconRef = useRef<HTMLDivElement | null>(null);
+    const [isCreating, setIsCreating] = useState(false);
+
     const handleClick = async () => {
         await handleSubmit;
-        setTimeout(() => {
-            router.push("/calendars/manage");
-        }, 2500);
     };
 
     const [calendarReq, setCalendarReq] = useState({
@@ -102,7 +102,7 @@ export default function CreateCalendar() {
 
     var [images, setImages] = useState<UploadImage | null>(null);
 
-    const handleSubmit = (e: any) => {
+    const handleSubmit = async (e: any) => {
         e.preventDefault();
         // Xây dựng đối tượng dữ liệu từ formData
         const dataToSend = {
@@ -116,31 +116,59 @@ export default function CreateCalendar() {
             addressName: calendarReq.addressName,
         };
 
-        if (!dataToSend.name) {
-            // Hiển thị thông báo lỗi
-            toast.error("Name field is required.");
-            return;
-        }
-        toast
-            .promise(fetchWrapper.post("/api/Calendar/create-calendar", dataToSend), {
-                loading: "Đang tạo lịch...", // Thông báo khi đang xử lý
-                success: <b>Lịch đã tạo thành công!</b>, // Thông báo khi Promise thành công
-                error: <b>Bị lỗi khi tạo lịch!</b>, // Thông báo khi Promise thất bại
-            })
-            .then((response) => {
-                if (!response.success) {
-                    // Xử lý lỗi từ API và hiển thị thông báo lỗi
-                    toast.error(`Lỗi khi tạo lịch: ${response.error}`);
-                    return;
-                }
+        setIsCreating(true);
 
-                // Cập nhật giao diện người dùng hoặc thực hiện các hành động khác
-            })
-            .catch((error) => {
-                // Xử lý lỗi trong quá trình gửi yêu cầu và hiển thị thông báo lỗi bằng toast
-                toast.error(`Lỗi: ${error.message}`);
-            });
-    };
+        try {
+            if (!dataToSend.name) {
+                // Hiển thị thông báo lỗi
+                console.error("Name field is required.");
+                setIsCreating(false); // Bỏ hiển thị Spinner và bỏ vô hiệu hóa nút
+                return;
+            }
+
+            // Gửi request API và hiển thị Spinner
+            const response = await fetchWrapper.post("/api/Calendar/create-calendar", dataToSend);
+            if (!response.success) {
+                // Xử lý lỗi từ API và hiển thị thông báo lỗi
+                console.error(`Lỗi khi tạo lịch: ${response.error}`);
+                setIsCreating(false); // Bỏ hiển thị Spinner và bỏ vô hiệu hóa nút
+                return;
+            }
+
+            // Xử lý thành công
+            console.log(<b>Lịch đã tạo thành công!</b>);
+            router.push("/calendars/manage");
+        } catch (error) {
+            // Xử lý lỗi trong quá trình gửi yêu cầu và hiển thị thông báo lỗi
+            console.error(`Lỗi: ${String(error)}`);
+            setIsCreating(false); // Bỏ hiển thị Spinner và bỏ vô hiệu hóa nút
+        }
+
+        // if (!dataToSend.name) {
+        //     // Hiển thị thông báo lỗi
+        //     toast.error("Name field is required.");
+        //     return;
+        // }
+        // toast
+        //     .promise(fetchWrapper.post("/api/Calendar/create-calendar", dataToSend), {
+        //         loading: "Đang tạo lịch...", // Thông báo khi đang xử lý
+        //         success: <b>Lịch đã tạo thành công!</b>, // Thông báo khi Promise thành công
+        //         error: <b>Bị lỗi khi tạo lịch!</b>, // Thông báo khi Promise thất bại
+        //     })
+        //     .then((response) => {
+        //         if (!response.success) {
+        //             // Xử lý lỗi từ API và hiển thị thông báo lỗi
+        //             toast.error(`Lỗi khi tạo lịch: ${response.error}`);
+        //             return;
+        //         }
+
+        //         // Cập nhật giao diện người dùng hoặc thực hiện các hành động khác
+        //     })
+        //     .catch((error) => {
+        //         // Xử lý lỗi trong quá trình gửi yêu cầu và hiển thị thông báo lỗi bằng toast
+        //         toast.error(`Lỗi: ${error.message}`);
+        //     });
+    }
     return (
         <div className="page-content">
             <Toaster />
@@ -286,16 +314,21 @@ export default function CreateCalendar() {
                     </div>
                     <Button
                         type="submit"
-                        className="text-[#fff] dark:text-[rgb(19,21,23)] bg-[#333537] dark:bg-[#fff] hover:bg-gray-700 border-[#333537] dark:border-[#fff] border border-solid cursor-pointer transition-[all 0.3s cubic-bezier(0.4,0,0.2,1)] outline-[0s] font-medium rounded-[0.5rem] relative whitespace-nowrap justify-center outline-offset-[.125rem] outline-none max-w-full text-[1rem] p-[0.625rem_0.875rem] w-fit flex items-center m-0 leading-[1.5]"
+                        className={`text-[#fff] dark:text-[rgb(19,21,23)] ${isCreating ? 'bg-gray-500' : 'bg-[#333537] dark:bg-[#fff] hover:bg-gray-700'} border-[#333537] dark:border-[#fff] focus-visible:outline-2 focus-visible:outline focus-visible:outline-[#333537] border border-solid cursor-pointer transition-[all 0.3s cubic-bezier(0.4,0,0.2,1)] outline-[0s] font-medium rounded-[0.5rem] relative whitespace-nowrap justify-center outline-offset-[.125rem] outline-none max-w-full text-[1rem] p-[0.625rem_0.875rem] w-fit flex items-center m-0 leading-[1.5]}`}
                         onClick={handleClick}
+                        disabled={isCreating}
                     >
-                        <CheckCircle className="mr-2 stroke-[2.5] w-4 h-4 flex-shrink-0 block align-middle" />
-                        <div
-                            id="label"
-                            className="leading-[1] m-[-4px_0] p-[4px_0] overflow-hidden text-ellipsis"
-                        >
-                            Tạo lịch
-                        </div>
+                        {isCreating ? (
+                            <>
+                                <Spinner size="sm" color="success" />
+                                <span className="label">Đang tạo lịch...</span>
+                            </>
+                        ) : (
+                            <>
+                                <CheckCircle className="mr-2 stroke-[2.5] w-4 h-4 flex-shrink-0 block align-middle" />
+                                <div id="label" className="...">Tạo lịch</div>
+                            </>
+                        )}
                     </Button>
                 </form>
             </div>
