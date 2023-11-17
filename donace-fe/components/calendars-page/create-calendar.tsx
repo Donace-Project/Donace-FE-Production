@@ -40,6 +40,7 @@ export default function CreateCalendar() {
     const backgroundRef = useRef<HTMLDivElement | null>(null);
     const iconRef = useRef<HTMLDivElement | null>(null);
     const [isCreating, setIsCreating] = useState(false);
+    const [isUploading, setIsUploading] = useState(false);
 
     const handleClick = async () => {
         await handleSubmit;
@@ -65,7 +66,6 @@ export default function CreateCalendar() {
         const selectedFile = event.target.files[0];
         const formData = new FormData();
         formData.append("file", selectedFile);
-
         const url = await fetchWrapper.postFile("api/Common/upload-file", formData);
         // setBackgrounUrl(text);
 
@@ -88,15 +88,23 @@ export default function CreateCalendar() {
         const formData = new FormData();
         formData.append("file", selectedFile);
 
-        const url = await fetchWrapper.postFile("api/Common/upload-file", formData);
+        setIsUploading(true);
 
-        if (iconRef.current && url) {
-            iconRef.current.style.backgroundImage = `url(${url})`;
+        try {
+            const url = await fetchWrapper.postFile("api/Common/upload-file", formData);
 
-            setCalendarReq({
-                ...calendarReq,
-                avatar: url,
-            });
+            if (iconRef.current && url) {
+                iconRef.current.style.backgroundImage = `url(${url})`;
+
+                setCalendarReq({
+                    ...calendarReq,
+                    avatar: url,
+                });
+            }
+        } catch (error) {
+            console.error("Lỗi khi upload ảnh:", error);
+        } finally {
+            setIsUploading(false);
         }
     };
 
@@ -251,11 +259,23 @@ export default function CreateCalendar() {
                                                 onChange={handleAvatarUpload}
                                             />
                                             <div
-
+                                                onClick={() => {
+                                                    const fileInput = document.getElementById("avatarImage");
+                                                    if (fileInput) {
+                                                        fileInput.click();
+                                                    }
+                                                }}
                                                 id="upload-icon"
-                                                className="rounded-[0.5rem] bg-center bg-cover flex justify-center items-center text-[#fff] dark:text-[#212325] bg-[rgb(19,21,23)] dark:bg-[#fff] hover:bg-red-500 w-[35%] h-[35%] min-w-[24px] min-h-[24px] border-2 border-solid border-[#fff] dark:border-[#212325] absolute right-[-1px] bottom-[-1px] origin-center transition-all duration-300 ease-in-out"
+                                                className="rounded-[0.5rem] bg-center bg-cover flex justify-center items-center text-[#fff] dark:text-[#212325] bg-[rgb(19,21,23)] dark:bg-[#fff] hover:bg-[#de3163] w-[35%] h-[35%] min-w-[24px] min-h-[24px] border-2 border-solid border-[#fff] dark:border-[#212325] absolute right-[-1px] bottom-[-1px] origin-center transition-all duration-300 ease-in-out"
                                             >
-                                                <ArrowUp className="stroke-[2.5] w-[65%] h-[65%] block align-middle" />
+                                                {isUploading ? (
+                                                    <Spinner
+                                                        size="sm"
+                                                        color="default"
+                                                    />
+                                                ) : (
+                                                    <ArrowUp className="stroke-[2.5] w-[65%] h-[65%] block align-middle" />
+                                                )}
                                             </div>
                                             <div
                                                 ref={iconRef}
@@ -268,12 +288,6 @@ export default function CreateCalendar() {
                                                 id="avatar square"
                                                 className="bg-[url('https://cdn.lu.ma/cdn-cgi/image/format=auto,fit=cover,dpr=2,background=white,quality=75,width=64,height=64/avatars-default/community_avatar_13.png')] w-16 h-16 rounded-[0.5rem] bg-center bg-cover flex justify-center items-center bg-[#ebeced] dark:bg-[#333537]"
                                             >
-                                                {/* <Avatar
-                                                    radius="full"
-                                                    src="https://avatars.githubusercontent.com/u/143386751?s=200&v=4"
-                                                    name="Donace"
-                                                    className="relative"
-                                                /> */}
                                             </div>
                                         </div>
                                     </div>
