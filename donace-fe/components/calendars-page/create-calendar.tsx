@@ -41,7 +41,7 @@ export default function CreateCalendar() {
     const handleClick = async () => {
         await handleSubmit;
         setTimeout(() => {
-            router.push("/calendars");
+            router.push("/calendars/manage");
         }, 2500);
     };
 
