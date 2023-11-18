@@ -63,3 +63,26 @@ export type ItemEventsProfile = {
 }
 
 // ***** END EXPORT PROFILE
+
+// CALENDAR
+
+export type CreateCaLendar ={
+    code: string;
+    success: boolean;
+    result: ResultCreateCaLendar;
+    pageInfor: any;
+}
+
+export type ResultCreateCaLendar ={
+    sorted: number;
+    id: string;
+    name: string;
+    cover: string;
+    avatar: string;
+    color: string;
+    publicURL: string;
+    lat: string;
+    long: string;
+    addressName: string;
+    totalSubcribed: number; 
+}
