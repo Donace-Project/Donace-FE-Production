@@ -1,6 +1,6 @@
 "use client";
 import { fetchWrapper } from "@/helpers/fetch-wrapper";
-import { ItemsCalendarManage } from "@/types/DonaceType";
+import { GetCalendarById, ItemsCalendarManage } from "@/types/DonaceType";
 import { Avatar } from "@nextui-org/avatar";
 import { Button } from "@nextui-org/button";
 import { Link } from "@nextui-org/link";
@@ -8,6 +8,22 @@ import { Tab, Tabs } from "@nextui-org/tabs";
 import { ArrowRight, ArrowUpRight, CalendarX2, Fullscreen, MapPin, Plus, Users2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Image } from "@nextui-org/image";
+
+export type Calendar = {
+    code: string
+    success: boolean
+    result: Result[]
+    pageInfo: any
+}
+
+export type Result = {
+    id: string
+    name: string
+    totalSubcriber: number
+    avatar: string
+    userId: string
+    sorted: number
+}
 
 
 const daysOfWeek = ["Chủ Nhật", "Thứ Hai", "Thứ Ba", "Thứ Tư", "Thứ Năm", "Thứ Sáu", "Thứ Bảy"];
@@ -26,10 +42,17 @@ const currentDateFormatted = currentDate.toLocaleDateString('en-US').replace(/\/
 currentDate.setDate(currentDate.getDate() - 1)
 const pastDateFormatted = currentDate.toLocaleString('en-US').replace(/\//g, '-');
 
-export default function CalendarManage() {
+export default function CalendarManage(props: any) {
+
+    var { id } = props
+    console.log(id);
 
     var [pastEvents, setPastEvents] = useState<ItemsCalendarManage[]>();
     var [futureEvents, setFutureEvents] = useState<ItemsCalendarManage[]>();
+    var [calendars, setCalendar] = useState<Calendar | null>(null);
+
+    const [getCalendars, setCalendars] = useState<GetCalendarById | null>(null);
+    const [calendarId, setCalendarId] = useState<string | null>(null);
 
     useEffect(() => {
         // uncomment khi có dữ liệu từ api
@@ -38,8 +61,10 @@ export default function CalendarManage() {
 
         fetchWrapper.get(`/api/Event?FromDate=01-01-1996&ToDate=${pastDateFormatted}&PageNumber=1&PageSize=9999`)
             .then(data => setPastEvents(data.items));
-    }, []);
 
+        fetchWrapper.post(`api/Calendar/get-by-id?Id=${calendarId}`, null)
+            .then(data => setCalendar(data.items));
+    }, []);
 
     return (
         <div className="page-content">
@@ -75,13 +100,15 @@ export default function CalendarManage() {
                         <div className="tabs flex max-w-full overflow-auto min-w-0 gap-4 flex-1">
                             <div className="side-padding"></div>
                             <Link
-                                href="/calendars/manage"
+                                // href={`/calendars/manage/${calendar.id}`}
+                                href=""
                                 className="text-black-light-theme dark:text-[#fff] border-b-2 border-solid border-[rgb(19,21,23)] dark:border-[#fff] whitespace-nowrap inline-block pb-2 transition-all duration-300 ease-in-out cursor-pointer"
                                 underline="none"
                             >
                                 Sự kiện
                             </Link>
                             <Link
+                                // href={`/calendars/manage/audience/${calendar.id}`}
                                 href="/calendars/manage/audience"
                                 className="text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)] border-b-2 border-solid border-transparent whitespace-nowrap inline-block pb-2 transition-all duration-300 ease-in-out cursor-pointer"
                                 underline="none"
@@ -323,6 +350,6 @@ export default function CalendarManage() {
                     </div>
                 </div>
             </div>
-        </div>
+        </div >
     )
 }

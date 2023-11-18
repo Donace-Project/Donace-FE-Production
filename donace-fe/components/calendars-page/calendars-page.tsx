@@ -78,6 +78,7 @@ export default function CalendarPage() {
             .then(data => setSubscribed(data))
     }, []);
 
+
     return (
         <div className="page-content">
             {isOnline ? (

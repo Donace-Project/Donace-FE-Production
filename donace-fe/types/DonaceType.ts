@@ -99,3 +99,20 @@ export type ItemsCalendarManage = {
 export type UploadImage = {
     file: string;
 }
+
+// **************
+
+// GET Calendar By ID in Manage Calendar
+export type GetCalendarById = {
+    sort: number;
+    id: string;
+    name: string;
+    cover: string;
+    avatar: string;
+    color: string;
+    publicURL: string;
+    lat: string;
+    long: string;
+    addressName: string;
+    totalSubcribed: number
+}
