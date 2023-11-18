@@ -6,9 +6,6 @@ import { CalendarX, Frown, Plus } from "lucide-react";
 import { Image } from "@nextui-org/image";
 import { Button } from "@nextui-org/button";
 import { fetchWrapper } from '../../helpers/fetch-wrapper'
-import { Card } from "@nextui-org/card";
-import { Skeleton } from "@nextui-org/skeleton";
-import { useRouter } from "next/navigation";
 
 export type Calendar = {
     code: string

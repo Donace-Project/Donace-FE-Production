@@ -45,14 +45,12 @@ const pastDateFormatted = currentDate.toLocaleString('en-US').replace(/\//g, '-'
 export default function CalendarManage(props: any) {
 
     var { id } = props
-    console.log(id);
 
     var [pastEvents, setPastEvents] = useState<ItemsCalendarManage[]>();
     var [futureEvents, setFutureEvents] = useState<ItemsCalendarManage[]>();
+    const [getCalendars, setCalendars] = useState<GetCalendarById | null>(null);
     var [calendars, setCalendar] = useState<Calendar | null>(null);
 
-    const [getCalendars, setCalendars] = useState<GetCalendarById | null>(null);
-    const [calendarId, setCalendarId] = useState<string | null>(null);
 
     useEffect(() => {
         // uncomment khi có dữ liệu từ api
@@ -62,8 +60,11 @@ export default function CalendarManage(props: any) {
         fetchWrapper.get(`/api/Event?FromDate=01-01-1996&ToDate=${pastDateFormatted}&PageNumber=1&PageSize=9999`)
             .then(data => setPastEvents(data.items));
 
-        fetchWrapper.post(`api/Calendar/get-by-id?Id=${calendarId}`, null)
-            .then(data => setCalendar(data.items));
+        fetchWrapper.post(`api/Calendar/get-by-id?Id=${id}`, null)
+            .then(data => setCalendars(data));
+
+        fetchWrapper.post('/api/Calendar/get-list', { pageNumber: 1, pageSize: 9999 })
+            .then(data => setCalendar(data))
     }, []);
 
     return (
@@ -71,17 +72,31 @@ export default function CalendarManage(props: any) {
             <div className="page-header opacity-[2] pl-4 pr-4 pt-12 max-width-global margin-global">
                 <div className="spread gap-2 mb-2 flex justify-between items-center">
                     <h1 className="tab-title text-4xl font-semibold text-black-light-theme dark:text-[#fff] mb-0">
-                        <div className="gap-3 flex items-center">
-                            <div className="avatar-square">
-                                <Avatar
-                                    radius="sm"
-                                    src="https://avatars.githubusercontent.com/u/143386751?s=200&v=4"
-                                    name="Donace"
-                                    className="relative w-6 h-6 mt-1"
-                                />
+                        {getCalendars ? (
+                            <div className="gap-3 flex items-center">
+                                <div className="avatar-square">
+                                    <Avatar
+                                        radius="sm"
+                                        src={getCalendars.avatar ? getCalendars.avatar : "https://cdn.lu.ma/cdn-cgi/image/format=auto,fit=cover,dpr=2,background=white,quality=75,width=64,height=64/avatars-default/community_avatar_13.png"}
+                                        name="Donace"
+                                        className="relative w-6 h-6 mt-1"
+                                    />
+                                </div>
+                                <div>{getCalendars.name}</div>
                             </div>
-                            <div>Donace</div>
-                        </div>
+                        ) : (
+                            <div className="gap-3 flex items-center">
+                                <div className="avatar-square">
+                                    <Avatar
+                                        radius="sm"
+                                        src="https://avatars.githubusercontent.com/u/143386751?s=200&v=4"
+                                        name="Donace"
+                                        className="relative w-6 h-6 mt-1"
+                                    />
+                                </div>
+                                <div>Donace</div>
+                            </div>
+                        )}
                     </h1>
                     <Link
                         href="/calendars/details"
@@ -97,25 +112,43 @@ export default function CalendarManage(props: any) {
             <div className="tab-wrapper m-auto pt-2">
                 <div className="zm-container pt-1 max-width-global margin-global">
                     <div className="page-header-tabs-wrapper flex justify-between items-baseline">
-                        <div className="tabs flex max-w-full overflow-auto min-w-0 gap-4 flex-1">
-                            <div className="side-padding"></div>
-                            <Link
-                                // href={`/calendars/manage/${calendar.id}`}
-                                href=""
-                                className="text-black-light-theme dark:text-[#fff] border-b-2 border-solid border-[rgb(19,21,23)] dark:border-[#fff] whitespace-nowrap inline-block pb-2 transition-all duration-300 ease-in-out cursor-pointer"
-                                underline="none"
-                            >
-                                Sự kiện
-                            </Link>
-                            <Link
-                                // href={`/calendars/manage/audience/${calendar.id}`}
-                                href="/calendars/manage/audience"
-                                className="text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)] border-b-2 border-solid border-transparent whitespace-nowrap inline-block pb-2 transition-all duration-300 ease-in-out cursor-pointer"
-                                underline="none"
-                            >
-                                Người tham gia
-                            </Link>
-                        </div>
+                        {getCalendars ? (
+                            <div className="tabs flex max-w-full overflow-auto min-w-0 gap-4 flex-1" key={getCalendars.id}>
+                                <div className="side-padding"></div>
+                                <Link
+                                    href={`/calendars/manage/${getCalendars.id}`}
+                                    className="text-black-light-theme dark:text-[#fff] border-b-2 border-solid border-[rgb(19,21,23)] dark:border-[#fff] whitespace-nowrap inline-block pb-2 transition-all duration-300 ease-in-out cursor-pointer"
+                                    underline="none"
+                                >
+                                    Sự kiện
+                                </Link>
+                                <Link
+                                    href={`/calendars/manage/${getCalendars.id}/audience/`}
+                                    className="text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)] border-b-2 border-solid border-transparent whitespace-nowrap inline-block pb-2 transition-all duration-300 ease-in-out cursor-pointer"
+                                    underline="none"
+                                >
+                                    Người tham gia
+                                </Link>
+                            </div>
+                        ) : (
+                            <div className="tabs flex max-w-full overflow-auto min-w-0 gap-4 flex-1">
+                                <div className="side-padding"></div>
+                                <Link
+                                    // href={`/calendars/manage/${getCalendars.id}`}
+                                    className="text-black-light-theme dark:text-[#fff] border-b-2 border-solid border-[rgb(19,21,23)] dark:border-[#fff] whitespace-nowrap inline-block pb-2 transition-all duration-300 ease-in-out cursor-pointer"
+                                    underline="none"
+                                >
+                                    Sự kiện
+                                </Link>
+                                <Link
+                                    // href={`/calendars/manage/${getCalendars.id}/audience/`}
+                                    className="text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)] border-b-2 border-solid border-transparent whitespace-nowrap inline-block pb-2 transition-all duration-300 ease-in-out cursor-pointer"
+                                    underline="none"
+                                >
+                                    Người tham gia
+                                </Link>
+                            </div>
+                        )}
                     </div>
                 </div>
                 <div className="tab-title-divider border border-solid border-[rgba(19,21,23,0.08)] mb-7"></div>

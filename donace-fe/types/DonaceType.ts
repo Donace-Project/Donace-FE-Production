@@ -116,3 +116,34 @@ export type GetCalendarById = {
     addressName: string;
     totalSubcribed: number
 }
+// **************
+
+// GET LiST Event BY CALENDAR ID
+export type GetListEventByCalendarId = {
+    id: string;
+    startDate: string;
+    endDate: string;
+    addressName: string;
+    lat: string;
+    long: string;
+    capacity: number
+    isOverCapacity: boolean;
+    cover: string;
+    name: string;
+    theme: string;
+    color: string;
+    fontSize: number;
+    instructions: string;
+    isMultiSection: boolean;
+    duration: number;
+    totalGuest: number;
+    section: SectionByEvent[];
+    calendarId: string;
+}
+
+export type SectionByEvent = {
+    id: string;
+    startDate: string;
+}
+
+// ******************

@@ -1,39 +1,12 @@
 "use client";
 import { fetchWrapper } from "@/helpers/fetch-wrapper";
-import { UploadImage } from "@/types/DonaceType";
+import { GetCalendarById, UploadImage } from "@/types/DonaceType";
 import { Button } from "@nextui-org/button";
 import { ArrowUp, CheckCircle } from "lucide-react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import toast, { Toaster } from "react-hot-toast";
 import { Spinner } from "@nextui-org/react";
-
-// const notify = () => toast.promise(
-//     saveSettings(settings),
-//     {
-//         loading: 'Saving...',
-//         success: <b>Settings saved!</b>,
-//         error: <b>Could not save.</b>,
-//     }
-// );
-
-export type CreateCalendar = {
-    code: string;
-    success: boolean;
-    result: CalendarModel[];
-    pageInfo: any;
-};
-
-export type CalendarModel = {
-    name: string;
-    cover: string;
-    avatar: string;
-    color: string;
-    publicURL: string;
-    lat: string;
-    long: string;
-    addressName: string;
-};
 
 export default function CreateCalendar() {
     const router = useRouter();
@@ -142,13 +115,12 @@ export default function CreateCalendar() {
                 setIsCreating(false); // Bỏ hiển thị Spinner và bỏ vô hiệu hóa nút
                 return;
             }
-
             // Xử lý thành công
             console.log(<b>Lịch đã tạo thành công!</b>);
-            router.push("/calendars/manage");
+            router.push("/calendars/manage/");
         } catch (error) {
             // Xử lý lỗi trong quá trình gửi yêu cầu và hiển thị thông báo lỗi
-            console.error(`Lỗi: ${String(error)}`);
+            console.error(`Lỗi: ${String(Error)}`);
             setIsCreating(false); // Bỏ hiển thị Spinner và bỏ vô hiệu hóa nút
         }
 
