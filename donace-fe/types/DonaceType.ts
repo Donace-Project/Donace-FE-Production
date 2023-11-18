@@ -64,25 +64,38 @@ export type ItemEventsProfile = {
 
 // ***** END EXPORT PROFILE
 
-// CALENDAR
+// CALENDAR MANAGER
 
-export type CreateCaLendar ={
-    code: string;
-    success: boolean;
-    result: ResultCreateCaLendar;
-    pageInfor: any;
+export type CalendarManageEvents = {
+    totalCount: number;
+    items: ItemsCalendarManage[];
 }
 
-export type ResultCreateCaLendar ={
-    sorted: number;
+export type ItemsCalendarManage = {
     id: string;
-    name: string;
-    cover: string;
-    avatar: string;
-    color: string;
-    publicURL: string;
+    startDate: string;
+    endDate: string;
+    addressName: string;
     lat: string;
     long: string;
-    addressName: string;
-    totalSubcribed: number; 
+    capacity: number;
+    isOverCapacity: boolean;
+    cover: string;
+    name: string;
+    theme: string;
+    color: string;
+    fontSize: number;
+    instructions: string;
+    isMultiSection: boolean;
+    duration: number;
+    totalGuest: number;
+    calendarId: string;
+    isLive: boolean;
+}
+
+// *************
+
+// Upload Image in CREATE CALENDAR
+export type UploadImage = {
+    file: string;
 }

@@ -8,6 +8,7 @@ import { Button } from "@nextui-org/button";
 import { fetchWrapper } from '../../helpers/fetch-wrapper'
 import { Card } from "@nextui-org/card";
 import { Skeleton } from "@nextui-org/skeleton";
+import { useRouter } from "next/navigation";
 
 export type Calendar = {
     code: string
@@ -111,10 +112,10 @@ export default function CalendarPage() {
                                         calendars.result.length > 0 ? (
                                             calendars.result.map((calendar, index) => (
                                                 <Link
-                                                    key={index}
+                                                    key={calendar.id}
                                                     className="p-[1rem_1rem_0.875rem] cursor-pointer transition-all duration-300 ease-in-out block relative rounded-xl bg-[#f3f4f5] dark:bg-[rgba(255,255,255,0.04)] border border-solid border-[#fff] dark:border-[rgba(255,255,255,0.04)] overflow-hidden"
                                                     underline="none"
-                                                    href="/calendars/manage"
+                                                    href={`/calendars/manage/${calendar.id}`}
                                                 >
                                                     <div className="spread min-h-full flex justify-between flex-col">
                                                         <Image
@@ -181,7 +182,7 @@ export default function CalendarPage() {
                                     subscribeds.result.length > 0 ? (
                                         subscribeds.result.map((subscribed, index) => (
                                             <Link
-                                                key={index}
+                                                key={subscribed.id}
                                                 className="p-[1rem_1rem_0.875rem] cursor-pointer transition-all duration-300 ease-in-out block relative rounded-xl bg-[#f3f4f5] dark:bg-[rgba(255,255,255,0.04)] border border-solid border-[#fff] dark:border-[rgba(255,255,255,0.04)] overflow-hidden"
                                                 underline="none"
                                             >

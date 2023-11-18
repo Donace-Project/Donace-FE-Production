@@ -7,6 +7,7 @@ const baseUrl = "http://34.97.29.83/";
 export const fetchWrapper = {
   get,
   post,
+  postFile,
   put,
   delete: _delete,
 };
@@ -35,6 +36,18 @@ async function post(url: string, body: any) {
 
   const response = await fetchRelative(url, requestOptions);
   return handleResponse(response);
+}
+
+async function postFile(url: string, body: any) {
+  const requestOptions = {
+    method: "POST",
+    headers: { ...authHeader() },
+    credentials: "include",
+    body: body,
+  } as RequestInit;
+
+  const response = await fetchRelative(url, requestOptions);
+  return await response.text();;
 }
 
 async function put(url: string, body: any) {
