@@ -1,6 +1,6 @@
 "use client";
 import { fetchWrapper } from "@/helpers/fetch-wrapper";
-import { GetCalendarById, ItemsCalendarManage } from "@/types/DonaceType";
+import { GetCalendarById, GetListEventByCalendarId, ItemsCalendarManage } from "@/types/DonaceType";
 import { Avatar } from "@nextui-org/avatar";
 import { Button } from "@nextui-org/button";
 import { Link } from "@nextui-org/link";
@@ -45,12 +45,17 @@ const pastDateFormatted = currentDate.toLocaleString('en-US').replace(/\//g, '-'
 export default function CalendarManage(props: any) {
 
     var { id } = props
+    const dateTimeTrue = true;
+    const dateTimeEvent = dateTimeTrue ? 'true' : 'false';
+    let apiURl = '';
 
     var [pastEvents, setPastEvents] = useState<ItemsCalendarManage[]>();
     var [futureEvents, setFutureEvents] = useState<ItemsCalendarManage[]>();
     const [getCalendars, setCalendars] = useState<GetCalendarById | null>(null);
     var [calendars, setCalendar] = useState<Calendar | null>(null);
-
+    const [getEvent, setEvent] = useState<GetListEventByCalendarId[]>([]);
+    const [getPastEventId, setPastEventsId] = useState<GetListEventByCalendarId[]>([]);
+    // var [getEvent, setEvent] = useState<null | GetListEventByCalendarId>(null);
 
     useEffect(() => {
         // uncomment khi có dữ liệu từ api
@@ -65,7 +70,28 @@ export default function CalendarManage(props: any) {
 
         fetchWrapper.post('/api/Calendar/get-list', { pageNumber: 1, pageSize: 9999 })
             .then(data => setCalendar(data))
+
+        // fetchWrapper.get(`api/Event/list-event-by-calendar-${id}-${dateTimeEvent}`)
+        //     .then(data => setEvent(data));
     }, []);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                let apiUrl = '';
+
+                if (!dateTimeTrue) { // Nếu dateTimeTrue là false
+                    apiUrl = `api/Event/list-event-by-calendar-${id}-false`;
+                    const data = await fetchWrapper.get(apiUrl);
+                    setPastEventsId(data);
+                }
+            } catch (error) {
+                // Xử lý lỗi khi gọi API không thành công
+                console.error('Error fetching past events data:', error);
+            }
+        };
+        fetchData(); // Gọi hàm fetchData khi useEffect được chạy
+    }, [id, dateTimeEvent]);
 
     return (
         <div className="page-content">
@@ -159,9 +185,9 @@ export default function CalendarManage(props: any) {
                         <div className="flex-col flex gap-2">
                             <Tabs aria-label="Options" >
                                 <Tab key="future" title="Sắp tới" className="text-sm font-semibold">
-                                    {futureEvents && futureEvents.length > 0 ? (
+                                    {getEvent && getEvent.length > 0 ? (
                                         <div className="timeline">
-                                            {futureEvents?.map((event, index) => (
+                                            {getEvent.map((event, index) => (
                                                 <div key={index} className="timeline-section relative flex w-full gap-16 pb-12">
                                                     <div className="line left-[calc(7rem+4rem/2)] dark:border-[rgba(255,255,255,0.08)]"></div>
                                                     <div className="title always relative w-28">
@@ -273,7 +299,7 @@ export default function CalendarManage(props: any) {
                                     )}
                                 </Tab>
                                 <Tab key="past" title="Đã qua" className="text-sm font-semibold">
-                                    {pastEvents && pastEvents.length > 0 ? (
+                                    {/* {pastEvents && pastEvents.length > 0 ? (
                                         <div className="timeline">
                                             {pastEvents?.map((event, index) => (
                                                 <div key={index} className="timeline-section relative flex w-full gap-16 pb-12">
@@ -375,6 +401,20 @@ export default function CalendarManage(props: any) {
                                                     </Button>
                                                 </div>
                                             </div>
+                                        </div>
+                                    )} */}
+
+                                    {getEvent && getEvent.length > 0 ? (
+                                        getEvent.map((event, index) => (
+                                            <div key={index}>
+                                                <p>ID: {event.id}</p>
+                                                <p>Start Date: {event.startDate}</p>
+                                                <p>{event.name}</p>
+                                            </div>
+                                        ))
+                                    ) : (
+                                        <div>
+                                            <p>Không có dữ liệu sự kiện.</p>
                                         </div>
                                     )}
                                 </Tab>
