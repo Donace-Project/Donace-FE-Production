@@ -25,6 +25,25 @@ export type Result = {
     sorted: number
 }
 
+interface DateTimeInfo {
+    year: string;
+    month: string;
+    day: string;
+    hour: string;
+    minute: string;
+}
+
+const ConvertDateTime = (dateTime: string): DateTimeInfo => {
+    const date = new Date(dateTime);
+    const year = date.getFullYear().toString();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    const hour = date.getHours().toString().padStart(2, '0');
+    const minute = date.getMinutes().toString().padStart(2, '0');
+
+    return { year, month, day, hour, minute };
+};
+
 
 const daysOfWeek = ["Chủ Nhật", "Thứ Hai", "Thứ Ba", "Thứ Tư", "Thứ Năm", "Thứ Sáu", "Thứ Bảy"];
 
@@ -46,8 +65,8 @@ export default function CalendarManage(props: any) {
 
     var { id } = props
     const dateTimeTrue = true;
+    const dateTimeFalse = false;
     const dateTimeEvent = dateTimeTrue ? 'true' : 'false';
-    let apiURl = '';
 
     var [pastEvents, setPastEvents] = useState<ItemsCalendarManage[]>();
     var [futureEvents, setFutureEvents] = useState<ItemsCalendarManage[]>();
@@ -71,27 +90,12 @@ export default function CalendarManage(props: any) {
         fetchWrapper.post('/api/Calendar/get-list', { pageNumber: 1, pageSize: 9999 })
             .then(data => setCalendar(data))
 
-        // fetchWrapper.get(`api/Event/list-event-by-calendar-${id}-${dateTimeEvent}`)
-        //     .then(data => setEvent(data));
+        fetchWrapper.get(`api/Event/list-event-by-calendar-${id}-${dateTimeTrue}`)
+            .then(data => setEvent(data));
+
+        fetchWrapper.get(`api/Event/list-event-by-calendar-${id}-${dateTimeFalse}`)
+            .then(data => setPastEventsId(data));
     }, []);
-
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                let apiUrl = '';
-
-                if (!dateTimeTrue) { // Nếu dateTimeTrue là false
-                    apiUrl = `api/Event/list-event-by-calendar-${id}-false`;
-                    const data = await fetchWrapper.get(apiUrl);
-                    setPastEventsId(data);
-                }
-            } catch (error) {
-                // Xử lý lỗi khi gọi API không thành công
-                console.error('Error fetching past events data:', error);
-            }
-        };
-        fetchData(); // Gọi hàm fetchData khi useEffect được chạy
-    }, [id, dateTimeEvent]);
 
     return (
         <div className="page-content">
@@ -221,7 +225,9 @@ export default function CalendarManage(props: any) {
                                                                         <div className="info gap-2 min-w-0 flex-1 flex flex-col">
                                                                             <div className="event-time gap-2 flex items-center">
                                                                                 <div className="overflow-hidden text-ellipsis whitespace-nowrap text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)]">
-                                                                                    <span>{CovertDate(event.startDate)[1]}</span>
+                                                                                    <span>
+                                                                                        {ConvertDateTime(event.startDate).hour}:{ConvertDateTime(event.startDate).minute}
+                                                                                    </span>
                                                                                 </div>
                                                                             </div>
                                                                             <div className="text-xl">
@@ -299,9 +305,22 @@ export default function CalendarManage(props: any) {
                                     )}
                                 </Tab>
                                 <Tab key="past" title="Đã qua" className="text-sm font-semibold">
-                                    {/* {pastEvents && pastEvents.length > 0 ? (
+                                    {/* {getPastEventId && getPastEventId.length > 0 ? (
+                                        getPastEventId.map((pastEvent, index) => (
+                                            <div key={index}>
+                                                <p>ID: {pastEvent.id}</p>
+                                                <p>Start Date: {pastEvent.startDate}</p>
+                                                <p>{pastEvent.name}</p>
+                                            </div>
+                                        ))
+                                    ) : (
+                                        <div>
+                                            <p>Không có dữ liệu sự kiện.</p>
+                                        </div>
+                                    )} */}
+                                    {getPastEventId && getPastEventId.length > 0 ? (
                                         <div className="timeline">
-                                            {pastEvents?.map((event, index) => (
+                                            {getPastEventId.map((event, index) => (
                                                 <div key={index} className="timeline-section relative flex w-full gap-16 pb-12">
                                                     <div className="line left-[calc(7rem+4rem/2)] dark:border-[rgba(255,255,255,0.08)]"></div>
                                                     <div className="title always relative w-28">
@@ -335,7 +354,9 @@ export default function CalendarManage(props: any) {
                                                                         <div className="info gap-2 min-w-0 flex-1 flex flex-col">
                                                                             <div className="event-time gap-2 flex items-center">
                                                                                 <div className="overflow-hidden text-ellipsis whitespace-nowrap text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)]">
-                                                                                    <span>{CovertDate(event.startDate)[1]}</span>
+                                                                                    <span>
+                                                                                        {ConvertDateTime(event.startDate).hour}:{ConvertDateTime(event.startDate).minute}
+                                                                                    </span>
                                                                                 </div>
                                                                             </div>
                                                                             <div className="text-xl">
@@ -401,20 +422,6 @@ export default function CalendarManage(props: any) {
                                                     </Button>
                                                 </div>
                                             </div>
-                                        </div>
-                                    )} */}
-
-                                    {getEvent && getEvent.length > 0 ? (
-                                        getEvent.map((event, index) => (
-                                            <div key={index}>
-                                                <p>ID: {event.id}</p>
-                                                <p>Start Date: {event.startDate}</p>
-                                                <p>{event.name}</p>
-                                            </div>
-                                        ))
-                                    ) : (
-                                        <div>
-                                            <p>Không có dữ liệu sự kiện.</p>
                                         </div>
                                     )}
                                 </Tab>
