@@ -5,7 +5,6 @@ import { Link } from "@nextui-org/link";
 import { ArrowRight, CalendarClock, Frown, MapPin, Plus, ScanLine, Users2 } from "lucide-react";
 import "@/styles/globals.css";
 import { fetchWrapper } from "@/helpers/fetch-wrapper";
-import { Avatar } from "@nextui-org/avatar";
 import { Image } from "@nextui-org/image";
 
 import { Tabs, Tab } from "@nextui-org/react";
@@ -79,6 +78,8 @@ export default function HomeEvents() {
   var [pastEvents, setPastEvents] = useState<Item[]>();
   var [futureEvents, setFutureEvents] = useState<Item[]>();
   const [isOnline, setIsOnline] = useState(true);
+  const [thoiGian, setThoiGian] = useState(new Date());
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const handleOnline = () => {
@@ -109,6 +110,9 @@ export default function HomeEvents() {
     fetchWrapper.get(`/api/Event?FromDate=01-01-1996&ToDate=${pastDateFormatted}&PageNumber=1&PageSize=9999`)
       .then(data => setPastEvents(data.items));
   }, []);
+
+  const gio = thoiGian.getHours();
+  const buoi = gio >= 12 ? "PM" : "AM";
 
   return (
     <div className="page-content">
@@ -156,25 +160,29 @@ export default function HomeEvents() {
                                     </div>
                                     <div className="info gap-2 min-w-0 flex-1 flex flex-col">
                                       <div className="event-time gap-2 flex items-center">
-                                        <div>
-                                          <div className="live-badge text-[#ff9641] flex items-center font-medium"
-                                            style={{
-                                              animationName: 'breath',
-                                              animationDuration: '2s',
-                                              animationTimingFunction: 'ease',
-                                              animationDelay: '0s',
-                                              animationIterationCount: 'infinite',
-                                              animationDirection: 'normal',
-                                              animationFillMode: 'none',
-                                              animationPlayState: 'running',
-                                            }}
-                                          >
-                                            LIVE
+                                        {event.isLive ? (
+                                          <div>
+                                            <div className="live-badge text-[#ff9641] flex items-center font-medium"
+                                              style={{
+                                                animationName: 'breath',
+                                                animationDuration: '2s',
+                                                animationTimingFunction: 'ease',
+                                                animationDelay: '0s',
+                                                animationIterationCount: 'infinite',
+                                                animationDirection: 'normal',
+                                                animationFillMode: 'none',
+                                                animationPlayState: 'running',
+                                              }}
+                                            >
+                                              LIVE
+                                            </div>
                                           </div>
-                                        </div>
+                                        ) : (
+                                          <div className="hidden"></div>
+                                        )}
                                         <div className="overflow-hidden text-ellipsis whitespace-nowrap text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)]">
                                           <span>
-                                            {ConvertDateTime(event.startDate).hour}:{ConvertDateTime(event.startDate).minute}
+                                            {ConvertDateTime(event.startDate).hour}:{ConvertDateTime(event.startDate).minute} {buoi}
                                           </span>
                                         </div>
                                       </div>
@@ -289,7 +297,7 @@ export default function HomeEvents() {
                                       <div className="event-time gap-2 flex items-center">
                                         <div className="overflow-hidden text-ellipsis whitespace-nowrap text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)]">
                                           <span>
-                                            {ConvertDateTime(event.startDate).hour}:{ConvertDateTime(event.startDate).minute}
+                                            {ConvertDateTime(event.startDate).hour}:{ConvertDateTime(event.startDate).minute} {buoi}
                                           </span>
                                         </div>
                                       </div>

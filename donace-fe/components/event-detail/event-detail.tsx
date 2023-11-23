@@ -13,8 +13,6 @@ import { Card } from "@nextui-org/card";
 import { Skeleton } from "@nextui-org/skeleton";
 import { EventDetailModels, UserProfile } from "@/types/DonaceType";
 
-
-
 interface DateTimeInfo {
     year: string;
     month: string;
@@ -46,17 +44,15 @@ const DayOfWeek = (date: string) => {
     return daysOfWeek[currentDate]
 }
 
-export default function EventDetails() {
-    const { isOpen, onOpen, onOpenChange } = useDisclosure();
+export default function EventDetails(props: any) {
 
+    var { id } = props
+    const { isOpen, onOpen, onOpenChange } = useDisclosure();
     var [eventDetail, setEventDetail] = useState<EventDetailModels | null>(null);
     let [userProfile, setUserProfile] = useState<null | UserProfile>(null);
 
     useEffect(() => {
-        const sortValue = '4'; // Thay 'validSortValue' bằng giá trị hợp lệ từ tài liệu API hoặc người triển khai
-        const calendarIdValue = 'f617f60c-e2bb-4237-afa4-70c546365bc7'; // Thay 'yourCalendarIdValue' bằng giá trị thích hợp
-
-        fetchWrapper.get(`/api/Event/detail?sorted=${sortValue}&calendarId=${calendarIdValue}`)
+        fetchWrapper.get(`api/Event/detail-by-id?id=${id}`)
             .then(data => setEventDetail(data));
 
         fetchWrapper.get('/api/User/profile')
@@ -111,7 +107,7 @@ export default function EventDetails() {
                                                         </div>
                                                         <div className="min-w-0 flex-1">
                                                             <div className="title text-[#fff] font-serif font-medium overflow-hidden text-ellipsis whitespace-nowrap">{DayOfWeek(CovertDate(eventDetail.startDate)[0])}, {ConvertDateTime(eventDetail.startDate).day} tháng {ConvertDateTime(eventDetail.startDate).month}</div>
-                                                            <div className="desc text-[hsla(0,0%,100%,.79)] text-sm mt-px overflow-hidden text-ellipsis whitespace-nowrap">{ConvertDateTime(eventDetail.startDate).hour} PM đến {ConvertDateTime(eventDetail.endDate).hour} PM</div>
+                                                            <div className="desc text-[hsla(0,0%,100%,.79)] text-sm mt-px overflow-hidden text-ellipsis whitespace-nowrap">{ConvertDateTime(eventDetail.startDate).hour}:{ConvertDateTime(eventDetail.startDate).minute} đến {ConvertDateTime(eventDetail.endDate).hour}:{ConvertDateTime(eventDetail.endDate).minute}</div>
                                                         </div>
                                                     </div>
                                                 </div>

@@ -163,14 +163,12 @@ export default function CalendarManage(props: any) {
                             <div className="tabs flex max-w-full overflow-auto min-w-0 gap-4 flex-1">
                                 <div className="side-padding"></div>
                                 <Link
-                                    // href={`/calendars/manage/${getCalendars.id}`}
                                     className="text-black-light-theme dark:text-[#fff] border-b-2 border-solid border-[rgb(19,21,23)] dark:border-[#fff] whitespace-nowrap inline-block pb-2 transition-all duration-300 ease-in-out cursor-pointer"
                                     underline="none"
                                 >
                                     Sự kiện
                                 </Link>
                                 <Link
-                                    // href={`/calendars/manage/${getCalendars.id}/audience/`}
                                     className="text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)] border-b-2 border-solid border-transparent whitespace-nowrap inline-block pb-2 transition-all duration-300 ease-in-out cursor-pointer"
                                     underline="none"
                                 >

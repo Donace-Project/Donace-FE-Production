@@ -160,82 +160,6 @@ export default function NavbarComponents() {
               <span> Sự kiện</span>
             </NavbarItem>
           </Link>
-          {/* <Input
-            classNames={{
-              base: "max-w-full sm:max-w-[10rem] h-10",
-              mainWrapper: "h-full",
-              input: "text-small",
-              inputWrapper:
-                "h-full font-normal text-default-500 bg-default-400/20 dark:bg-default-500/20",
-            }}
-            placeholder="Tìm kiếm..."
-            size="sm"
-            startContent={<SearchIcon size={18} />}
-            endContent={<Kbd keys={["shift"]}>K</Kbd>}
-            type="search"
-          />
-          <Dropdown>
-            <DropdownTrigger>
-              <Button className="lux-menu-trigger-wrapper	cursor-pointer notification-bell-button relative text-black-blur-light-theme transition-all duration-300 ease-in-out inline-flex min-w-0 font-medium rounded-lg bg-transparent border border-solid border-transparent leading-6 text-inherit">
-                <NavbarContent
-                  as={"div"}
-                  className="cursor-pointer inline-flex min-w-0"
-                >
-                  <NavbarItem as={"div"} className="inline-flex relative">
-                    <NavbarItem as={"div"} className="icon">
-                      <Bell className="block w-4 h-4 align-middle" />
-                    </NavbarItem>
-                  </NavbarItem>
-                </NavbarContent>
-              </Button>
-            </DropdownTrigger>
-            <DropdownMenu className="dark:bg-[rgba(33,35,37,0.8)] w-80 max-w-[300px] min-h-[300px] max-h-[60vh] overflow-auto">
-              <DropdownItem className="text-sm">
-                <div className="noti-row relative p-[0.875rem_1rem]">
-                  <Link
-                    href="/my-calendars"
-                    className="text-inherit transition-all duration-300 ease-in-out cursor-pointer"
-                    underline="none"
-                  >
-                    <div className="gap-3 flex items-start">
-                      <div className="icon-wrapper relative mt-0.5">
-                        <div className="avatar">
-                          <Avatar
-                            isBordered
-                            color="primary"
-                            radius="full"
-                            src={
-                              user?.avatar?.trim()
-                                ? user.avatar
-                                : "https://avatars.githubusercontent.com/u/143386751?s=200&v=4"
-                            }
-                            name="Donace"
-                            className="relative"
-                          />
-                        </div>
-                      </div>
-                      <div className="main break-words min-w-0 flex-1 flex flex-col">
-                        <div>
-                          <span>
-                            <strong>Donace </strong>
-                            đã đăng ký
-                            <br />
-                            <strong className="font-medium">
-                              Đồ án tốt nghiệp
-                            </strong>
-                          </span>
-                          <br />
-                          <span className="dark:text-[hsla(0,0%,100%,.5)] text-black-blur-light-theme">
-                            5 tháng 9
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </Link>
-                </div>
-              </DropdownItem>
-            </DropdownMenu>
-          </Dropdown> */}
           <NavbarItem
             as={"div"}
             className="avatar-wrapper -m-2 p-2 cursor-pointer transition-all duration-300 ease-in-out inline-flex min-w-0 items-center"
@@ -250,7 +174,6 @@ export default function NavbarComponents() {
                   }
                   radius="full"
                   name="Donace"
-                  isBordered
                   className="w-[28px] h-[28px] bg-center bg-cover bg-white relative"
                 />
               </DropdownTrigger>
