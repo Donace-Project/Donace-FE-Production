@@ -147,3 +147,28 @@ export type SectionByEvent = {
 }
 
 // ******************
+
+// GET EVENT DETAILS    
+
+export type EventDetailModels = {
+    sort: number
+    id: string
+    startDate: string
+    endDate: string
+    addressName: string
+    lat: string
+    long: string
+    capacity: number
+    isOverCapacity: boolean
+    cover: string
+    name: string
+    theme: string
+    color: string
+    fontSize: number
+    instructions: string
+    isMultiSection: true
+    duration: number
+    totalGuest: number
+    calendarId: string
+    isLive: boolean
+}

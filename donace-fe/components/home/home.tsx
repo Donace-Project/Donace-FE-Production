@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { Button } from "@nextui-org/button";
 import { Link } from "@nextui-org/link";
-import { ArrowRight, CalendarClock, Frown, Fullscreen, MapPin, Plus, Users2 } from "lucide-react";
+import { ArrowRight, CalendarClock, Frown, MapPin, Plus, ScanLine, Users2 } from "lucide-react";
 import "@/styles/globals.css";
 import { fetchWrapper } from "@/helpers/fetch-wrapper";
 import { Avatar } from "@nextui-org/avatar";
@@ -156,9 +156,25 @@ export default function HomeEvents() {
                                     </div>
                                     <div className="info gap-2 min-w-0 flex-1 flex flex-col">
                                       <div className="event-time gap-2 flex items-center">
+                                        <div>
+                                          <div className="live-badge text-[#ff9641] flex items-center font-medium"
+                                            style={{
+                                              animationName: 'breath',
+                                              animationDuration: '2s',
+                                              animationTimingFunction: 'ease',
+                                              animationDelay: '0s',
+                                              animationIterationCount: 'infinite',
+                                              animationDirection: 'normal',
+                                              animationFillMode: 'none',
+                                              animationPlayState: 'running',
+                                            }}
+                                          >
+                                            LIVE
+                                          </div>
+                                        </div>
                                         <div className="overflow-hidden text-ellipsis whitespace-nowrap text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)]">
                                           <span>
-                                          {ConvertDateTime(event.startDate).hour}:{ConvertDateTime(event.startDate).minute}
+                                            {ConvertDateTime(event.startDate).hour}:{ConvertDateTime(event.startDate).minute}
                                           </span>
                                         </div>
                                       </div>
@@ -187,21 +203,16 @@ export default function HomeEvents() {
                                     <div className="gap-2 flex items-center">
                                       <Button
                                         as={Link}
-                                        href="/user/user-join-event"
+                                        href={`/events/manage/${event.id}`}
                                         className="text-black-more-blur-light-theme dark:text-[rgba(255,255,255,0.64)] bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)] border-transparent border border-solid transition-all duration-300 ease-in-out donace-button flex items-center cursor-pointer"
                                       >
-                                        <Fullscreen className="mr-1.5 stroke-2 w-3.5 h-3.5 flex-shrink-0 block align-middle mt-0.5" />
+                                        <ScanLine className="mr-1.5 stroke-2 w-3.5 h-3.5 flex-shrink-0 block align-middle mt-0.5" />
                                         <div className="label">Check In</div>
                                       </Button>
-                                      <Button as={Link} href="my-event" className="text-black-more-blur-light-theme dark:text-[rgba(255,255,255,0.64)] bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)] border-transparent border border-solid transition-all duration-300 ease-in-out donace-button flex items-center cursor-pointer">
+                                      <Button as={Link} href={`/events/manage/${event.id}`} className="text-black-more-blur-light-theme dark:text-[rgba(255,255,255,0.64)] bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)] border-transparent border border-solid transition-all duration-300 ease-in-out donace-button flex items-center cursor-pointer">
                                         <div className="label">Quản lý sự kiện</div>
                                         <ArrowRight className="mr-1.5 stroke-2 w-3.5 h-3.5 flex-shrink-0 block align-middle" />
                                       </Button>
-                                      <div className="flex items-center">
-                                        <div className="head relative flex items-start">
-                                          <Avatar radius="full" src="https://avatars.githubusercontent.com/u/143386751?s=200&v=4" name="Donace" className="relative w-5 h-5 dark:border dark:border-solid dark:border-[hsla(0,0%,100%,.5)]" />
-                                        </div>
-                                      </div>
                                     </div>
                                   </div>
                                 </div>
@@ -278,7 +289,7 @@ export default function HomeEvents() {
                                       <div className="event-time gap-2 flex items-center">
                                         <div className="overflow-hidden text-ellipsis whitespace-nowrap text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)]">
                                           <span>
-                                          {ConvertDateTime(event.startDate).hour}:{ConvertDateTime(event.startDate).minute}
+                                            {ConvertDateTime(event.startDate).hour}:{ConvertDateTime(event.startDate).minute}
                                           </span>
                                         </div>
                                       </div>
@@ -305,15 +316,13 @@ export default function HomeEvents() {
                                   </div>
                                   <div className="event-bottom-bar flex justify-between items-center">
                                     <div className="gap-2 flex items-center">
-                                      <Button as={Link} href="my-event" className="text-black-more-blur-light-theme dark:text-[rgba(255,255,255,0.64)] bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)] border-transparent border border-solid transition-all duration-300 ease-in-out donace-button flex items-center cursor-pointer">
+                                      <Button
+                                        as={Link}
+                                        href={`/events/manage/${event.id}`}
+                                        className="text-black-more-blur-light-theme dark:text-[rgba(255,255,255,0.64)] bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)] border-transparent border border-solid transition-all duration-300 ease-in-out donace-button flex items-center cursor-pointer">
                                         <div className="label">Quản lý sự kiện</div>
                                         <ArrowRight className="mr-1.5 stroke-2 w-3.5 h-3.5 flex-shrink-0 block align-middle" />
                                       </Button>
-                                      <div className="flex items-center">
-                                        <div className="head relative flex items-start">
-                                          <Avatar radius="full" src="https://avatars.githubusercontent.com/u/143386751?s=200&v=4" name="Donace" className="relative w-5 h-5 dark:border dark:border-solid dark:border-[hsla(0,0%,100%,.5)]" />
-                                        </div>
-                                      </div>
                                     </div>
                                   </div>
                                 </div>

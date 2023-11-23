@@ -49,7 +49,6 @@ export default function ProfilePage() {
     }, []);
 
     useEffect(() => {
-        // uncomment khi có dữ liệu từ api
         fetchWrapper.get(`/api/Event?FromDate=01-01-1996&ToDate=${pastDateFormatted}&PageNumber=1&PageSize=9999`)
             .then(data => setPastEvents(data.items));
     }, []);
