@@ -11,39 +11,33 @@ import { useEffect, useState } from "react";
 import { Textarea } from "@nextui-org/input";
 import { Card } from "@nextui-org/card";
 import { Skeleton } from "@nextui-org/skeleton";
-import { EventDetailModels, UserProfile } from "@/types/DonaceType";
 
-
-
-interface DateTimeInfo {
-    year: string;
-    month: string;
-    day: string;
-    hour: string;
-    minute: string;
+export type EventDetails = {
+    totalCount: number
+    items: Item[]
 }
 
-const ConvertDateTime = (dateTime: string): DateTimeInfo => {
-    const date = new Date(dateTime);
-    const year = date.getFullYear().toString();
-    const month = (date.getMonth() + 1).toString().padStart(2, '0');
-    const day = date.getDate().toString().padStart(2, '0');
-    const hour = date.getHours().toString().padStart(2, '0');
-    const minute = date.getMinutes().toString().padStart(2, '0');
-
-    return { year, month, day, hour, minute };
-};
-
-const CovertDate = (date: string) => {
-    return date.split("T");
-}
-
-const daysOfWeek = ["Chủ Nhật", "Thứ Hai", "Thứ Ba", "Thứ Tư", "Thứ Năm", "Thứ Sáu", "Thứ Bảy"];
-
-
-const DayOfWeek = (date: string) => {
-    let currentDate = new Date(date).getDay();
-    return daysOfWeek[currentDate]
+export type Item = {
+    sort: number
+    id: string
+    startDate: string
+    endDate: string
+    addressName: string
+    lat: string
+    long: string
+    capacity: number
+    isOverCapacity: boolean
+    cover: string
+    name: string
+    theme: string
+    color: string
+    fontSize: number
+    instructions: string
+    isMultiSection: true
+    duration: number
+    totalGuest: number
+    calendarId: string
+    isLive: boolean
 }
 
 export default function EventDetails() {
