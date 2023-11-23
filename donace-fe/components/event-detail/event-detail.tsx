@@ -33,6 +33,7 @@ export type Item = {
     color: string
     fontSize: number
     instructions: string
+    
     isMultiSection: true
     duration: number
     totalGuest: number
