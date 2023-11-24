@@ -8,6 +8,7 @@ import { Tab, Tabs } from "@nextui-org/tabs";
 import { ArrowRight, ArrowUpRight, CalendarX2, Fullscreen, MapPin, Plus, ScanLine, Users2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Image } from "@nextui-org/image";
+import { Skeleton } from "@nextui-org/skeleton";
 
 export type Calendar = {
     code: string
@@ -68,75 +69,100 @@ export default function CalendarManage(props: any) {
     const dateTimeFalse = false;
     const dateTimeEvent = dateTimeTrue ? 'true' : 'false';
 
-    var [pastEvents, setPastEvents] = useState<ItemsCalendarManage[]>();
     var [futureEvents, setFutureEvents] = useState<ItemsCalendarManage[]>();
+    var [pastEvents, setPastEvents] = useState<ItemsCalendarManage[]>();
     const [getCalendars, setCalendars] = useState<GetCalendarById | null>(null);
     var [calendars, setCalendar] = useState<Calendar | null>(null);
-    const [getEvent, setEvent] = useState<GetListEventByCalendarId[]>([]);
+    const [getEvent, setEvents] = useState<GetListEventByCalendarId[]>([]);
     const [getPastEventId, setPastEventsId] = useState<GetListEventByCalendarId[]>([]);
 
+    const [loading, setLoading] = useState(true);
+
     useEffect(() => {
-        // uncomment khi có dữ liệu từ api
-        fetchWrapper.get(`/api/Event?FromDate=${currentDateFormatted}&ToDate=12-31-9998&PageNumber=1&PageSize=9999`)
-            .then(data => setFutureEvents(data.items));
+        const fetchData = async () => {
+            try {
+                const futureEventsData = await fetchWrapper.get(`/api/Event?FromDate=${currentDateFormatted}&ToDate=12-31-9998&PageNumber=1&PageSize=9999`);
+                setFutureEvents(futureEventsData.items);
 
-        fetchWrapper.get(`/api/Event?FromDate=01-01-1996&ToDate=${pastDateFormatted}&PageNumber=1&PageSize=9999`)
-            .then(data => setPastEvents(data.items));
+                const pastEventsData = await fetchWrapper.get(`/api/Event?FromDate=01-01-1996&ToDate=${pastDateFormatted}&PageNumber=1&PageSize=9999`);
+                setPastEvents(pastEventsData.items);
 
-        fetchWrapper.post(`api/Calendar/get-by-id?Id=${id}`, null)
-            .then(data => setCalendars(data));
+                const calendarsData = await fetchWrapper.post(`api/Calendar/get-by-id?Id=${id}`, null);
+                setCalendars(calendarsData);
 
-        fetchWrapper.post('/api/Calendar/get-list', { pageNumber: 1, pageSize: 9999 })
-            .then(data => setCalendar(data))
+                const calendarData = await fetchWrapper.post('/api/Calendar/get-list', { pageNumber: 1, pageSize: 9999 });
+                setCalendar(calendarData);
 
-        fetchWrapper.get(`api/Event/list-event-by-calendar-${id}-${dateTimeTrue}`)
-            .then(data => setEvent(data));
+                const eventsData = await fetchWrapper.get(`api/Event/list-event-by-calendar-${id}-${dateTimeTrue}`);
+                setEvents(eventsData);
 
-        fetchWrapper.get(`api/Event/list-event-by-calendar-${id}-${dateTimeFalse}`)
-            .then(data => setPastEventsId(data));
+                const pastEventsIdData = await fetchWrapper.get(`api/Event/list-event-by-calendar-${id}-${dateTimeFalse}`);
+                setPastEventsId(pastEventsIdData);
+
+                setLoading(false); // Set loading to false once all data is fetched
+            } catch (error) {
+                console.error('Error fetching data:', error);
+                setLoading(false);
+            }
+        };
+
+        fetchData();
     }, []);
 
     return (
         <div className="page-content">
             <div className="page-header opacity-[2] pl-4 pr-4 pt-12 max-width-global margin-global">
-                <div className="spread gap-2 mb-2 flex justify-between items-center">
-                    <h1 className="tab-title text-4xl font-semibold text-black-light-theme dark:text-[#fff] mb-0">
-                        {getCalendars ? (
-                            <div className="gap-3 flex items-center">
-                                <div className="avatar-square">
-                                    <Avatar
-                                        radius="sm"
-                                        src={getCalendars.avatar ? getCalendars.avatar : "https://cdn.lu.ma/cdn-cgi/image/format=auto,fit=cover,dpr=2,background=white,quality=75,width=64,height=64/avatars-default/community_avatar_13.png"}
-                                        name="Donace"
-                                        className="relative w-6 h-6 mt-1"
-                                    />
+                {loading ? (
+                    <div className="w-2/16 flex items-center justify-between gap-3">
+                        <div>
+                            <Skeleton className="flex rounded-full w-6 h-6" />
+                        </div>
+                        <div className="w-full flex flex-col gap-2">
+                            <Skeleton className="h-6 w-3/5 rounded-lg" />
+                        </div>
+                        <Skeleton className="flex justify-end items-end w-2/12 rounded-lg">
+                            <div className="h-6 w-2/12 rounded-lg bg-default-300"></div>
+                        </Skeleton>
+                    </div>
+                ) : (
+                    <div className="spread gap-2 mb-2 flex justify-between items-center">
+                        <h1 className="tab-title text-4xl font-semibold text-black-light-theme dark:text-[#fff] mb-0">
+                            {getCalendars ? (
+                                <div className="gap-3 flex items-center">
+                                    <div className="avatar-square">
+                                        <Avatar
+                                            radius="sm"
+                                            src={getCalendars.avatar ? getCalendars.avatar : "https://cdn.lu.ma/cdn-cgi/image/format=auto,fit=cover,dpr=2,background=white,quality=75,width=64,height=64/avatars-default/community_avatar_13.png"}
+                                            name="Donace"
+                                            className="relative w-6 h-6 mt-1"
+                                        />
+                                    </div>
+                                    <div>{getCalendars.name}</div>
                                 </div>
-                                <div>{getCalendars.name}</div>
-                            </div>
-                        ) : (
-                            <div className="gap-3 flex items-center">
-                                <div className="avatar-square">
-                                    <Avatar
-                                        radius="sm"
-                                        src="https://avatars.githubusercontent.com/u/143386751?s=200&v=4"
-                                        name="Donace"
-                                        className="relative w-6 h-6 mt-1"
-                                    />
+                            ) : (
+                                <div className="gap-3 flex items-center">
+                                    <div className="avatar-square">
+                                        <Avatar
+                                            radius="sm"
+                                            src="https://avatars.githubusercontent.com/u/143386751?s=200&v=4"
+                                            name="Donace"
+                                            className="relative w-6 h-6 mt-1"
+                                        />
+                                    </div>
+                                    <div>Donace</div>
                                 </div>
-                                <div>Donace</div>
-                            </div>
-                        )}
-                    </h1>
-                    <Link
-                        href="/calendars/details"
-                        target="_blank"
-                        className="text-black-more-blur-light-theme dark:text-[rgba(255,255,255,0.64)] bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)] border-transparent border border-solid transition-all duration-300 ease-in-out donace-button-w-fit flex items-center cursor-pointer"
-                        underline="none"
-                    >
-                        <div className="label">Lịch</div>
-                        <ArrowUpRight className="ml-1.5 stroke-2 w-3.5 h-3.5 flex-shrink-0 block align-middle" />
-                    </Link>
-                </div>
+                            )}
+                        </h1>
+                        <Link
+                            href="/calendars"
+                            className="text-black-more-blur-light-theme dark:text-[rgba(255,255,255,0.64)] bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)] border-transparent border border-solid transition-all duration-300 ease-in-out donace-button-w-fit flex items-center cursor-pointer"
+                            underline="none"
+                        >
+                            <div className="label">Lịch</div>
+                            <ArrowUpRight className="ml-1.5 stroke-2 w-3.5 h-3.5 flex-shrink-0 block align-middle" />
+                        </Link>
+                    </div>
+                )}
             </div>
             <div className="tab-wrapper m-auto pt-2">
                 <div className="zm-container pt-1 max-width-global margin-global">
@@ -183,247 +209,261 @@ export default function CalendarManage(props: any) {
             <div className="zm-container pl-4 pr-4 max-width-global margin-global">
                 <div className="can-divide with-divider medium">
                     <div className="section-title-wrapper">
-                        <div className="flex-col flex gap-2">
-                            <Tabs aria-label="Options" >
-                                <Tab key="future" title="Sắp tới" className="text-sm font-semibold">
-                                    {getEvent && getEvent.length > 0 ? (
-                                        <div className="timeline">
-                                            {getEvent.map((event, index) => (
-                                                <div key={index} className="timeline-section relative flex w-full gap-16 pb-12">
-                                                    <div className="line left-[calc(7rem+4rem/2)] dark:border-[rgba(255,255,255,0.08)]"></div>
-                                                    <div className="title always relative w-28">
-                                                        <div className="container sticky">
-                                                            <div className="timeline-title">
-                                                                <div className="content animated transition-all duration-300 ease-in-out">
-                                                                    <div className="date font-medium">{CovertDate(event.startDate)[0]}</div>
-                                                                    <div className="text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)]">{DayOfWeek(CovertDate(event.startDate)[0])}</div>
-                                                                </div>
-                                                            </div>
-                                                            <div className="dot-outer-wrapper absolute top-1.5 right-[calc(-2rem-0.4375rem)] justify-center flex items-center">
-                                                                <div className="dot-wrapper justify-center flex items-center">
-                                                                    <div className="dot w-3 h-3 bg-[#f3f4f5] dark:bg-[rgb(19,21,23)] border-2 border-solid border-[rgba(19,21,23,0.2)] dark:border-[hsla(0,0%,100%,.32)] rounded-full"></div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div className="min-w-0 flex-1">
-                                                        <div className="card-wrapper">
-                                                            <div className="card-wrapper content-card cursor-pointer transition-all duration-300 ease-in-out relative rounded-xl bg-[#f3f4f5] dark:bg-[rgba(255,255,255,0.04)] border border-solid border-[#f3f4f5] dark:border-[rgba(255,255,255,0.04)]">
-                                                                <Link className="event-link absolute inset-0 transition-all duration-300 ease-in-out cursor-pointer" underline="none">&nbsp;</Link>
-                                                                <div className="event-content gap-3 flex flex-col">
-                                                                    <div className="info-and-cover flex-row-reverse gap-4 flex">
-                                                                        <div className="cover-image pointer-events-none">
-                                                                            <div className="w-40 h-20">
-                                                                                <div className="img-aspect-ratio cover-event-image w-full h-full overflow-hidden relative rounded-lg">
-                                                                                    <Image className="w-full h-full" alt="you are invited" src={event.cover} />
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div className="info gap-2 min-w-0 flex-1 flex flex-col">
-                                                                            <div className="event-time gap-2 flex items-center">
-                                                                                <div>
-                                                                                    <div className="live-badge text-[#ff9641] flex items-center font-medium"
-                                                                                        style={{
-                                                                                            animationName: 'breath',
-                                                                                            animationDuration: '2s',
-                                                                                            animationTimingFunction: 'ease',
-                                                                                            animationDelay: '0s',
-                                                                                            animationIterationCount: 'infinite',
-                                                                                            animationDirection: 'normal',
-                                                                                            animationFillMode: 'none',
-                                                                                            animationPlayState: 'running',
-                                                                                        }}
-                                                                                    >
-                                                                                        LIVE
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div className="overflow-hidden text-ellipsis whitespace-nowrap text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)]">
-                                                                                    <span>
-                                                                                        {ConvertDateTime(event.startDate).hour}:{ConvertDateTime(event.startDate).minute}
-                                                                                    </span>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div className="text-xl">
-                                                                                <h3 className="inline text-xl font-medium break-words mt-0 mb-4">{event.name}</h3>
-                                                                            </div>
-                                                                            <div className="gap-1 flex flex-col">
-                                                                                <div className="attribute text-base text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)] gap-3 flex items-start">
-                                                                                    <div className="icon text-base flex items-center">
-                                                                                        &nbsp;
-                                                                                        <MapPin className="w-4 h-4 block align-middle mt-0.5" />
-                                                                                    </div>
-                                                                                    <div className="text-base min-w-0">{event.addressName}</div>
-                                                                                </div>
-                                                                                <div className="attribute text-base text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)] gap-3 flex items-start">
-                                                                                    <div className="icon text-base flex items-center">
-                                                                                        &nbsp;
-                                                                                        <Users2 className="w-4 h-4 block align-middle mt-0.5" />
-                                                                                    </div>
-                                                                                    <div className="text-base min-w-0">{event.totalGuest} Khách</div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
+                        {loading ? (
+                            <div className="space-y-3 pt-1 mt-2">
+                                <Skeleton className="w-4/5 rounded-lg">
+                                    <div className="h-6 w-4/5 rounded-lg bg-default-200"></div>
+                                </Skeleton>
+                                <Skeleton className="w-full rounded-lg">
+                                    <div className="h-6 w-full rounded-lg bg-default-200"></div>
+                                </Skeleton>
+                                <Skeleton className="w-3/5 rounded-lg">
+                                    <div className="h-6 w-3/5 rounded-lg bg-default-300"></div>
+                                </Skeleton>
+                            </div>
+                        ) : (
+                            <div className="flex-col flex gap-2">
+                                <Tabs aria-label="Options" >
+                                    <Tab key="future" title="Sắp tới" className="text-sm font-semibold">
+                                        {getEvent && getEvent.length > 0 ? (
+                                            <div className="timeline">
+                                                {getEvent.map((event, index) => (
+                                                    <div key={index} className="timeline-section relative flex w-full gap-16 pb-12">
+                                                        <div className="line left-[calc(7rem+4rem/2)] dark:border-[rgba(255,255,255,0.08)]"></div>
+                                                        <div className="title always relative w-28">
+                                                            <div className="container sticky">
+                                                                <div className="timeline-title">
+                                                                    <div className="content animated transition-all duration-300 ease-in-out">
+                                                                        <div className="date font-medium">{CovertDate(event.startDate)[0]}</div>
+                                                                        <div className="text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)]">{DayOfWeek(CovertDate(event.startDate)[0])}</div>
                                                                     </div>
-                                                                    <div className="event-bottom-bar flex justify-between items-center">
-                                                                        <div className="gap-2 flex items-center">
-                                                                            <Button
-                                                                                as={Link}
-                                                                                href={`/events/manage/${event.id}`}
-                                                                                className="text-black-more-blur-light-theme dark:text-[rgba(255,255,255,0.64)] bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)] border-transparent border border-solid transition-all duration-300 ease-in-out donace-button flex items-center cursor-pointer"
-                                                                            >
-                                                                                <ScanLine className="mr-1.5 stroke-2 w-3.5 h-3.5 flex-shrink-0 block align-middle mt-0.5" />
-                                                                                <div className="label">Check In</div>
-                                                                            </Button>
-                                                                            <Button
-                                                                                as={Link}
-                                                                                href={`/events/manage/${event.id}`}
-                                                                                className="text-black-more-blur-light-theme dark:text-[rgba(255,255,255,0.64)] bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)] border-transparent border border-solid transition-all duration-300 ease-in-out donace-button flex items-center cursor-pointer">
-                                                                                <div className="label">Quản lý sự kiện</div>
-                                                                                <ArrowRight className="mr-1.5 stroke-2 w-3.5 h-3.5 flex-shrink-0 block align-middle" />
-                                                                            </Button>
-                                                                        </div>
+                                                                </div>
+                                                                <div className="dot-outer-wrapper absolute top-1.5 right-[calc(-2rem-0.4375rem)] justify-center flex items-center">
+                                                                    <div className="dot-wrapper justify-center flex items-center">
+                                                                        <div className="dot w-3 h-3 bg-[#f3f4f5] dark:bg-[rgb(19,21,23)] border-2 border-solid border-[rgba(19,21,23,0.2)] dark:border-[hsla(0,0%,100%,.32)] rounded-full"></div>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                         </div>
+                                                        <div className="min-w-0 flex-1">
+                                                            <div className="card-wrapper">
+                                                                <div className="card-wrapper content-card cursor-pointer transition-all duration-300 ease-in-out relative rounded-xl bg-[#f3f4f5] dark:bg-[rgba(255,255,255,0.04)] border border-solid border-[#f3f4f5] dark:border-[rgba(255,255,255,0.04)]">
+                                                                    <Link className="event-link absolute inset-0 transition-all duration-300 ease-in-out cursor-pointer" underline="none">&nbsp;</Link>
+                                                                    <div className="event-content gap-3 flex flex-col">
+                                                                        <div className="info-and-cover flex-row-reverse gap-4 flex">
+                                                                            <div className="cover-image pointer-events-none">
+                                                                                <div className="w-40 h-20">
+                                                                                    <div className="img-aspect-ratio cover-event-image w-full h-full overflow-hidden relative rounded-lg">
+                                                                                        <Image className="w-full h-full" alt="you are invited" src={event.cover} />
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div className="info gap-2 min-w-0 flex-1 flex flex-col">
+                                                                                <div className="event-time gap-2 flex items-center">
+                                                                                    <div>
+                                                                                        <div className="live-badge text-[#ff9641] flex items-center font-medium"
+                                                                                            style={{
+                                                                                                animationName: 'breath',
+                                                                                                animationDuration: '2s',
+                                                                                                animationTimingFunction: 'ease',
+                                                                                                animationDelay: '0s',
+                                                                                                animationIterationCount: 'infinite',
+                                                                                                animationDirection: 'normal',
+                                                                                                animationFillMode: 'none',
+                                                                                                animationPlayState: 'running',
+                                                                                            }}
+                                                                                        >
+                                                                                            LIVE
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div className="overflow-hidden text-ellipsis whitespace-nowrap text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)]">
+                                                                                        <span>
+                                                                                            {ConvertDateTime(event.startDate).hour}:{ConvertDateTime(event.startDate).minute}
+                                                                                        </span>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div className="text-xl">
+                                                                                    <h3 className="inline text-xl font-medium break-words mt-0 mb-4">{event.name}</h3>
+                                                                                </div>
+                                                                                <div className="gap-1 flex flex-col">
+                                                                                    <div className="attribute text-base text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)] gap-3 flex items-start">
+                                                                                        <div className="icon text-base flex items-center">
+                                                                                            &nbsp;
+                                                                                            <MapPin className="w-4 h-4 block align-middle mt-0.5" />
+                                                                                        </div>
+                                                                                        <div className="text-base min-w-0">{event.addressName}</div>
+                                                                                    </div>
+                                                                                    <div className="attribute text-base text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)] gap-3 flex items-start">
+                                                                                        <div className="icon text-base flex items-center">
+                                                                                            &nbsp;
+                                                                                            <Users2 className="w-4 h-4 block align-middle mt-0.5" />
+                                                                                        </div>
+                                                                                        <div className="text-base min-w-0">{event.totalGuest} Khách</div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div className="event-bottom-bar flex justify-between items-center">
+                                                                            <div className="gap-2 flex items-center">
+                                                                                <Button
+                                                                                    as={Link}
+                                                                                    href={`/events/manage/${event.id}`}
+                                                                                    className="text-black-more-blur-light-theme dark:text-[rgba(255,255,255,0.64)] bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)] border-transparent border border-solid transition-all duration-300 ease-in-out donace-button flex items-center cursor-pointer"
+                                                                                >
+                                                                                    <ScanLine className="mr-1.5 stroke-2 w-3.5 h-3.5 flex-shrink-0 block align-middle mt-0.5" />
+                                                                                    <div className="label">Check In</div>
+                                                                                </Button>
+                                                                                <Button
+                                                                                    as={Link}
+                                                                                    href={`/events/manage/${event.id}`}
+                                                                                    className="text-black-more-blur-light-theme dark:text-[rgba(255,255,255,0.64)] bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)] border-transparent border border-solid transition-all duration-300 ease-in-out donace-button flex items-center cursor-pointer">
+                                                                                    <div className="label">Quản lý sự kiện</div>
+                                                                                    <ArrowRight className="mr-1.5 stroke-2 w-3.5 h-3.5 flex-shrink-0 block align-middle" />
+                                                                                </Button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    ) : (
-                                        <div className="timeline-container">
-                                            <div className="lux-empty-state text-center mt-16 flex flex-col items-center">
-                                                <div className="icon justify-center flex items-center">
-                                                    <div className="mb-2">
-                                                        <CalendarX2 className="w-64 h-auto block align-middle text-foreground-200 dark:text-[#484848]" />
+                                                ))}
+                                            </div>
+                                        ) : (
+                                            <div className="timeline-container">
+                                                <div className="lux-empty-state text-center mt-16 flex flex-col items-center">
+                                                    <div className="icon justify-center flex items-center">
+                                                        <div className="mb-2">
+                                                            <CalendarX2 className="w-64 h-auto block align-middle text-foreground-200 dark:text-[#484848]" />
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <h3 className="text-2xl font-medium text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)] p-0 mt-6 mb-0">Không có sự kiện</h3>
-                                                <div className="desc pl-12 pr-12 text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)] mt-2">Lịch này không có sự kiện gì sắp diễn ra.</div>
-                                                <div className="mt-6 justify-center flex items-center">
-                                                    <Button
-                                                        as={Link}
-                                                        href="/create"
-                                                        type="button"
-                                                        className="text-black-more-blur-light-theme dark:text-[rgba(255,255,255,0.64)] bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)] border-transparent border border-solid cursor-pointer transition-all duration-300 ease-in-out donace-button-w-fit flex items-center m-0"
-                                                    >
-                                                        <Plus className="mr-1.5 stroke-2 w-3.5 h-3.5 flex-shrink-0 block align-middle" />
-                                                        <div className="label">Tạo sự kiện mới</div>
-                                                    </Button>
+                                                    <h3 className="text-2xl font-medium text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)] p-0 mt-6 mb-0">Không có sự kiện</h3>
+                                                    <div className="desc pl-12 pr-12 text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)] mt-2">Lịch này không có sự kiện gì sắp diễn ra.</div>
+                                                    <div className="mt-6 justify-center flex items-center">
+                                                        <Button
+                                                            as={Link}
+                                                            href="/create"
+                                                            type="button"
+                                                            className="text-black-more-blur-light-theme dark:text-[rgba(255,255,255,0.64)] bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)] border-transparent border border-solid cursor-pointer transition-all duration-300 ease-in-out donace-button-w-fit flex items-center m-0"
+                                                        >
+                                                            <Plus className="mr-1.5 stroke-2 w-3.5 h-3.5 flex-shrink-0 block align-middle" />
+                                                            <div className="label">Tạo sự kiện mới</div>
+                                                        </Button>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    )}
-                                </Tab>
-                                <Tab key="past" title="Đã qua" className="text-sm font-semibold">
-                                    {getPastEventId && getPastEventId.length > 0 ? (
-                                        <div className="timeline">
-                                            {getPastEventId.map((event, index) => (
-                                                <div key={index} className="timeline-section relative flex w-full gap-16 pb-12">
-                                                    <div className="line left-[calc(7rem+4rem/2)] dark:border-[rgba(255,255,255,0.08)]"></div>
-                                                    <div className="title always relative w-28">
-                                                        <div className="container sticky">
-                                                            <div className="timeline-title">
-                                                                <div className="content animated transition-all duration-300 ease-in-out">
-                                                                    <div className="date font-medium">{CovertDate(event.startDate)[0]}</div>
-                                                                    <div className="text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)]">{DayOfWeek(CovertDate(event.startDate)[0])}</div>
-                                                                </div>
-                                                            </div>
-                                                            <div className="dot-outer-wrapper absolute top-1.5 right-[calc(-2rem-0.4375rem)] justify-center flex items-center">
-                                                                <div className="dot-wrapper justify-center flex items-center">
-                                                                    <div className="dot w-3 h-3 bg-[#f3f4f5] dark:bg-[rgb(19,21,23)] border-2 border-solid border-[rgba(19,21,23,0.2)] dark:border-[hsla(0,0%,100%,.32)] rounded-full"></div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div className="min-w-0 flex-1">
-                                                        <div className="card-wrapper">
-                                                            <div className="card-wrapper content-card cursor-pointer transition-all duration-300 ease-in-out relative rounded-xl bg-[#f3f4f5] dark:bg-[rgba(255,255,255,0.04)] border border-solid border-[#f3f4f5] dark:border-[rgba(255,255,255,0.04)]">
-                                                                <Link className="event-link absolute inset-0 transition-all duration-300 ease-in-out cursor-pointer" underline="none">&nbsp;</Link>
-                                                                <div className="event-content gap-3 flex flex-col">
-                                                                    <div className="info-and-cover flex-row-reverse gap-4 flex">
-                                                                        <div className="cover-image pointer-events-none">
-                                                                            <div className="w-40 h-20">
-                                                                                <div className="img-aspect-ratio cover-event-image w-full h-full overflow-hidden relative rounded-lg">
-                                                                                    <Image className="w-full h-full" alt="you are invited" src={event.cover} />
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div className="info gap-2 min-w-0 flex-1 flex flex-col">
-                                                                            <div className="event-time gap-2 flex items-center">
-                                                                                <div className="overflow-hidden text-ellipsis whitespace-nowrap text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)]">
-                                                                                    <span>
-                                                                                        {ConvertDateTime(event.startDate).hour}:{ConvertDateTime(event.startDate).minute}
-                                                                                    </span>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div className="text-xl">
-                                                                                <h3 className="inline text-xl font-medium break-words mt-0 mb-4">{event.name}</h3>
-                                                                            </div>
-                                                                            <div className="gap-1 flex flex-col">
-                                                                                <div className="attribute text-base text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)] gap-3 flex items-start">
-                                                                                    <div className="icon text-base flex items-center">
-                                                                                        &nbsp;
-                                                                                        <MapPin className="w-4 h-4 block align-middle mt-0.5" />
-                                                                                    </div>
-                                                                                    <div className="text-base min-w-0">{event.addressName}</div>
-                                                                                </div>
-                                                                                <div className="attribute text-base text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)] gap-3 flex items-start">
-                                                                                    <div className="icon text-base flex items-center">
-                                                                                        &nbsp;
-                                                                                        <Users2 className="w-4 h-4 block align-middle mt-0.5" />
-                                                                                    </div>
-                                                                                    <div className="text-base min-w-0">{event.totalGuest} Khách</div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
+                                        )}
+                                    </Tab>
+                                    <Tab key="past" title="Đã qua" className="text-sm font-semibold">
+                                        {getPastEventId && getPastEventId.length > 0 ? (
+                                            <div className="timeline">
+                                                {getPastEventId.map((event, index) => (
+                                                    <div key={index} className="timeline-section relative flex w-full gap-16 pb-12">
+                                                        <div className="line left-[calc(7rem+4rem/2)] dark:border-[rgba(255,255,255,0.08)]"></div>
+                                                        <div className="title always relative w-28">
+                                                            <div className="container sticky">
+                                                                <div className="timeline-title">
+                                                                    <div className="content animated transition-all duration-300 ease-in-out">
+                                                                        <div className="date font-medium">{CovertDate(event.startDate)[0]}</div>
+                                                                        <div className="text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)]">{DayOfWeek(CovertDate(event.startDate)[0])}</div>
                                                                     </div>
-                                                                    <div className="event-bottom-bar flex justify-between items-center">
-                                                                        <div className="gap-2 flex items-center">
-                                                                            <Button
-                                                                                as={Link}
-                                                                                href={`/events/manage/${event.id}`}
-                                                                                className="text-black-more-blur-light-theme dark:text-[rgba(255,255,255,0.64)] bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)] border-transparent border border-solid transition-all duration-300 ease-in-out donace-button flex items-center cursor-pointer"
-                                                                            >
-                                                                                <div className="label">Quản lý sự kiện</div>
-                                                                                <ArrowRight className="mr-1.5 stroke-2 w-3.5 h-3.5 flex-shrink-0 block align-middle" />
-                                                                            </Button>
-                                                                        </div>
+                                                                </div>
+                                                                <div className="dot-outer-wrapper absolute top-1.5 right-[calc(-2rem-0.4375rem)] justify-center flex items-center">
+                                                                    <div className="dot-wrapper justify-center flex items-center">
+                                                                        <div className="dot w-3 h-3 bg-[#f3f4f5] dark:bg-[rgb(19,21,23)] border-2 border-solid border-[rgba(19,21,23,0.2)] dark:border-[hsla(0,0%,100%,.32)] rounded-full"></div>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                         </div>
+                                                        <div className="min-w-0 flex-1">
+                                                            <div className="card-wrapper">
+                                                                <div className="card-wrapper content-card cursor-pointer transition-all duration-300 ease-in-out relative rounded-xl bg-[#f3f4f5] dark:bg-[rgba(255,255,255,0.04)] border border-solid border-[#f3f4f5] dark:border-[rgba(255,255,255,0.04)]">
+                                                                    <Link className="event-link absolute inset-0 transition-all duration-300 ease-in-out cursor-pointer" underline="none">&nbsp;</Link>
+                                                                    <div className="event-content gap-3 flex flex-col">
+                                                                        <div className="info-and-cover flex-row-reverse gap-4 flex">
+                                                                            <div className="cover-image pointer-events-none">
+                                                                                <div className="w-40 h-20">
+                                                                                    <div className="img-aspect-ratio cover-event-image w-full h-full overflow-hidden relative rounded-lg">
+                                                                                        <Image className="w-full h-full" alt="you are invited" src={event.cover} />
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div className="info gap-2 min-w-0 flex-1 flex flex-col">
+                                                                                <div className="event-time gap-2 flex items-center">
+                                                                                    <div className="overflow-hidden text-ellipsis whitespace-nowrap text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)]">
+                                                                                        <span>
+                                                                                            {ConvertDateTime(event.startDate).hour}:{ConvertDateTime(event.startDate).minute}
+                                                                                        </span>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div className="text-xl">
+                                                                                    <h3 className="inline text-xl font-medium break-words mt-0 mb-4">{event.name}</h3>
+                                                                                </div>
+                                                                                <div className="gap-1 flex flex-col">
+                                                                                    <div className="attribute text-base text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)] gap-3 flex items-start">
+                                                                                        <div className="icon text-base flex items-center">
+                                                                                            &nbsp;
+                                                                                            <MapPin className="w-4 h-4 block align-middle mt-0.5" />
+                                                                                        </div>
+                                                                                        <div className="text-base min-w-0">{event.addressName}</div>
+                                                                                    </div>
+                                                                                    <div className="attribute text-base text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)] gap-3 flex items-start">
+                                                                                        <div className="icon text-base flex items-center">
+                                                                                            &nbsp;
+                                                                                            <Users2 className="w-4 h-4 block align-middle mt-0.5" />
+                                                                                        </div>
+                                                                                        <div className="text-base min-w-0">{event.totalGuest} Khách</div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div className="event-bottom-bar flex justify-between items-center">
+                                                                            <div className="gap-2 flex items-center">
+                                                                                <Button
+                                                                                    as={Link}
+                                                                                    href={`/events/manage/${event.id}`}
+                                                                                    className="text-black-more-blur-light-theme dark:text-[rgba(255,255,255,0.64)] bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)] border-transparent border border-solid transition-all duration-300 ease-in-out donace-button flex items-center cursor-pointer"
+                                                                                >
+                                                                                    <div className="label">Quản lý sự kiện</div>
+                                                                                    <ArrowRight className="mr-1.5 stroke-2 w-3.5 h-3.5 flex-shrink-0 block align-middle" />
+                                                                                </Button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    ) : (
-                                        <div className="timeline-container">
-                                            <div className="lux-empty-state text-center mt-16 flex flex-col items-center">
-                                                <div className="icon justify-center flex items-center">
-                                                    <div className="mb-2">
-                                                        <CalendarX2 className="w-64 h-auto block align-middle text-foreground-200 dark:text-[#484848]" />
+                                                ))}
+                                            </div>
+                                        ) : (
+                                            <div className="timeline-container">
+                                                <div className="lux-empty-state text-center mt-16 flex flex-col items-center">
+                                                    <div className="icon justify-center flex items-center">
+                                                        <div className="mb-2">
+                                                            <CalendarX2 className="w-64 h-auto block align-middle text-foreground-200 dark:text-[#484848]" />
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <h3 className="text-2xl font-medium text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)] p-0 mt-6 mb-0">Không có sự kiện</h3>
-                                                <div className="desc pl-12 pr-12 text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)] mt-2">Lịch này không có sự kiện gì đã diễn ra.</div>
-                                                <div className="mt-6 justify-center flex items-center">
-                                                    <Button
-                                                        as={Link}
-                                                        href="/create"
-                                                        type="button"
-                                                        className="text-black-more-blur-light-theme dark:text-[rgba(255,255,255,0.64)] bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)] border-transparent border border-solid cursor-pointer transition-all duration-300 ease-in-out donace-button-w-fit flex items-center m-0"
-                                                    >
-                                                        <Plus className="mr-1.5 stroke-2 w-3.5 h-3.5 flex-shrink-0 block align-middle" />
-                                                        <div className="label">Tạo sự kiện mới</div>
-                                                    </Button>
+                                                    <h3 className="text-2xl font-medium text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)] p-0 mt-6 mb-0">Không có sự kiện</h3>
+                                                    <div className="desc pl-12 pr-12 text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)] mt-2">Lịch này không có sự kiện gì đã diễn ra.</div>
+                                                    <div className="mt-6 justify-center flex items-center">
+                                                        <Button
+                                                            as={Link}
+                                                            href="/create"
+                                                            type="button"
+                                                            className="text-black-more-blur-light-theme dark:text-[rgba(255,255,255,0.64)] bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)] border-transparent border border-solid cursor-pointer transition-all duration-300 ease-in-out donace-button-w-fit flex items-center m-0"
+                                                        >
+                                                            <Plus className="mr-1.5 stroke-2 w-3.5 h-3.5 flex-shrink-0 block align-middle" />
+                                                            <div className="label">Tạo sự kiện mới</div>
+                                                        </Button>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    )}
-                                </Tab>
-                            </Tabs>
-                        </div>
+                                        )}
+                                    </Tab>
+                                </Tabs>
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>

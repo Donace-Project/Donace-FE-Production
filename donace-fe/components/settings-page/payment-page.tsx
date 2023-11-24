@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import { Button } from "@nextui-org/button";
 import { Link } from "@nextui-org/link";
 import { CreditCard, Plus, Receipt } from "lucide-react";
-import { Modal, ModalContent, ModalBody, useDisclosure } from "@nextui-org/react";
+import { Modal, ModalContent, ModalBody, useDisclosure, Divider, ModalFooter } from "@nextui-org/react";
 import { usePaymentInputs, PaymentInputsWrapper } from 'react-payment-inputs';
 import { css } from 'styled-components';
 import { ThemeProvider } from 'styled-components';
@@ -111,6 +111,13 @@ export default function PaymentPage() {
                                                     </div>
                                                     <div className="title font-semibold text-xl mb-2">Thêm phương thức thanh toán</div>
                                                     <div className="desc text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)]">Thêm phương thức thanh toán để mua vé tham gia sự kiện. Thông tin của bạn sẽ được chúng tôi bảo mật an toàn.</div>
+                                                    <Link
+                                                        href='https://vivnpay.vn/huong-dan'
+                                                        target='_blank'
+                                                        className='justify-end items-end flex text-sm pt-1 mt-2'
+                                                    >
+                                                        <span>Click vào đây để làm theo hướng dẫn tạo tài khoản VNPay.</span>
+                                                    </Link>
                                                 </div>
                                                 <div className="pt-1 mt-2">
                                                     <PaymentInputsWrapper
@@ -166,6 +173,7 @@ export default function PaymentPage() {
                                                 >
                                                     <div className='label'>Thêm phương thức giao dịch</div>
                                                 </Button>
+
                                             </div>
                                         </ModalBody>
                                     </>
@@ -181,7 +189,7 @@ export default function PaymentPage() {
                             <div className="lux-empty-state text-center mt-16 flex flex-col items-center">
                                 <div className="icon illu justify-center flex items-center">
                                     <div className="mb-2">
-                                        <Receipt className="w-64 h-auto block align-middle text-foreground-300 dark:text-neutral-700"/>
+                                        <Receipt className="w-64 h-auto block align-middle text-foreground-300 dark:text-neutral-700" />
                                     </div>
                                 </div>
                                 <h3 className="text-2xl font-medium text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)] p-0 mt-6 mb-0">Không có giao dịch nào gần đây</h3>

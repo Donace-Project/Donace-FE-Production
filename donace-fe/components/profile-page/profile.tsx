@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "@/styles/globals.css";
 import { Avatar } from "@nextui-org/avatar";
 import { Button } from "@nextui-org/button";
@@ -11,11 +11,32 @@ import { Textarea } from "@nextui-org/input";
 import { FaTiktok } from 'react-icons/fa';
 import { Checkbox } from "@nextui-org/checkbox";
 import { fetchWrapper } from "../../helpers/fetch-wrapper";
+import { ItemEventsProfile, UserProfile } from "@/types/DonaceType";
+
+interface DateInfo {
+    year: string;
+    month: string;
+    day: string;
+}
+
+const ConvertDate = (date: string): DateInfo => {
+    const dateArray = date.split("-");
+    const year = dateArray[0]; // Lấy thông tin về năm từ phần tử đầu tiên trong mảng
+    const month = dateArray[1]; // Lấy thông tin về tháng từ phần tử thứ hai trong mảng
+    const day = dateArray[2].split("T")[0]; // Lấy thông tin về ngày từ phần tử thứ ba và loại bỏ phần giờ nếu có
+
+    return { year, month, day };
+};
+
+const currentDate = new Date();
+const currentDateFormatted = currentDate.toLocaleDateString('en-US').replace(/\//g, '-');
+currentDate.setDate(currentDate.getDate() - 1)
+const pastDateFormatted = currentDate.toLocaleString('en-US').replace(/\//g, '-');
 
 export default function ProfilePage() {
 
     let [userProfile, setUserProfile] = useState<null | UserProfile>(null);
-    var [pastEvents, setPastEvents] = useState<ItemEventsProfile[]>();
+    var [futureEvents, setFutureEvents] = useState<ItemEventsProfile[]>();
 
 
     useEffect(() => {
@@ -29,8 +50,8 @@ export default function ProfilePage() {
     }, []);
 
     useEffect(() => {
-        fetchWrapper.get(`/api/Event?FromDate=01-01-1996&ToDate=${pastDateFormatted}&PageNumber=1&PageSize=9999`)
-            .then(data => setPastEvents(data.items));
+        fetchWrapper.get(`/api/Event?FromDate=${currentDateFormatted}&ToDate=12-31-9998&PageNumber=1&PageSize=9999`)
+            .then(data => setFutureEvents(data.items));
     }, []);
 
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -39,10 +60,9 @@ export default function ProfilePage() {
         "outside"
     ];
     const variants = ["bordered"];
-    const [modalPlacement, setModalPlacement] = React.useState("center");
-
-    const updateProfileHandle = async ()=>{
-        const res = await fetchWrapper.put('/api/User/update-profile',{
+    const imageUrl = "https://cdn.lu.ma/cdn-cgi/image/format=auto,fit=cover,dpr=2,quality=75,width=400/event-defaults/1-1/standard3.png";
+    const updateProfileHandle = async () => {
+        const res = await fetchWrapper.put('/api/User/update-profile', {
             userName: "test",
             avatar: "https://avatars.githubusercontent.com/u/143386751?s=200&v=4",
             bio: "string",
@@ -68,17 +88,100 @@ export default function ProfilePage() {
                                         <div className="image-container w-32 m-auto">
                                             <Link href="/my-calendar" className="transition-all duration-300 ease-in-out cursor-pointer" underline="none">
                                                 <div className="avatar-wrapper">
-                                                    <Avatar src="https://avatars.githubusercontent.com/u/143386751?s=200&v=4" radius="full" name="Donace" className="w-32 h-32 bg-[#fff] relative" />
+                                                    <Avatar
+                                                        src={userProfile?.result.avatar.trim() ? userProfile.result.avatar : "https://avatars.githubusercontent.com/u/143386751?s=200&v=4"}
+                                                        radius="full"
+                                                        name="Donace"
+                                                        className="w-32 h-32 bg-[#fff] relative" />
                                                 </div>
                                             </Link>
                                         </div>
                                         <div className="bio-container">
                                             <div className="user-header-text">
-                                                <Link className="text-inherit transition-all duration-300 ease-in-out cursor-pointer" underline="none">
-                                                    <h1 className="font-semibold text-3xl mt-4 mb-4">Donace</h1>
-                                                </Link>
+                                                {userProfile && userProfile.result ? (
+                                                    <div>
+                                                        <Link className="text-inherit transition-all duration-300 ease-in-out cursor-pointer" underline="none">
+                                                            <h1 className="font-semibold text-3xl mt-4 mb-4">{userProfile.result.userName}</h1>
+                                                        </Link>
+                                                        <div className="bio whitespace-pre-line break-words text-sm text-[#849ba4] mb-2">{userProfile.result.bio}</div>
+                                                    </div>
+                                                ) : (
+                                                    <div></div>
+                                                )}
                                             </div>
-                                            <div className="justify-center flex items-center"></div>
+                                            <div className="justify-center flex items-center">
+                                                {userProfile && userProfile.result ? (
+                                                    <div>
+                                                        <div className="social-link large">
+                                                        </div>
+                                                    </div>
+                                                ) : (
+                                                    <div>
+                                                        <div className="social-links -ml-2 -mr-2 flex items-center">
+                                                            <div className="social-link large">
+                                                                <Link
+                                                                    defaultValue={userProfile?.result.instagram}
+                                                                    href=""
+                                                                    target="_blank"
+                                                                    rel="nofollow noopener"
+                                                                    className="lux-menu-trigger p-2 text-black-blur-light-theme block min-w-0 transition-all duration-300 ease-in-out cursor-pointer"
+                                                                    underline="none"
+                                                                >
+                                                                    <Instagram className="dark:text-[hsla(0,0%,100%,.5)] flex-shrink-0 block w-5 h-5 align-middle" />
+
+                                                                </Link>
+                                                            </div>
+                                                            <div className="social-link large">
+                                                                <Link
+                                                                    href=""
+                                                                    target="_blank"
+                                                                    rel="nofollow noopener"
+                                                                    className="lux-menu-trigger p-2 text-black-blur-light-theme block min-w-0 transition-all duration-300 ease-in-out cursor-pointer"
+                                                                    underline="none"
+                                                                >
+                                                                    <Twitter className="dark:text-[hsla(0,0%,100%,.5)] flex-shrink-0 block w-5 h-5 align-middle" />
+                                                                </Link>
+                                                            </div>
+                                                            <div className="social-link large">
+                                                                <Link
+                                                                    href=""
+                                                                    target="_blank"
+                                                                    rel="nofollow noopener"
+                                                                    className="lux-menu-trigger p-2 text-black-blur-light-theme block min-w-0 transition-all duration-300 ease-in-out cursor-pointer"
+                                                                    underline="none"
+                                                                >
+                                                                    <Youtube className="dark:text-[hsla(0,0%,100%,.5)] flex-shrink-0 block w-5 h-5 align-middle" />
+
+                                                                </Link>
+                                                            </div>
+                                                            <div className="social-link large">
+                                                                <Link
+                                                                    href=""
+                                                                    target="_blank"
+                                                                    rel="nofollow noopener"
+                                                                    className="lux-menu-trigger p-2 text-black-blur-light-theme block min-w-0 transition-all duration-300 ease-in-out cursor-pointer"
+                                                                    underline="none"
+                                                                >
+                                                                    <FaTiktok className="dark:text-[hsla(0,0%,100%,.5)] flex-shrink-0 block w-5 h-5 align-middle" />
+
+                                                                </Link>
+                                                            </div>
+                                                            <div className="social-link large">
+                                                                <Link
+                                                                    href=""
+                                                                    target="_blank"
+                                                                    rel="nofollow noopener"
+                                                                    className="lux-menu-trigger p-2 text-black-blur-light-theme block min-w-0 transition-all duration-300 ease-in-out cursor-pointer"
+                                                                    underline="none"
+                                                                >
+                                                                    <Linkedin className="dark:text-[hsla(0,0%,100%,.5)] flex-shrink-0 block w-5 h-5 align-middle" />
+
+                                                                </Link>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                )}
+                                            </div>
                                             <div className="pt-4">
                                                 <Modal
                                                     isOpen={isOpen}
@@ -90,7 +193,7 @@ export default function ProfilePage() {
                                                         {(onClose) => (
                                                             <>
                                                                 <ModalHeader className="p-[0.75rem_1.25rem] border-b border-solid border-[#eff3f5] dark:border-[#0005] flex justify-between items-center">
-                                                                    <div className="text-[#002f45] dark:text-white text-lg font-semibold">Edit Profile</div>
+                                                                    <div className="text-[#002f45] dark:text-white text-lg font-semibold">Chỉnh sửa thông tin cá nhân</div>
                                                                 </ModalHeader>
                                                                 <ModalBody className="w-full p-[1rem_1.25rem] overflow-auto dark:bg-[#0e151d]">
                                                                     <div className="edit-profile-modal pb-2">
@@ -105,7 +208,7 @@ export default function ProfilePage() {
                                                                                     <Input
                                                                                         key={placement}
                                                                                         type="text"
-                                                                                        label="Name"
+                                                                                        label="Tên"
                                                                                         labelPlacement={"outside"}
                                                                                         autoCorrect="off"
                                                                                         spellCheck="false"
@@ -114,7 +217,7 @@ export default function ProfilePage() {
                                                                                         autoFocus
                                                                                         autoComplete="disable"
                                                                                         variant="bordered"
-                                                                                        placeholder="Your name"
+                                                                                        placeholder={userProfile?.result.userName}
                                                                                     />
                                                                                 ))}
                                                                             </div>
@@ -123,16 +226,16 @@ export default function ProfilePage() {
                                                                                     <Textarea
                                                                                         key={variant}
                                                                                         variant={"bordered"}
-                                                                                        label="Description"
+                                                                                        label="Tiểu sử"
                                                                                         labelPlacement={"outside"}
-                                                                                        placeholder="Short Bio"
+                                                                                        placeholder={userProfile?.result.bio}
                                                                                         maxLength={140}
                                                                                         autoCapitalize="on"
                                                                                         className="bg-transparent font-semibold mt-2 mb-2 pl-3 text-lg h-auto p-[0.375rem_0.75rem] transition-all duration-300 ease-in-out text-[#002f45] dark:text-white leading-6 rounded-lg w-full"
                                                                                     />
                                                                                 ))}
                                                                             </div>
-                                                                            <div className="social-label dark:text-[#aec1ca]">Social Links</div>
+                                                                            <div className="social-label dark:text-[#aec1ca]">Liên kết mạng xã hội</div>
                                                                             <div className="gap-2 flex flex-col">
                                                                                 <div className="w-96 max-w-full gap-4 flex items-baseline">
                                                                                     <Instagram className="dark:text-[hsla(0,0%,100%,.5)] translate-y-0.5 flex-shrink-0 text-black-blur-light-theme block w-4 h-4 align-middle" />
@@ -280,29 +383,16 @@ export default function ProfilePage() {
                                                                                                     variant="bordered"
                                                                                                 />
                                                                                             </div>
-
                                                                                         </div>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
-                                                                            <div className="mt-6 mb-6">
-                                                                                <div className="lux-checkbox transition-all duration-300 ease-in-out relative cursor-pointer text-base clear-both flex flex-row  justify-start items-center">
-                                                                                    <label className="checkbox-icon block relative mr-2 text-xs h-5 w-5 clear-both mb-0">
-                                                                                        <Checkbox />
-                                                                                    </label>
-                                                                                    <label className="text-label flex-1 cursor-pointer leading-6 mb-0">
-                                                                                        <div className="checkbox-title font-medium text-base mb-0.5 ml-2">Compact Bio</div>
-                                                                                        <div className="text-teriaty checkbox-desc text-sm ml-2 text-[#a2b7bf]">Show your avatar to the left of your name</div>
-                                                                                    </label>
-                                                                                </div>
-                                                                            </div>
-
                                                                         </form>
                                                                     </div>
                                                                 </ModalBody>
                                                                 <ModalFooter className="border-t border-solid border-t-[#eff3f5]">
                                                                     <Button onClick={updateProfileHandle} className="text-[#fff] bg-[#0099dd] border-[#0099dd] border border-solid w-full cursor-pointer transition-all duration-300 ease-in-out donace-button mt-6 flex items-center m-0 leading-6">
-                                                                        <div className="label">Save Changes</div>
+                                                                        <div className="label">Lưu thay đổi</div>
                                                                     </Button>
                                                                 </ModalFooter>
                                                             </>
@@ -311,7 +401,7 @@ export default function ProfilePage() {
                                                 </Modal>
                                                 <Button onPress={onOpen} type="button" className="bg-[#a2b7bf] text-white dark:bg-[#122935] dark:text-[white] p-[0.25rem_0.75rem] font-medium border-none cursor-pointer transition-all duration-300 ease-in-out inline-flex items-center m-0" radius="full">
                                                     <Pen className="mr-1 w-3 h-3 block align-middle" />
-                                                    <span className="text-base">Edit Bio</span>
+                                                    <span className="text-base">Chỉnh sửa tiểu sử</span>
                                                 </Button>
                                             </div>
                                         </div>
@@ -326,36 +416,59 @@ export default function ProfilePage() {
                                                 <div>
                                                     <div className="profile-events-wrapper">
                                                         <div className="mb-4 overflow-hidden flex justify-between align-baseline">
-                                                            <h2 className="font-semibold text-xl mb-0 overflow-hidden text-ellipsis mt-0">Events</h2>
+                                                            <h2 className="font-semibold text-xl mb-0 overflow-hidden text-ellipsis mt-0">Sự kiện</h2>
                                                             <div className="whitespace-nowrap pl-2">
                                                                 <Link href={"/create"} className="block-action pl-0 pr-0 text-[#0099dd] dark:text-[#0099dd] inline-flex items-center justify-center transition-all duration-300 ease-in-out cursor-pointer" underline="none">
                                                                     <Plus className="mr-1 h-4 w-4 block align-middle mt-0.5" />
-                                                                    <span>Create New</span>
+                                                                    <span>Tạo mới</span>
                                                                 </Link>
                                                             </div>
                                                         </div>
                                                         <div className="block">
-                                                            <div className="profile-event-empty w-full text-center p-[2rem_1rem_2rem_1rem] text-[#a2b7bf] dark:text-[#939597] border border-solid border-[#eff3f5] dark:border-[#151719] rounded-lg flex flex-col items-center">
-                                                                <Calendar className="w-8 h-8 mb-4 block align-middle" />
-                                                                <div className="font-semibold mb-1">Nothing Upcoming</div>
-                                                                <div className="text-sm">Subscribe to hear about what&apos;s coming up</div>
-                                                            </div>
-                                                        </div>
-                                                        <div className="bottom-action mt-4">
-                                                            <div id="block-action" className="inline-block p-0 text-[#a2b7bf]">
-                                                                <Link href={"/"} className="transition-all duration-300 ease-in-out text-[#0099dd] dark:text-[#0099dd] cursor-pointer" underline="none">
-                                                                    View Past
-                                                                </Link>
-                                                            </div>
+                                                            {futureEvents ? (
+                                                                futureEvents.map((event, index) => (
+                                                                    <div key={index} className="profile-events-content-wrapper">
+                                                                        <div className="profile-event-wrapper pb-0">
+                                                                            <Link
+                                                                                href="/events/detail"
+                                                                                className="profile-event relative flex items-center m-[-0.75rem_-1.5rem] p-[0.75rem_1.5rem] rounded-lg transition-all duration-300 ease-in-out text-[#0099dd] cursor-pointer hover:bg-[#f0f7fb] hover:opacity-[1]"
+                                                                                underline="none"
+                                                                            >
+                                                                                <div className="event-time-left w-14 text-center mr-6 border border-solid border-[#f0f8fd] rounded-lg bg-white overflow-hidden transition-all duration-300 ease-in-out">
+                                                                                    <div className="event-month uppercase text-xs font-semibold text-[#82aad8] bg-[#f0f8fd] p-[0.125rem_0px] transition-all duration-300 ease-in-out">{ConvertDate(event.endDate).month}</div>
+                                                                                    <div className="event-date text-2xl font-light m-[0.375rem_0px] text-[#002f45]">{ConvertDate(event.endDate).day}</div>
+                                                                                </div>
+                                                                                <div className="event-cover-wrapper w-40 mr-6 relative">
+                                                                                    <div
+                                                                                        className="pb-[50%] bg-cover bg-center rounded-md"
+                                                                                        style={{ backgroundImage: `url(${imageUrl})` }}
+                                                                                    ></div>
+                                                                                    <div className="bg-cover bg-center rounded-md absolute left-0 top-0 w-full transition-all duration-300 ease-in-out"></div>
+                                                                                </div>
+                                                                                <div className="event-info flex-1 min-w-0">
+                                                                                    <div>
+                                                                                        <span className="event-name text-lg mr-2 font-medium text-[#002f45]">{event.name}</span>
+                                                                                    </div>
+                                                                                    <div className="text-sm flex-wrap mt-1 flex items-center">
+                                                                                        <div className={`event-time ${event.isLive ? 'starting-soon text-[#ec660d]' : 'not-starting text-[#82aad8]'}`}>
+                                                                                            {event.isLive ? 'Đang diễn ra' : 'Chưa bắt đầu'}
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </Link>
+                                                                        </div>
+                                                                    </div>
+                                                                ))
+                                                            ) : (
+                                                                <div className="profile-event-empty w-full text-center p-[2rem_1rem_2rem_1rem] text-[#a2b7bf] dark:text-[#939597] border border-solid border-[#eff3f5] dark:border-[#151719] rounded-lg flex flex-col items-center">
+                                                                    <Calendar className="w-8 h-8 mb-4 block align-middle" />
+                                                                    <div className="font-semibold mb-1">Không có sự kiện nào sắp diễn ra</div>
+                                                                    <div className="text-sm">Đăng ký ngay để nhận những sự kiện sắp diễn ra.</div>
+                                                                </div>
+                                                            )}
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <div className="pt-4">
-                                                <Button type="button" className="bg-[#a2b7bf] dark:bg-[#122935] rounded-full p-[0.25rem_0.75rem] font-medium border-none cursor-pointer transition-all duration-300 ease-in-out inline-flex items-center m-0 leading-6 text-inherit">
-                                                    <Pen className="mr-1 w-3 h-3 block align-middle text-white dark:text-white" />
-                                                    <span className="text-white dark:text-white text-sm">Edit Block</span>
-                                                </Button>
                                             </div>
                                         </div>
                                     </div>
