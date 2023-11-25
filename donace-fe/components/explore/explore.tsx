@@ -37,16 +37,22 @@ export default function Explore() {
         <div className="grid grid-cols-2 justify-center items-center gap-5">
           <div className="w-full h-full">
             <Link href="/explore/cities/hochiminh">
-              <Card isFooterBlurred radius="lg" className="border-none h-[500] shadow-xl shadow-white/10">
+              <Card
+                isFooterBlurred
+                radius="lg"
+                className="border-none h-[500] shadow-xl shadow-white/10"
+              >
                 <Image
                   alt="Ho Chi Minh City"
                   className="object-cover"
                   height={500}
-                  src="https://file1.dangcongsan.vn/data/0/images/2021/04/27/vuongle/ttxxvnktvn.jpg"
+                  src="https://res.cloudinary.com/deupkdvle/image/upload/v1700906524/hcm_r4fxew.jpg"
                   width={500}
                 />
                 <CardFooter className="justify-between before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
-                  <p className="text-sm text-white/80 pl-unit-16 font-medium">Hồ Chí Minh</p>
+                  <p className="text-sm text-white/80 pl-unit-16 font-medium">
+                    Hồ Chí Minh
+                  </p>
                   <Button
                     className="text-tiny font-medium text-white bg-black/20"
                     variant="flat"
@@ -62,16 +68,22 @@ export default function Explore() {
           </div>
           <div className="w-full h-full">
             <Link href="/explore/cities/hue">
-              <Card isFooterBlurred radius="lg" className="border-none shadow-xl shadow-white/10">
+              <Card
+                isFooterBlurred
+                radius="lg"
+                className="border-none shadow-xl shadow-white/10"
+              >
                 <Image
                   alt="The Ancient Capital of Hue"
                   className="object-cover"
                   height={500}
-                  src="https://cdnimg.vietnamplus.vn/uploaded/ivpycivo/2023_07_13/pho_co_hoi_an.png"
+                  src="https://res.cloudinary.com/deupkdvle/image/upload/v1700906537/hue_qm6jwk.webp"
                   width={500}
                 />
                 <CardFooter className="justify-between before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
-                  <p className="text-sm text-white/80 pl-unit-16 font-medium">Huế</p>
+                  <p className="text-sm text-white/80 pl-unit-16 font-medium">
+                    Huế
+                  </p>
                   <Button
                     className="text-tiny font-medium text-white bg-black/20"
                     variant="flat"
@@ -87,16 +99,22 @@ export default function Explore() {
           </div>
           <div className="w-full h-full">
             <Link href="/explore/cities/cantho">
-              <Card isFooterBlurred radius="lg" className="border-none shadow-xl shadow-white/10">
+              <Card
+                isFooterBlurred
+                radius="lg"
+                className="border-none shadow-xl shadow-white/10"
+              >
                 <Image
                   alt="Can Tho City"
                   className="object-cover"
                   height={500}
-                  src="https://media.vneconomy.vn/images/upload/2023/05/13/dbscl-4604.jpg"
+                  src="https://res.cloudinary.com/deupkdvle/image/upload/v1700906489/cantho_nwydwd.jpg"
                   width={500}
                 />
                 <CardFooter className="justify-between before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
-                  <p className="text-sm text-white/80 pl-unit-16 font-medium">Cần Thơ</p>
+                  <p className="text-sm text-white/80 pl-unit-16 font-medium">
+                    Cần Thơ
+                  </p>
                   <Button
                     className="text-tiny font-medium text-white bg-black/20"
                     variant="flat"
