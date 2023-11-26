@@ -1,8 +1,7 @@
 import { authHelper } from "./authHelper";
 
 // TODO: Move config này ra setting
-// const baseUrl = "http://127.0.0.1:3008/";
-const baseUrl = "http://34.97.29.83/";
+const baseUrl = "http://35.198.246.148:8082/";
 
 export const fetchWrapper = {
   get,
