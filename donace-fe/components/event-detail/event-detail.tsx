@@ -8,7 +8,7 @@ import { Link } from "@nextui-org/link";
 import { Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure } from "@nextui-org/modal";
 import { ArrowUpRight, MapPin, MapPinned, Send, Users } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Textarea } from "@nextui-org/input";
+import { Input, Textarea } from "@nextui-org/input";
 import { Card } from "@nextui-org/card";
 import { Skeleton } from "@nextui-org/skeleton";
 import { EventDetailModels, UserProfile } from "@/types/DonaceType";
@@ -57,7 +57,8 @@ export default function EventDetails(props: any) {
 
         fetchWrapper.get('/api/User/profile')
             .then((data: UserProfile) => {
-                console.log(data); // Xem dữ liệu được trả về từ API
+
+                console.log(data); //? Xem dữ liệu được trả về từ API từ màn console
                 setUserProfile(data);
             })
             .catch(error => console.error('Lỗi khi gọi API:', error));
@@ -86,6 +87,7 @@ export default function EventDetails(props: any) {
                                                                 name="Donace"
                                                                 className="relative w-5 h-5" />
                                                         </div>
+                                                        // TODO: fetch lại api tên
                                                         <div className="overflow-hidden text-ellipsis whitespace-nowrap">Điều phối bởi TODO</div>
                                                     </div>
                                                 </div>
@@ -162,6 +164,30 @@ export default function EventDetails(props: any) {
                                                                 <div className="text-[#fff] text-xl font-semibold font-serif mt-2">Cảm ơn bạn vì đã tham dự</div>
                                                                 <div className="desc text-[hsla(0,0%,100%,.79)]">Chúng tôi hi vọng bạn sẽ tận hưởng sự kiện này!</div>
                                                             </div>
+                                                        </div>
+                                                        <div className="">
+                                                            <Input
+                                                                className="mt-2 pt-2 cursor-copy"
+                                                                type="email"
+                                                                label="Email"
+                                                                labelPlacement="outside"
+                                                                placeholder="Enter your email"
+                                                                value="Gia bao"
+                                                                variant="flat"
+                                                                isReadOnly
+                                                                classNames={{
+                                                                    label: [
+                                                                        "text-[#fff]"
+                                                                    ],
+                                                                    input: [
+                                                                        
+                                                                        "text-[hsla(0,0%,100%,.79)]"
+                                                                    ],
+                                                                    base: [
+                                                                    ]
+                                                                }}
+                                                                disabled
+                                                            />
                                                         </div>
                                                     </div>
                                                 </div>

@@ -64,7 +64,7 @@ export default function ProfilePage() {
     const updateProfileHandle = async () => {
         const res = await fetchWrapper.put('/api/User/update-profile', {
             userName: "test",
-            avatar: "https://avatars.githubusercontent.com/u/143386751?s=200&v=4",
+            avatar: "https://cdn.lu.ma/cdn-cgi/image/format=auto,fit=cover,dpr=2,background=white,quality=75,width=32,height=32/avatars-default/avatar_8.png",
             bio: "string",
             instagram: "string",
             twitter: "string",
@@ -89,7 +89,7 @@ export default function ProfilePage() {
                                             <Link href="/my-calendar" className="transition-all duration-300 ease-in-out cursor-pointer" underline="none">
                                                 <div className="avatar-wrapper">
                                                     <Avatar
-                                                        src={userProfile?.result.avatar.trim() ? userProfile.result.avatar : "https://avatars.githubusercontent.com/u/143386751?s=200&v=4"}
+                                                        src={userProfile?.result.avatar.trim() ? userProfile.result.avatar : "https://cdn.lu.ma/cdn-cgi/image/format=auto,fit=cover,dpr=2,background=white,quality=75,width=32,height=32/avatars-default/avatar_8.png"}
                                                         radius="full"
                                                         name="Donace"
                                                         className="w-32 h-32 bg-[#fff] relative" />
@@ -200,7 +200,7 @@ export default function ProfilePage() {
                                                                         <form action={"#"}>
                                                                             <div className="avatar justify-center flex items-center">
                                                                                 <div role="presentation" tabIndex={0}>
-                                                                                    <Avatar radius="full" src="https://avatars.githubusercontent.com/u/143386751?s=200&v=4" name="Donace" className="avatar-wrapper relative w-32 h-32 cursor-pointer" />
+                                                                                    <Avatar radius="full" src="https://cdn.lu.ma/cdn-cgi/image/format=auto,fit=cover,dpr=2,background=white,quality=75,width=32,height=32/avatars-default/avatar_8.png" name="Donace" className="avatar-wrapper relative w-32 h-32 cursor-pointer" />
                                                                                 </div>
                                                                             </div>
                                                                             <div className="user-header-text">

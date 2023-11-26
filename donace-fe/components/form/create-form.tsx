@@ -279,7 +279,7 @@ export default function CreateForm() {
                                                         <div className='icon text-[rgba(19,21,23,0.2)] dark:text-[hsla(0,0%,100%,.32)] m-[0px_0.25rem]'>
                                                             <ArrowUp10 className='block w-4 h-4 align-middle' />
                                                         </div>
-                                                        <div className='text-black-more-blur-light-them dark:text-[hsla(0,0%,100%,.79)]e select-none flex-1' id='capacity'>Capacity</div>
+                                                        <div className='text-black-more-blur-light-them dark:text-[hsla(0,0%,100%,.79)]e select-none flex-1' id='capacity'>Số lượng</div>
                                                         <div className='gap-1 flex items-center'>
                                                             <Popover placement="bottom" showArrow offset={10}>
                                                                 <PopoverTrigger>
@@ -293,7 +293,6 @@ export default function CreateForm() {
                                                                     </Button>
                                                                 </PopoverTrigger>
                                                                 <PopoverContent className="w-[240px]">
-
                                                                     {(titleProps) => (
                                                                         <div className="px-1 py-2 w-full">
                                                                             <p className="text-small font-bold text-foreground" id='capacity' {...titleProps}>

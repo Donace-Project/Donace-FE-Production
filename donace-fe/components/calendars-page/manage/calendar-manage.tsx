@@ -184,12 +184,19 @@ export default function CalendarManage(props: any) {
                                 >
                                     Người tham gia
                                 </Link>
+                                <Link
+                                    href={`/calendars/manage/${getCalendars.id}/settings`}
+                                    className="text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)] border-b-2 border-solid border-transparent whitespace-nowrap inline-block pb-2 transition-all duration-300 ease-in-out cursor-pointer"
+                                    underline="none"
+                                >
+                                    Cài đặt
+                                </Link>
                             </div>
                         ) : (
                             <div className="tabs flex max-w-full overflow-auto min-w-0 gap-4 flex-1">
                                 <div className="side-padding"></div>
                                 <Link
-                                    className="text-black-light-theme dark:text-[#fff] border-b-2 border-solid border-[rgb(19,21,23)] dark:border-[#fff] whitespace-nowrap inline-block pb-2 transition-all duration-300 ease-in-out cursor-pointer"
+                                    className="text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)] border-b-2 border-solid border-transparent whitespace-nowrap inline-block pb-2 transition-all duration-300 ease-in-out cursor-pointer"
                                     underline="none"
                                 >
                                     Sự kiện
@@ -199,6 +206,12 @@ export default function CalendarManage(props: any) {
                                     underline="none"
                                 >
                                     Người tham gia
+                                </Link>
+                                <Link
+                                    className="text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)] border-b-2 border-solid border-transparent whitespace-nowrap inline-block pb-2 transition-all duration-300 ease-in-out cursor-pointer"
+                                    underline="none"
+                                >
+                                    Cài đặt
                                 </Link>
                             </div>
                         )}
@@ -307,7 +320,7 @@ export default function CalendarManage(props: any) {
                                                                             <div className="gap-2 flex items-center">
                                                                                 <Button
                                                                                     as={Link}
-                                                                                    href={`/events/manage/${event.id}`}
+                                                                                    href={`/user/join-event/${event.id}`}
                                                                                     className="text-black-more-blur-light-theme dark:text-[rgba(255,255,255,0.64)] bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)] border-transparent border border-solid transition-all duration-300 ease-in-out donace-button flex items-center cursor-pointer"
                                                                                 >
                                                                                     <ScanLine className="mr-1.5 stroke-2 w-3.5 h-3.5 flex-shrink-0 block align-middle mt-0.5" />

@@ -3,23 +3,29 @@
 import { Avatar } from '@nextui-org/avatar';
 import { Input, Textarea } from '@nextui-org/input';
 
-import { ArrowUp10, ChevronDown, ChevronsUpDown, FileImage, MapPin, Pen } from 'lucide-react';
-import { useMemo, useState, useEffect } from 'react';
+import { ArrowUp, ArrowUpToLine, CheckCircle2, ChevronDown, CreditCard, Globe, MapPin, Pen, Plus, PlusIcon, Ticket, Upload, UserCheck } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Switch, User } from "@nextui-org/react";
 
-import { Modal, ModalContent, ModalHeader, ModalBody, useDisclosure, ModalFooter } from "@nextui-org/modal";
+import { Modal, ModalContent, ModalHeader, ModalBody, useDisclosure } from "@nextui-org/modal";
+import { Dropdown, DropdownTrigger, DropdownMenu, DropdownSection, DropdownItem } from "@nextui-org/dropdown";
 import { Button } from '@nextui-org/button';
 import { Divider } from '@nextui-org/divider';
-import { Popover, PopoverTrigger, PopoverContent, Checkbox, Image } from "@nextui-org/react";
+import { Image } from "@nextui-org/react";
 
 //@ts-ignore
 import goongjs from '@goongmaps/goong-js';
 //@ts-ignore
 import GoongGeocoder from '@goongmaps/goong-geocoder'
+import { Link } from '@nextui-org/link';
 
 
 export default function CreateFormFinal() {
     let map: any;
-    const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
+    const modalMap = useDisclosure();
+    const modalCapacity = useDisclosure();
+    const modalPayment = useDisclosure();
+    const modalCreateCalendar = useDisclosure();
 
     const [startDate, setStartDate] = useState('');
     const [startTime, setStartTime] = useState('');
@@ -41,7 +47,7 @@ export default function CreateFormFinal() {
 
     useEffect(() => {
         // Khởi tạo bản đồ khi component được mount
-        if (isOpen) {
+        if (modalMap.isOpen) {
             goongjs.accessToken = 'wnicbAmnNkoMHNYUKWnlFHezV189FjmMwkNJ7hKW';
             map = new goongjs.Map({
                 container: 'map', // ID của phần tử HTML để chứa bản đồ
@@ -64,10 +70,7 @@ export default function CreateFormFinal() {
                 map.remove();
             };
         }
-
-    }, [isOpen]);
-
-
+    }, [modalMap.isOpen]);
 
     return (
         <>
@@ -79,30 +82,143 @@ export default function CreateFormFinal() {
                                 <div className='content-container grid grid-cols-2 gap-10'>
                                     <div className='left min-w-0'>
                                         <div>
-                                            <div className='lux-menu-trigger-wrapper m-[-0.375rem_-0.625rem] p-[0.375rem_0.625rem] cursor-pointer rounded-lg gap-3 w-64 transition-all duration-300 ease-in-out inline-flex min-w-0 items-center'>
-                                                <div className='avatar-wrapper small'>
-                                                    <Avatar
-                                                        radius="full"
-                                                        src="https://avatars.githubusercontent.com/u/143386751?s=200&v=4"
-                                                        name="Donace"
-                                                        className="w-6 h-6 relative"
-                                                    />
-                                                </div>
-                                                <div className='min-w-0 flex-1'>
-                                                    <div className='text-xs text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)]'>Create under</div>
-                                                    <div className='gap-1 flex items-center'>
-                                                        <div className='font-medium overflow-hidden text-ellipsis whitespace-nowrap text-sm'>Personal Calendar</div>
+                                            <Dropdown>
+                                                <DropdownTrigger>
+                                                    <div className='lux-menu-trigger-wrapper m-[-0.375rem_-0.625rem] p-[0.375rem_0.625rem] cursor-pointer rounded-lg gap-3 w-64 transition-all duration-300 ease-in-out inline-flex min-w-0 items-center'>
+                                                        <div className='avatar-wrapper small'>
+                                                            <Avatar
+                                                                radius="full"
+                                                                src="https://avatars.githubusercontent.com/u/143386751?s=200&v=4"
+                                                                name="Donace"
+                                                                className="w-6 h-6 relative"
+                                                            />
+                                                        </div>
+                                                        <div className='min-w-0 flex-1'>
+                                                            <div className='text-xs text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)]'>Tạo dưới</div>
+                                                            <div className='gap-1 flex items-center'>
+                                                                <div className='font-medium overflow-hidden text-ellipsis whitespace-nowrap text-sm'>Lịch cá nhân</div>
+                                                            </div>
+                                                        </div>
+                                                        <div className='chevron text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)]'>
+                                                            <ChevronDown className='block w-4 h-4 align-middle' />
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div className='chevron text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)]'>
-                                                    <ChevronDown className='block w-4 h-4 align-middle' />
-                                                </div>
-                                            </div>
+                                                </DropdownTrigger>
+                                                <DropdownMenu variant="faded" aria-label="Dropdown menu with description" className='w-64'>
+                                                    <DropdownSection
+                                                        title="Chọn Lịch để tạo Sự kiện:"
+                                                    >
+                                                        <DropdownItem
+                                                            endContent={<CheckCircle2 className='block w-4 h-4 align-middle' />}
+                                                        >
+                                                            <User
+                                                                name="Lịch cá nhân"
+                                                                avatarProps={{
+                                                                    radius: "sm",
+                                                                    size: "sm",
+                                                                    src: "https://avatars.githubusercontent.com/u/143386751?s=200&v=4"
+                                                                }}
+                                                            />
+                                                        </DropdownItem>
+                                                        <DropdownItem
+                                                        >
+                                                            <User
+                                                                name="Lịch công việc"
+                                                                avatarProps={{
+                                                                    radius: "sm",
+                                                                    size: "sm",
+                                                                    src: "https://cdn.lu.ma/cdn-cgi/image/format=auto,fit=cover,dpr=2,background=white,quality=75,width=20,height=20/avatars-default/community_avatar_12.png"
+                                                                }}
+                                                            />
+                                                        </DropdownItem>
+                                                        <DropdownItem
+                                                            onPress={modalCreateCalendar.onOpen}
+                                                            startContent={<Plus className='block w-4 h-4 align-middle translate-y-px text-black-more-blur-light-theme' />}
+                                                        >
+                                                            <div className='cursor-pointer gap-3 transition-all duration-300 ease-in-out text-black-more-blur-light-theme flex items-center'>
+                                                                <div>Tạo Lịch</div>
+                                                            </div>
+                                                        </DropdownItem>
+                                                    </DropdownSection>
+                                                </DropdownMenu>
+                                            </Dropdown>
+                                            <Modal
+                                                isOpen={modalCreateCalendar.isOpen}
+                                                onOpenChange={modalCreateCalendar.onOpenChange}
+                                                size='md'
+                                                radius="lg"
+                                                classNames={{
+                                                    base: "flex flex-col relative",
+                                                    closeButton: "hidden"
+                                                }}
+                                            >
+                                                <ModalContent>
+                                                    {(onClose) => (
+                                                        <>
+                                                            <ModalBody className='w-full p-[1rem_1.25rem]'>
+                                                                <form action="#" className='gap-2 pt-2 flex flex-col'>
+                                                                    <div>
+                                                                        <div
+                                                                            role='presentation'
+                                                                            className='w-[54px] h-[54px] relative cursor-pointer'
+                                                                        >
+                                                                            <input
+                                                                                type="file"
+                                                                                id="avatarImage"
+                                                                                className="hidden"
+                                                                            />
+                                                                            <div
+                                                                                className="upload-icon rounded-[0.5rem] bg-center bg-cover flex justify-center items-center text-[#fff] dark:text-[#212325] bg-[rgb(19,21,23)] dark:bg-[#fff] hover:bg-[#de3163] w-[35%] h-[35%] min-w-[24px] min-h-[24px] border-2 border-solid border-[#fff] dark:border-[#212325] absolute right-[-1px] bottom-[-1px] origin-center transition-all duration-300 ease-in-out"
+                                                                            >
+                                                                                <ArrowUp className='stroke-2 w-[65%] h-[65%] block align-middle' />
+                                                                            </div>
+                                                                            <div
+                                                                                id="avatar square"
+                                                                                className="bg-[url('https://cdn.lu.ma/cdn-cgi/image/format=auto,fit=cover,dpr=2,background=white,quality=75,width=64,height=64/avatars-default/community_avatar_13.png')] w-[54px] h-[54px] rounded-[0.5rem] bg-center bg-cover flex justify-center items-center bg-[#ebeced] dark:bg-[#333537]"
+                                                                            >
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className='pt-1'>
+                                                                        <div
+                                                                            className="name-input text-[1.5rem] font-medium p-2 h-12"
+                                                                        >
+                                                                            <textarea
+                                                                                id="lux-naked-input bordered mounted"
+                                                                                spellCheck="false"
+                                                                                autoCapitalize="words"
+                                                                                placeholder="Tên lịch"
+                                                                                className="h-[47.8px!important] p-2 border-b border-solid outline-none border-b-[#ebeced] transition-all duration-300 ease-in-out height-0 text-[rgb(19,21,23)] dark:text-[#fff] leading-[1.3] overflow-hidden bg-transparent text-[1.5rem] font-medium w-full resize-none m-0 focus:border-b-2 focus:border-gray-400 hover:border-b-2 hover:border-gray-400"
+                                                                            ></textarea>
+                                                                        </div>
+                                                                        <div id="desc-input" className="p-2">
+                                                                            <textarea
+                                                                                id="lux-naked-input mounted"
+                                                                                spellCheck="false"
+                                                                                autoCapitalize="sentences"
+                                                                                placeholder="Một vài dòng mô tả ngắn về lịch của bạn."
+                                                                                maxLength={200}
+                                                                                className="h-[37px!important] p-2 outline-none transition-all duration-300 ease-in-out height-0 text-[rgb(19,21,23)] dark:text-[#fff] leading-[1.3] overflow-hidden bg-transparent text-[1rem] font-normal w-full resize-none m-0"
+                                                                            ></textarea>
+                                                                        </div>
+                                                                    </div>
+                                                                    <Button
+                                                                        type='submit'
+                                                                        className='text-[#fff] bg-[#333537] border-[#333537] cursor-pointer transition-all duration-300 ease-in-out donace-button mt-4 flex items-center m-0'
+                                                                    >
+                                                                        <div className='label'>Tạo lịch</div>
+                                                                    </Button>
+                                                                </form>
+                                                            </ModalBody>
+                                                        </>
+                                                    )}
+                                                </ModalContent>
+                                            </Modal>
                                         </div>
                                         <div className='name-input-wrapper -ml-2 m-6 flex'>
                                             <Textarea
                                                 className='transition-all duration-300 ease-in-out text-black-light-theme dark:text-[#fff] overflow-hidden bg-transparent p-0 font-semibold w-full resize-none m-0'
-                                                placeholder='Event Name'
+                                                placeholder='Tên Sự kiện'
                                                 spellCheck="false"
                                                 autoCapitalize='words'
                                                 minRows={1}
@@ -112,7 +228,6 @@ export default function CreateFormFinal() {
                                                         "text-4xl",
                                                     ],
                                                     inputWrapper: [
-
                                                         "shadow-none"
                                                     ]
                                                 }}
@@ -128,7 +243,7 @@ export default function CreateFormFinal() {
                                                 </div>
                                                 <div className='time-picker bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)] rounded-lg overflow-hidden flex-1'>
                                                     <div className='start-row p-[0.25rem_0.25rem_0.25rem_0.75rem] flex justify-between items-baseline'>
-                                                        <div className='label w-12'>Start</div>
+                                                        <div className='label w-12'>Bắt đầu</div>
                                                         <div className='pr-12 p-0'>
                                                             <div className='datetime-timezone w-auto max-w-full'>
                                                                 <div className='datetime-input max-w-[13.5rem] flex items-stretch transition-all duration-300 ease-in-out'>
@@ -161,8 +276,8 @@ export default function CreateFormFinal() {
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div className='end-row p-[0.25rem_0.25rem_0.25rem_0.75rem] flex justify-between items-baseline'>
-                                                        <div className='label w-12'>End</div>
+                                                    <div className='end-row p-[0.25rem_0.25rem_0.25rem_0.75rem] flex justify-between items-baseline mb-2'>
+                                                        <div className='label w-12'>Kết thúc</div>
                                                         <div className='pr-12 p-0'>
                                                             <div className='datetime-timezone w-auto max-w-full'>
                                                                 <div className='datetime-input max-w-[13.5rem] flex items-stretch transition-all duration-300 ease-in-out'>
@@ -198,31 +313,31 @@ export default function CreateFormFinal() {
                                                 </div>
                                             </div>
                                             <div className='w-full gap-3 mb-4 flex items-start'>
-                                                <div className='icon-container w-10 h-10 border border-solid border-[rgba(19,21,23,0.1)] dark:border-[rgba(255,255,255,0.08)] text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)] rounded-lg flex-shrink-0 mt-2 overflow-hidden justify-center flex items-center'>
+                                                <div className='icon-container w-10 h-10 border border-solid border-[rgba(19,21,23,0.1)] dark:border-[rgba(255,255,255,0.08)] text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)] rounded-lg flex-shrink-0 mt-3.5 overflow-hidden justify-center flex items-center'>
                                                     <MapPin className='w-5 h-5 block align-middle' />
                                                 </div>
                                                 <div className='location-picker-wrapper min-w-0 flex-1'>
                                                     <div className='lux-menu-trigger-wrapper cursor-pointer inline-flex min-w-0 w-full'>
                                                         <Button
-                                                            className='mt-2 bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)] min-w-0 transition-all duration-300 ease-in-out w-full'
+                                                            className='mt-2 bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)] min-w-0 h-full transition-all duration-300 ease-in-out w-full'
                                                             radius='sm'
                                                             type='button'
-                                                            onPress={onOpen}
+                                                            onPress={modalMap.onOpen}
                                                         >
                                                             <div className='inner min-h-unit-3.5 p-[0.375rem_0.75rem]'>
                                                                 <div>
                                                                     <div>
                                                                         <div className='min-w-0'>
-                                                                            <div className='text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)] font-medium overflow-hidden text-ellipsis whitespace-nowrap'>Add Event Location</div>
-                                                                            <div className='overflow-hidden text-ellipsis whitespace-nowrap text-sm text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)]'>Event location or pick via Maps</div>
+                                                                            <div className='text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)] font-medium overflow-hidden text-ellipsis whitespace-nowrap'>Thêm địa điểm</div>
+                                                                            <div className='overflow-hidden text-ellipsis whitespace-nowrap text-sm text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)]'>Tổ chức Online/Offline sự kiện của bạn</div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                         </Button>
                                                         <Modal
-                                                            isOpen={isOpen}
-                                                            onOpenChange={onOpenChange}
+                                                            isOpen={modalMap.isOpen}
+                                                            onOpenChange={modalMap.onOpenChange}
                                                             size='3xl'
                                                             placement='center'
                                                             scrollBehavior='inside'
@@ -230,7 +345,7 @@ export default function CreateFormFinal() {
                                                             <ModalContent>
                                                                 {(onClose) => (
                                                                     <>
-                                                                        <ModalHeader className="flex flex-col gap-1">Adding Event Location</ModalHeader>
+                                                                        <ModalHeader className="flex flex-col gap-1">Thêm địa chỉ diễn ra sự kiện</ModalHeader>
                                                                         <Divider />
                                                                         <ModalBody>
                                                                             <div className='pt-2 m-2'>
@@ -239,7 +354,6 @@ export default function CreateFormFinal() {
                                                                                 <div className='pt-4'>
                                                                                     <div id="map" style={{ width: '100%', height: '400px' }}></div>
                                                                                 </div>
-                                                                                {/* setLngFc={setLng} setLatFc={setLat} */}
                                                                             </div>
                                                                         </ModalBody>
                                                                     </>
@@ -252,68 +366,263 @@ export default function CreateFormFinal() {
                                         </div>
                                         <div className='advanced-optiions mt-6'>
                                             <div className='lux-input-label medium text-sm block mb-1.5 font-medium text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)] transition-all duration-300 ease-in-out'>
-                                                <div>Event Options</div>
+                                                <div>Cài đặt Sự kiện</div>
                                             </div>
                                             <div className='options-card mt-2 rounded-lg overflow-hidden'>
                                                 <div className='option-row w-full p-[0.5rem_0.75rem] transition-all duration-300 ease-in-out relative overflow-hidden bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)]'>
                                                     <div className='gap-2 flex items-center'>
-                                                        <div className='icon text-[rgba(19,21,23,0.2)] dark:text-[hsla(0,0%,100%,.32)] m-[0px_0.25rem]'>
-                                                            <ArrowUp10 className='block w-4 h-4 align-middle' />
+                                                        <div className='icon text-[rgba(19,21,23,0.2)] m-[0px_0.25rem]'>
+                                                            <Ticket className='block w-4 h-4 align-middle translate-y-px' />
                                                         </div>
-                                                        <div className='text-black-more-blur-light-them dark:text-[hsla(0,0%,100%,.79)]e select-none flex-1' id='capacity'>Capacity</div>
+                                                        <div className='text-black-more-blur-light-theme select-none flex-1'>Loại vé</div>
                                                         <div className='gap-1 flex items-center'>
-                                                            <Popover placement="bottom" showArrow offset={10}>
-                                                                <PopoverTrigger>
-                                                                    <Button
-                                                                        aria-label='Edit'
-                                                                        type='button'
-                                                                        className='m-[-1px_-0.25rem_-1px_0px] text-black-blur-light-theme bg-transparent border-transparent border border-solid flex-shrink-0 cursor-pointer transition-all duration-300 ease-in-out donace-button-w-fit flex items-center'
-                                                                    >
-                                                                        <div className='text-black-blur-light-theme font-medium capitalize dark:text-[hsla(0,0%,100%,.5)]'>Unlimited</div>
-                                                                        <Pen className='stroke-2 w-3.5 h-3.5 flex-shrink-0 block align-middle mt-0.5 dark:text-[hsla(0,0%,100%,.5)]' />
-                                                                    </Button>
-                                                                </PopoverTrigger>
-                                                                <PopoverContent className="w-[240px]">
-
-                                                                    {(titleProps) => (
-                                                                        <div className="px-1 py-2 w-full">
-                                                                            <p className="text-small font-bold text-foreground" id='capacity' {...titleProps}>
-                                                                                Capacity
-                                                                            </p>
-                                                                            <div className="mt-2 flex flex-col gap-2 w-full">
-                                                                                {/* <Input
-                                                                                    type="number"
-                                                                                    inputMode='numeric'
-                                                                                    id='capacity'
-                                                                                    value={formData.capacity}
-                                                                                    onChange={handleChange}
-
-                                                                                    placeholder="0"
-                                                                                    labelPlacement="outside"
-                                                                                    variant="bordered"
-                                                                                /> */}
-                                                                                <div className='mt-2'>
-                                                                                    <Checkbox className='label text-base font-medium'>Over-Capacity Waitlist</Checkbox>
+                                                            <div className='value'>Miễn phí</div>
+                                                            <button
+                                                                type='button'
+                                                                onClick={modalPayment.onOpen}
+                                                                className='m-[-1px_-0.25rem_-1px_0px] text-black-blur-light-theme bg-transparent border-transparent border border-solid flex-shrink-0 cursor-pointer transition-all duration-300 ease-in-out donace-button-w-fit flex items-center'
+                                                            >
+                                                                <Pen className='stroke-2 w-3.5 h-3.5 flex-shrink-0 block align-middle translate-y-px' />
+                                                            </button>
+                                                        </div>
+                                                        <Modal
+                                                            isOpen={modalPayment.isOpen}
+                                                            onOpenChange={modalPayment.onOpenChange}
+                                                            size="xl"
+                                                            radius="lg"
+                                                            classNames={{
+                                                                base: "flex flex-col relative",
+                                                                closeButton: "hidden"
+                                                            }}
+                                                        >
+                                                            <ModalContent>
+                                                                {(onClose) => (
+                                                                    <>
+                                                                        <ModalBody
+                                                                            className="w-full p-[1rem_1.25rem]"
+                                                                        >
+                                                                            <div className="flex flex-col">
+                                                                                <div className="lux-alert-top pt-1">
+                                                                                    <div className="icon-wrapper m-[0.25rem_0px_0.75rem] w-14 h-14 rounded-full text-[#737577] dark:text-[#d2d4d7] bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)] justify-center flex items-center">
+                                                                                        <CreditCard className="w-8 h-8 block align-middle" />
+                                                                                    </div>
+                                                                                    <div className="title font-semibold text-xl mb-2">Liên kết <span className='text-red-500'>VN</span><span className='text-blue-500'>PAY</span></div>
+                                                                                    <div className="desc text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)]">Tài khoản của bạn chưa được thiết lập để chấp nhận thanh toán.</div>
+                                                                                    <div className='desc text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)]'>
+                                                                                        Chúng tôi sử dụng VNPay làm bộ xử lý thanh toán. Kết nối tài khoản VNPay của bạn để bắt đầu thanh toán. <strong>Phí quản lý là: 10.000 VND!</strong>
+                                                                                    </div>
+                                                                                    <Link
+                                                                                        href='https://sandbox.vnpayment.vn/apis/docs/huong-dan-tich-hop/'
+                                                                                        target='_blank'
+                                                                                        className='justify-end items-end flex text-sm pt-2'
+                                                                                    >
+                                                                                        <span>Click vào đây để làm theo hướng dẫn lấy keys.</span>
+                                                                                    </Link>
                                                                                 </div>
-                                                                                <div className='mt-2 gap-2 flex justify-between items-center'>
+                                                                                <div className='gap-4 mt-2 flex flex-col'>
+                                                                                    <div className='lux-input-wrapper medium max-w-[auto]'>
+                                                                                        <div className='inner-wrapper inline-block w-full'>
+                                                                                            <label className='text-sm block mb-1.5 font-medium text-black-more-blur-light-theme transition-all duration-300 ease-in-out'>
+                                                                                                <div>Key</div>
+                                                                                            </label>
+                                                                                            <div className='input-wrapper flex items-baseline'>
+                                                                                                <div className='flex-1 flex items-center'>
+                                                                                                    <div>&nbsp;</div>
+                                                                                                    <Input
+                                                                                                        placeholder='Điền key của bạn vào trong này.'
+                                                                                                        size='md'
+                                                                                                        variant='bordered'
+                                                                                                        type='password'
+                                                                                                        inputMode='text'
+                                                                                                        step={1}
+                                                                                                        min={1}
+                                                                                                        classNames={{
+                                                                                                            input: [
+                                                                                                                "text-base"
+                                                                                                            ]
+                                                                                                        }}
+                                                                                                    />
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div className='lux-input-wrapper medium max-w-[auto]'>
+                                                                                        <div className='inner-wrapper inline-block w-full'>
+                                                                                            <label className='text-sm block mb-1.5 font-medium text-black-more-blur-light-theme transition-all duration-300 ease-in-out'>
+                                                                                                <div>Secret key</div>
+                                                                                            </label>
+                                                                                            <div className='input-wrapper flex items-baseline'>
+                                                                                                <div className='flex-1 flex items-center'>
+                                                                                                    <div>&nbsp;</div>
+                                                                                                    <Input
+                                                                                                        size='md'
+                                                                                                        variant='bordered'
+                                                                                                        type='password'
+                                                                                                        inputMode='text'
+                                                                                                        step={1}
+                                                                                                        min={1}
+                                                                                                        placeholder='Điền secret key của bạn vào trong này.'
+                                                                                                        classNames={{
+                                                                                                            input: [
+                                                                                                                "text-base"
+                                                                                                            ]
+                                                                                                        }}
+                                                                                                    />
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div className='gap-2 flex justify-between items-center'>
+                                                                                        <Button
+                                                                                            type='submit'
+                                                                                            className='text-[#fff] bg-[#333537] border-[#333537] border border-solid cursor-pointer transition-all duration-300 ease-in-out donace-button mt-4 flex items-center m-0'
+                                                                                        >
+                                                                                            <div className='label'>Kết nối</div>
+                                                                                        </Button>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </ModalBody>
+                                                                    </>
+                                                                )}
+                                                            </ModalContent>
+                                                        </Modal>
+                                                    </div>
+                                                </div>
+                                                <div className='option-row w-full p-[0.5rem_0.75rem] transition-all duration-300 ease-in-out relative overflow-hidden bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)]'>
+                                                    <div className='divider absolute top-0 left-11 right-0 border-b border-solid border-[rgba(19,21,23,0.04)] z-10'></div>
+                                                    <div className='gap-2 flex items-center'>
+                                                        <div className='icon text-[rgba(19,21,23,0.2)] m-[0px_0.25rem]'>
+                                                            <UserCheck className='block w-4 h-4 align-middle translate-y-px' />
+                                                        </div>
+                                                        <div className='text-black-more-blur-light-theme select-none flex-1'>Phê duyệt</div>
+                                                        <div className='gap-1 flex items-center'>
+                                                            <Switch
+                                                                color='success'
+                                                                classNames={{
+                                                                    thumb: [
+                                                                        "bg-[#fff]",
+                                                                    ],
+                                                                    wrapper: [
+                                                                        "bg-[rgba(19,21,23,0.16)]"
+                                                                    ],
+                                                                }}
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div className='option-row w-full p-[0.5rem_0.75rem] transition-all duration-300 ease-in-out relative overflow-hidden bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)]'>
+                                                    <div className='divider absolute top-0 left-11 right-0 border-b border-solid border-[rgba(19,21,23,0.04)] z-10'></div>
+                                                    <div className='gap-2 flex items-center'>
+                                                        <div className='icon text-[rgba(19,21,23,0.2)] m-[0px_0.25rem]'>
+                                                            <ArrowUpToLine className='block w-4 h-4 align-middle translate-y-px' />
+                                                        </div>
+                                                        <div className='text-black-more-blur-light-theme select-none flex-1'>Số lượng</div>
+                                                        <div className='gap-1 flex items-center'>
+                                                            <div className='value'>Không giới hạn</div>
+                                                            <button
+                                                                onClick={modalCapacity.onOpen}
+                                                                type='button'
+                                                                className='m-[-1px_-0.25rem_-1px_0px] text-black-blur-light-theme bg-transparent border-transparent border border-solid flex-shrink-0 cursor-pointer transition-all duration-300 ease-in-out donace-button-w-fit flex items-center'
+                                                            >
+                                                                <Pen className='stroke-2 w-3.5 h-3.5 flex-shrink-0 block align-middle translate-y-px' />
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                    <Modal
+                                                        isOpen={modalCapacity.isOpen}
+                                                        onOpenChange={modalCapacity.onOpenChange}
+                                                        size="sm"
+                                                        radius="lg"
+                                                        classNames={{
+                                                            base: "flex flex-col relative",
+                                                            closeButton: "hidden"
+                                                        }}
+                                                    >
+                                                        <ModalContent>
+                                                            {(onClose) => (
+                                                                <>
+                                                                    <ModalBody
+                                                                        className="w-full p-[1rem_1.25rem]"
+                                                                    >
+                                                                        <div className="flex flex-col">
+                                                                            <div className="lux-alert-top pt-1">
+                                                                                <div className="icon-wrapper m-[0.25rem_0px_0.75rem] w-14 h-14 rounded-full text-[#737577] dark:text-[#d2d4d7] bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)] justify-center flex items-center">
+                                                                                    <Upload className="w-8 h-8 block align-middle" />
+                                                                                </div>
+                                                                                <div className="title font-semibold text-xl mb-2">Số lượng tối đa</div>
+                                                                                <div className="desc text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)]">Đóng đăng ký tự động khi đã đạt số lượng đăng ký. Chỉ những khách mời được phê duyệt mới được tính vào số lượng đã đủ.</div>
+                                                                            </div>
+                                                                            <div className='gap-4 pt-1 mt-2 flex flex-col'>
+                                                                                <div className='lux-input-wrapper medium max-w-[auto]'>
+                                                                                    <div className='inner-wrapper inline-block w-full'>
+                                                                                        <label className='text-sm cursor-pointer block mb-1.5 font-medium text-black-more-blur-light-theme transition-all duration-300 ease-in-out'>
+                                                                                            <div>Số lượng</div>
+                                                                                        </label>
+                                                                                        <div className='input-wrapper flex items-baseline'>
+                                                                                            <div className='flex-1 flex items-center'>
+                                                                                                <div>&nbsp;</div>
+                                                                                                <Input
+                                                                                                    placeholder='99'
+                                                                                                    size='md'
+                                                                                                    variant='bordered'
+                                                                                                    type='number'
+                                                                                                    inputMode='numeric'
+                                                                                                    step={1}
+                                                                                                    min={1}
+                                                                                                    classNames={{
+                                                                                                        input: [
+                                                                                                            "text-base"
+                                                                                                        ]
+                                                                                                    }}
+                                                                                                />
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div className='gap-2 flex justify-between items-center'>
                                                                                     <Button
                                                                                         type='submit'
-                                                                                        className='text-[#fff] dark:text-[rgb(19,21,23)] bg-[#333537] dark:bg-[#fff] border-[#333537] dark:border-[#fff] border border-solid cursor-pointer transition-all duration-300 ease-in-out donace-button flex items-center m-0'
+                                                                                        className='text-[#fff] bg-[#333537] border-[#333537] border border-solid cursor-pointer transition-all duration-300 ease-in-out donace-button mt-4 flex items-center m-0'
                                                                                     >
-                                                                                        <div className='label'>Đồng ý</div>
+                                                                                        <div className='label'>Đặt giới hạn</div>
                                                                                     </Button>
                                                                                     <Button
-                                                                                        type='submit'
-                                                                                        className='text-black-more-blur-light-theme dark:text-[rgba(255,255,255,0.64)] bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)] border-transparent border border-solid cursor-pointer transition-all duration-300 ease-in-out donace-button flex items-center m-0'
+                                                                                        onPress={modalCapacity.onClose}
+                                                                                        type='button'
+                                                                                        className='text-black-more-blur-light-theme bg-[rgba(19,21,23,0.04)] border-transparent border border-solid cursor-pointer transition-all duration-300 ease-in-out donace-button mt-4 flex items-center m-0'
                                                                                     >
-                                                                                        <div className='label'>Xóa</div>
+                                                                                        <div className='label'>Không giới hạn</div>
                                                                                     </Button>
                                                                                 </div>
                                                                             </div>
+
                                                                         </div>
-                                                                    )}
-                                                                </PopoverContent>
-                                                            </Popover>
+                                                                    </ModalBody>
+                                                                </>
+                                                            )}
+                                                        </ModalContent>
+                                                    </Modal>
+                                                </div>
+                                                <div className='option-row w-full p-[0.5rem_0.75rem] transition-all duration-300 ease-in-out relative overflow-hidden bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)]'>
+                                                    <div className='divider absolute top-0 left-11 right-0 border-b border-solid border-[rgba(19,21,23,0.04)] z-10'></div>
+                                                    <div className='gap-2 flex items-center'>
+                                                        <div className='icon text-[rgba(19,21,23,0.2)] m-[0px_0.25rem]'>
+                                                            <Globe className='block w-4 h-4 align-middle translate-y-px' />
+                                                        </div>
+                                                        <div className='text-black-more-blur-light-theme select-none flex-1'>Công khai</div>
+                                                        <div className='gap-1 flex items-center'>
+                                                            <Switch
+                                                                color='success'
+                                                                classNames={{
+                                                                    thumb: [
+                                                                        "bg-[#fff]",
+                                                                    ],
+                                                                    wrapper: [
+                                                                        "bg-[rgba(19,21,23,0.16)]"
+                                                                    ],
+                                                                }}
+                                                            />
                                                         </div>
                                                     </div>
                                                 </div>
@@ -357,49 +666,6 @@ export default function CreateFormFinal() {
                                                         <input type="file" id="image" name="image" className='-z-0 hidden' accept="image/*" onChange={handleImageChange} />
                                                         {formData.cover && <img src={formData.cover} alt="Preview" />} */}
                                                     </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className='pt-4'>
-                                            <div className='theme-control-card rounded-lg overflow-hidden'>
-                                                <div className='h-auto block filter-none'>
-                                                    <Popover placement="bottom" showArrow={true}>
-                                                        <PopoverTrigger>
-                                                            <div className='lux-menu-trigger-wrapper color cursor-pointer inline-flex min-w-0 w-full'>
-                                                                <div className='option-row w-full p-[0.5rem_0.75rem] flex-1 transition-all duration-300 ease-in-out relative overflow-hidden bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)]'>
-                                                                    <div className='divider'></div>
-                                                                    <div className='gap-2 flex items-center'>
-                                                                        <div>
-                                                                            <div className='dot bg-[#939597] dark:bg-[#d2d4d7] w-6 h-6 rounded-full'></div>
-                                                                        </div>
-                                                                        <div className='text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)] select-none flex-1'>Color</div>
-                                                                        <div className='gap-1 flex items-center'>
-                                                                            <div className='value text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)] font-medium capitalize'>Gray</div>
-                                                                            <div className='accessory flex items-center justify-center text-[rgba(19,21,23,0.2)] dark:text-[hsla(0,0%,100%,.32)] w-[calc(0.3125rem*2+0.875rem+2px)] -mr-1 transition-all duration-300 ease-in-out'>
-                                                                                <ChevronsUpDown className='block w-4 h-4 align-middle mt-0.5' />
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </PopoverTrigger>
-                                                        {/* content này là về bảng màu á, chỉ cần ông muốn thêm màu là copy dot-container là được */}
-                                                        <PopoverContent
-                                                            className='shadow-md relative rounded-lg border border-solid border-[rgba(19,21,23,0.08)] dark:border-[rgba(255,255,255,0.08)] bg-[#fffd] dark:bg-[rgba(33,35,37,0.8)] overflow-auto'
-                                                        >
-                                                            <div className='max-w-[95vw] p-4'>
-                                                                <div>
-                                                                    <div className='dots gap-1 flex flex-wrap items-center'>
-                                                                        <div className='dot-container'>
-                                                                            <div className='dot-ring opacity-[1] border-[#939597] dark:border-[#d2d4d7] border-[0.125rem] border-solid rounded-full p-0.5 transition-all duration-300 ease-in-out cursor-pointer' role='button'>
-                                                                                <div className='bg-[#939597] dark:bg-[#d2d4d7] w-5 h-5 rounded-full flex items-center transition-all duration-300 ease-in-out'></div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </PopoverContent>
-                                                    </Popover>
                                                 </div>
                                             </div>
                                         </div>

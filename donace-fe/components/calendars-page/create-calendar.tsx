@@ -8,7 +8,9 @@ import { useRouter } from "next/navigation";
 import toast, { Toaster } from "react-hot-toast";
 import { Spinner } from "@nextui-org/react";
 
-export default function CreateCalendar() {
+export default function CreateCalendar(props: any) {
+    
+    var { id } = props;
     const router = useRouter();
     const backgroundRef = useRef<HTMLDivElement | null>(null);
     const iconRef = useRef<HTMLDivElement | null>(null);
@@ -109,6 +111,8 @@ export default function CreateCalendar() {
 
             // Gửi request API và hiển thị Spinner
             const response = await fetchWrapper.post("/api/Calendar/create-calendar", dataToSend);
+                const calendarsData = await fetchWrapper.post(`api/Calendar/get-by-id?Id=${id}`, null);
+
             if (!response.success) {
                 // Xử lý lỗi từ API và hiển thị thông báo lỗi
                 console.error(`Lỗi khi tạo lịch: ${response.error}`);
@@ -123,31 +127,6 @@ export default function CreateCalendar() {
             console.error(`Lỗi: ${String(Error)}`);
             setIsCreating(false); // Bỏ hiển thị Spinner và bỏ vô hiệu hóa nút
         }
-
-        // if (!dataToSend.name) {
-        //     // Hiển thị thông báo lỗi
-        //     toast.error("Name field is required.");
-        //     return;
-        // }
-        // toast
-        //     .promise(fetchWrapper.post("/api/Calendar/create-calendar", dataToSend), {
-        //         loading: "Đang tạo lịch...", // Thông báo khi đang xử lý
-        //         success: <b>Lịch đã tạo thành công!</b>, // Thông báo khi Promise thành công
-        //         error: <b>Bị lỗi khi tạo lịch!</b>, // Thông báo khi Promise thất bại
-        //     })
-        //     .then((response) => {
-        //         if (!response.success) {
-        //             // Xử lý lỗi từ API và hiển thị thông báo lỗi
-        //             toast.error(`Lỗi khi tạo lịch: ${response.error}`);
-        //             return;
-        //         }
-
-        //         // Cập nhật giao diện người dùng hoặc thực hiện các hành động khác
-        //     })
-        //     .catch((error) => {
-        //         // Xử lý lỗi trong quá trình gửi yêu cầu và hiển thị thông báo lỗi bằng toast
-        //         toast.error(`Lỗi: ${error.message}`);
-        //     });
     }
     return (
         <div className="page-content">

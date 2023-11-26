@@ -294,3 +294,8 @@ input:-webkit-autofill:active {
         opacity: 1;
     }
 }
+
+.value { 
+    color: rgba( 19,21,23 ,0.36);
+    font-weight: 500;
+}

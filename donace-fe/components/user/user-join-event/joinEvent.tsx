@@ -1,10 +1,65 @@
+'use client';
+import { useEffect, useState } from "react";
+import { EventDetailModels, GetCalendarById, ItemEventsProfile, UserProfile } from "@/types/DonaceType";
 import { Avatar } from "@nextui-org/avatar";
 import { Button } from "@nextui-org/button";
 import { Image } from "@nextui-org/image";
 import { Link } from "@nextui-org/link";
 import { ArrowUpRight, MapPin } from "lucide-react";
+import { fetchWrapper } from "@/helpers/fetch-wrapper";
 
-export default function JoinEvent() {
+interface DateTimeInfo {
+    year: string;
+    month: string;
+    day: string;
+    hour: string;
+    minute: string;
+}
+
+const ConvertDateTime = (dateTime: string): DateTimeInfo => {
+    const date = new Date(dateTime);
+    const year = date.getFullYear().toString();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    const hour = date.getHours().toString().padStart(2, '0');
+    const minute = date.getMinutes().toString().padStart(2, '0');
+
+    return { year, month, day, hour, minute };
+};
+
+
+const daysOfWeek = ["Chủ Nhật", "Thứ Hai", "Thứ Ba", "Thứ Tư", "Thứ Năm", "Thứ Sáu", "Thứ Bảy"];
+
+const CovertDate = (date: string) => {
+    return date.split("T");
+}
+
+const DayOfWeek = (date: string) => {
+    let currentDate = new Date(date).getDay();
+    return daysOfWeek[currentDate]
+}
+
+export default function JoinEvent(props: any) {
+    var { id } = props
+    var [eventDetail, setEventDetail] = useState<EventDetailModels | null>(null);
+    var [getProfile, setProfile] = useState<null | UserProfile>(null);
+    const [thoiGian, setThoiGian] = useState(new Date());
+
+
+    const gio = thoiGian.getHours();
+    const buoi = gio >= 12 ? "PM" : "AM";
+
+    useEffect(() => {
+        fetchWrapper.get(`api/Event/detail-by-id?id=${id}`)
+            .then(data => setEventDetail(data));
+
+        fetchWrapper.get('/api/User/profile')
+            .then((data: UserProfile) => {
+                console.log(data); // Xem dữ liệu được trả về từ API
+                setProfile(data);
+            })
+            .catch(error => console.error('Lỗi khi gọi API:', error));
+    }, []);
     return (
         <div className="page-content">
             <div className="page-container min-h-[100dvh] relative bg-transparent">
@@ -31,10 +86,14 @@ export default function JoinEvent() {
                                                 underline="none"
                                             >
                                                 <div className="avatar-wrapper">
-                                                    <Avatar src="https://avatars.githubusercontent.com/u/143386751?s=200&v=4" className="w-6 h-6 relative" radius="full" />
+                                                    <Avatar
+                                                        className="w-6 h-6 relative"
+                                                        radius="full"
+                                                        src={getProfile?.result.avatar ? "https://avatars.githubusercontent.com/u/143386751?s=200&v=4" : "https://avatars.githubusercontent.com/u/143386751?s=200&v=4"}
+                                                    />
                                                 </div>
                                                 <div className="min-w-0">
-                                                    <div className="font-medium overflow-hidden text-ellipsis whitespace-nowrap">Donace</div>
+                                                    <div className="font-medium overflow-hidden text-ellipsis whitespace-nowrap">{getProfile?.result.userName}</div>
                                                 </div>
                                             </Link>
                                         </div>
@@ -52,57 +111,61 @@ export default function JoinEvent() {
                         </div>
                     </div>
                     <div className="right flex flex-col gap-6 min-w-0 flex-1">
-                        <div className="top-wrapper gap-2 flex flex-col">
-                            <div className="top-card-content">
-                                <div className="title-wrapper mb-4 gap-2 flex justify-between items-start">
-                                    <div className="min-w-0">
-                                        <h1 className="title text-5xl break-words text-black-light-theme dark:text-[#fff] mb-0 font-semibold mt-0">
-                                            địt mẹ fpt scam ác thiệt
-                                        </h1>
-                                    </div>
-                                </div>
-                                <div className="meta mt-5 gap-3 flex flex-col">
-                                    <div className="row-container rounded-lg -m-2 p-2">
-                                        <div className="icon-row gap-4 flex items-center">
-                                            <div className="icon-container w-10 h-10 border border-solid border-[rgba(19,21,23,0.08)] dark:border-[rgba(255,255,255,0.08)] text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)] m-0.5 flex-shrink-0 justify-center flex items-center overflow-hidden rounded-lg">
-                                                <div className="calendar-card w-full text-center min-h-full">
-                                                    <div className="month bg-[rgba(19,21,23,0.08)] dark:bg-[rgba(255,255,255,0.08)] text-[0.5rem] font-semibold uppercase p-px">11</div>
-                                                    <div className="day -translate-y-px font-medium">6</div>
-                                                </div>
-                                            </div>
-                                            <div className="min-w-0 flex-1">
-                                                <div className="title text-black-light-theme dark:text-[#fff] font-medium overflow-hidden text-ellipsis whitespace-nowrap">Thứ 2, 6 tháng 11</div>
-                                                <div className="desc text-black-more-blur-light-theme dark:text-[#fff] text-sm mt-px overflow-hidden text-ellipsis whitespace-nowrap">4:30 PM đến 5:30 PM</div>
-                                            </div>
+                        {eventDetail ? (
+                            <div className="top-wrapper gap-2 flex flex-col">
+                                <div className="top-card-content">
+                                    <div className="title-wrapper mb-4 gap-2 flex justify-between items-start">
+                                        <div className="min-w-0">
+                                            <h1 className="title text-5xl break-words text-black-light-theme dark:text-[#fff] mb-0 font-semibold mt-0">
+                                                {eventDetail.name}
+                                            </h1>
                                         </div>
                                     </div>
-                                    <Link
-                                        href="https://maps.app.goo.gl/PcmdqBSLh3SwXnZN7"
-                                        target="_blank"
-                                        rel="nofollow noopener"
-                                        className="transition-all duration-300 ease-in-out cursor-pointer"
-                                        underline="none"
-                                    >
-                                        <div className="icon-row gap-4 flex items-center">
-                                            <div className="icon-container w-10 h-10 border border-solid border-[rgba(19,21,23,0.08)] dark:border-[rgba(255,255,255,0.08)] text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)] m-0.5 flex-shrink-0 justify-center flex items-center overflow-hidden rounded-lg">
-                                                <MapPin className="w-5 h-5 block align-middle" />
-                                            </div>
-                                            <div className="min-w-0 flex-1">
-                                                <div className="title text-black-light-theme dark:text-[#fff] font-medium overflow-hidden whitespace-nowrap text-ellipsis">
-                                                    <div className="gap-1 flex items-center max-w-sm">
-                                                        <div className="overflow-hidden text-ellipsis whitespace-nowrap">Tòa nhà QTSC (Tòa T) Trường Cao đẳng FPT Polytechnic</div>
-                                                        <div className="icon opacity-50 translate-y-[0.5px] text-black-more-blur-light-theme transition-all duration-300 ease-in-out">
-                                                            <ArrowUpRight className="block w-4 h-4 align-middle" />
-                                                        </div>
+                                    <div className="meta mt-5 gap-3 flex flex-col">
+                                        <div className="row-container rounded-lg -m-2 p-2">
+                                            <div className="icon-row gap-4 flex items-center">
+                                                <div className="icon-container w-10 h-10 border border-solid border-[rgba(19,21,23,0.08)] dark:border-[rgba(255,255,255,0.08)] text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)] m-0.5 flex-shrink-0 justify-center flex items-center overflow-hidden rounded-lg">
+                                                    <div className="calendar-card w-full text-center min-h-full">
+                                                        <div className="month bg-[rgba(19,21,23,0.08)] dark:bg-[rgba(255,255,255,0.08)] text-[0.5rem] font-semibold uppercase p-px">{ConvertDateTime(eventDetail.startDate).month}</div>
+                                                        <div className="day -translate-y-px font-medium">{ConvertDateTime(eventDetail.startDate).day}</div>
                                                     </div>
                                                 </div>
-                                                <div className="desc text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)] text-sm mt-px overflow-hidden text-ellipsis whitespace-nowrap">Quận 12, TP HCM</div>
+                                                <div className="min-w-0 flex-1">
+                                                    <div className="title text-black-light-theme dark:text-[#fff] font-medium overflow-hidden text-ellipsis whitespace-nowrap">{DayOfWeek(CovertDate(eventDetail.startDate)[0])}, {ConvertDateTime(eventDetail.startDate).day} tháng {ConvertDateTime(eventDetail.startDate).month}</div>
+                                                    <div className="desc text-black-more-blur-light-theme dark:text-[#fff] text-sm mt-px overflow-hidden text-ellipsis whitespace-nowrap">{ConvertDateTime(eventDetail.startDate).hour}:{ConvertDateTime(eventDetail.startDate).minute} {buoi} đến {ConvertDateTime(eventDetail.endDate).hour}:{ConvertDateTime(eventDetail.endDate).minute} {buoi}</div>
+                                                </div>
                                             </div>
                                         </div>
-                                    </Link>
+                                        <Link
+                                            href="https://maps.app.goo.gl/PcmdqBSLh3SwXnZN7"
+                                            target="_blank"
+                                            rel="nofollow noopener"
+                                            className="transition-all duration-300 ease-in-out cursor-pointer"
+                                            underline="none"
+                                        >
+                                            <div className="icon-row gap-4 flex items-center">
+                                                <div className="icon-container w-10 h-10 border border-solid border-[rgba(19,21,23,0.08)] dark:border-[rgba(255,255,255,0.08)] text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)] m-0.5 flex-shrink-0 justify-center flex items-center overflow-hidden rounded-lg">
+                                                    <MapPin className="w-5 h-5 block align-middle" />
+                                                </div>
+                                                <div className="min-w-0 flex-1">
+                                                    <div className="title text-black-light-theme dark:text-[#fff] font-medium overflow-hidden whitespace-nowrap text-ellipsis">
+                                                        <div className="gap-1 flex items-center max-w-sm">
+                                                            <div className="overflow-hidden text-ellipsis whitespace-nowrap">{eventDetail.addressName}</div>
+                                                            <div className="icon opacity-50 translate-y-[0.5px] text-black-more-blur-light-theme transition-all duration-300 ease-in-out">
+                                                                <ArrowUpRight className="block w-4 h-4 align-middle" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div className="desc text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)] text-sm mt-px overflow-hidden text-ellipsis whitespace-nowrap">{eventDetail.lat}, {eventDetail.long}</div>
+                                                </div>
+                                            </div>
+                                        </Link>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        ) : (
+                            <div>không có gì cả, tui lười viết thêm</div>
+                        )}
                         <div className="p-[0.75rem_1rem] bg-[#f5f6f7] dark:bg-[rgba(255,255,255,0.1)] border border-solid border-[#f3f4f5] dark:border-[rgba(255,255,255,0.1)] rounded-xl backdrop-blur-none shadow-md">
                             <div className="inner">
                                 <div>
@@ -126,9 +189,8 @@ export default function JoinEvent() {
                                                 <div className="cta gap-2 mb-1 flex items-center">
                                                     <Button
                                                         className="text-[#fff] dark:text-[rgb(19,21,23)] bg-[#333537] dark:bg-[#fff] border-[#333537] dark:border-[#fff] border border-solid donace-button transition-all duration-300 ease-in-out flex items-center m-0"
-
                                                     >
-                                                        <div className="label">Đăng ký</div>
+                                                        <div className="label">Tham gia sự kiện</div>
                                                     </Button>
                                                 </div>
                                             </div>
