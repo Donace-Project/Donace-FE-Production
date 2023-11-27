@@ -70,7 +70,7 @@ export default function CreateFormFinal() {
 
     useEffect(() => {
         // Khởi tạo bản đồ khi component được mount
-        if (modalMap.isOpen) {
+        if (modalMap.isOpen && showOfflineContent === true) {
             goongjs.accessToken = 'wnicbAmnNkoMHNYUKWnlFHezV189FjmMwkNJ7hKW';
             map = new goongjs.Map({
                 container: 'map', // ID của phần tử HTML để chứa bản đồ
@@ -93,7 +93,7 @@ export default function CreateFormFinal() {
                 map.remove();
             };
         }
-    }, [modalMap.isOpen]);
+    }, [modalMap.isOpen, showOfflineContent]);
 
     return (
         <>
