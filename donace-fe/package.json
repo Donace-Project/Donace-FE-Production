@@ -55,6 +55,7 @@
     "react-dom": "18.2.0",
     "react-hot-toast": "^2.4.1",
     "react-icons": "^4.11.0",
+    "react-number-format": "^5.3.1",
     "react-payment-inputs": "^1.1.9",
     "react-router-dom": "^6.18.0",
     "react-type-animation": "^3.2.0",

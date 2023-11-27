@@ -35,6 +35,8 @@ const pastDateFormatted = currentDate.toLocaleString('en-US').replace(/\//g, '-'
 
 export default function ProfilePage() {
 
+    const dateTimeTrue = true;
+
     let [userProfile, setUserProfile] = useState<null | UserProfile>(null);
     var [futureEvents, setFutureEvents] = useState<ItemEventsProfile[]>();
 
@@ -50,7 +52,7 @@ export default function ProfilePage() {
     }, []);
 
     useEffect(() => {
-        fetchWrapper.get(`/api/Event?FromDate=${currentDateFormatted}&ToDate=12-31-9998&PageNumber=1&PageSize=9999`)
+        fetchWrapper.get(`api/Event?IsNew=${dateTimeTrue}`)
             .then(data => setFutureEvents(data.items));
     }, []);
 
@@ -92,7 +94,8 @@ export default function ProfilePage() {
                                                         src={userProfile?.result.avatar.trim() ? userProfile.result.avatar : "https://cdn.lu.ma/cdn-cgi/image/format=auto,fit=cover,dpr=2,background=white,quality=75,width=32,height=32/avatars-default/avatar_8.png"}
                                                         radius="full"
                                                         name="Donace"
-                                                        className="w-32 h-32 bg-[#fff] relative" />
+                                                        className="w-32 h-32 bg-[#fff] relative"
+                                                    />
                                                 </div>
                                             </Link>
                                         </div>

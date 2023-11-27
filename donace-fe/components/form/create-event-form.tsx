@@ -3,7 +3,7 @@
 import { Avatar } from '@nextui-org/avatar';
 import { Input, Textarea } from '@nextui-org/input';
 
-import { ArrowUp, ArrowUpToLine, CheckCircle2, ChevronDown, ChevronDownIcon, CreditCard, Globe, MapPin, Pen, Plus, PlusIcon, Ticket, Upload, UserCheck } from 'lucide-react';
+import { ArrowUp, ArrowUpToLine, CheckCircle2, ChevronDown, ChevronDownIcon, Coins, CreditCard, Globe, MapPin, Pen, Plus, PlusIcon, Ticket, Upload, UserCheck } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { Switch, User } from "@nextui-org/react";
 
@@ -19,6 +19,9 @@ import goongjs from '@goongmaps/goong-js';
 import GoongGeocoder from '@goongmaps/goong-geocoder'
 import { Link } from '@nextui-org/link';
 import React from 'react';
+import { Player } from '@lottiefiles/react-lottie-player';
+import Animation from '../Animation_1701106485452.json'
+import { NumericFormat } from 'react-number-format';
 
 
 export default function CreateFormFinal() {
@@ -42,6 +45,11 @@ export default function CreateFormFinal() {
             setShowOfflineContent(false);
         }
     };
+
+    const handleInputChange = (event) => {
+        // Xử lý giá trị nhập vào nếu cần thiết
+        console.log(event.target.value);
+    };
     //
 
     let map: any;
@@ -49,6 +57,7 @@ export default function CreateFormFinal() {
     const modalCapacity = useDisclosure();
     const modalPayment = useDisclosure();
     const modalCreateCalendar = useDisclosure();
+    const modalPriceEvent = useDisclosure();
 
     const [startDate, setStartDate] = useState('');
     const [startTime, setStartTime] = useState('');
@@ -86,7 +95,7 @@ export default function CreateFormFinal() {
                 setLng(e.result.result.geometry.location.lng);
                 // console.log(e.result.result.geometry.location.lng);
                 console.log(e.result.result.formatted_address); // log the place name
-                // console.log(ev.result.geometry); // log the coordinates [longitude, latitude]
+                // console.log(e.result.geometry); // log the coordinates [longitude, latitude]
             });
 
             return () => {
@@ -377,7 +386,14 @@ export default function CreateFormFinal() {
                                                                                 </div>
                                                                                 <ButtonGroup variant="flat" className='ml-[14rem]'>
                                                                                     <Button>{labelsMap[selectedOption.values().next().value]}</Button>
-                                                                                    <Dropdown placement="bottom-end">
+                                                                                    <Dropdown placement="bottom-end"
+                                                                                        classNames={{
+                                                                                            base: [
+                                                                                                "min-w-0",
+                                                                                                "right-[1.6rem]",
+                                                                                            ],
+                                                                                        }}
+                                                                                    >
                                                                                         <DropdownTrigger>
                                                                                             <Button isIconOnly>
                                                                                                 <ChevronDownIcon />
@@ -387,8 +403,8 @@ export default function CreateFormFinal() {
                                                                                             disallowEmptySelection
                                                                                             selectedKeys={selectedOption}
                                                                                             selectionMode="single"
-                                                                                            oonSelectionChange={(option) => handleSelectedOption(option[0])}
-                                                                                            className="max-w-[300px] w-fit"
+                                                                                            onSelectionChange={(option) => handleSelectedOption(option[0])}
+                                                                                            className="max-w-[300px]"
                                                                                         >
                                                                                             <DropdownItem as={"button"} key="offline" onClick={() => handleSelectedOption('offline')} className='w-fit'>
                                                                                                 {labelsMap["offline"]}
@@ -405,16 +421,55 @@ export default function CreateFormFinal() {
                                                                                         // <div>Nội dung offline</div>
                                                                                     ) : (
                                                                                         // Nội dung khi chọn online
-                                                                                        <div>Hiển thị nội dung khi chọn online</div>
+                                                                                        <div>
+                                                                                            <Player
+                                                                                                autoplay
+                                                                                                loop
+                                                                                                src={Animation}
+                                                                                                style={{ height: '350px', width: '400px', marginLeft: '10rem', justifyContent: "center", display: "flex", alignItems: "center" }}
+                                                                                            >
+                                                                                            </Player>
+                                                                                        </div>
                                                                                     )}
                                                                                 </div>
-                                                                                <div className='col-span-2 flex justify-end'>
-                                                                                    <Button
-                                                                                        type='submit'
-                                                                                        className='text-[#fff] dark:text-[rgb(19,21,23)] bg-[#333537] dark:bg-[#fff] border-[#333537] dark:border-[#fff] border border-solid cursor-pointer transition-all duration-300 ease-in-out donace-button-w-fit flex items-center m-0'
-                                                                                    >
-                                                                                        <div className='label'>Lưu</div>
-                                                                                    </Button>
+                                                                                <div className='col-span-2 flex'>
+                                                                                    {showOfflineContent ? (
+                                                                                        <div className='flex justify-end ml-[39rem]'>
+                                                                                            <Button
+                                                                                                type='submit'
+                                                                                                className='text-[#fff] dark:text-[rgb(19,21,23)] bg-[#333537] dark:bg-[#fff] border-[#333537] dark:border-[#fff] border border-solid cursor-pointer transition-all duration-300 ease-in-out donace-button-w-fit flex items-center m-0'
+                                                                                            >
+                                                                                                <div className='label'>Lưu</div>
+                                                                                            </Button>
+                                                                                        </div>
+                                                                                    ) : (
+                                                                                        <div className='flex'>
+                                                                                            <div className='flex-grow mr-2'>
+                                                                                                <Input
+                                                                                                    variant='underlined'
+                                                                                                    placeholder='Nhập Link của bạn.'
+                                                                                                    isClearable
+                                                                                                    classNames={{
+                                                                                                        base: [
+                                                                                                            "w-[38.5rem]"
+                                                                                                        ],
+                                                                                                        input: [
+                                                                                                            "text-lg",
+                                                                                                            "font-normal"
+                                                                                                        ]
+                                                                                                    }}
+                                                                                                />
+                                                                                            </div>
+                                                                                            <div className='flex items-center'>
+                                                                                                <Button
+                                                                                                    type='submit'
+                                                                                                    className='text-[#fff] dark:text-[rgb(19,21,23)] bg-[#333537] dark:bg-[#fff] border-[#333537] dark:border-[#fff] border border-solid cursor-pointer transition-all duration-300 ease-in-out donace-button-w-fit flex items-center m-0'
+                                                                                                >
+                                                                                                    <div className='label'>Lưu</div>
+                                                                                                </Button>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    )}
                                                                                 </div>
                                                                             </div>
                                                                         </ModalBody>
@@ -436,7 +491,81 @@ export default function CreateFormFinal() {
                                                         <div className='icon text-[rgba(19,21,23,0.2)] m-[0px_0.25rem]'>
                                                             <Ticket className='block w-4 h-4 align-middle translate-y-px' />
                                                         </div>
-                                                        <div className='text-black-more-blur-light-theme select-none flex-1'>Loại vé</div>
+                                                        <div className='text-black-more-blur-light-theme select-none flex-1 ' onClick={modalPriceEvent.onOpen}>Loại vé</div>
+                                                        <Modal
+                                                            isOpen={modalPriceEvent.isOpen}
+                                                            onOpenChange={modalPriceEvent.onOpenChange}
+                                                            size="sm"
+                                                            radius="lg"
+                                                            classNames={{
+                                                                base: "flex flex-col relative",
+                                                                closeButton: "hidden"
+                                                            }}
+                                                        >
+                                                            <ModalContent>
+                                                                {(onClose) => (
+                                                                    <>
+                                                                        <ModalBody
+                                                                            className="w-full p-[1rem_1.25rem]"
+                                                                        >
+                                                                            <div className="flex flex-col">
+                                                                                <div className="lux-alert-top pt-1">
+                                                                                    <div className="icon-wrapper m-[0.25rem_0px_0.75rem] w-14 h-14 rounded-full text-[#737577] dark:text-[#d2d4d7] bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)] justify-center flex items-center">
+                                                                                        <Coins className="w-8 h-8 block align-middle" />
+                                                                                    </div>
+                                                                                    <div className="title font-semibold text-xl mb-2">Giá vé</div>
+                                                                                    <div className="desc text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)]">Hãy điều chỉnh giá vé dành riêng cho Sự kiện của bạn.</div>
+                                                                                </div>
+                                                                                <div className='gap-4 pt-1 mt-2 flex flex-col'>
+                                                                                    <div className='lux-input-wrapper medium max-w-[auto]'>
+                                                                                        <div className='inner-wrapper inline-block w-full'>
+                                                                                            <label className='text-sm block mb-1.5 font-medium text-black-more-blur-light-theme transition-all duration-300 ease-in-out'>
+                                                                                                <div>Giá vé</div>
+                                                                                            </label>
+                                                                                            <div className='input-wrapper flex items-baseline'>
+                                                                                                <div className='flex-1 flex items-center'>
+                                                                                                    <div>&nbsp;</div>
+                                                                                                    {/* // TODO: khi nào có api check, check thành công thì đổi lại vị trí click */}
+                                                                                                    <NumericFormat
+                                                                                                        className="text-base h-auto donace-button bg-[#fff] border border-solid border-[#ebeced] transition-all duration-300 ease-in-out m-0 focus:outline-none focus:border-[rgb(19,21,23)]"
+                                                                                                        thousandSeparator={true}
+                                                                                                        allowNegative={false}
+                                                                                                        prefix={'₫ '} // Dấu tiền tệ Việt Nam đồng
+                                                                                                        placeholder={'Nhập số tiền'}
+                                                                                                        onValueChange={(values) => {
+                                                                                                            handleInputChange({
+                                                                                                                target: {
+                                                                                                                    value: values.value,
+                                                                                                                },
+                                                                                                            });
+                                                                                                        }}
+                                                                                                    />
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div className='gap-2 flex justify-between items-center'>
+                                                                                        <Button
+                                                                                            type='submit'
+                                                                                            className='text-[#fff] bg-[#333537] border-[#333537] border border-solid cursor-pointer transition-all duration-300 ease-in-out donace-button mt-4 flex items-center m-0'
+                                                                                        >
+                                                                                            <div className='label'>Xác nhận</div>
+                                                                                        </Button>
+                                                                                        <Button
+                                                                                            onPress={modalPriceEvent.onClose}
+                                                                                            type='button'
+                                                                                            className='text-black-more-blur-light-theme bg-[rgba(19,21,23,0.04)] border-transparent border border-solid cursor-pointer transition-all duration-300 ease-in-out donace-button mt-4 flex items-center m-0'
+                                                                                        >
+                                                                                            <div className='label'>Sự kiện miễn phí</div>
+                                                                                        </Button>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </ModalBody>
+                                                                    </>
+                                                                )}
+                                                            </ModalContent>
+                                                        </Modal>
                                                         <div className='gap-1 flex items-center'>
                                                             <div className='value'>Miễn phí</div>
                                                             <button
@@ -665,28 +794,6 @@ export default function CreateFormFinal() {
                                                             )}
                                                         </ModalContent>
                                                     </Modal>
-                                                </div>
-                                                <div className='option-row w-full p-[0.5rem_0.75rem] transition-all duration-300 ease-in-out relative overflow-hidden bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)]'>
-                                                    <div className='divider absolute top-0 left-11 right-0 border-b border-solid border-[rgba(19,21,23,0.04)] z-10'></div>
-                                                    <div className='gap-2 flex items-center'>
-                                                        <div className='icon text-[rgba(19,21,23,0.2)] m-[0px_0.25rem]'>
-                                                            <Globe className='block w-4 h-4 align-middle translate-y-px' />
-                                                        </div>
-                                                        <div className='text-black-more-blur-light-theme select-none flex-1'>Công khai</div>
-                                                        <div className='gap-1 flex items-center'>
-                                                            <Switch
-                                                                color='success'
-                                                                classNames={{
-                                                                    thumb: [
-                                                                        "bg-[#fff]",
-                                                                    ],
-                                                                    wrapper: [
-                                                                        "bg-[rgba(19,21,23,0.16)]"
-                                                                    ],
-                                                                }}
-                                                            />
-                                                        </div>
-                                                    </div>
                                                 </div>
                                             </div>
                                         </div>

@@ -238,47 +238,6 @@ export default function CalendarPeople(props: any) {
                         }}
                         isOpen={isOpen}
                         onOpenChange={onOpenChange}
-                    // motionProps={{
-                    //     initial: {
-                    //         opacity: 0,
-                    //         x: '100%',
-                    //         right: 0,
-                    //         top: '50%',
-                    //         y: '-50%',
-                    //         bottom: 'auto',
-                    //         width: 620,
-                    //         maxWidth: 620,
-                    //         marginTop: 0,
-                    //         overflowY: 'auto',
-                    //         borderRadius: 0,
-                    //         boxShadow: 'none',
-                    //         outline: 'none',
-                    //     },
-                    //     animate: {
-                    //         opacity: 1,
-                    //         x: '50%',
-                    //         transition: {
-                    //             type: 'spring',
-                    //             duration: 0.3,
-                    //             ease: 'easeOut',
-                    //             stiffness: 250,
-                    //             damping: 25,
-                    //             clamp: true,
-                    //         },
-                    //     },
-                    //     exit: {
-                    //         opacity: 0,
-                    //         x: '100%',
-                    //         transition: {
-                    //             type: 'spring',
-                    //             duration: 0.2,
-                    //             ease: 'easeIn',
-                    //             stiffness: 250,
-                    //             damping: 25,
-                    //             clamp: true,
-                    //         },
-                    //     },
-                    // }}
                     >
                         <ModalContent>
                             {(onClose) => (

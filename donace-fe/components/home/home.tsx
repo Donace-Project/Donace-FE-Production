@@ -72,8 +72,12 @@ const pastDateFormatted = currentDate.toLocaleString('en-US').replace(/\//g, '-'
 
 export default function HomeEvents() {
 
-  var [pastEvents, setPastEvents] = useState<Item[]>();
+  const dateTimeTrue = true;
+  const dateTimeFalse = false;
+
   var [futureEvents, setFutureEvents] = useState<Item[]>();
+  var [pastEvents, setPastEvents] = useState<Item[]>();
+  
   const [isOnline, setIsOnline] = useState(true);
   const [thoiGian, setThoiGian] = useState(new Date());
   const [loading, setLoading] = useState(true);
@@ -102,11 +106,11 @@ export default function HomeEvents() {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const futureEventsData = await fetchWrapper.get(`/api/Event?FromDate=${currentDateFormatted}&ToDate=12-31-9998&PageNumber=1&PageSize=9999`);
+        const futureEventsData = await fetchWrapper.get(`api/Event?IsNew=${dateTimeTrue}`);
         setFutureEvents(futureEventsData.items);
         setLoading(false);
 
-        const pastEventsData = await fetchWrapper.get(`/api/Event?FromDate=01-01-1996&ToDate=${pastDateFormatted}&PageNumber=1&PageSize=9999`);
+        const pastEventsData = await fetchWrapper.get(`api/Event?IsNew=${dateTimeFalse}`);
         setPastEvents(pastEventsData.items);
 
       } catch (error) {
@@ -194,7 +198,7 @@ export default function HomeEvents() {
                                                   animationPlayState: 'running',
                                                 }}
                                               >
-                                                <Radio className="translate-y-px mr-2 w-4 h-4 block align-middle"/>
+                                                <Radio className="translate-y-px mr-2 w-4 h-4 block align-middle" />
                                                 LIVE
                                               </div>
                                             </div>
