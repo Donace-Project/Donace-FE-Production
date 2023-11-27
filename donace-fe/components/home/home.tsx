@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { Button } from "@nextui-org/button";
 import { Link } from "@nextui-org/link";
-import { ArrowRight, CalendarClock, Frown, MapPin, Plus, ScanLine, Users2 } from "lucide-react";
+import { ArrowRight, CalendarClock, Frown, MapPin, Plus, Radio, ScanLine, Users2, Video } from "lucide-react";
 import "@/styles/globals.css";
 import { fetchWrapper } from "@/helpers/fetch-wrapper";
 import { Image } from "@nextui-org/image";
@@ -99,14 +99,6 @@ export default function HomeEvents() {
     }
   }, []);
 
-  // useEffect(() => {
-  //   fetchWrapper.get(`/api/Event?FromDate=${currentDateFormatted}&ToDate=12-31-9998&PageNumber=1&PageSize=9999`)
-  //     .then(data => setFutureEvents(data.items));
-
-  //   fetchWrapper.get(`/api/Event?FromDate=01-01-1996&ToDate=${pastDateFormatted}&PageNumber=1&PageSize=9999`)
-  //     .then(data => setPastEvents(data.items));
-  // }, []);
-
   useEffect(() => {
     const fetchEvents = async () => {
       try {
@@ -202,6 +194,7 @@ export default function HomeEvents() {
                                                   animationPlayState: 'running',
                                                 }}
                                               >
+                                                <Radio className="translate-y-px mr-2 w-4 h-4 block align-middle"/>
                                                 LIVE
                                               </div>
                                             </div>
@@ -239,7 +232,7 @@ export default function HomeEvents() {
                                       <div className="gap-2 flex items-center">
                                         <Button
                                           as={Link}
-                                          href={`/events/manage/${event.id}`}
+                                          href={`/user/join-event/${event.id}`}
                                           className="text-black-more-blur-light-theme dark:text-[rgba(255,255,255,0.64)] bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)] border-transparent border border-solid transition-all duration-300 ease-in-out donace-button flex items-center cursor-pointer"
                                         >
                                           <ScanLine className="mr-1.5 stroke-2 w-3.5 h-3.5 flex-shrink-0 block align-middle mt-0.5" />

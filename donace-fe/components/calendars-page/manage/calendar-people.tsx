@@ -108,21 +108,37 @@ export default function CalendarPeople(props: any) {
                                 >
                                     Người tham gia
                                 </Link>
+                                <Link
+                                    className="text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)] border-b-2 border-solid border-transparent whitespace-nowrap inline-block pb-2 transition-all duration-300 ease-in-out cursor-pointer"
+                                    href={`/calendars/manage/${getCalendars.id}/settings`}
+                                    underline="none"
+                                >
+                                    Cài đặt
+                                </Link>
                             </div>
                         ) : (
                             <div className="tabs flex max-w-full overflow-auto min-w-0 gap-4 flex-1">
                                 <div className="side-padding"></div>
                                 <Link
                                     className="text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)] border-b-2 border-solid border-transparent whitespace-nowrap inline-block pb-2 transition-all duration-300 ease-in-out cursor-pointer"
+
                                     underline="none"
                                 >
                                     Sự kiện
                                 </Link>
                                 <Link
-                                    className="text-black-light-theme dark:text-[#fff] border-b-2 border-solid border-[rgb(19,21,23)] dark:border-[#fff] whitespace-nowrap inline-block pb-2 transition-all duration-300 ease-in-out cursor-pointer"
+                                    className="text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)] border-b-2 border-solid border-transparent whitespace-nowrap inline-block pb-2 transition-all duration-300 ease-in-out cursor-pointer"
+
                                     underline="none"
                                 >
                                     Người tham gia
+                                </Link>
+                                <Link
+                                    className="text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)] border-b-2 border-solid border-transparent whitespace-nowrap inline-block pb-2 transition-all duration-300 ease-in-out cursor-pointer"
+
+                                    underline="none"
+                                >
+                                    Cài đặt
                                 </Link>
                             </div>
                         )}

@@ -170,7 +170,7 @@ export default function NavbarComponents() {
                   src={
                     user?.avatar?.trim()
                       ? user.avatar
-                      : "https://avatars.githubusercontent.com/u/143386751?s=200&v=4"
+                      : "https://cdn.lu.ma/cdn-cgi/image/format=auto,fit=cover,dpr=2,background=white,quality=75,width=32,height=32/avatars-default/avatar_8.png"
                   }
                   radius="full"
                   name="Donace"
@@ -193,7 +193,7 @@ export default function NavbarComponents() {
                             src={
                               user?.avatar?.trim()
                                 ? user.avatar
-                                : "https://avatars.githubusercontent.com/u/143386751?s=200&v=4"
+                                : "https://cdn.lu.ma/cdn-cgi/image/format=auto,fit=cover,dpr=2,background=white,quality=75,width=32,height=32/avatars-default/avatar_8.png"
                             }
                             name="Donace"
                             className="w-[32px] h-[32px] bg-center bg-cover bg-[#fff] relative"
