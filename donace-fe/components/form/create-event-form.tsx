@@ -3,13 +3,13 @@
 import { Avatar } from '@nextui-org/avatar';
 import { Input, Textarea } from '@nextui-org/input';
 
-import { ArrowUp, ArrowUpToLine, CheckCircle2, ChevronDown, CreditCard, Globe, MapPin, Pen, Plus, PlusIcon, Ticket, Upload, UserCheck } from 'lucide-react';
+import { ArrowUp, ArrowUpToLine, CheckCircle2, ChevronDown, ChevronDownIcon, CreditCard, Globe, MapPin, Pen, Plus, PlusIcon, Ticket, Upload, UserCheck } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { Switch, User } from "@nextui-org/react";
 
-import { Modal, ModalContent, ModalHeader, ModalBody, useDisclosure } from "@nextui-org/modal";
+import { Modal, ModalContent, ModalHeader, ModalBody, useDisclosure, ModalFooter } from "@nextui-org/modal";
 import { Dropdown, DropdownTrigger, DropdownMenu, DropdownSection, DropdownItem } from "@nextui-org/dropdown";
-import { Button } from '@nextui-org/button';
+import { Button, ButtonGroup } from '@nextui-org/button';
 import { Divider } from '@nextui-org/divider';
 import { Image } from "@nextui-org/react";
 
@@ -18,9 +18,32 @@ import goongjs from '@goongmaps/goong-js';
 //@ts-ignore
 import GoongGeocoder from '@goongmaps/goong-geocoder'
 import { Link } from '@nextui-org/link';
+import React from 'react';
 
 
 export default function CreateFormFinal() {
+
+    // ?: options chọn địa điểm
+    const [selectedOption, setSelectedOption] = React.useState(new Set(["offline"]));
+    const [showOfflineContent, setShowOfflineContent] = React.useState(true);
+
+    const labelsMap = {
+        offline: "Offline",
+        online: "Online",
+    }
+
+    const selectedOptionValue = Array.from(selectedOption)[0];
+
+    const handleSelectedOption = (option: any) => {
+        setSelectedOption(new Set([option]));
+        if (option === "offline") {
+            setShowOfflineContent(true);
+        } else {
+            setShowOfflineContent(false);
+        }
+    };
+    //
+
     let map: any;
     const modalMap = useDisclosure();
     const modalCapacity = useDisclosure();
@@ -340,19 +363,58 @@ export default function CreateFormFinal() {
                                                             onOpenChange={modalMap.onOpenChange}
                                                             size='3xl'
                                                             placement='center'
-                                                            scrollBehavior='inside'
+                                                            scrollBehavior='outside'
                                                         >
                                                             <ModalContent>
                                                                 {(onClose) => (
                                                                     <>
-                                                                        <ModalHeader className="flex flex-col gap-1">Thêm địa chỉ diễn ra sự kiện</ModalHeader>
+                                                                        <ModalHeader className="flex flex-col gap-1">Thêm địa điểm diễn ra sự kiện</ModalHeader>
                                                                         <Divider />
                                                                         <ModalBody>
-                                                                            <div className='pt-2 m-2'>
-
-                                                                                <div className='pt-4 font-medium text-base text-black-light-theme dark:text-[#fff]'>Or pick your location via Maps:</div>
-                                                                                <div className='pt-4'>
-                                                                                    <div id="map" style={{ width: '100%', height: '400px' }}></div>
+                                                                            <div className='pt-2 m-2 grid grid-cols-1 md:grid-cols-2 gap-4'>
+                                                                                <div className='font-medium text-base text-black-light-theme dark:text-[#fff] translate-y-2'>
+                                                                                    Chọn địa điểm:
+                                                                                </div>
+                                                                                <ButtonGroup variant="flat" className='ml-[14rem]'>
+                                                                                    <Button>{labelsMap[selectedOption.values().next().value]}</Button>
+                                                                                    <Dropdown placement="bottom-end">
+                                                                                        <DropdownTrigger>
+                                                                                            <Button isIconOnly>
+                                                                                                <ChevronDownIcon />
+                                                                                            </Button>
+                                                                                        </DropdownTrigger>
+                                                                                        <DropdownMenu
+                                                                                            disallowEmptySelection
+                                                                                            selectedKeys={selectedOption}
+                                                                                            selectionMode="single"
+                                                                                            oonSelectionChange={(option) => handleSelectedOption(option[0])}
+                                                                                            className="max-w-[300px] w-fit"
+                                                                                        >
+                                                                                            <DropdownItem as={"button"} key="offline" onClick={() => handleSelectedOption('offline')} className='w-fit'>
+                                                                                                {labelsMap["offline"]}
+                                                                                            </DropdownItem>
+                                                                                            <DropdownItem as={"button"} key="online" onClick={() => handleSelectedOption('online')} className='w-fit'>
+                                                                                                {labelsMap["online"]}
+                                                                                            </DropdownItem>
+                                                                                        </DropdownMenu>
+                                                                                    </Dropdown>
+                                                                                </ButtonGroup>
+                                                                                <div className='col-span-2 md:col-span-1'>
+                                                                                    {showOfflineContent ? (
+                                                                                        <div id="map" style={{ width: '700px', height: '400px' }}></div>
+                                                                                        // <div>Nội dung offline</div>
+                                                                                    ) : (
+                                                                                        // Nội dung khi chọn online
+                                                                                        <div>Hiển thị nội dung khi chọn online</div>
+                                                                                    )}
+                                                                                </div>
+                                                                                <div className='col-span-2 flex justify-end'>
+                                                                                    <Button
+                                                                                        type='submit'
+                                                                                        className='text-[#fff] dark:text-[rgb(19,21,23)] bg-[#333537] dark:bg-[#fff] border-[#333537] dark:border-[#fff] border border-solid cursor-pointer transition-all duration-300 ease-in-out donace-button-w-fit flex items-center m-0'
+                                                                                    >
+                                                                                        <div className='label'>Lưu</div>
+                                                                                    </Button>
                                                                                 </div>
                                                                             </div>
                                                                         </ModalBody>

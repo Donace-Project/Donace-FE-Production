@@ -16,12 +16,13 @@ export type Calendar = {
 }
 
 export type Result = {
+    sorted: number
     id: string
     name: string
     totalSubcriber: number
     avatar: string
     userId: string
-    sorted: number
+    isSubcribed: boolean
 }
 
 export type CalendarSub = {
