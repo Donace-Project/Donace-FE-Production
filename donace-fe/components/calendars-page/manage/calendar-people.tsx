@@ -3,15 +3,16 @@ import { SearchIcon } from "@/components/icons";
 import { Avatar } from "@nextui-org/avatar";
 import { Input } from "@nextui-org/input";
 import { Link } from "@nextui-org/link";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, Mail, MailPlus, Send } from "lucide-react";
 import { Divider } from "@nextui-org/react";
-import { people } from "@/components/icon/data";
-import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure } from "@nextui-org/react";
+import { Modal, ModalContent, ModalHeader, ModalBody, useDisclosure } from "@nextui-org/react";
 import { Button } from "@nextui-org/button";
 import { Chip } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import { GetCalendarById } from "@/types/DonaceType";
 import { fetchWrapper } from "@/helpers/fetch-wrapper";
+import React from "react";
+
 
 export type Calendar = {
     code: string
@@ -31,6 +32,19 @@ export type Result = {
 
 
 export default function CalendarPeople(props: any) {
+
+    const modalInvite = useDisclosure();
+    const modalUserDetails = useDisclosure();
+
+    const [value, setValue] = React.useState("");
+    const validateEmail = (value: any) => value.match(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+.[A-Z]{2,4}$/i);
+
+    const isInvalid = React.useMemo(() => {
+        if (value === "") return false;
+
+        return validateEmail(value) ? false : true;
+    }, [value]);
+
     var { id } = props
 
     const [getCalendars, setCalendars] = useState<GetCalendarById | null>(null);
@@ -157,8 +171,9 @@ export default function CalendarPeople(props: any) {
                         <div className="section-subtitle -mt-3.5 mb-5 text-[#737577] dark:text-[#d2d4d7] text-base">Quản lý người đăng ký của bạn.</div>
                     </div>
                     <div className="search-bar">
-                        <div className="flex justify-center relative overflow-hidden items-center transition-all duration-300 ease-in-out">
+                        <div className="flex justify-between relative overflow-hidden items-center transition-all duration-300 ease-in-out">
                             <Input
+                                isClearable
                                 startContent={<SearchIcon className="dark:text-[rgba(255,255,255,0.32)]" />}
                                 placeholder="Tìm kiếm.."
                                 className="flex-1 m-0"
@@ -180,21 +195,91 @@ export default function CalendarPeople(props: any) {
                                     ]
                                 }}
                             />
+                            <Button
+                                onPress={modalInvite.onOpen}
+                                type="button"
+                                className="text-[#fff] dark:text-[rgb(19,21,23)] bg-[#333537] dark:bg-[#fff] hover:bg-gray-700 border-[#333537] dark:border-[#fff] border border-solid cursor-pointer transition-[all 0.3s cubic-bezier(0.4,0,0.2,1)] outline-[0s] font-medium rounded-[0.5rem] relative whitespace-nowrap justify-center outline-offset-[.125rem] outline-none max-w-full text-[1rem] p-[0.625rem_0.875rem] w-fit flex items-center m-0 leading-[1.5] ml-2"
+                            >
+                                <div className="label">Mời</div>
+                            </Button>
+                            <Modal
+                                isOpen={modalInvite.isOpen}
+                                onOpenChange={modalInvite.onOpenChange}
+                                size="xl"
+                                radius="lg"
+                                classNames={{
+                                    base: "flex flex-col relative",
+                                }}
+                            >
+                                <ModalContent>
+                                    {(onClose) => (
+                                        <>
+                                            <ModalBody
+                                                className="w-full p-[1rem_1.25rem]"
+                                            >
+                                                <div className="flex flex-col">
+                                                    <div className="lux-alert-top pt-1">
+                                                        <div className="icon-wrapper m-[0.25rem_0px_0.75rem] w-14 h-14 rounded-full text-[#737577] dark:text-[#d2d4d7] bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)] justify-center flex items-center">
+                                                            <Mail className="w-8 h-8 block align-middle translate-y-px"/>
+                                                        </div>
+                                                        <div className="title font-semibold text-xl mb-2">Mời mọi người tham gia lịch của bạn</div>
+                                                        <div className="desc text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)]">Chúng tôi sẽ gửi mail yêu cầu tham gia lịch tới những người bạn mời đến.</div>
+                                                    </div>
+                                                    <div className='gap-4 mt-2 flex flex-col'>
+                                                        <div className='lux-input-wrapper medium max-w-[auto] mt-2'>
+                                                            <div className='inner-wrapper inline-block w-full'>
+                                                                <label className='text-sm block mb-1.5 font-medium text-black-more-blur-light-theme transition-all duration-300 ease-in-out'>
+                                                                    <div>Email</div>
+                                                                </label>
+                                                                <div className='input-wrapper flex items-baseline'>
+                                                                    <div className='flex-1 flex items-center'>
+                                                                        <div>&nbsp;</div>
+                                                                        <Input
+                                                                            value={value}
+                                                                            isInvalid={isInvalid}
+                                                                            color={isInvalid ? "danger" : "success"}
+                                                                            errorMessage={isInvalid && "Vui lòng điền đúng email."}
+                                                                            onValueChange={setValue}
+                                                                            isClearable
+                                                                            placeholder='Điền email của người bạn muốn mời.'
+                                                                            size='md'
+                                                                            variant='bordered'
+                                                                            type='email'
+                                                                            inputMode='text'
+                                                                            classNames={{
+                                                                                input: [
+                                                                                    "text-sm",
+                                                                                ],
+                                                                                errorMessage: [
+                                                                                    "text-sm",
+                                                                                    "font-normal"
+                                                                                ]
+                                                                            }}
+                                                                            startContent={<MailPlus className="w-5 h-5 block align-middle mr-2 translate-y-[0.025px]" />}
+                                                                        />
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div className='gap-2 flex justify-end items-center'>
+                                                            <Button
+                                                                type='submit'
+                                                                className='text-[#fff] bg-[#333537] border-[#333537] border border-solid cursor-pointer transition-all duration-300 ease-in-out donace-button-w-fit mt-4 flex items-center m-0'
+                                                            >
+                                                                <Send className="w-5 h-5 block align-middle translate-y-px"/>
+                                                                <div className='label'>Gửi</div>
+                                                            </Button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </ModalBody>
+                                        </>
+                                    )}
+                                </ModalContent>
+                            </Modal>
                         </div>
                     </div>
-                    {/* <div className="spread gap-2 mb-2 mt-2 flex justify-end items-center">
-                        <div className="w-1/4">
-                            <Select
-                                items={people}
-                                label="Bộ lọc hiển thị"
-                                placeholder="Theo danh mục.."
-                                startContent={<ArrowDownWideNarrow className="mr-1.5 stroke-2 w-3.5 h-3.5 flex-shrink-0 block mt-0.5" />}
-                            >
-                                {(people) => <SelectItem key={people.value}>{people.label}</SelectItem>}
-                            </Select>
-                        </div>
-                    </div> */}
-                    <div onClick={onOpen} className="simple-table-wrapper bg-[#f2f3f4] mt-2 border border-solid border-[rgba(19,21,23,0.08)] dark:border-[rgba(255,255,255,0.08)] dark:bg-[rgba(255,255,255,0.04)]">
+                    <div onClick={modalUserDetails.onOpen} className="simple-table-wrapper bg-[#f2f3f4] mt-2 border border-solid border-[rgba(19,21,23,0.08)] dark:border-[rgba(255,255,255,0.08)] dark:bg-[rgba(255,255,255,0.04)]">
                         <div className="base-row border-b-0 border-t-0 p-[0.75rem_1rem] cursor-pointer transition-all duration-300 ease-in-out">
                             <div className="gap-3 flex justify-between items-center">
                                 <div className="avatar-wrapper small">
@@ -236,8 +321,8 @@ export default function CalendarPeople(props: any) {
                                 "backdrop-blur-sm",
                             ]
                         }}
-                        isOpen={isOpen}
-                        onOpenChange={onOpenChange}
+                        isOpen={modalUserDetails.isOpen}
+                        onOpenChange={modalUserDetails.onOpenChange}
                     >
                         <ModalContent>
                             {(onClose) => (
