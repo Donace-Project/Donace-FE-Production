@@ -23,7 +23,7 @@ export type Result = {
     sorted: number
 }
 
-export default function CalendarSetting(props: any) {
+export default function CalendarSettingOptions(props: any) {
     var { id } = props
 
     const [getCalendars, setCalendars] = useState<GetCalendarById | null>(null);
@@ -148,7 +148,18 @@ export default function CalendarSetting(props: any) {
                                     <div className="icon">
                                         <Settings2 className="block w-4 h-4 align-middle" />
                                     </div>
-                                    <div className="whitespace-nowrap">Options</div>
+                                    <div className="whitespace-nowrap">Hiển thị</div>
+                                </div>
+                            </Link>
+                            <Link
+                                className="transition-all duration-300 ease-in-out cursor-pointer"
+                                underline="none"
+                            >
+                                <div className="tab gap-3 text-black-light-theme rounded-lg font-medium transition-all duration-300 ease-in-out flex items-center">
+                                    <div className="icon">
+                                        <Settings2 className="block w-4 h-4 align-middle" />
+                                    </div>
+                                    <div className="whitespace-nowrap">Cài đặt</div>
                                 </div>
                             </Link>
                         </div>

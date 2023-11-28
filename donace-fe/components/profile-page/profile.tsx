@@ -4,7 +4,7 @@ import "@/styles/globals.css";
 import { Avatar } from "@nextui-org/avatar";
 import { Button } from "@nextui-org/button";
 import { Link } from "@nextui-org/link";
-import { Calendar, Globe, Instagram, Linkedin, Pen, Plus, Twitter, Youtube } from "lucide-react";
+import { Calendar, CalendarX2, Globe, Instagram, Linkedin, Pen, Plus, Twitter, Youtube } from "lucide-react";
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure, ModalProps } from "@nextui-org/modal";
 import { Input } from "@nextui-org/input";
 import { Textarea } from "@nextui-org/input";
@@ -88,7 +88,7 @@ export default function ProfilePage() {
                                 <div className="user-header-wrapper p-[0_1rem] w-full max-w-2xl m-auto">
                                     <div className="user-header pr-0 pb-8 pl-0 pt-8 block text-center">
                                         <div className="image-container w-32 m-auto">
-                                            <Link href="/my-calendar" className="transition-all duration-300 ease-in-out cursor-pointer" underline="none">
+                                            <Link href="/calendars" className="transition-all duration-300 ease-in-out cursor-pointer" underline="none">
                                                 <div className="avatar-wrapper">
                                                     <Avatar
                                                         src={userProfile?.result.avatar.trim() ? userProfile.result.avatar : "https://cdn.lu.ma/cdn-cgi/image/format=auto,fit=cover,dpr=2,background=white,quality=75,width=32,height=32/avatars-default/avatar_8.png"}
@@ -429,8 +429,9 @@ export default function ProfilePage() {
                                                         </div>
                                                         <div className="block">
                                                             {futureEvents ? (
-                                                                futureEvents.map((event, index) => (
-                                                                    <div key={index} className="profile-events-content-wrapper">
+                                                                futureEvents && futureEvents.length > 0 ? (
+                                                                    futureEvents.map((event, index) => (
+                                                                        <div key={index} className="profile-events-content-wrapper">
                                                                         <div className="profile-event-wrapper pb-0">
                                                                             <Link
                                                                                 href="/events/detail"
@@ -461,10 +462,17 @@ export default function ProfilePage() {
                                                                             </Link>
                                                                         </div>
                                                                     </div>
-                                                                ))
+                                                                    ))
+                                                                ) : (
+                                                                    <div className="profile-event-empty w-full text-center p-[2rem_1rem_2rem_1rem] text-[#a2b7bf] dark:text-[#939597] border border-solid border-[#eff3f5] dark:border-[#151719] rounded-lg flex flex-col items-center">
+                                                                        <CalendarX2 className="w-8 h-8 mb-4 block align-middle" />
+                                                                        <div className="font-semibold mb-1">Không có sự kiện nào sắp diễn ra</div>
+                                                                        <div className="text-sm">Đăng ký ngay để nhận những sự kiện sắp diễn ra.</div>
+                                                                    </div>
+                                                                )
                                                             ) : (
                                                                 <div className="profile-event-empty w-full text-center p-[2rem_1rem_2rem_1rem] text-[#a2b7bf] dark:text-[#939597] border border-solid border-[#eff3f5] dark:border-[#151719] rounded-lg flex flex-col items-center">
-                                                                    <Calendar className="w-8 h-8 mb-4 block align-middle" />
+                                                                    <CalendarX2 className="w-8 h-8 mb-4 block align-middle" />
                                                                     <div className="font-semibold mb-1">Không có sự kiện nào sắp diễn ra</div>
                                                                     <div className="text-sm">Đăng ký ngay để nhận những sự kiện sắp diễn ra.</div>
                                                                 </div>

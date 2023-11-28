@@ -6,7 +6,7 @@ import { CreditCard, Plus, Receipt } from "lucide-react";
 import { Modal, ModalContent, ModalBody, useDisclosure, Divider, ModalFooter } from "@nextui-org/react";
 import { usePaymentInputs, PaymentInputsWrapper } from 'react-payment-inputs';
 import { css } from 'styled-components';
-import { ThemeProvider } from 'styled-components';
+// import { ThemeProvider } from 'styled-components';
 import images from 'react-payment-inputs/images';
 
 const ERROR_MESSAGES = {

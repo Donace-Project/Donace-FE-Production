@@ -483,11 +483,11 @@ export default function CreateFormFinal() {
                                                                                     )}
                                                                                 </div>
                                                                                 {compoundLatCommune && compoundLngCommune && compoundLatDistrict && compoundLngDistrict && compoundLatProvince && compoundLngProvince ? (
-                                                                                    <div className='overflow-hidden text-ellipsis whitespace-nowrap text-sm text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)]'>
+                                                                                    <div className='overflow-hidden text-ellipsis whitespace-nowrap text-sm text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)] max-w-[19rem]'>
                                                                                         <p>{compoundLatCommune}, {compoundLatDistrict}, {compoundLatProvince}</p>
                                                                                     </div>
                                                                                 ) : (
-                                                                                    <div className='overflow-hidden text-ellipsis whitespace-nowrap text-sm text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)]'>Tổ chức Online/Offline sự kiện của bạn</div>
+                                                                                    <div className='overflow-hidden text-ellipsis whitespace-nowrap text-sm text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)] max-w-[19rem]'>Tổ chức Online/Offline sự kiện của bạn</div>
                                                                                 )}
 
                                                                             </div>
