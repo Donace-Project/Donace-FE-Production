@@ -4,15 +4,18 @@ import React, { useState } from "react";
 import { Button } from "@nextui-org/button";
 import { Card, CardHeader, CardBody, CardFooter } from "@nextui-org/card";
 import { Input } from "@nextui-org/input";
-import { ArrowLeft, DoorOpen, UserCircle2 } from "lucide-react";
+import { ArrowLeft, CheckCircle, DoorOpen, UserCircle2 } from "lucide-react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { Divider } from "@nextui-org/divider";
 import { Link } from "@nextui-org/link";
+import { Spinner } from "@nextui-org/react";
 
 export default function SignIn() {
   const router = useRouter();
   const [isVisible, setIsVisible] = React.useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
 
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
@@ -29,6 +32,7 @@ export default function SignIn() {
   const [error, setError] = useState("");
 
   const onSubmit = async () => {
+    setIsLoading(true);
     const result = await signIn("credentials", {
       email: email,
       password: password,
@@ -41,6 +45,7 @@ export default function SignIn() {
       // Xử lý hiển thị lỗi
       setError("Sai tài khoản hoặc mật khẩu.");
     }
+    setIsLoading(false);
   };
 
 
@@ -93,11 +98,23 @@ export default function SignIn() {
               </div>}
             </div>
             <Button
+              disabled={isLoading}
               onClick={onSubmit}
               type="button"
               className="mb-12 text-[#fff] bg-[#333537] border-[#333537] border border-solid w-full cursor-pointer transition-all duration-300 ease-in-out font-medium rounded-lg relative whitespace-nowrap justify-center outline-none max-w-full text-base p-[0.625rem_0.875rem] h-[calc(2.25rem+2*1px)] flex items-center m-0 leading-6"
             >
-              <div className="label">Đăng nhập</div>
+              <div className="label">
+                {isLoading ? (
+                  <>
+                    <Spinner size="sm" color="success" className="translate-y-0.5 mr-2"/>
+                    <span className="label">Đang đăng nhập..</span>
+                  </>
+                ) : (
+                  <>
+                    <div id="label" className="...">Đăng nhập</div>
+                  </>
+                )}
+              </div>
             </Button>
           </CardBody>
           <Divider />

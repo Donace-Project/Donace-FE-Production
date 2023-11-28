@@ -99,7 +99,7 @@ export default function SignUp() {
                 onValueChange={setPassword}
                 isRequired
                 labelPlacement={"inside"}
-                placeholder="Password của bạn"
+                placeholder="Mật khẩu của bạn"
                 className="pt-2 text-base h-auto transition-all duration-300 leading-4 rounded-lg w-full m-0 mb-4"
                 type={isVisible ? "text" : "password"}
               />
