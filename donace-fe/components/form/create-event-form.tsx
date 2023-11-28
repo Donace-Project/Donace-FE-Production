@@ -94,6 +94,7 @@ export default function CreateFormFinal() {
                 setLat(e.result.result.geometry.location.lat);
                 setLng(e.result.result.geometry.location.lng);
                 // console.log(e.result.result.geometry.location.lng);
+                console.log(e.result.result)
                 console.log(e.result.result.formatted_address); // log the place name
                 // console.log(e.result.geometry); // log the coordinates [longitude, latitude]
             });
