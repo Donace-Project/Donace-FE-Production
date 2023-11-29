@@ -67,14 +67,19 @@ export default function CalendarManage(props: any) {
     var { id } = props
     const dateTimeTrue = true;
     const dateTimeFalse = false;
+    const dateTimeSubTrue = true;
+    const dateTimeSubFalse = false;
     const dateTimeEvent = dateTimeTrue ? 'true' : 'false';
 
     var [futureEvents, setFutureEvents] = useState<ItemsCalendarManage[]>();
     var [pastEvents, setPastEvents] = useState<ItemsCalendarManage[]>();
     const [getCalendars, setCalendars] = useState<GetCalendarById | null>(null);
     var [calendars, setCalendar] = useState<Calendar | null>(null);
+
     const [getEvent, setEvents] = useState<GetListEventByCalendarId[]>([]);
     const [getPastEventId, setPastEventsId] = useState<GetListEventByCalendarId[]>([]);
+    const [getEventSub, setEventSub] = useState<GetListEventByCalendarId[]>([]);
+    const [getPastEventSub, setPastEventSub] = useState<GetListEventByCalendarId[]>([]);
 
 
     const [loading, setLoading] = useState(true);
@@ -82,10 +87,10 @@ export default function CalendarManage(props: any) {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const futureEventsData = await fetchWrapper.get(`/api/Event?FromDate=${currentDateFormatted}&ToDate=12-31-9998&PageNumber=1&PageSize=9999`);
+                const futureEventsData = await fetchWrapper.get(`api/Event?IsNew=${dateTimeTrue}`);
                 setFutureEvents(futureEventsData.items);
 
-                const pastEventsData = await fetchWrapper.get(`/api/Event?FromDate=01-01-1996&ToDate=${pastDateFormatted}&PageNumber=1&PageSize=9999`);
+                const pastEventsData = await fetchWrapper.get(`api/Event?IsNew=${dateTimeFalse}`);
                 setPastEvents(pastEventsData.items);
 
                 const calendarsData = await fetchWrapper.post(`api/Calendar/get-by-id?Id=${id}`, null);
@@ -94,13 +99,11 @@ export default function CalendarManage(props: any) {
                 const calendarData = await fetchWrapper.post('/api/Calendar/get-list', { pageNumber: 1, pageSize: 9999 });
                 setCalendar(calendarData);
 
-                const eventsData = await fetchWrapper.get(`api/Event/list-event-by-calendar-${id}-${dateTimeTrue}`);
+                const eventsData = await fetchWrapper.get(`api/Event/list-event-by-calendar-${id}-${dateTimeTrue}-${dateTimeSubTrue}`);
                 setEvents(eventsData);
 
-                const pastEventsIdData = await fetchWrapper.get(`api/Event/list-event-by-calendar-${id}-${dateTimeFalse}`);
+                const pastEventsIdData = await fetchWrapper.get(`api/Event/list-event-by-calendar-${id}-${dateTimeFalse}-${dateTimeSubFalse}`);
                 setPastEventsId(pastEventsIdData);
-
-                
 
                 setLoading(false); // Set loading to false once all data is fetched
             } catch (error) {

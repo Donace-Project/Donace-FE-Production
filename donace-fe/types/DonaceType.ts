@@ -139,6 +139,9 @@ export type GetListEventByCalendarId = {
     totalGuest: number;
     section: SectionByEvent[];
     calendarId: string;
+    isHost: string
+    status: string;
+    sorted: number
 }
 
 export type SectionByEvent = {
