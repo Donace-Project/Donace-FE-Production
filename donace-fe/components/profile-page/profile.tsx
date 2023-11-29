@@ -4,12 +4,11 @@ import "@/styles/globals.css";
 import { Avatar } from "@nextui-org/avatar";
 import { Button } from "@nextui-org/button";
 import { Link } from "@nextui-org/link";
-import { Calendar, CalendarX2, Globe, Instagram, Linkedin, Pen, Plus, Twitter, Youtube } from "lucide-react";
+import { CalendarX2, Globe, Instagram, Linkedin, Pen, Plus, Twitter, Youtube } from "lucide-react";
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure, ModalProps } from "@nextui-org/modal";
 import { Input } from "@nextui-org/input";
 import { Textarea } from "@nextui-org/input";
 import { FaTiktok } from 'react-icons/fa';
-import { Checkbox } from "@nextui-org/checkbox";
 import { fetchWrapper } from "../../helpers/fetch-wrapper";
 import { ItemEventsProfile, UserProfile } from "@/types/DonaceType";
 

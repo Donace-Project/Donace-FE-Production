@@ -281,7 +281,7 @@ export default function CreateCalendar(props: any) {
                         type="submit"
                         className={`text-[#fff] dark:text-[rgb(19,21,23)] ${isCreating ? 'bg-gray-500' : 'bg-[#333537] dark:bg-[#fff] hover:bg-gray-700'} border-[#333537] dark:border-[#fff] focus-visible:outline-2 focus-visible:outline focus-visible:outline-[#333537] border border-solid cursor-pointer transition-[all 0.3s cubic-bezier(0.4,0,0.2,1)] outline-[0s] font-medium rounded-[0.5rem] relative whitespace-nowrap justify-center outline-offset-[.125rem] outline-none max-w-full text-[1rem] p-[0.625rem_0.875rem] w-fit flex items-center m-0 leading-[1.5]}`}
                         onClick={handleClick}
-                        disabled={isCreating}
+                        isDisabled={isCreating}
                     >
                         {isCreating ? (
                             <>

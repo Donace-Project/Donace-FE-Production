@@ -9,7 +9,7 @@ import { Modal, ModalContent, ModalHeader, ModalBody, useDisclosure } from "@nex
 import { Button } from "@nextui-org/button";
 import { Chip } from "@nextui-org/react";
 import { useEffect, useState } from "react";
-import { GetCalendarById } from "@/types/DonaceType";
+import { GetCalendarById, ListEventByUser, UserProfile } from "@/types/DonaceType";
 import { fetchWrapper } from "@/helpers/fetch-wrapper";
 import React from "react";
 
@@ -30,6 +30,55 @@ export type Result = {
     sorted: number
 }
 
+export type Events = {
+    totalCount: number;
+    items: Item[];
+}
+
+export type Item = {
+    id: string;
+    startDate: string;
+    endDate: string;
+    addressName: string;
+    lat: string;
+    long: string;
+    capacity: number;
+    isOverCapacity: boolean;
+    cover: string;
+    name: string;
+    theme: string;
+    color: string;
+    fontSize: number;
+    instructions: string;
+    isMultiSection: boolean;
+    duration: number;
+    totalGuest: number;
+    calendarId: string;
+    isLive: boolean;
+    status: string
+    isHost: boolean
+}
+
+interface DateTimeInfo {
+    year: string;
+    month: string;
+    day: string;
+    hour: string;
+    minute: string;
+}
+
+const ConvertDateTime = (dateTime: string): DateTimeInfo => {
+    const date = new Date(dateTime);
+    const year = date.getFullYear().toString();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    const hour = date.getHours().toString().padStart(2, '0');
+    const minute = date.getMinutes().toString().padStart(2, '0');
+
+    return { year, month, day, hour, minute };
+};
+
+
 
 export default function CalendarPeople(props: any) {
 
@@ -47,8 +96,14 @@ export default function CalendarPeople(props: any) {
 
     var { id } = props
 
+    const dateTimeTrue = true;
+
     const [getCalendars, setCalendars] = useState<GetCalendarById | null>(null);
     var [calendars, setCalendar] = useState<Calendar | null>(null);
+    const [userProfile, setUserProfile] = useState<null | UserProfile>(null);
+    var [futureEvents, setFutureEvents] = useState<Item[]>();
+    const [thoiGian, setThoiGian] = useState(new Date());
+
 
     useEffect(() => {
         fetchWrapper.post(`api/Calendar/get-by-id?Id=${id}`, null)
@@ -56,9 +111,20 @@ export default function CalendarPeople(props: any) {
 
         fetchWrapper.post('/api/Calendar/get-list', { pageNumber: 1, pageSize: 9999 })
             .then(data => setCalendar(data))
+
+        fetchWrapper.get('/api/User/profile')
+            .then((data: UserProfile) => {
+                console.log(data); // Xem dữ liệu được trả về từ API
+                setUserProfile(data);
+            })
+            .catch(error => console.error('Lỗi khi gọi API:', error));
+
+        fetchWrapper.get(`api/Event?IsNew=${dateTimeTrue}`)
+            .then(data => setFutureEvents(data.items))
     }, []);
 
-    const { isOpen, onOpen, onOpenChange } = useDisclosure();
+    const gio = thoiGian.getHours();
+    const buoi = gio >= 12 ? "PM" : "AM";
 
     return (
         <div className="page-content">
@@ -220,7 +286,7 @@ export default function CalendarPeople(props: any) {
                                                 <div className="flex flex-col">
                                                     <div className="lux-alert-top pt-1">
                                                         <div className="icon-wrapper m-[0.25rem_0px_0.75rem] w-14 h-14 rounded-full text-[#737577] dark:text-[#d2d4d7] bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)] justify-center flex items-center">
-                                                            <Mail className="w-8 h-8 block align-middle translate-y-px"/>
+                                                            <Mail className="w-8 h-8 block align-middle translate-y-px" />
                                                         </div>
                                                         <div className="title font-semibold text-xl mb-2">Mời mọi người tham gia lịch của bạn</div>
                                                         <div className="desc text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)]">Chúng tôi sẽ gửi mail yêu cầu tham gia lịch tới những người bạn mời đến.</div>
@@ -266,7 +332,7 @@ export default function CalendarPeople(props: any) {
                                                                 type='submit'
                                                                 className='text-[#fff] bg-[#333537] border-[#333537] border border-solid cursor-pointer transition-all duration-300 ease-in-out donace-button-w-fit mt-4 flex items-center m-0'
                                                             >
-                                                                <Send className="w-5 h-5 block align-middle translate-y-px"/>
+                                                                <Send className="w-5 h-5 block align-middle translate-y-px" />
                                                                 <div className='label'>Gửi</div>
                                                             </Button>
                                                         </div>
@@ -285,17 +351,18 @@ export default function CalendarPeople(props: any) {
                                 <div className="avatar-wrapper small">
                                     <Avatar
                                         radius="full"
-                                        src="https://avatars.githubusercontent.com/u/143386751?s=200&v=4"
+                                        src={userProfile?.result.avatar ? userProfile.result.avatar : "https://cdn.lu.ma/cdn-cgi/image/format=auto,fit=cover,dpr=2,background=white,quality=75,width=32,height=32/avatars-default/avatar_8.png"}
                                         name="Donace"
                                         className="w-6 h-6 bg-center bg-cover bg-[#fff] relative"
                                     />
                                 </div>
                                 <div className="info overflow-hidden text-ellipsis whitespace-nowrap text-[#b3b5b7] min-w-0 flex-1">
                                     <div className="name inline">
-                                        <div className="inline font-medium overflow-hidden text-ellipsis whitespace-nowrap text-black-light-theme dark:text-[#fff] mr-2 min-w-0">demo</div>
+                                        <div className="inline font-medium overflow-hidden text-ellipsis whitespace-nowrap text-black-light-theme dark:text-[#fff] mr-2 min-w-0">{getCalendars?.name}</div>
                                     </div>
-                                    <div className="email inline overflow-hidden text-ellipsis whitespace-nowrap text-[#b3b5b7] dark:text-[#939597] min-w-0">dattranphu1114@gmail.com</div>
+                                    <div className="email inline overflow-hidden text-ellipsis whitespace-nowrap text-[#b3b5b7] dark:text-[#939597] min-w-0">{userProfile?.result.email}</div>
                                 </div>
+                                {/* //TODO: Chỗ này đổi thành ngày người tham gia lịch */}
                                 <span className="whitespace-nowrap text-sm text-[#b3b5b7] dark:text-[#939597]" title="dat">5 Tháng 9</span>
                             </div>
                         </div>
@@ -319,6 +386,9 @@ export default function CalendarPeople(props: any) {
                             ],
                             wrapper: [
                                 "backdrop-blur-sm",
+                            ],
+                            closeButton: [
+                                "hidden"
                             ]
                         }}
                         isOpen={modalUserDetails.isOpen}
@@ -327,7 +397,7 @@ export default function CalendarPeople(props: any) {
                         <ModalContent>
                             {(onClose) => (
                                 <>
-                                    <ModalHeader className="flex flex-col gap-1">User Details</ModalHeader>
+                                    <ModalHeader className="flex flex-col gap-1">Chi tiết người tham gia</ModalHeader>
                                     <Divider />
                                     <ModalBody>
                                         <div>
@@ -336,64 +406,62 @@ export default function CalendarPeople(props: any) {
                                                     <div className="gap-3 flex items-center">
                                                         <div className="avatar-wrapper">
                                                             <Avatar
-                                                                src="https://avatars.githubusercontent.com/u/143386751?s=200&v=4"
+                                                                src={userProfile?.result.avatar ? userProfile.result.avatar : "https://cdn.lu.ma/cdn-cgi/image/format=auto,fit=cover,dpr=2,background=white,quality=75,width=32,height=32/avatars-default/avatar_8.png"}
                                                                 radius="full"
                                                                 name="Donace"
                                                                 className="w-10 h-10 bg-center bg-cover bg-white relative"
                                                             />
                                                         </div>
                                                         <div>
-                                                            <div className="font-semibold">demo</div>
-                                                            <div className="cursor-copy text-sm text-[#737577] dark:text-[#d2d4d7]">dattranphu1114@gmail.com</div>
+                                                            <div className="font-semibold">{getCalendars?.name}</div>
+                                                            <div className="cursor-copy text-sm text-[#737577] dark:text-[#d2d4d7]">{userProfile?.result.email}</div>
                                                         </div>
                                                     </div>
                                                     <button type="button" className="text-black-more-blur-light-theme dark:text-[rgba(255,255,255,0.64)] border-transparent bg-transparent p-0 h-auto border-none rounded-none outline-offset-[.375rem] cursor-pointer transition-all duration-300 ease-in-out donace-button-w-fit flex items-center m-0">
-                                                        <div className="label">Remove</div>
+                                                        <div className="label">Xóa</div>
                                                     </button>
                                                 </div>
                                             </div>
                                             <div className="can-divide with-divider small mt-5 pt-5 border-t border-solid border-[rgba(19,21,23,0.08)] dark:border-[rgba(255,255,255,0.08)]">
                                                 <div className="section-title-wrapper small">
                                                     <div className="section-title-row mb-4 flex justify-between items-center">
-                                                        <h2 className="text-lg font-semibold text-black-light-theme dark:text-[#fff] mb-0">Event</h2>
+                                                        <h2 className="text-lg font-semibold text-black-light-theme dark:text-[#fff] mb-0">Sự kiện</h2>
                                                     </div>
                                                 </div>
-                                                <div className="simple-table-wrapper border border-solid border-[rgba(19,21,23,0.08)] dark:border-[rgba(255,255,255,0.08)] rounded-lg overflow-hidden bg-[#f2f3f4] dark:bg-[rgba(255,255,255,0.04)]">
-                                                    <div className="base-row border-b-0 border-t-0 p-[0.75rem_1rem] transition-all duration-300 ease-in-out">
-                                                        <div>
-                                                            <Link
-                                                                className="text-black-light-theme dark:text-[#fff] transition-all duration-300 ease-in-out cursor-pointer"
-                                                                href=""
-                                                                underline="none"
-                                                            >
-                                                                <div className="font-semibold">Đồ án tốt nghiệp</div>
-                                                            </Link>
-                                                            <div className="gap-2 flex justify-between items-center">
-                                                                <div className="text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)]">Sep 5, 2023, 6:00 PM</div>
-                                                                <Chip className="p-[0.25rem_0.4375rem] text-xs whitespace-nowrap inline-flex items-center font-medium text-[#07a460] dark:text-[#47c97e] bg-[#07a46022] dark:bg-[#07a46022]">
-                                                                    <div>Going</div>
-                                                                </Chip>
+                                                {futureEvents && futureEvents.length > 0 ? (
+                                                    futureEvents.map((event, index) => (
+                                                        <div key={index} className="mb-2 simple-table-wrapper border border-solid border-[rgba(19,21,23,0.08)] dark:border-[rgba(255,255,255,0.08)] rounded-lg overflow-hidden bg-[#f2f3f4] dark:bg-[rgba(255,255,255,0.04)]">
+                                                            <div className="base-row border-b-0 border-t-0 p-[0.75rem_1rem] transition-all duration-300 ease-in-out">
+                                                                <div>
+                                                                    <Link
+                                                                        className="text-black-light-theme dark:text-[#fff] transition-all duration-300 ease-in-out cursor-pointer"
+                                                                        href=""
+                                                                        underline="none"
+                                                                    >
+                                                                        <div className="font-semibold">{event.name}</div>
+                                                                    </Link>
+                                                                    <div className="gap-2 flex justify-between items-center">
+                                                                        <div className="text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)]">{ConvertDateTime(event.startDate).day} tháng {ConvertDateTime(event.startDate).month}, {ConvertDateTime(event.startDate).year}, {ConvertDateTime(event.startDate).hour}:{ConvertDateTime(event.startDate).minute} {buoi}</div>
+                                                                        {event.status ? (
+                                                                            <Chip className="p-[0.25rem_0.4375rem] text-xs whitespace-nowrap inline-flex items-center font-medium text-[#07a460] dark:text-[#47c97e] bg-[#07a46022] dark:bg-[#07a46022]">
+                                                                                <div>{event.status}</div>
+                                                                            </Chip>
+                                                                        ) : (
+                                                                            <Chip
+                                                                                color="danger"
+                                                                                className="p-[0.25rem_0.4375rem] text-xs whitespace-nowrap inline-flex items-center font-medium"
+                                                                            >
+                                                                                <div>Chưa tham gia</div>
+                                                                            </Chip>
+                                                                        )}
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                    <div className="base-row border-b-0 border-t border-solid border-[rgba(19,21,23,0.08)] dark:border-[rgba(255,255,255,0.08)] p-[0.75rem_1rem] transition-all duration-300 ease-in-out">
-                                                        <div>
-                                                            <Link
-                                                                className="text-black-light-theme dark:text-[#fff] transition-all duration-300 ease-in-out cursor-pointer"
-                                                                href=""
-                                                                underline="none"
-                                                            >
-                                                                <div className="font-semibold">Demo</div>
-                                                            </Link>
-                                                            <div className="gap-2 flex justify-between items-center">
-                                                                <div className="text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)]">Sep 5, 2023, 6:00 PM</div>
-                                                                <Chip className="p-[0.25rem_0.4375rem] text-xs whitespace-nowrap inline-flex items-center font-medium text-[#07a460] dark:text-[#47c97e] bg-[#07a46022] dark:bg-[#07a46022]">
-                                                                    <div>Going</div>
-                                                                </Chip>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                                    ))
+                                                ) : (
+                                                    <div className="text-red-500">Bạn hiện không có tham gia event nào cả</div>
+                                                )}
                                             </div>
                                         </div>
                                     </ModalBody>

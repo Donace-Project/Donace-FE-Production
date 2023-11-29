@@ -192,3 +192,29 @@ export type CreateEventModel = {
     duration: number
     calendarId: string
 }
+// ****************
+
+// LIST EVENT BY USER
+export type ListEventByUser = {
+    id: string
+    startDate: string
+    endDate: string
+    addressName: string
+    lat: string
+    long: string
+    capacity: number
+    isOverCapacity: boolean
+    cover: string
+    name: string
+    theme: string
+    color: string
+    fontSize: number
+    instructions: string
+    isMultiSection: boolean
+    duration: number
+    totalGuest: number
+    calendarId: string
+    isHost: boolean
+    status: string
+    sorted: number
+}

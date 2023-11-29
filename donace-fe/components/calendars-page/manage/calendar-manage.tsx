@@ -5,7 +5,7 @@ import { Avatar } from "@nextui-org/avatar";
 import { Button } from "@nextui-org/button";
 import { Link } from "@nextui-org/link";
 import { Tab, Tabs } from "@nextui-org/tabs";
-import { ArrowRight, ArrowUpRight, CalendarX2, Fullscreen, MapPin, Plus, ScanLine, Users2 } from "lucide-react";
+import { ArrowRight, ArrowUpRight, CalendarX2, MapPin, Plus, ScanLine, Users2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Image } from "@nextui-org/image";
 import { Skeleton } from "@nextui-org/skeleton";
@@ -76,6 +76,7 @@ export default function CalendarManage(props: any) {
     const [getEvent, setEvents] = useState<GetListEventByCalendarId[]>([]);
     const [getPastEventId, setPastEventsId] = useState<GetListEventByCalendarId[]>([]);
 
+
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -98,6 +99,8 @@ export default function CalendarManage(props: any) {
 
                 const pastEventsIdData = await fetchWrapper.get(`api/Event/list-event-by-calendar-${id}-${dateTimeFalse}`);
                 setPastEventsId(pastEventsIdData);
+
+                
 
                 setLoading(false); // Set loading to false once all data is fetched
             } catch (error) {
