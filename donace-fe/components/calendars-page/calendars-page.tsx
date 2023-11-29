@@ -88,7 +88,7 @@ export default function CalendarPage() {
     useEffect(() => {
         const fetchSubscribed = async () => {
             try {
-                const subscribedData = await fetchWrapper.post('/api/Calendar/get-list-subscribed', { pageNumber: 1, pageSize: 9999 });
+                const subscribedData = await fetchWrapper.post('/api/Calendar/get-list-subcribed', { pageNumber: 1, pageSize: 9999 });
                 setSubscribed(subscribedData);
                 setLoadingSubscribed(false);
             } catch (error) {
