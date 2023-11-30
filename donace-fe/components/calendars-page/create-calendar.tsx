@@ -1,15 +1,16 @@
 "use client";
 import { fetchWrapper } from "@/helpers/fetch-wrapper";
-import { GetCalendarById, UploadImage } from "@/types/DonaceType";
+import { UploadImage } from "@/types/DonaceType";
 import { Button } from "@nextui-org/button";
 import { ArrowUp, CheckCircle } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import toast, { Toaster } from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 import { Spinner } from "@nextui-org/react";
+import { useSearchParams } from 'next/navigation'
 
 export default function CreateCalendar(props: any) {
-    
+
     var { id } = props;
     const router = useRouter();
     const backgroundRef = useRef<HTMLDivElement | null>(null);
@@ -111,7 +112,6 @@ export default function CreateCalendar(props: any) {
 
             // Gửi request API và hiển thị Spinner
             const response = await fetchWrapper.post("/api/Calendar/create-calendar", dataToSend);
-                const calendarsData = await fetchWrapper.post(`api/Calendar/get-by-id?Id=${id}`, null);
 
             if (!response.success) {
                 // Xử lý lỗi từ API và hiển thị thông báo lỗi
@@ -121,7 +121,9 @@ export default function CreateCalendar(props: any) {
             }
             // Xử lý thành công
             console.log(<b>Lịch đã tạo thành công!</b>);
-            router.push("/calendars/manage/");
+
+            const calendarsData = await fetchWrapper.post(`api/Calendar/get-by-id?Id=${id}`, null);
+            router.push(`/calendar/manage/${response.id}`);
         } catch (error) {
             // Xử lý lỗi trong quá trình gửi yêu cầu và hiển thị thông báo lỗi
             console.error(`Lỗi: ${String(Error)}`);
