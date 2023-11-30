@@ -107,12 +107,6 @@ export default function SettingLandingPage() {
                             >
                                 Tài khoản
                             </Link>
-                            <Link href="/preferences"
-                                className="text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)] border-b-2 border-solid border-transparent whitespace-nowrap inline-block pb-2 transition-all duration-300 ease-in-out cursor-pointer"
-                                underline="none"
-                            >
-                                Tùy chọn
-                            </Link>
                             <Link href="/settings/payment"
                                 className="text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)] border-b-2 border-solid border-transparent whitespace-nowrap inline-block pb-2 transition-all duration-300 ease-in-out cursor-pointer"
                                 underline="none"
@@ -140,7 +134,7 @@ export default function SettingLandingPage() {
                                 <div className="ml-1">Ảnh cá nhân</div>
                             </label>
                             <div role="presentation" className="relative w-24 h-24 cursor-pointer">
-                                <input accept="image/*,.jpg,.jpeg,.png,.gif,.webp" multiple type="file" tabIndex={-1} className="hidden text-inherit m-0" />
+                                <input aria-label="input" accept="image/*,.jpg,.jpeg,.png,.gif,.webp" multiple type="file" tabIndex={-1} className="hidden text-inherit m-0" />
                                 <div className="z-20 upload-icon rounded-full bg-center bg-cover flex justify-center items-center text-[#fff] dark:text-[rgb(19,21,23)] bg-[rgb(19,21,23)] dark:bg-[#fff] w-[35%] h-[35%] border-2 border-solid border-[#fff] dark:border-[rgb(19,21,23)] absolute right-0 bottom-0 origin-center transition-all duration-300 ease-in-out">
                                     <ArrowUp className="stroke-2 w-2/3 block align-middle" />
                                 </div>

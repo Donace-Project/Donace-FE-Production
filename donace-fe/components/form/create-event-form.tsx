@@ -297,6 +297,7 @@ export default function CreateFormFinal() {
                                                                                 className='w-[54px] h-[54px] relative cursor-pointer'
                                                                             >
                                                                                 <input
+                                                                                    aria-label='avatarImage'
                                                                                     type="file"
                                                                                     id="avatarImage"
                                                                                     className="hidden"
@@ -392,10 +393,11 @@ export default function CreateFormFinal() {
                                                                                 <Input
                                                                                     type="date"
                                                                                     id="date"
-                                                                                    value={getEventReq.startDate}
+                                                                                    value={getEventReq.name}
                                                                                     onChange={(e) =>
-                                                                                        setEventReq({ ...getEventReq, startDate: e.target.value })
+                                                                                        setEventReq({ ...getEventReq, name: e.target.value })
                                                                                     }
+
                                                                                     className='bg-transparent dark:bg-[rgba(255,255,255,0.08)] dark:text-[#fff]'
                                                                                     variant='flat'
                                                                                     radius='none' />
@@ -404,7 +406,7 @@ export default function CreateFormFinal() {
                                                                         <div className='divider w-px bg-transparent transition-all duration-300 ease-in-out'></div>
                                                                         <div className='time-input border-l-0 rounded-tl-none rounded-tr rounded-br rounded-bl-none border border-solid border-transparent bg-[rgba(19,21,23,0.04)] transition-all duration-300 ease-in-out flex items-center'>
                                                                             <div className='lux-menu-trigger flex cursor-pointer min-w-0'>
-                                                                                <Input
+                                                                                {/* <Input
                                                                                     type="time"
                                                                                     id="time"
                                                                                     value={startTime}
@@ -412,7 +414,7 @@ export default function CreateFormFinal() {
                                                                                     className='bg-transparent dark:bg-[rgba(255,255,255,0.08)] dark:text-[#fff]'
                                                                                     variant='flat'
                                                                                     radius='none'
-                                                                                />
+                                                                                /> */}
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -435,13 +437,14 @@ export default function CreateFormFinal() {
                                                                                     }
                                                                                     className='bg-transparent dark:bg-[rgba(255,255,255,0.08)] dark:text-[#fff]'
                                                                                     variant='flat'
-                                                                                    radius='none' />
+                                                                                    radius='none'
+                                                                                />
                                                                             </div>
                                                                         </div>
                                                                         <div className='divider w-px bg-transparent transition-all duration-300 ease-in-out'></div>
                                                                         <div className='time-input border-l-0 rounded-tl-none rounded-tr rounded-br rounded-bl-none border border-solid border-transparent bg-[rgba(19,21,23,0.04)] transition-all duration-300 ease-in-out flex items-center'>
                                                                             <div className='lux-menu-trigger flex cursor-pointer min-w-0'>
-                                                                                <Input
+                                                                                {/* <Input
                                                                                     type="time"
                                                                                     id="time"
                                                                                     value={endTime}
@@ -449,7 +452,7 @@ export default function CreateFormFinal() {
                                                                                     className='bg-transparent dark:bg-[rgba(255,255,255,0.08)] dark:text-[#fff]'
                                                                                     variant='flat'
                                                                                     radius='none'
-                                                                                />
+                                                                                /> */}
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -470,14 +473,38 @@ export default function CreateFormFinal() {
                                                                 radius='sm'
                                                                 type='button'
                                                                 onPress={modalMap.onOpen}
+
                                                             >
                                                                 <div className='inner min-h-unit-3.5 p-[0.375rem_0.75rem]'>
                                                                     <div>
                                                                         <div>
                                                                             <div className='min-w-0'>
+                                                                                <Input
+                                                                                    className='hidden'
+                                                                                    value={getEventReq.lat}
+                                                                                    onChange={(e) =>
+                                                                                        setEventReq({ ...getEventReq, lat: e.target.value })
+                                                                                    }
+                                                                                />
+                                                                                <Input
+                                                                                    className='hidden'
+                                                                                    value={getEventReq.long}
+                                                                                    onChange={(e) =>
+                                                                                        setEventReq({ ...getEventReq, long: e.target.value })
+                                                                                    }
+                                                                                />
                                                                                 <div className='text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)] font-medium overflow-hidden text-ellipsis whitespace-nowrap max-w-[19rem]'>
                                                                                     {addressLat && addressLng ? (
-                                                                                        `${addressLat}`
+                                                                                        <div>
+                                                                                            {addressLat}
+                                                                                            <Input
+                                                                                                className='hidden'
+                                                                                                value={getEventReq.lat}
+                                                                                                onChange={(e) =>
+                                                                                                    setEventReq({ ...getEventReq, lat: e.target.value })
+                                                                                                }
+                                                                                            />
+                                                                                        </div>
                                                                                     ) : (
                                                                                         'Thêm địa điểm diễn ra sự kiện'
                                                                                     )}
@@ -513,7 +540,7 @@ export default function CreateFormFinal() {
                                                                                         Chọn địa điểm:
                                                                                     </div>
                                                                                     <ButtonGroup variant="flat" className='ml-[14rem]'>
-                                                                                        <Button>{labelsMap[selectedOption.values().next().value]}</Button>
+                                                                                        <Button>{(labelsMap as { [key: string]: string })[selectedOptionValue]}</Button>
                                                                                         <Dropdown placement="bottom-end"
                                                                                             classNames={{
                                                                                                 base: [

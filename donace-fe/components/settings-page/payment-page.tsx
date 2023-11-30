@@ -54,13 +54,6 @@ export default function PaymentPage() {
                                 >
                                     Tài khoản
                                 </Link>
-                                <Link href="/preferences"
-                                    className="text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)] border-b-2 border-solid border-transparent whitespace-nowrap inline-block pb-2 transition-all duration-300 ease-in-out cursor-pointer"
-
-                                    underline="none"
-                                >
-                                    Tùy chọn
-                                </Link>
                                 <Link href="/settings/payment"
                                     className="text-black-light-theme dark:text-[#fff] border-b-2 border-solid border-[rgb(19,21,23)] dark:border-[#fff] whitespace-nowrap inline-block pb-2 transition-all duration-300 ease-in-out cursor-pointer"
                                     underline="none"
