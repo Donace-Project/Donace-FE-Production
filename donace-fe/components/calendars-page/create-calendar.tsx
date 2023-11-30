@@ -170,6 +170,7 @@ export default function CreateCalendar(props: any) {
                                     className="absolute top-2 right-2 backdrop-blur-xl backdrop-contrast-[50%] backdrop-brightness-[130%] border border-solid border-[rgba(19,21,23,0.08)] rounded-[0.5rem] overflow-hidden"
                                 >
                                     <input
+                                        aria-label="coverImage"
                                         type="file"
                                         id="coverImage"
                                         className="hidden"
@@ -206,6 +207,7 @@ export default function CreateCalendar(props: any) {
                                             className="w-[64px] h-[64px] relative cursor-pointer"
                                         >
                                             <input
+                                                aria-label="avatarImage"
                                                 type="file"
                                                 id="avatarImage"
                                                 className="hidden"

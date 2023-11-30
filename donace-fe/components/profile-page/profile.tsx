@@ -288,6 +288,7 @@ export default function ProfilePage() {
                                               className="relative w-24 h-24 cursor-pointer"
                                             >
                                               <input
+                                                aria-label="avatarImage"
                                                 accept="image/*,.jpg,.jpeg,.png,.gif,.webp"
                                                 multiple
                                                 type="file"
