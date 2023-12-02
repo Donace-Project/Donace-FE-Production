@@ -45,7 +45,7 @@ import { Image } from "@nextui-org/react";
 //@ts-ignore
 // import goongjs from '@goongmaps/goong-js';
 //@ts-ignore
-// import GoongGeocoder from "@goongmaps/goong-geocoder";
+import GoongGeocoder from "@goongmaps/goong-geocoder";
 import { Link } from "@nextui-org/link";
 import React from "react";
 import { Player } from "@lottiefiles/react-lottie-player";
@@ -54,7 +54,7 @@ import { NumericFormat } from "react-number-format";
 import { CreateEventModel } from "@/types/DonaceType";
 import { fetchWrapper } from "@/helpers/fetch-wrapper";
 export default function CreateFormFinal() {
-  let goongjs:any;
+  let goongjs = useRef<any>(null);
 
   // ?: options chọn địa điểm
   const [selectedOption, setSelectedOption] = React.useState(
@@ -105,10 +105,6 @@ export default function CreateFormFinal() {
   const month = currentDate.getMonth() + 1;
 
   const [geocoder, setGeocoder] = useState<any>(null);
-  //   let geocoder = new GoongGeocoder({
-  //     accessToken: "sbRzCkkevuDa7mTtXzH1mE1i3CZGdFjGAcG01XqF",
-  //     goongjs: goongjs,
-  //   });
 
   const labelsMap = {
     offline: "Offline",
@@ -210,16 +206,14 @@ export default function CreateFormFinal() {
   };
   useEffect(() => {
     async function ImportMap() {
-        goongjs = await require("@goongmaps/goong-js");     
-        if(goongjs !== null) {
-            goongjs.accessToken = "wnicbAmnNkoMHNYUKWnlFHezV189FjmMwkNJ7hKW";
-            setGeocoder(
-                {
-                  accessToken: "sbRzCkkevuDa7mTtXzH1mE1i3CZGdFjGAcG01XqF",
-                  goongjs: goongjs.current,
-                }
-              );
-        }
+        goongjs.current = await require("@goongmaps/goong-js");     
+        goongjs.current.accessToken = "wnicbAmnNkoMHNYUKWnlFHezV189FjmMwkNJ7hKW";
+      setGeocoder(
+        new GoongGeocoder({
+          accessToken: "sbRzCkkevuDa7mTtXzH1mE1i3CZGdFjGAcG01XqF",
+          goongjs: goongjs.current,
+        })
+      );
     }
 
     ImportMap();
@@ -228,7 +222,7 @@ export default function CreateFormFinal() {
   useEffect(() => {
     // Khởi tạo bản đồ khi component được mount
     if (modalMap.isOpen && showOfflineContent === true) {
-        map = new goongjs.Map({
+        map = new goongjs.current.Map({
           container: "map", // ID của phần tử HTML để chứa bản đồ
           style: "https://tiles.goong.io/assets/goong_map_web.json",
           center: [lng, lat], // Tọa độ trung tâm
