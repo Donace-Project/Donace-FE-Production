@@ -62,6 +62,25 @@ export type ItemEventsProfile = {
     isLive: boolean;
 }
 
+
+export type UpdateProfile ={
+    code : string;
+    success : true;
+    result : ResultUpdateProfile;
+    pageInfor: any;
+}
+
+export type ResultUpdateProfile ={
+    userName: string;
+    avatar: string;
+    bio: string;
+    instagram: string;
+    twitter: string;
+    youtube: string;
+    tiktok: string;
+    linkedIn: string;
+    website: string;
+}
 // ***** END EXPORT PROFILE
 
 // CALENDAR MANAGER

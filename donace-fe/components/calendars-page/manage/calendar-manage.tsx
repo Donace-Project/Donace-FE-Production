@@ -87,10 +87,10 @@ export default function CalendarManage(props: any) {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const futureEventsData = await fetchWrapper.get(`api/Event?IsNew=${dateTimeTrue}`);
+                const futureEventsData = await fetchWrapper.get(`api/Event?IsNew=${dateTimeTrue}-${dateTimeSubTrue}`);
                 setFutureEvents(futureEventsData.items);
 
-                const pastEventsData = await fetchWrapper.get(`api/Event?IsNew=${dateTimeFalse}`);
+                const pastEventsData = await fetchWrapper.get(`api/Event?IsNew=${dateTimeFalse}-${dateTimeSubFalse}`);
                 setPastEvents(pastEventsData.items);
 
                 const calendarsData = await fetchWrapper.post(`api/Calendar/get-by-id?Id=${id}`, null);

@@ -225,6 +225,7 @@ export default function CalendarPage() {
                                                     key={subscribed.id}
                                                     className="p-[1rem_1rem_0.875rem] cursor-pointer transition-all duration-300 ease-in-out block relative rounded-xl bg-[#f3f4f5] dark:bg-[rgba(255,255,255,0.04)] border border-solid border-[#fff] dark:border-[rgba(255,255,255,0.04)] overflow-hidden"
                                                     underline="none"
+                                                    href={`/calendars/manage/${subscribed.id}`}
                                                 >
                                                     <div className="spread min-h-full flex justify-between flex-col">
                                                         <Image
@@ -245,7 +246,7 @@ export default function CalendarPage() {
                                                             )}
                                                         </div>
                                                         <div className="spread gap-2 mt-4 flex justify-between flex-wrap items-center">
-                                                            <div className="text-sm text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)]">Personal</div>
+                                                            <div className="text-sm text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)]">Cá nhân</div>
                                                         </div>
                                                     </div>
                                                 </Link>

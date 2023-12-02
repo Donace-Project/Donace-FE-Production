@@ -5,7 +5,7 @@ import { Input, Textarea } from '@nextui-org/input';
 
 import { ArrowUp, ArrowUpToLine, CheckCircle2, ChevronDown, ChevronDownIcon, Coins, CreditCard, Globe, MapPin, Pen, Plus, PlusIcon, Ticket, Upload, UserCheck } from 'lucide-react';
 import { useState, useEffect } from 'react';
-import { Switch, User } from "@nextui-org/react";
+import { Spinner, Switch, User } from "@nextui-org/react";
 
 import { Modal, ModalContent, ModalHeader, ModalBody, useDisclosure, ModalFooter } from "@nextui-org/modal";
 import { Dropdown, DropdownTrigger, DropdownMenu, DropdownSection, DropdownItem } from "@nextui-org/dropdown";
@@ -61,6 +61,12 @@ export default function CreateFormFinal() {
     const [compoundLngProvince, setCompoundLngProvince] = useState(null);
 
     const [isCreating, setIsCreating] = useState(false);
+
+    const [capacity, setCapacity] = useState('');
+
+    const currentDate = new Date();
+    const day = currentDate.getDate();
+    const month = currentDate.getMonth() + 1;
 
     let geocoder = new GoongGeocoder({
         accessToken: 'sbRzCkkevuDa7mTtXzH1mE1i3CZGdFjGAcG01XqF',
@@ -196,6 +202,13 @@ export default function CreateFormFinal() {
                 console.log(e.result.result.name);
                 console.log(e.result.result.compound)
                 setSelectedLocation({ lat: e.result.result.name, lng: e.result.result.name });
+
+                setEventReq(prevState => ({
+                    ...prevState,
+                    lat: e.result.result.geometry.location.lat,
+                    long: e.result.result.geometry.location.lng,
+                    // Các giá trị khác nếu cần
+                }));
                 // console.log(e.result.result.formatted_address); // log the place name
                 // console.log(e.result.geometry); // log the coordinates [longitude, latitude]
             });
@@ -297,6 +310,7 @@ export default function CreateFormFinal() {
                                                                                 className='w-[54px] h-[54px] relative cursor-pointer'
                                                                             >
                                                                                 <input
+                                                                                    aria-label='avatarImage'
                                                                                     type="file"
                                                                                     id="avatarImage"
                                                                                     className="hidden"
@@ -377,8 +391,8 @@ export default function CreateFormFinal() {
                                                 <div className='attribute-row w-full gap-3 mb-4 flex items-start'>
                                                     <div className='icon-container w-10 h-10 border border-solid border-[rgba(19,21,23,0.1)] dark:border-[rgba(255,255,255,0.08)] text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)] rounded-lg flex-shrink-0 mt-2 overflow-hidden justify-center flex items-center'>
                                                         <div className='text-center w-full'>
-                                                            <div className='month bg-[rgba(19,21,23,0.1)] dark:bg-[rgba(255,255,255,0.08)] text-[0.5rem] font-semibold uppercase p-px'>Nov</div>
-                                                            <div className='day -translate-y-px font-medium'>6</div>
+                                                            <div className='month bg-[rgba(19,21,23,0.1)] dark:bg-[rgba(255,255,255,0.08)] text-[0.5rem] font-semibold uppercase p-px'>{month}</div>
+                                                            <div className='day -translate-y-px font-medium'>{day}</div>
                                                         </div>
                                                     </div>
                                                     <div className='time-picker bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)] rounded-lg overflow-hidden flex-1'>
@@ -396,6 +410,7 @@ export default function CreateFormFinal() {
                                                                                     onChange={(e) =>
                                                                                         setEventReq({ ...getEventReq, startDate: e.target.value })
                                                                                     }
+
                                                                                     className='bg-transparent dark:bg-[rgba(255,255,255,0.08)] dark:text-[#fff]'
                                                                                     variant='flat'
                                                                                     radius='none' />
@@ -404,15 +419,17 @@ export default function CreateFormFinal() {
                                                                         <div className='divider w-px bg-transparent transition-all duration-300 ease-in-out'></div>
                                                                         <div className='time-input border-l-0 rounded-tl-none rounded-tr rounded-br rounded-bl-none border border-solid border-transparent bg-[rgba(19,21,23,0.04)] transition-all duration-300 ease-in-out flex items-center'>
                                                                             <div className='lux-menu-trigger flex cursor-pointer min-w-0'>
-                                                                                <Input
+                                                                                {/* <Input
                                                                                     type="time"
                                                                                     id="time"
-                                                                                    value={startTime}
-                                                                                    onChange={(e) => setStartTime(e.target.value)}
+                                                                                    value={getEventReq.startDate}
+                                                                                    onChange={(e) =>
+                                                                                        setEventReq({ ...getEventReq, startDate: e.target.value })
+                                                                                    }
                                                                                     className='bg-transparent dark:bg-[rgba(255,255,255,0.08)] dark:text-[#fff]'
                                                                                     variant='flat'
                                                                                     radius='none'
-                                                                                />
+                                                                                /> */}
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -435,21 +452,24 @@ export default function CreateFormFinal() {
                                                                                     }
                                                                                     className='bg-transparent dark:bg-[rgba(255,255,255,0.08)] dark:text-[#fff]'
                                                                                     variant='flat'
-                                                                                    radius='none' />
+                                                                                    radius='none'
+                                                                                />
                                                                             </div>
                                                                         </div>
                                                                         <div className='divider w-px bg-transparent transition-all duration-300 ease-in-out'></div>
                                                                         <div className='time-input border-l-0 rounded-tl-none rounded-tr rounded-br rounded-bl-none border border-solid border-transparent bg-[rgba(19,21,23,0.04)] transition-all duration-300 ease-in-out flex items-center'>
                                                                             <div className='lux-menu-trigger flex cursor-pointer min-w-0'>
-                                                                                <Input
+                                                                                {/* <Input
                                                                                     type="time"
                                                                                     id="time"
-                                                                                    value={endTime}
-                                                                                    onChange={(e) => setEndTime(e.target.value)}
+                                                                                    value={getEventReq.endDate}
+                                                                                    onChange={(e) =>
+                                                                                        setEventReq({ ...getEventReq, endDate: e.target.value })
+                                                                                    }
                                                                                     className='bg-transparent dark:bg-[rgba(255,255,255,0.08)] dark:text-[#fff]'
                                                                                     variant='flat'
                                                                                     radius='none'
-                                                                                />
+                                                                                /> */}
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -470,14 +490,31 @@ export default function CreateFormFinal() {
                                                                 radius='sm'
                                                                 type='button'
                                                                 onPress={modalMap.onOpen}
+                                                                onClick={handleClick}
                                                             >
                                                                 <div className='inner min-h-unit-3.5 p-[0.375rem_0.75rem]'>
                                                                     <div>
                                                                         <div>
                                                                             <div className='min-w-0'>
+                                                                                <Input
+                                                                                    className='hidden'
+                                                                                    value={getEventReq.lat}
+                                                                                    onChange={(e) =>
+                                                                                        setEventReq({ ...getEventReq, lat: e.target.value })
+                                                                                    }
+                                                                                />
+                                                                                <Input
+                                                                                    className='hidden'
+                                                                                    value={getEventReq.long}
+                                                                                    onChange={(e) =>
+                                                                                        setEventReq({ ...getEventReq, long: e.target.value })
+                                                                                    }
+                                                                                />
                                                                                 <div className='text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)] font-medium overflow-hidden text-ellipsis whitespace-nowrap max-w-[19rem]'>
                                                                                     {addressLat && addressLng ? (
-                                                                                        `${addressLat}`
+                                                                                        <div>
+                                                                                            {addressLat}
+                                                                                        </div>
                                                                                     ) : (
                                                                                         'Thêm địa điểm diễn ra sự kiện'
                                                                                     )}
@@ -489,7 +526,6 @@ export default function CreateFormFinal() {
                                                                                 ) : (
                                                                                     <div className='overflow-hidden text-ellipsis whitespace-nowrap text-sm text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)] max-w-[19rem]'>Tổ chức Online/Offline sự kiện của bạn</div>
                                                                                 )}
-
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -513,7 +549,7 @@ export default function CreateFormFinal() {
                                                                                         Chọn địa điểm:
                                                                                     </div>
                                                                                     <ButtonGroup variant="flat" className='ml-[14rem]'>
-                                                                                        <Button>{labelsMap[selectedOption.values().next().value]}</Button>
+                                                                                        <Button>{(labelsMap as { [key: string]: string })[selectedOptionValue]}</Button>
                                                                                         <Dropdown placement="bottom-end"
                                                                                             classNames={{
                                                                                                 base: [
@@ -562,6 +598,7 @@ export default function CreateFormFinal() {
                                                                                         {showOfflineContent ? (
                                                                                             <div className='flex justify-end ml-[39rem]'>
                                                                                                 <Button
+                                                                                                    onPress={modalMap.onClose}
                                                                                                     onClick={handleSaveLocation}
                                                                                                     type='submit'
                                                                                                     className='text-[#fff] dark:text-[rgb(19,21,23)] bg-[#333537] dark:bg-[#fff] border-[#333537] dark:border-[#fff] border border-solid cursor-pointer transition-all duration-300 ease-in-out donace-button-w-fit flex items-center m-0'
@@ -838,7 +875,7 @@ export default function CreateFormFinal() {
                                                             </div>
                                                             <div className='text-black-more-blur-light-theme select-none flex-1'>Số lượng</div>
                                                             <div className='gap-1 flex items-center'>
-                                                                <div className='value'>Không giới hạn</div>
+                                                                <div className='value'>{capacity || 'Không giới hạn'}</div>
                                                                 <button
                                                                     aria-label='Button to open modalCapacity'
                                                                     onClick={modalCapacity.onOpen}
@@ -895,6 +932,11 @@ export default function CreateFormFinal() {
                                                                                                                 "text-base"
                                                                                                             ]
                                                                                                         }}
+                                                                                                        value={getEventReq.capacity}
+                                                                                                        onChange={(e) => {
+                                                                                                            setCapacity(e.target.value);
+                                                                                                            setEventReq({ ...getEventReq, capacity: e.target.value });
+                                                                                                        }}
                                                                                                     />
                                                                                                 </div>
                                                                                             </div>
@@ -902,6 +944,7 @@ export default function CreateFormFinal() {
                                                                                     </div>
                                                                                     <div className='gap-2 flex justify-between items-center'>
                                                                                         <Button
+                                                                                            onPress={modalCapacity.onClose}
                                                                                             type='submit'
                                                                                             className='text-[#fff] bg-[#333537] border-[#333537] border border-solid cursor-pointer transition-all duration-300 ease-in-out donace-button mt-4 flex items-center m-0'
                                                                                         >
@@ -923,6 +966,94 @@ export default function CreateFormFinal() {
                                                                 )}
                                                             </ModalContent>
                                                         </Modal>
+                                                    </div>
+                                                    <div className='options-row'>
+                                                        <Input
+                                                            value={getEventReq.addressName}
+                                                            onChange={(e) =>
+                                                                setEventReq({ ...getEventReq, addressName: e.target.value })
+                                                            }
+                                                            className='addressName mt-2'
+                                                            variant='bordered'
+                                                            placeholder='Address Name'
+                                                        />
+                                                    </div>
+                                                    <div className='options-row'>
+                                                        <Input
+                                                            value={getEventReq.calendarId}
+                                                            onChange={(e) =>
+                                                                setEventReq({ ...getEventReq, calendarId: e.target.value })
+                                                            }
+                                                            className='addressName mt-2'
+                                                            variant='bordered'
+                                                            placeholder='CalendarID'
+                                                        />
+                                                    </div>
+                                                    <div className='options-row'>
+                                                        <Input
+                                                            value={getEventReq.color}
+                                                            onChange={(e) =>
+                                                                setEventReq({ ...getEventReq, color: e.target.value })
+                                                            }
+                                                            className='addressName mt-2'
+                                                            variant='bordered'
+                                                            placeholder='Color'
+                                                        />
+                                                    </div>
+                                                    <div className='options-row'>
+                                                        <Input
+                                                            value={getEventReq.cover}
+                                                            onChange={(e) =>
+                                                                setEventReq({ ...getEventReq, cover: e.target.value })
+                                                            }
+                                                            className='addressName mt-2'
+                                                            variant='bordered'
+                                                            placeholder='Cover'
+                                                        />
+                                                    </div>
+                                                    <div className='options-row'>
+                                                        <Input
+                                                            value={getEventReq.duration}
+                                                            onChange={(e) =>
+                                                                setEventReq({ ...getEventReq, duration: e.target.value })
+                                                            }
+                                                            className='addressName mt-2'
+                                                            variant='bordered'
+                                                            placeholder='Duration'
+                                                        />
+                                                    </div>
+                                                    <div className='options-row'>
+                                                        <Input
+                                                            value={getEventReq.fontSize}
+                                                            onChange={(e) =>
+                                                                setEventReq({ ...getEventReq, fontSize: e.target.value })
+                                                            }
+                                                            className='addressName mt-2'
+                                                            variant='bordered'
+                                                            placeholder='Font size'
+                                                        />
+                                                    </div>
+                                                    <div className='options-row'>
+                                                        <Input
+                                                            value={getEventReq.instructions}
+                                                            onChange={(e) =>
+                                                                setEventReq({ ...getEventReq, instructions: e.target.value })
+                                                            }
+                                                            className='addressName mt-2'
+                                                            variant='bordered'
+                                                            placeholder='instructions'
+                                                        />
+                                                    </div>
+                                                    <div className='options-row'>
+                                                        <Input
+                                                            value={getEventReq.theme}
+                                                            onChange={(e) =>
+                                                                setEventReq({ ...getEventReq, theme: e.target.value })
+                                                            }
+                                                            className='addressName mt-2'
+                                                            variant='bordered'
+                                                            placeholder='theme'
+                                                        />
                                                     </div>
                                                 </div>
                                             </div>
