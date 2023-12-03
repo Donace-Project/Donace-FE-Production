@@ -656,10 +656,10 @@ export default function ProfilePage() {
                                         >
                                           <div className="event-time-left w-14 text-center mr-6 border border-solid border-[#f0f8fd] rounded-lg bg-white overflow-hidden transition-all duration-300 ease-in-out">
                                             <div className="event-month uppercase text-xs font-semibold text-[#82aad8] bg-[#f0f8fd] p-[0.125rem_0px] transition-all duration-300 ease-in-out">
-                                              {ConvertDate(event.endDate).month}
+                                              {ConvertDate(event.startDate).month}
                                             </div>
                                             <div className="event-date text-2xl font-light m-[0.375rem_0px] text-[#002f45]">
-                                              {ConvertDate(event.endDate).day}
+                                              {ConvertDate(event.startDate).day}
                                             </div>
                                           </div>
                                           <div className="event-cover-wrapper w-40 mr-6 relative">
