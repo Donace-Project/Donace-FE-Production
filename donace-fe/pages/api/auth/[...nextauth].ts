@@ -1,6 +1,7 @@
 import CredentialsProvider from "next-auth/providers/credentials";
 import NextAuth from "next-auth";
 import type { NextAuthOptions } from "next-auth";
+import { fetchWrapper } from '../../../helpers/fetch-wrapper';
 
 export const authOptions: NextAuthOptions = {
     // Configure one or more authentication providers
@@ -25,22 +26,10 @@ export const authOptions: NextAuthOptions = {
             },
             async authorize(credentials, req) {
                 const { email, password } = credentials as any;
-                const res = await fetch("http://34.97.29.83/api/Authentication/login", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        email,
-                        password,
-                    }),
-                });
-
-                const user = await res.json();
-
-                if (res.ok && user) {
-                    return user;
-                } else return null;
+                return fetchWrapper.post("api/Authentication/login", {
+                    email,
+                    password
+                })
             },
         }),
     ],

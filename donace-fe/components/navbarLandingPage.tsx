@@ -31,10 +31,10 @@ export default function NavbarLanding() {
                 <div className="m-[-4px_0]">
                     <Link 
                         href="/auth/login"
-                        className="text-[rgba(255,255,255,0.64)] bg-[rgba(255,255,255,0.08)] rounded-full border-transparent border border-solid transition-all duration-300 ease-in-out donace-button flex items-center cursor-pointer"
+                        className="text-black-more-blur-light-theme bg-[rgba(255,255,255,0.50)] rounded-full border-transparent border border-solid transition-all duration-300 ease-in-out donace-button flex items-center cursor-pointer"
                         underline="none"
                     >
-                        <div className="label">Sign In</div>
+                        <div className="label">Đăng nhập</div>
                     </Link>
                 </div>
             </NavbarContent>

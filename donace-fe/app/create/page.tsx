@@ -1,10 +1,14 @@
 "use client"
-import CreateForm from "@/components/form/create-form";
+import CreateFormFinal from "@/components/form/create-event-form";
+import NavbarComponents from "@/components/navbar";
 
 function CreatePage() {
     return (
-        <div>
-            <CreateForm />
+        <div className="page-wrapper">
+            <NavbarComponents />
+            <div className="main">
+                <CreateFormFinal />
+            </div>
         </div>)
 }
 

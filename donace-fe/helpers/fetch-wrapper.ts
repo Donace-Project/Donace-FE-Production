@@ -1,11 +1,12 @@
 import { authHelper } from "./authHelper";
 
 // TODO: Move config này ra setting
-const baseUrl = "http://34.97.29.83/";
+const baseUrl = "http://34.85.64.55:8082/";
 
 export const fetchWrapper = {
   get,
   post,
+  postFile,
   put,
   delete: _delete,
 };
@@ -14,16 +15,17 @@ function fetchRelative(url: string, option: RequestInit) {
   return fetch(new URL(url, baseUrl), option);
 }
 
-function get(url: string) {
+async function get(url: string) {
   const requestOptions = {
     method: "GET",
     headers: authHeader(),
   } as RequestInit;
 
-  return fetchRelative(url, requestOptions).then(handleResponse);
+  const response = await fetchRelative(url, requestOptions);
+  return handleResponse(response);
 }
 
-function post(url: string, body: any) {
+async function post(url: string, body: any) {
   const requestOptions = {
     method: "POST",
     headers: { "Content-Type": "application/json", ...authHeader() },
@@ -31,25 +33,40 @@ function post(url: string, body: any) {
     body: JSON.stringify(body),
   } as RequestInit;
 
-  return fetchRelative(url, requestOptions).then(handleResponse);
+  const response = await fetchRelative(url, requestOptions);
+  return handleResponse(response);
 }
 
-function put(url: string, body: any) {
+async function postFile(url: string, body: any) {
+  const requestOptions = {
+    method: "POST",
+    headers: { ...authHeader() },
+    credentials: "include",
+    body: body,
+  } as RequestInit;
+
+  const response = await fetchRelative(url, requestOptions);
+  return await response.text();;
+}
+
+async function put(url: string, body: any) {
   const requestOptions = {
     method: "PUT",
     headers: { "Content-Type": "application/json", ...authHeader() },
     body: JSON.stringify(body),
   } as RequestInit;
-  return fetchRelative(url, requestOptions).then(handleResponse);
+  const response = await fetchRelative(url, requestOptions);
+  return handleResponse(response);
 }
 
 // prefixed with underscored because delete is a reserved word in javascript
-function _delete(url: string) {
+async function _delete(url: string) {
   const requestOptions = {
     method: "DELETE",
     headers: authHeader(),
   } as RequestInit;
-  return fetchRelative(url, requestOptions).then(handleResponse);
+  const response = await fetchRelative(url, requestOptions);
+  return handleResponse(response);
 }
 
 // helper functions
@@ -59,20 +76,14 @@ function authHeader() {
   return { Authorization: `Bearer ${token}` };
 }
 
-function handleResponse(response: Response) {
-  return response.text().then((text) => {
-    const data = text && JSON.parse(text);
-
-    if (!response.ok) {
-      if ([401, 403].includes(response.status)) {
-        // auto logout if 401 Unauthorized or 403 Forbidden response returned from api
-        // TODO: Handle chuyển trang sang màn login
-      }
-
-      const error = (data && data.message) || response.statusText;
-      return Promise.reject(error);
+async function handleResponse(response: Response) {
+  const text = await response.text();
+  const data = text && JSON.parse(text);
+  if (!response.ok) {
+    if ([401, 403].includes(response.status)) {
     }
 
-    return data;
-  });
+    return Promise.reject(data);
+  }
+  return data;
 }

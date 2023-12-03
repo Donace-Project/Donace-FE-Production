@@ -254,3 +254,48 @@
     top: 0px;
     left: 0px;
 }
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    -webkit-background-clip: text;
+    transition: background-color 5000s ease-in-out 0s;
+}
+
+/* MANAGE -> CALENDARS -> PEOPLE */
+.simple-table-wrapper {
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgba(19, 21, 23, 0.08);
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+
+.live-bagde-animation::before {
+    animation: 2s ease 0s infinite normal none;
+    content: "";
+    width: 0.375rem;
+    height: 0.375rem;
+    margin-right: 0.375rem;
+    background-color: #ff9641;
+}
+
+@keyframes breath {
+    0% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+.value { 
+    color: rgba( 19,21,23 ,0.36);
+    font-weight: 500;
+}

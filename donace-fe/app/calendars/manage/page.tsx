@@ -4,9 +4,9 @@ import NavbarComponents from "@/components/navbar";
 export default function Page() {
     return (
         <div className="page-wrapper">
-            <NavbarComponents/>
+            <NavbarComponents />
             <div className="main">
-                <CalendarManage/>
+                <CalendarManage />
             </div>
         </div>
     )
