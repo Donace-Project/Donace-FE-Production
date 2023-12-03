@@ -123,7 +123,7 @@ export default function CreateCalendar(props: any) {
             console.log(<b>Lịch đã tạo thành công!</b>);
 
             const calendarsData = await fetchWrapper.post(`api/Calendar/get-by-id?Id=${id}`, null);
-            router.push(`/calendar/manage/${response.id}`);
+            router.push(`/calendars`);
         } catch (error) {
             // Xử lý lỗi trong quá trình gửi yêu cầu và hiển thị thông báo lỗi
             console.error(`Lỗi: ${String(Error)}`);
