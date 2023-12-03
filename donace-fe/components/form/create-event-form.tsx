@@ -1,223 +1,270 @@
-"use client"
+"use client";
 
-import { Avatar } from '@nextui-org/avatar';
-import { Input, Textarea } from '@nextui-org/input';
+import { Avatar } from "@nextui-org/avatar";
+import { Input, Textarea } from "@nextui-org/input";
 
-import { ArrowUp, ArrowUpToLine, CheckCircle2, ChevronDown, ChevronDownIcon, Coins, CreditCard, Globe, MapPin, Pen, Plus, PlusIcon, Ticket, Upload, UserCheck } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import {
+  ArrowUp,
+  ArrowUpToLine,
+  CheckCircle2,
+  ChevronDown,
+  ChevronDownIcon,
+  Coins,
+  CreditCard,
+  Globe,
+  MapPin,
+  Pen,
+  Plus,
+  PlusIcon,
+  Ticket,
+  Upload,
+  UserCheck,
+} from "lucide-react";
+import { useState, useEffect, useRef } from "react";
 import { Spinner, Switch, User } from "@nextui-org/react";
 
-import { Modal, ModalContent, ModalHeader, ModalBody, useDisclosure, ModalFooter } from "@nextui-org/modal";
-import { Dropdown, DropdownTrigger, DropdownMenu, DropdownSection, DropdownItem } from "@nextui-org/dropdown";
-import { Button, ButtonGroup } from '@nextui-org/button';
-import { Divider } from '@nextui-org/divider';
+import {
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  useDisclosure,
+  ModalFooter,
+} from "@nextui-org/modal";
+import {
+  Dropdown,
+  DropdownTrigger,
+  DropdownMenu,
+  DropdownSection,
+  DropdownItem,
+} from "@nextui-org/dropdown";
+import { Button, ButtonGroup } from "@nextui-org/button";
+import { Divider } from "@nextui-org/divider";
 import { Image } from "@nextui-org/react";
 
 //@ts-ignore
-import goongjs from '@goongmaps/goong-js';
+// import goongjs from '@goongmaps/goong-js';
 //@ts-ignore
-import GoongGeocoder from '@goongmaps/goong-geocoder'
-import { Link } from '@nextui-org/link';
-import React from 'react';
-import { Player } from '@lottiefiles/react-lottie-player';
-import Animation from '../Animation_1701106485452.json'
-import { NumericFormat } from 'react-number-format';
-import { CreateEventModel } from '@/types/DonaceType';
-import { fetchWrapper } from '@/helpers/fetch-wrapper';
-
+import GoongGeocoder from "@goongmaps/goong-geocoder";
+import { Link } from "@nextui-org/link";
+import React from "react";
+import { Player } from "@lottiefiles/react-lottie-player";
+import Animation from "../Animation_1701106485452.json";
+import { NumericFormat } from "react-number-format";
+import { CreateEventModel } from "@/types/DonaceType";
+import { fetchWrapper } from "@/helpers/fetch-wrapper";
 export default function CreateFormFinal() {
+  let goongjs = useRef<any>(null);
 
-    // ?: options chọn địa điểm
-    const [selectedOption, setSelectedOption] = React.useState(new Set(["offline"]));
-    const [showOfflineContent, setShowOfflineContent] = React.useState(true);
-    const [getCreateEvent, setCreateEvent] = useState<CreateEventModel | null>(null);
-    const [selectedLocation, setSelectedLocation] = useState<{ lat: number | null, lng: number | null }>({ lat: null, lng: null });
+  // ?: options chọn địa điểm
+  const [selectedOption, setSelectedOption] = React.useState(
+    new Set(["offline"])
+  );
+  const [showOfflineContent, setShowOfflineContent] = React.useState(true);
+  const [getCreateEvent, setCreateEvent] = useState<CreateEventModel | null>(
+    null
+  );
+  const [selectedLocation, setSelectedLocation] = useState<{
+    lat: number | null;
+    lng: number | null;
+  }>({ lat: null, lng: null });
 
-    let map: any;
-    const modalMap = useDisclosure();
-    const modalCapacity = useDisclosure();
-    const modalPayment = useDisclosure();
-    const modalCreateCalendar = useDisclosure();
-    const modalPriceEvent = useDisclosure();
+  let map:any;
+  const modalMap = useDisclosure();
+  const modalCapacity = useDisclosure();
+  const modalPayment = useDisclosure();
+  const modalCreateCalendar = useDisclosure();
+  const modalPriceEvent = useDisclosure();
 
-    const [startDate, setStartDate] = useState('');
-    const [startTime, setStartTime] = useState('');
+  const [startDate, setStartDate] = useState("");
+  const [startTime, setStartTime] = useState("");
 
-    const [endDate, setEndDate] = useState('');
-    const [endTime, setEndTime] = useState('');
+  const [endDate, setEndDate] = useState("");
+  const [endTime, setEndTime] = useState("");
 
-    const [selectedImage, setSelectedImage] = useState<File | null>(null);
-    const [result, setResult] = useState('');
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  const [result, setResult] = useState("");
 
-    const [lat, setLat] = useState(10.8537915);
-    const [lng, setLng] = useState(106.6234887);
-    const [addressLat, setAddressLat] = useState(null);
-    const [addressLng, setAddressLng] = useState(null);
-    const [compoundLatCommune, setCompoundLatCommune] = useState(null);
-    const [compoundLngCommune, setCompoundLngCommune] = useState(null);
-    const [compoundLatDistrict, setCompoundLatDistrict] = useState(null);
-    const [compoundLngDistrict, setCompoundLngDistrict] = useState(null);
-    const [compoundLatProvince, setCompoundLatProvince] = useState(null);
-    const [compoundLngProvince, setCompoundLngProvince] = useState(null);
+  const [lat, setLat] = useState(10.8537915);
+  const [lng, setLng] = useState(106.6234887);
+  const [addressLat, setAddressLat] = useState(null);
+  const [addressLng, setAddressLng] = useState(null);
+  const [compoundLatCommune, setCompoundLatCommune] = useState(null);
+  const [compoundLngCommune, setCompoundLngCommune] = useState(null);
+  const [compoundLatDistrict, setCompoundLatDistrict] = useState(null);
+  const [compoundLngDistrict, setCompoundLngDistrict] = useState(null);
+  const [compoundLatProvince, setCompoundLatProvince] = useState(null);
+  const [compoundLngProvince, setCompoundLngProvince] = useState(null);
 
-    const [isCreating, setIsCreating] = useState(false);
+  const [isCreating, setIsCreating] = useState(false);
 
-    const [capacity, setCapacity] = useState('');
+  const [capacity, setCapacity] = useState("");
 
-    const currentDate = new Date();
-    const day = currentDate.getDate();
-    const month = currentDate.getMonth() + 1;
+  const currentDate = new Date();
+  const day = currentDate.getDate();
+  const month = currentDate.getMonth() + 1;
 
-    let geocoder = new GoongGeocoder({
-        accessToken: 'sbRzCkkevuDa7mTtXzH1mE1i3CZGdFjGAcG01XqF',
-        goongjs: goongjs
-    });
+  const [geocoder, setGeocoder] = useState<any>(null);
 
-    const labelsMap = {
-        offline: "Offline",
-        online: "Online",
+  const labelsMap = {
+    offline: "Offline",
+    online: "Online",
+  };
+
+  const selectedOptionValue = Array.from(selectedOption)[0];
+
+  const handleSelectedOption = (option: any) => {
+    setSelectedOption(new Set([option]));
+    if (option === "offline") {
+      setShowOfflineContent(true);
+    } else {
+      setShowOfflineContent(false);
+    }
+  };
+
+  const handleInputChange = (event: any) => {
+    // Xử lý giá trị nhập vào nếu cần thiết
+    console.log(event.target.value);
+  };
+  //
+
+  const handleClick = async () => {
+    await handleSubmit;
+  };
+
+  const handleSaveLocation = () => {
+    setShowOfflineContent(true); // Hiển thị nội dung offline
+    setSelectedLocation({ lat: lat, lng: lng }); // Lưu thông tin địa điểm đã chọn
+  };
+
+  const [getEventReq, setEventReq] = useState({
+    startDate: "",
+    endDate: "",
+    addressName: "",
+    lat: "",
+    long: "",
+    capacity: "",
+    isOverCapacity: "",
+    cover: "",
+    name: "",
+    theme: "",
+    color: "",
+    fontSize: "",
+    instructions: "",
+    isMultiSection: "",
+    duration: "",
+    calendarId: "",
+    // Thêm các trường dữ liệu khác của form nếu có
+  });
+
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
+    // Xây dựng đối tượng dữ liệu từ formData
+    const dataToSend = {
+      startDate: getEventReq.startDate,
+      endDate: getEventReq.endDate,
+      addressName: getEventReq.addressName,
+      lat: getEventReq.lat,
+      long: getEventReq.long,
+      capacity: getEventReq.capacity,
+      cover: getEventReq.cover,
+      name: getEventReq.name,
+      theme: getEventReq.theme,
+      color: getEventReq.color,
+      fontSize: getEventReq.fontSize,
+      instructions: getEventReq.instructions,
+      duration: getEventReq.duration,
+      calendarId: getEventReq.calendarId,
+    };
+
+    setIsCreating(true);
+
+    try {
+      if (!dataToSend.name) {
+        // Hiển thị thông báo lỗi
+        console.error("Name field is required.");
+        setIsCreating(false); // Bỏ hiển thị Spinner và bỏ vô hiệu hóa nút
+        return;
+      }
+
+      // Gửi request API và hiển thị Spinner
+      const response = await fetchWrapper.post("/api/Event", dataToSend);
+
+      if (!response.success) {
+        // Xử lý lỗi từ API và hiển thị thông báo lỗi
+        console.error(`Lỗi khi tạo sự kiện: ${response.error}`);
+        setIsCreating(false); // Bỏ hiển thị Spinner và bỏ vô hiệu hóa nút
+        return;
+      }
+      // Xử lý thành công
+      console.log(<b>Sự kiện đã tạo thành công!</b>);
+    } catch (error) {
+      // Xử lý lỗi trong quá trình gửi yêu cầu và hiển thị thông báo lỗi
+      console.error(`Lỗi: ${String(Error)}`);
+      setIsCreating(false); // Bỏ hiển thị Spinner và bỏ vô hiệu hóa nút
+    }
+  };
+  useEffect(() => {
+    async function ImportMap() {
+        goongjs.current = await require("@goongmaps/goong-js");     
+        goongjs.current.accessToken = "wnicbAmnNkoMHNYUKWnlFHezV189FjmMwkNJ7hKW";
+      setGeocoder(
+        new GoongGeocoder({
+          accessToken: "sbRzCkkevuDa7mTtXzH1mE1i3CZGdFjGAcG01XqF",
+          goongjs: goongjs.current,
+        })
+      );
     }
 
-    const selectedOptionValue = Array.from(selectedOption)[0];
+    ImportMap();
+  }, []);
 
-    const handleSelectedOption = (option: any) => {
-        setSelectedOption(new Set([option]));
-        if (option === "offline") {
-            setShowOfflineContent(true);
-        } else {
-            setShowOfflineContent(false);
-        }
-    };
+  useEffect(() => {
+    // Khởi tạo bản đồ khi component được mount
+    if (modalMap.isOpen && showOfflineContent === true) {
+        map = new goongjs.current.Map({
+          container: "map", // ID của phần tử HTML để chứa bản đồ
+          style: "https://tiles.goong.io/assets/goong_map_web.json",
+          center: [lng, lat], // Tọa độ trung tâm
+          zoom: 9, // Mức độ zoom mặc định
+        });
 
-    const handleInputChange = (event: any) => {
-        // Xử lý giá trị nhập vào nếu cần thiết
-        console.log(event.target.value);
-    };
-    //
+        map.addControl(geocoder);
+        geocoder.on("result", function (e: any) {
+          setLat(e.result.result.geometry.location.lat);
+          setLng(e.result.result.geometry.location.lng);
+          setAddressLat(e.result.result.name);
+          setAddressLng(e.result.result.name);
+          setCompoundLatCommune(e.result.result.compound.commune);
+          setCompoundLngCommune(e.result.result.compound.commune);
+          setCompoundLatDistrict(e.result.result.compound.district);
+          setCompoundLngDistrict(e.result.result.compound.district);
+          setCompoundLatProvince(e.result.result.compound.province);
+          setCompoundLngProvince(e.result.result.compound.province);
 
-    const handleClick = async () => {
-        await handleSubmit;
-    };
+          // console.log(e.result.result.geometry.location.lng);
+          console.log(e.result.result);
+          console.log(e.result.result.name);
+          console.log(e.result.result.compound);
+          setSelectedLocation({
+            lat: e.result.result.name,
+            lng: e.result.result.name,
+          });
 
-    const handleSaveLocation = () => {
-        setShowOfflineContent(true); // Hiển thị nội dung offline
-        setSelectedLocation({ lat: lat, lng: lng }); // Lưu thông tin địa điểm đã chọn
-    };
-
-    const [getEventReq, setEventReq] = useState({
-        startDate: "",
-        endDate: "",
-        addressName: "",
-        lat: "",
-        long: "",
-        capacity: "",
-        isOverCapacity: "",
-        cover: "",
-        name: "",
-        theme: "",
-        color: "",
-        fontSize: "",
-        instructions: "",
-        isMultiSection: "",
-        duration: "",
-        calendarId: "",
-        // Thêm các trường dữ liệu khác của form nếu có
-    });
-
-    const handleSubmit = async (e: any) => {
-        e.preventDefault();
-        // Xây dựng đối tượng dữ liệu từ formData
-        const dataToSend = {
-            startDate: getEventReq.startDate,
-            endDate: getEventReq.endDate,
-            addressName: getEventReq.addressName,
-            lat: getEventReq.lat,
-            long: getEventReq.long,
-            capacity: getEventReq.capacity,
-            cover: getEventReq.cover,
-            name: getEventReq.name,
-            theme: getEventReq.theme,
-            color: getEventReq.color,
-            fontSize: getEventReq.fontSize,
-            instructions: getEventReq.instructions,
-            duration: getEventReq.duration,
-            calendarId: getEventReq.calendarId,
-        };
-
-        setIsCreating(true);
-
-        try {
-            if (!dataToSend.name) {
-                // Hiển thị thông báo lỗi
-                console.error("Name field is required.");
-                setIsCreating(false); // Bỏ hiển thị Spinner và bỏ vô hiệu hóa nút
-                return;
-            }
-
-            // Gửi request API và hiển thị Spinner
-            const response = await fetchWrapper.post("/api/Event", dataToSend);
-
-            if (!response.success) {
-                // Xử lý lỗi từ API và hiển thị thông báo lỗi
-                console.error(`Lỗi khi tạo sự kiện: ${response.error}`);
-                setIsCreating(false); // Bỏ hiển thị Spinner và bỏ vô hiệu hóa nút
-                return;
-            }
-            // Xử lý thành công
-            console.log(<b>Sự kiện đã tạo thành công!</b>);
-        } catch (error) {
-            // Xử lý lỗi trong quá trình gửi yêu cầu và hiển thị thông báo lỗi
-            console.error(`Lỗi: ${String(Error)}`);
-            setIsCreating(false); // Bỏ hiển thị Spinner và bỏ vô hiệu hóa nút
-        }
-    }
-
-    useEffect(() => {
-        // Khởi tạo bản đồ khi component được mount
-        if (modalMap.isOpen && showOfflineContent === true) {
-            goongjs.accessToken = 'wnicbAmnNkoMHNYUKWnlFHezV189FjmMwkNJ7hKW';
-            map = new goongjs.Map({
-                container: 'map', // ID của phần tử HTML để chứa bản đồ
-                style: 'https://tiles.goong.io/assets/goong_map_web.json',
-                center: [lng, lat], // Tọa độ trung tâm
-                zoom: 9, // Mức độ zoom mặc định
-            });
-            map.addControl(
-                geocoder
-            );
-            geocoder.on('result', function (e: any) {
-                setLat(e.result.result.geometry.location.lat);
-                setLng(e.result.result.geometry.location.lng);
-                setAddressLat(e.result.result.name);
-                setAddressLng(e.result.result.name);
-                setCompoundLatCommune(e.result.result.compound.commune);
-                setCompoundLngCommune(e.result.result.compound.commune);
-                setCompoundLatDistrict(e.result.result.compound.district);
-                setCompoundLngDistrict(e.result.result.compound.district);
-                setCompoundLatProvince(e.result.result.compound.province);
-                setCompoundLngProvince(e.result.result.compound.province);
-
-                // console.log(e.result.result.geometry.location.lng);
-                console.log(e.result.result);
-                console.log(e.result.result.name);
-                console.log(e.result.result.compound)
-                setSelectedLocation({ lat: e.result.result.name, lng: e.result.result.name });
-
-                setEventReq(prevState => ({
-                    ...prevState,
-                    lat: e.result.result.geometry.location.lat,
-                    long: e.result.result.geometry.location.lng,
-                    // Các giá trị khác nếu cần
-                }));
-                // console.log(e.result.result.formatted_address); // log the place name
-                // console.log(e.result.geometry); // log the coordinates [longitude, latitude]
-            });
-
-            return () => {
-                map.remove();
-            };
-        }
-    }, [modalMap.isOpen, showOfflineContent]);
+          setEventReq((prevState) => ({
+            ...prevState,
+            lat: e.result.result.geometry.location.lat,
+            long: e.result.result.geometry.location.lng,
+            // Các giá trị khác nếu cần
+          }));
+          // console.log(e.result.result.formatted_address); // log the place name
+          // console.log(e.result.geometry); // log the coordinates [longitude, latitude]
+        });
+        return () => {
+            map.remove();
+          };
+      }
+  }, [modalMap.isOpen, showOfflineContent]);
     return (
         <>
             <div className='page-content'>

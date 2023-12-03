@@ -47,7 +47,7 @@
     "framer-motion": "^10.16.2",
     "intl-messageformat": "^10.5.0",
     "lucide-react": "^0.288.0",
-    "next": "^13.5.6",
+    "next": "^14.0.3",
     "next-auth": "^4.24.3",
     "next-themes": "^0.2.1",
     "postcss": "^8.4.31",
