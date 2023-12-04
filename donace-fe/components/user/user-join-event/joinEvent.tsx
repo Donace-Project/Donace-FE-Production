@@ -59,8 +59,8 @@ export default function JoinEvent(props: any) {
     const buoi = gio >= 12 ? "PM" : "AM";
 
     useEffect(() => {
-        // fetchWrapper.get(`api/Event/detail-by-id?id=${id}`)
-        //     .then(data => setEventDetail(data));
+        fetchWrapper.get(`api/Event/detail-by-id?id=${id}`)
+            .then(data => setEventDetail(data));
 
         fetchWrapper.get('/api/User/profile')
             .then((data: UserProfile) => {
@@ -94,6 +94,7 @@ export default function JoinEvent(props: any) {
                                     <div className="hosts gap-3 flex flex-col">
                                         <div className="gap-2 flex items-center">
                                             <Link
+                                                href="/profile"
                                                 className="overflow-hidden text-inherit gap-2 flex-1 flex items-center transition-all duration-300 ease-in-out cursor-pointer"
                                                 underline="none"
                                             >
@@ -145,7 +146,7 @@ export default function JoinEvent(props: any) {
                                                 <div className="icon-container w-10 h-10 border border-solid border-[rgba(19,21,23,0.08)] dark:border-[rgba(255,255,255,0.08)] text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)] m-0.5 flex-shrink-0 justify-center flex items-center overflow-hidden rounded-lg">
                                                     <div className="calendar-card w-full text-center min-h-full">
                                                         <div className="month bg-[rgba(19,21,23,0.08)] dark:bg-[rgba(255,255,255,0.08)] text-[0.5rem] font-semibold uppercase p-px">{ConvertDateTime(eventDetail.startDate).month}</div>
-                                                        <div className="day -translate-y-px font-medium">{ConvertDateTime(eventDetail.startDate).day}</div>
+                                                        <div className="day -translate-y-px font-medium">{ConvertDateTime(eventDetail.endDate).day}</div>
                                                     </div>
                                                 </div>
                                                 <div className="min-w-0 flex-1">
@@ -340,14 +341,14 @@ export default function JoinEvent(props: any) {
                                                 </div>
                                                 <div className="min-w-0 flex flex-wrap items-baseline justify-between w-full text-ellipsis overflow-auto whitespace-nowrap">
                                                     <div>
-                                                        <b className="overflow-hidden text-ellipsis whitespace-nowrap mr-1 font-semibold">Trần Văn Tiếp</b>
-                                                        <span className="email text-sm text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)] overflow-hidden text-ellipsis whitespace-nowrap">tranvantiep2506@gmail.com</span>
+                                                        <b className="overflow-hidden text-ellipsis whitespace-nowrap mr-1 font-semibold">{getProfile?.result.userName}</b>
+                                                        <span className="email text-sm text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)] overflow-hidden text-ellipsis whitespace-nowrap">{getProfile?.result.email}</span>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                         <div className="content gap-3 mt-1 flex flex-col">
-                                            {/* <div className="waiting-request">
+                                            <div className="waiting-request">
                                                 <div className="text-black-light-theme text-lg font-medium">Đợi chấp nhận</div>
                                                 <div className="text-black-more-blur-light-theme text-sm mt-1">
                                                     Email xác nhận đã được gửi tới: <span className="text-black-light-theme font-medium">tungnhps17361@fpt.edu.vn</span>.
@@ -375,7 +376,7 @@ export default function JoinEvent(props: any) {
                                                 >
                                                     tại đây
                                                 </Link>
-                                            </div> */}
+                                            </div>
                                             {/* <div className="waiting-request">
                                                 <div className="text-black-light-theme text-lg font-medium">Bạn đã hủy đăng ký sự kiện</div>
                                                 <div className="text-black-more-blur-light-theme text-sm mt-1">
@@ -393,12 +394,12 @@ export default function JoinEvent(props: any) {
                                                     tại đây
                                                 </Link>
                                             </div> */}
-                                            <div className="waiting-request">
+                                            {/* <div className="waiting-request">
                                                 <div className="text-black-light-theme text-lg font-medium">Bạn đang tham gia</div>
                                                 <div className="text-black-more-blur-light-theme text-sm mt-1">
                                                     Email xác nhận đã được gửi tới: <span className="text-black-light-theme font-medium">tungnhps17361@fpt.edu.vn</span>.
                                                 </div>
-                                            </div>
+                                            </div> */}
                                             <div className="join-event-online text-black-more-blur-light-theme text-xs">
                                                 <div className="cta-wrapper join-event">
                                                     <div className="cta gap-2 mb-1 flex items-center">
@@ -408,13 +409,13 @@ export default function JoinEvent(props: any) {
                                                             <Video className="mr-2 w-5 h-5 align-middle block translate-y-px"/>
                                                             <div className="label">Tham gia</div>
                                                         </Button> */}
-                                                        <Button
+                                                        {/* <Button
                                                             onPress={modalViewTicket.onOpen}
                                                             className="text-[#fff] dark:text-[rgb(19,21,23)] bg-[#333537] dark:bg-[#fff] border-[#333537] dark:border-[#fff] border border-solid donace-button-w-fit transition-all duration-300 ease-in-out flex items-center m-0"
                                                         >
                                                             <QrCode className="mr-2 w-5 h-5 align-middle block translate-y-px" />
                                                             <div className="label">Xem vé</div>
-                                                        </Button>
+                                                        </Button> */}
                                                     </div>
                                                 </div>
                                             </div>
@@ -428,12 +429,6 @@ export default function JoinEvent(props: any) {
                                 <div className="title-label font-medium text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)] text-sm">Thông tin</div>
                             </div>
                             <div className="content">
-                                <div>
-                                    <div className="cursor-copy">
-                                        <div className="font-medium">{eventDetail?.lat}</div>
-                                        <div className="text-tined text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)] text-sm mt-1">{eventDetail?.long}</div>
-                                    </div>
-                                </div>
                                 <div className="mt-4">
                                     <div className="flex items-center">
                                         <div className="label font-normal">Lorem ipsum dolor sit amet consectetur adipisicing elit. Dignissimos quidem quos, cum impedit laborum placeat expedita qui accusamus dolorem nisi molestias alias repudiandae dolorum est sunt eum commodi ipsa optio!</div>

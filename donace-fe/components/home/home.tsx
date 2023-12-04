@@ -313,7 +313,7 @@ export default function HomeEvents() {
                                     <div className="info-and-cover flex-row-reverse gap-4 flex">
                                       <div className="cover-image pointer-events-none">
                                         <div className="w-40 h-20">
-                                          <div className="img-aspect-ratio cover-event-image w-full h-full overflow-hidden relative rounded-lg">
+                                          <div className="img-aspect-ratio cover-event-image w-full h-full overflow-hidden relative rounded-lg bg-center bg-cover block ml-auto mr-auto">
                                             <Image className="w-full h-full" alt="you are invited" src={event.cover} />
                                           </div>
                                         </div>

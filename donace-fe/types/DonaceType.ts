@@ -192,6 +192,10 @@ export type EventDetailModels = {
     duration: number
     totalGuest: number
     calendarId: string
+    isHost: string
+    status: string
+    isSub: string
+    isAppro: string
     isLive: boolean
 }
 
@@ -239,4 +243,11 @@ export type ListEventByUser = {
     isHost: boolean
     status: string
     sorted: number
+}
+
+// PAYMENT MODEL
+export type PaymentModel = {
+    id: string
+    tmnCode: string
+    hashSecret: string
 }

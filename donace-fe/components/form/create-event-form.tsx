@@ -4,39 +4,39 @@ import { Avatar } from "@nextui-org/avatar";
 import { Input, Textarea } from "@nextui-org/input";
 
 import {
-  ArrowUp,
-  ArrowUpToLine,
-  CheckCircle2,
-  ChevronDown,
-  ChevronDownIcon,
-  Coins,
-  CreditCard,
-  Globe,
-  MapPin,
-  Pen,
-  Plus,
-  PlusIcon,
-  Ticket,
-  Upload,
-  UserCheck,
+    ArrowUp,
+    ArrowUpToLine,
+    CheckCircle2,
+    ChevronDown,
+    ChevronDownIcon,
+    Coins,
+    CreditCard,
+    Globe,
+    MapPin,
+    Pen,
+    Plus,
+    PlusIcon,
+    Ticket,
+    Upload,
+    UserCheck,
 } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { Spinner, Switch, User } from "@nextui-org/react";
 
 import {
-  Modal,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  useDisclosure,
-  ModalFooter,
+    Modal,
+    ModalContent,
+    ModalHeader,
+    ModalBody,
+    useDisclosure,
+    ModalFooter,
 } from "@nextui-org/modal";
 import {
-  Dropdown,
-  DropdownTrigger,
-  DropdownMenu,
-  DropdownSection,
-  DropdownItem,
+    Dropdown,
+    DropdownTrigger,
+    DropdownMenu,
+    DropdownSection,
+    DropdownItem,
 } from "@nextui-org/dropdown";
 import { Button, ButtonGroup } from "@nextui-org/button";
 import { Divider } from "@nextui-org/divider";
@@ -51,220 +51,357 @@ import React from "react";
 import { Player } from "@lottiefiles/react-lottie-player";
 import Animation from "../Animation_1701106485452.json";
 import { NumericFormat } from "react-number-format";
-import { CreateEventModel } from "@/types/DonaceType";
+import { CreateEventModel, PaymentModel } from "@/types/DonaceType";
 import { fetchWrapper } from "@/helpers/fetch-wrapper";
+
+export type Calendar = {
+    code: string
+    success: boolean
+    result: Result[]
+    pageInfo: any
+}
+
+export type Result = {
+    sorted: number
+    id: string
+    name: string
+    totalSubcriber: number
+    avatar: string
+    userId: string
+    isSubcribed: boolean
+}
+
 export default function CreateFormFinal() {
-  let goongjs = useRef<any>(null);
+    let goongjs = useRef<any>(null);
 
-  // ?: options chọn địa điểm
-  const [selectedOption, setSelectedOption] = React.useState(
-    new Set(["offline"])
-  );
-  const [showOfflineContent, setShowOfflineContent] = React.useState(true);
-  const [getCreateEvent, setCreateEvent] = useState<CreateEventModel | null>(
-    null
-  );
-  const [selectedLocation, setSelectedLocation] = useState<{
-    lat: number | null;
-    lng: number | null;
-  }>({ lat: null, lng: null });
+    // ?: options chọn địa điểm
+    const [selectedOption, setSelectedOption] = React.useState(
+        new Set(["offline"])
+    );
+    const [showOfflineContent, setShowOfflineContent] = React.useState(true);
+    const [getCreateEvent, setCreateEvent] = useState<CreateEventModel | null>(
+        null
+    );
+    const [selectedLocation, setSelectedLocation] = useState<{
+        lat: number | null;
+        lng: number | null;
+    }>({ lat: null, lng: null });
 
-  let map:any;
-  const modalMap = useDisclosure();
-  const modalCapacity = useDisclosure();
-  const modalPayment = useDisclosure();
-  const modalCreateCalendar = useDisclosure();
-  const modalPriceEvent = useDisclosure();
+    let map: any;
+    const modalMap = useDisclosure();
+    const modalCapacity = useDisclosure();
+    const modalPayment = useDisclosure();
+    const modalCreateCalendar = useDisclosure();
+    const modalPriceEvent = useDisclosure();
+    const modalMaintenance = useDisclosure();
 
-  const [startDate, setStartDate] = useState("");
-  const [startTime, setStartTime] = useState("");
+    const [startDate, setStartDate] = useState("");
+    const [startTime, setStartTime] = useState("");
 
-  const [endDate, setEndDate] = useState("");
-  const [endTime, setEndTime] = useState("");
+    const [endDate, setEndDate] = useState("");
+    const [endTime, setEndTime] = useState("");
 
-  const [selectedImage, setSelectedImage] = useState<File | null>(null);
-  const [result, setResult] = useState("");
+    const [selectedImage, setSelectedImage] = useState<File | null>(null);
+    const [result, setResult] = useState("");
 
-  const [lat, setLat] = useState(10.8537915);
-  const [lng, setLng] = useState(106.6234887);
-  const [addressLat, setAddressLat] = useState(null);
-  const [addressLng, setAddressLng] = useState(null);
-  const [compoundLatCommune, setCompoundLatCommune] = useState(null);
-  const [compoundLngCommune, setCompoundLngCommune] = useState(null);
-  const [compoundLatDistrict, setCompoundLatDistrict] = useState(null);
-  const [compoundLngDistrict, setCompoundLngDistrict] = useState(null);
-  const [compoundLatProvince, setCompoundLatProvince] = useState(null);
-  const [compoundLngProvince, setCompoundLngProvince] = useState(null);
+    const [payment, setPayment] = useState(null);
+    const [getModalPayment, setModalPayment] = useState(false);
+    const [getModalPriceEvent, setModalPriceEvent] = useState(false);
+    const [tmnCode, setTmnCode] = useState<string>("");
+    const [hashSecret, setHashSecret] = useState<string>("");
+    const [isError, setIsError] = useState(false);
 
-  const [isCreating, setIsCreating] = useState(false);
+    var [calendars, setCalendar] = useState<Calendar | null>(null);
+    const iconRef = useRef<HTMLDivElement | null>(null);
 
-  const [capacity, setCapacity] = useState("");
+    const [calendarReq, setCalendarReq] = useState({
+        name: "",
+        cover: "",
+        avatar: "",
+        color: "",
+        publicURL: "",
+        lat: "",
+        long: "",
+        addressName: "",
+    });
+    const handleAvatarUpload = async (
+        event: React.ChangeEvent<HTMLInputElement>
+    ) => {
+        if (!event.target.files) return;
 
-  const currentDate = new Date();
-  const day = currentDate.getDate();
-  const month = currentDate.getMonth() + 1;
+        const selectedFile = event.target.files[0];
+        const formData = new FormData();
+        formData.append("file", selectedFile);
 
-  const [geocoder, setGeocoder] = useState<any>(null);
 
-  const labelsMap = {
-    offline: "Offline",
-    online: "Online",
-  };
+        try {
+            const url = await fetchWrapper.postFile("api/Common/upload-file", formData);
 
-  const selectedOptionValue = Array.from(selectedOption)[0];
+            if (iconRef.current && url) {
+                iconRef.current.style.backgroundImage = `url(${url})`;
 
-  const handleSelectedOption = (option: any) => {
-    setSelectedOption(new Set([option]));
-    if (option === "offline") {
-      setShowOfflineContent(true);
-    } else {
-      setShowOfflineContent(false);
-    }
-  };
-
-  const handleInputChange = (event: any) => {
-    // Xử lý giá trị nhập vào nếu cần thiết
-    console.log(event.target.value);
-  };
-  //
-
-  const handleClick = async () => {
-    await handleSubmit;
-  };
-
-  const handleSaveLocation = () => {
-    setShowOfflineContent(true); // Hiển thị nội dung offline
-    setSelectedLocation({ lat: lat, lng: lng }); // Lưu thông tin địa điểm đã chọn
-  };
-
-  const [getEventReq, setEventReq] = useState({
-    startDate: "",
-    endDate: "",
-    addressName: "",
-    lat: "",
-    long: "",
-    capacity: "",
-    isOverCapacity: "",
-    cover: "",
-    name: "",
-    theme: "",
-    color: "",
-    fontSize: "",
-    instructions: "",
-    isMultiSection: "",
-    duration: "",
-    calendarId: "",
-    // Thêm các trường dữ liệu khác của form nếu có
-  });
-
-  const handleSubmit = async (e: any) => {
-    e.preventDefault();
-    // Xây dựng đối tượng dữ liệu từ formData
-    const dataToSend = {
-      startDate: getEventReq.startDate,
-      endDate: getEventReq.endDate,
-      addressName: getEventReq.addressName,
-      lat: getEventReq.lat,
-      long: getEventReq.long,
-      capacity: getEventReq.capacity,
-      cover: getEventReq.cover,
-      name: getEventReq.name,
-      theme: getEventReq.theme,
-      color: getEventReq.color,
-      fontSize: getEventReq.fontSize,
-      instructions: getEventReq.instructions,
-      duration: getEventReq.duration,
-      calendarId: getEventReq.calendarId,
+                setCalendarReq({
+                    ...calendarReq,
+                    avatar: url,
+                });
+            }
+        } catch (error) {
+            console.error("Lỗi khi upload ảnh:", error);
+        } finally {
+        }
     };
 
-    setIsCreating(true);
+    const handleCalendarSubmit = async (e: any) => {
+        e.preventDefault();
+        const dataToSend = {
+            name: calendarReq.name,
+            cover: calendarReq.cover,
+            avatar: calendarReq.avatar,
+            color: calendarReq.color,
+            publicURL: calendarReq.publicURL,
+            lat: calendarReq.lat,
+            long: calendarReq.long,
+            addressName: calendarReq.addressName,
+        };
 
-    try {
-      if (!dataToSend.name) {
-        // Hiển thị thông báo lỗi
-        console.error("Name field is required.");
-        setIsCreating(false); // Bỏ hiển thị Spinner và bỏ vô hiệu hóa nút
-        return;
-      }
+        setIsCreating(true);
 
-      // Gửi request API và hiển thị Spinner
-      const response = await fetchWrapper.post("/api/Event", dataToSend);
+        try {
+            if (!dataToSend.name) {
+                console.error("Name field is required.");
+                setIsCreating(false);
+                return;
+            }
 
-      if (!response.success) {
-        // Xử lý lỗi từ API và hiển thị thông báo lỗi
-        console.error(`Lỗi khi tạo sự kiện: ${response.error}`);
-        setIsCreating(false); // Bỏ hiển thị Spinner và bỏ vô hiệu hóa nút
-        return;
-      }
-      // Xử lý thành công
-      console.log(<b>Sự kiện đã tạo thành công!</b>);
-    } catch (error) {
-      // Xử lý lỗi trong quá trình gửi yêu cầu và hiển thị thông báo lỗi
-      console.error(`Lỗi: ${String(Error)}`);
-      setIsCreating(false); // Bỏ hiển thị Spinner và bỏ vô hiệu hóa nút
-    }
-  };
-  useEffect(() => {
-    async function ImportMap() {
-        goongjs.current = await require("@goongmaps/goong-js");     
-        goongjs.current.accessToken = "wnicbAmnNkoMHNYUKWnlFHezV189FjmMwkNJ7hKW";
-      setGeocoder(
-        new GoongGeocoder({
-          accessToken: "sbRzCkkevuDa7mTtXzH1mE1i3CZGdFjGAcG01XqF",
-          goongjs: goongjs.current,
-        })
-      );
+            const response = await fetchWrapper.post("/api/Calendar/create-calendar", dataToSend);
+
+            if (!response.success) {
+                console.error(`Lỗi khi tạo lịch: ${response.error}`);
+                setIsCreating(false);
+                return;
+            }
+            console.log(<b>Lịch đã tạo thành công!</b>);
+        } catch (error) {
+            console.error(`Lỗi: ${String(Error)}`);
+            setIsCreating(false);
+        }
     }
 
-    ImportMap();
-  }, []);
+    useEffect(() => {
+        const fetchCalendar = async () => {
+            try {
+                const calendarData = await fetchWrapper.post('/api/Calendar/get-list', { pageNumber: 1, pageSize: 9999 });
+                setCalendar(calendarData);
+                console.log('Dữ liệu trả về từ API:', calendarData);
+                setCalendar(calendarData);
+                console.log('State calendars sau khi cập nhật:', calendars);
+            } catch (error) {
+                console.error('Error fetching calendar:', error);
+            }
+        };
+        fetchCalendar();
 
-  useEffect(() => {
-    // Khởi tạo bản đồ khi component được mount
-    if (modalMap.isOpen && showOfflineContent === true) {
-        map = new goongjs.current.Map({
-          container: "map", // ID của phần tử HTML để chứa bản đồ
-          style: "https://tiles.goong.io/assets/goong_map_web.json",
-          center: [lng, lat], // Tọa độ trung tâm
-          zoom: 9, // Mức độ zoom mặc định
-        });
+    }, []);
 
-        map.addControl(geocoder);
-        geocoder.on("result", function (e: any) {
-          setLat(e.result.result.geometry.location.lat);
-          setLng(e.result.result.geometry.location.lng);
-          setAddressLat(e.result.result.name);
-          setAddressLng(e.result.result.name);
-          setCompoundLatCommune(e.result.result.compound.commune);
-          setCompoundLngCommune(e.result.result.compound.commune);
-          setCompoundLatDistrict(e.result.result.compound.district);
-          setCompoundLngDistrict(e.result.result.compound.district);
-          setCompoundLatProvince(e.result.result.compound.province);
-          setCompoundLngProvince(e.result.result.compound.province);
 
-          // console.log(e.result.result.geometry.location.lng);
-          console.log(e.result.result);
-          console.log(e.result.result.name);
-          console.log(e.result.result.compound);
-          setSelectedLocation({
-            lat: e.result.result.name,
-            lng: e.result.result.name,
-          });
 
-          setEventReq((prevState) => ({
-            ...prevState,
-            lat: e.result.result.geometry.location.lat,
-            long: e.result.result.geometry.location.lng,
-            // Các giá trị khác nếu cần
-          }));
-          // console.log(e.result.result.formatted_address); // log the place name
-          // console.log(e.result.geometry); // log the coordinates [longitude, latitude]
-        });
-        return () => {
-            map.remove();
-          };
-      }
-  }, [modalMap.isOpen, showOfflineContent]);
+    const [lat, setLat] = useState(10.8537915);
+    const [lng, setLng] = useState(106.6234887);
+    const [addressLat, setAddressLat] = useState(null);
+    const [addressLng, setAddressLng] = useState(null);
+    const [compoundLatCommune, setCompoundLatCommune] = useState(null);
+    const [compoundLngCommune, setCompoundLngCommune] = useState(null);
+    const [compoundLatDistrict, setCompoundLatDistrict] = useState(null);
+    const [compoundLngDistrict, setCompoundLngDistrict] = useState(null);
+    const [compoundLatProvince, setCompoundLatProvince] = useState(null);
+    const [compoundLngProvince, setCompoundLngProvince] = useState(null);
+
+    const [isCreating, setIsCreating] = useState(false);
+
+    const [capacity, setCapacity] = useState("");
+
+    const currentDate = new Date();
+    const day = currentDate.getDate();
+    const month = currentDate.getMonth() + 1;
+
+    const [geocoder, setGeocoder] = useState<any>(null);
+
+    const labelsMap = {
+        offline: "Offline",
+        online: "Online",
+    };
+
+    const selectedOptionValue = Array.from(selectedOption)[0];
+
+    const handleSelectedOption = (option: any) => {
+        setSelectedOption(new Set([option]));
+        if (option === "offline") {
+            setShowOfflineContent(true);
+        } else {
+            setShowOfflineContent(false);
+        }
+    };
+
+    const handleInputChange = (event: any) => {
+        console.log(event.target.value);
+    };
+    //
+
+    const handleCalendarClick = async () => {
+        await handleCalendarSubmit;
+    };
+
+    const handleClick = async () => {
+        await handleSubmit;
+    };
+
+    const handleSaveLocation = () => {
+        setShowOfflineContent(true);
+        setSelectedLocation({ lat: lat, lng: lng });
+    };
+
+    const [getEventReq, setEventReq] = useState({
+        startDate: "",
+        endDate: "",
+        addressName: "",
+        lat: "",
+        long: "",
+        capacity: "",
+        isOverCapacity: "",
+        cover: "",
+        name: "",
+        theme: "",
+        color: "",
+        fontSize: "",
+        instructions: "",
+        isMultiSection: "",
+        duration: "",
+        calendarId: "",
+    });
+
+    const handleSubmit = async (e: any) => {
+        e.preventDefault();
+        const dataToSend = {
+            startDate: getEventReq.startDate,
+            endDate: getEventReq.endDate,
+            addressName: getEventReq.addressName,
+            lat: getEventReq.lat,
+            long: getEventReq.long,
+            capacity: getEventReq.capacity,
+            cover: getEventReq.cover,
+            name: getEventReq.name,
+            theme: getEventReq.theme,
+            color: getEventReq.color,
+            fontSize: getEventReq.fontSize,
+            instructions: getEventReq.instructions,
+            duration: getEventReq.duration,
+            calendarId: getEventReq.calendarId,
+        };
+
+        setIsCreating(true);
+
+        try {
+            if (!dataToSend.name) {
+                console.error("Name field is required.");
+                setIsCreating(false);
+                return;
+            }
+            const response = await fetchWrapper.post("/api/Event", dataToSend);
+
+            if (!response.success) {
+                console.error(`Lỗi khi tạo sự kiện: ${response.error}`);
+                setIsCreating(false);
+                return;
+            }
+            console.log(<b>Sự kiện đã tạo thành công!</b>);
+        } catch (error) {
+            console.error(`Lỗi: ${String(Error)}`);
+            setIsCreating(false);
+        }
+    };
+    useEffect(() => {
+        async function ImportMap() {
+            goongjs.current = await require("@goongmaps/goong-js");
+            goongjs.current.accessToken = "wnicbAmnNkoMHNYUKWnlFHezV189FjmMwkNJ7hKW";
+            setGeocoder(
+                new GoongGeocoder({
+                    accessToken: "sbRzCkkevuDa7mTtXzH1mE1i3CZGdFjGAcG01XqF",
+                    goongjs: goongjs.current,
+                })
+            );
+        }
+        ImportMap();
+    }, []);
+
+    useEffect(() => {
+        const fetchPayment = async () => {
+            try {
+                const paymentData = await fetchWrapper.get('/api/Payment/get-connect');
+                console.log(paymentData);
+                if (paymentData !== "") {
+                    console.log(paymentData);
+                    setModalPayment(false);
+                } else if (paymentData === "") {
+                    console.log('204 No Content');
+                    setModalPayment(true);
+                }
+                else {
+                    console.log("Lỗi hệ thống rồi!!!")
+                }
+                setPayment(paymentData);
+            } catch (error) {
+                console.error('Error fetching Payment:', error);
+            }
+        };
+        fetchPayment();
+    }, []);
+
+    useEffect(() => {
+        // Khởi tạo bản đồ khi component được mount
+        if (modalMap.isOpen && showOfflineContent === true) {
+            map = new goongjs.current.Map({
+                container: "map", // ID của phần tử HTML để chứa bản đồ
+                style: "https://tiles.goong.io/assets/goong_map_web.json",
+                center: [lng, lat], // Tọa độ trung tâm
+                zoom: 9, // Mức độ zoom mặc định
+            });
+
+            map.addControl(geocoder);
+            geocoder.on("result", function (e: any) {
+                setLat(e.result.result.geometry.location.lat);
+                setLng(e.result.result.geometry.location.lng);
+                setAddressLat(e.result.result.name);
+                setAddressLng(e.result.result.name);
+                setCompoundLatCommune(e.result.result.compound.commune);
+                setCompoundLngCommune(e.result.result.compound.commune);
+                setCompoundLatDistrict(e.result.result.compound.district);
+                setCompoundLngDistrict(e.result.result.compound.district);
+                setCompoundLatProvince(e.result.result.compound.province);
+                setCompoundLngProvince(e.result.result.compound.province);
+
+                // console.log(e.result.result.geometry.location.lng);
+                console.log(e.result.result);
+                console.log(e.result.result.name);
+                console.log(e.result.result.compound);
+                setSelectedLocation({
+                    lat: e.result.result.name,
+                    lng: e.result.result.name,
+                });
+
+                setEventReq((prevState) => ({
+                    ...prevState,
+                    lat: e.result.result.geometry.location.lat,
+                    long: e.result.result.geometry.location.lng,
+                    // Các giá trị khác nếu cần
+                }));
+                // console.log(e.result.result.formatted_address); // log the place name
+                // console.log(e.result.geometry); // log the coordinates [longitude, latitude]
+            });
+            return () => {
+                map.remove();
+            };
+        }
+    }, [modalMap.isOpen, showOfflineContent]);
     return (
         <>
             <div className='page-content'>
@@ -288,7 +425,9 @@ export default function CreateFormFinal() {
                                                                 />
                                                             </div>
                                                             <div className='min-w-0 flex-1'>
-                                                                <div className='text-xs text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)]'>Tạo dưới</div>
+                                                                <div className='text-xs text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)]'>
+                                                                    Tạo dưới
+                                                                </div>
                                                                 <div className='gap-1 flex items-center'>
                                                                     <div className='font-medium overflow-hidden text-ellipsis whitespace-nowrap text-sm'>Lịch cá nhân</div>
                                                                 </div>
@@ -299,11 +438,10 @@ export default function CreateFormFinal() {
                                                         </div>
                                                     </DropdownTrigger>
                                                     <DropdownMenu variant="faded" aria-label="Dropdown menu with description" className='w-64'>
-                                                        <DropdownSection
-                                                            title="Chọn Lịch để tạo Sự kiện:"
-                                                        >
+                                                        {/* @ts-ignore */}
+                                                        <DropdownSection title="Chọn Lịch để tạo Sự kiện:">
                                                             <DropdownItem
-                                                                endContent={<CheckCircle2 className='block w-4 h-4 align-middle' />}
+                                                                endContent={<CheckCircle2 className='block w-4 h-4 align-middle'/>}
                                                             >
                                                                 <User
                                                                     name="Lịch cá nhân"
@@ -314,17 +452,26 @@ export default function CreateFormFinal() {
                                                                     }}
                                                                 />
                                                             </DropdownItem>
-                                                            <DropdownItem
-                                                            >
-                                                                <User
-                                                                    name="Lịch công việc"
-                                                                    avatarProps={{
-                                                                        radius: "sm",
-                                                                        size: "sm",
-                                                                        src: "https://cdn.lu.ma/cdn-cgi/image/format=auto,fit=cover,dpr=2,background=white,quality=75,width=20,height=20/avatars-default/community_avatar_12.png"
-                                                                    }}
-                                                                />
-                                                            </DropdownItem>
+                                                            {calendars ? (
+                                                                calendars.result.length > 0 ? (
+                                                                    calendars.result.map((calendar, index) => (
+                                                                        <DropdownItem >
+                                                                            <User
+                                                                                name={calendar.name}
+                                                                                avatarProps={{
+                                                                                    radius: "sm",
+                                                                                    size: "sm",
+                                                                                    src: calendar.avatar ? `${calendar.avatar}` : "https://cdn.lu.ma/cdn-cgi/image/format=auto,fit=cover,dpr=2,background=white,quality=75,width=20,height=20/avatars-default/community_avatar_12.png"
+                                                                                }}
+                                                                            />
+                                                                        </DropdownItem>
+                                                                    ))
+                                                                ) : (
+                                                                    <DropdownItem key="no-calendars" className="hidden"></DropdownItem>
+                                                                )
+                                                            ) : (
+                                                                <DropdownItem key="loading" className="hidden"></DropdownItem>
+                                                            )}
                                                             <DropdownItem
                                                                 onPress={modalCreateCalendar.onOpen}
                                                                 startContent={<Plus className='block w-4 h-4 align-middle translate-y-px text-black-more-blur-light-theme' />}
@@ -350,7 +497,7 @@ export default function CreateFormFinal() {
                                                         {(onClose) => (
                                                             <>
                                                                 <ModalBody className='w-full p-[1rem_1.25rem]'>
-                                                                    <form action="#" className='gap-2 pt-2 flex flex-col' onSubmit={handleSubmit}>
+                                                                    <form action="#" className='gap-2 pt-2 flex flex-col' onSubmit={handleCalendarSubmit}>
                                                                         <div>
                                                                             <div
                                                                                 role='presentation'
@@ -361,13 +508,27 @@ export default function CreateFormFinal() {
                                                                                     type="file"
                                                                                     id="avatarImage"
                                                                                     className="hidden"
+                                                                                    onChange={handleAvatarUpload}
                                                                                 />
                                                                                 <div
+                                                                                    onClick={() => {
+                                                                                        const fileInput = document.getElementById("avatarImage");
+                                                                                        if (fileInput) {
+                                                                                            fileInput.click();
+                                                                                        }
+                                                                                    }}
                                                                                     className="upload-icon rounded-[0.5rem] bg-center bg-cover flex justify-center items-center text-[#fff] dark:text-[#212325] bg-[rgb(19,21,23)] dark:bg-[#fff] hover:bg-[#de3163] w-[35%] h-[35%] min-w-[24px] min-h-[24px] border-2 border-solid border-[#fff] dark:border-[#212325] absolute right-[-1px] bottom-[-1px] origin-center transition-all duration-300 ease-in-out"
                                                                                 >
                                                                                     <ArrowUp className='stroke-2 w-[65%] h-[65%] block align-middle' />
                                                                                 </div>
                                                                                 <div
+                                                                                    ref={iconRef}
+                                                                                    onClick={() => {
+                                                                                        const fileInput = document.getElementById("avatarImage");
+                                                                                        if (fileInput) {
+                                                                                            fileInput.click();
+                                                                                        }
+                                                                                    }}
                                                                                     id="avatar square"
                                                                                     className="bg-[url('https://cdn.lu.ma/cdn-cgi/image/format=auto,fit=cover,dpr=2,background=white,quality=75,width=64,height=64/avatars-default/community_avatar_13.png')] w-[54px] h-[54px] rounded-[0.5rem] bg-center bg-cover flex justify-center items-center bg-[#ebeced] dark:bg-[#333537]"
                                                                                 >
@@ -379,7 +540,10 @@ export default function CreateFormFinal() {
                                                                                 className="name-input text-[1.5rem] font-medium p-2 h-12"
                                                                             >
                                                                                 <textarea
-
+                                                                                    value={calendarReq.name}
+                                                                                    onChange={(e) =>
+                                                                                        setCalendarReq({ ...calendarReq, name: e.target.value })
+                                                                                    }
                                                                                     id="lux-naked-input bordered mounted"
                                                                                     spellCheck="false"
                                                                                     autoCapitalize="words"
@@ -400,6 +564,7 @@ export default function CreateFormFinal() {
                                                                             </div>
                                                                         </div>
                                                                         <Button
+                                                                            onClick={handleCalendarClick}
                                                                             type='submit'
                                                                             className='text-[#fff] bg-[#333537] border-[#333537] cursor-pointer transition-all duration-300 ease-in-out donace-button mt-4 flex items-center m-0'
                                                                         >
@@ -466,7 +631,7 @@ export default function CreateFormFinal() {
                                                                         <div className='divider w-px bg-transparent transition-all duration-300 ease-in-out'></div>
                                                                         <div className='time-input border-l-0 rounded-tl-none rounded-tr rounded-br rounded-bl-none border border-solid border-transparent bg-[rgba(19,21,23,0.04)] transition-all duration-300 ease-in-out flex items-center'>
                                                                             <div className='lux-menu-trigger flex cursor-pointer min-w-0'>
-                                                                                {/* <Input
+                                                                                <Input
                                                                                     type="time"
                                                                                     id="time"
                                                                                     value={getEventReq.startDate}
@@ -476,7 +641,7 @@ export default function CreateFormFinal() {
                                                                                     className='bg-transparent dark:bg-[rgba(255,255,255,0.08)] dark:text-[#fff]'
                                                                                     variant='flat'
                                                                                     radius='none'
-                                                                                /> */}
+                                                                                />
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -702,7 +867,134 @@ export default function CreateFormFinal() {
                                                             <div className='icon text-[rgba(19,21,23,0.2)] m-[0px_0.25rem]'>
                                                                 <Ticket className='block w-4 h-4 align-middle translate-y-px' />
                                                             </div>
-                                                            <div className='text-black-more-blur-light-theme select-none flex-1 ' onClick={modalPriceEvent.onOpen}>Loại vé</div>
+                                                            <div className='text-black-more-blur-light-theme select-none flex-1'>Loại vé</div>
+                                                            {getModalPayment ? (
+                                                                <div className="gap-1 flex items-center">
+                                                                    <div className='value'>Miễn phí</div>
+                                                                    <button
+                                                                        onClick={modalPayment.onOpen}
+                                                                        aria-label="Button to open modalPayment"
+                                                                        type='button'
+                                                                        className='m-[-1px_-0.25rem_-1px_0px] text-black-blur-light-theme bg-transparent border-transparent border border-solid flex-shrink-0 cursor-pointer transition-all duration-300 ease-in-out donace-button-w-fit flex items-center'
+                                                                    >
+                                                                        <Pen className='stroke-2 w-3.5 h-3.5 flex-shrink-0 block align-middle translate-y-px' />
+                                                                    </button>
+                                                                </div>
+                                                            ) : (
+                                                                <div className="gap-1 flex items-center">
+                                                                    <div className='value'>Miễn phí</div>
+                                                                    <button
+                                                                        onClick={modalPriceEvent.onOpen}
+                                                                        aria-label="Button to open modalPayment"
+                                                                        type='button'
+                                                                        className='m-[-1px_-0.25rem_-1px_0px] text-black-blur-light-theme bg-transparent border-transparent border border-solid flex-shrink-0 cursor-pointer transition-all duration-300 ease-in-out donace-button-w-fit flex items-center'
+                                                                    >
+                                                                        <Pen className='stroke-2 w-3.5 h-3.5 flex-shrink-0 block align-middle translate-y-px' />
+                                                                    </button>
+                                                                </div>
+                                                            )}
+                                                            <Modal
+                                                                isOpen={modalPayment.isOpen}
+                                                                onOpenChange={modalPayment.onOpenChange}
+                                                                size="xl"
+                                                                radius="lg"
+                                                                classNames={{
+                                                                    base: "flex flex-col relative",
+                                                                    closeButton: "hidden"
+                                                                }}
+                                                            >
+                                                                <ModalContent>
+                                                                    {(onClose) => (
+                                                                        <>
+                                                                            <ModalBody
+                                                                                className="w-full p-[1rem_1.25rem]"
+                                                                            >
+                                                                                <div className="flex flex-col">
+                                                                                    <div className="lux-alert-top pt-1">
+                                                                                        <div className="icon-wrapper m-[0.25rem_0px_0.75rem] w-14 h-14 rounded-full text-[#737577] dark:text-[#d2d4d7] bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)] justify-center flex items-center">
+                                                                                            <CreditCard className="w-8 h-8 block align-middle" />
+                                                                                        </div>
+                                                                                        <div className="title font-semibold text-xl mb-2">Liên kết <span className='text-red-500'>VN</span><span className='text-blue-500'>PAY</span></div>
+                                                                                        <div className="desc text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)]">Tài khoản của bạn chưa được thiết lập để chấp nhận thanh toán.</div>
+                                                                                        <div className='desc text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)]'>
+                                                                                            Chúng tôi sử dụng VNPay làm bộ xử lý thanh toán. Kết nối tài khoản VNPay của bạn để bắt đầu thanh toán.
+                                                                                        </div>
+                                                                                        <Link
+                                                                                            href='https://sandbox.vnpayment.vn/apis/docs/huong-dan-tich-hop/'
+                                                                                            target='_blank'
+                                                                                            className='justify-end items-end flex text-sm pt-2'
+                                                                                        >
+                                                                                            <span>Click vào đây để làm theo hướng dẫn lấy keys.</span>
+                                                                                        </Link>
+                                                                                    </div>
+                                                                                    <div className='gap-4 mt-2 flex flex-col'>
+                                                                                        <div className='lux-input-wrapper medium max-w-[auto]'>
+                                                                                            <div className='inner-wrapper inline-block w-full'>
+                                                                                                <label className='text-sm block mb-1.5 font-medium text-black-more-blur-light-theme transition-all duration-300 ease-in-out'>
+                                                                                                    <div>Key</div>
+                                                                                                </label>
+                                                                                                <div className='input-wrapper flex items-baseline'>
+                                                                                                    <div className='flex-1 flex items-center'>
+                                                                                                        <div>&nbsp;</div>
+                                                                                                        <Input
+                                                                                                            placeholder='Điền key của bạn vào trong này.'
+                                                                                                            size='md'
+                                                                                                            variant='bordered'
+                                                                                                            type='password'
+                                                                                                            inputMode='text'
+                                                                                                            value={tmnCode}
+                                                                                                            onChange={(e) => setTmnCode(e.target.value)}
+                                                                                                            classNames={{
+                                                                                                                input: [
+                                                                                                                    "text-base"
+                                                                                                                ]
+                                                                                                            }}
+                                                                                                        />
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div className='lux-input-wrapper medium max-w-[auto]'>
+                                                                                            <div className='inner-wrapper inline-block w-full'>
+                                                                                                <label className='text-sm block mb-1.5 font-medium text-black-more-blur-light-theme transition-all duration-300 ease-in-out'>
+                                                                                                    <div>Secret key</div>
+                                                                                                </label>
+                                                                                                <div className='input-wrapper flex items-baseline'>
+                                                                                                    <div className='flex-1 flex items-center'>
+                                                                                                        <div>&nbsp;</div>
+                                                                                                        <Input
+                                                                                                            size='md'
+                                                                                                            variant='bordered'
+                                                                                                            type='password'
+                                                                                                            inputMode='text'
+                                                                                                            value={hashSecret}
+                                                                                                            onChange={(e) => setHashSecret(e.target.value)}
+                                                                                                            placeholder='Điền secret key của bạn vào trong này.'
+                                                                                                            classNames={{
+                                                                                                                input: [
+                                                                                                                    "text-base"
+                                                                                                                ]
+                                                                                                            }}
+                                                                                                        />
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div className='gap-2 flex justify-between items-center'>
+                                                                                            <Button
+                                                                                                type='submit'
+                                                                                                className='text-[#fff] bg-[#333537] border-[#333537] border border-solid cursor-pointer transition-all duration-300 ease-in-out donace-button mt-4 flex items-center m-0'
+                                                                                            >
+                                                                                                <div className='label'>Kết nối</div>
+                                                                                            </Button>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </ModalBody>
+                                                                        </>
+                                                                    )}
+                                                                </ModalContent>
+                                                            </Modal>
                                                             <Modal
                                                                 isOpen={modalPriceEvent.isOpen}
                                                                 onOpenChange={modalPriceEvent.onOpenChange}
@@ -768,119 +1060,6 @@ export default function CreateFormFinal() {
                                                                                                 className='text-black-more-blur-light-theme bg-[rgba(19,21,23,0.04)] border-transparent border border-solid cursor-pointer transition-all duration-300 ease-in-out donace-button mt-4 flex items-center m-0'
                                                                                             >
                                                                                                 <div className='label'>Sự kiện miễn phí</div>
-                                                                                            </Button>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </ModalBody>
-                                                                        </>
-                                                                    )}
-                                                                </ModalContent>
-                                                            </Modal>
-                                                            <div className='gap-1 flex items-center'>
-                                                                <div className='value'>Miễn phí</div>
-                                                                <button
-                                                                    aria-label="Button to open modalPayment"
-                                                                    type='button'
-                                                                    onClick={modalPayment.onOpen}
-                                                                    className='m-[-1px_-0.25rem_-1px_0px] text-black-blur-light-theme bg-transparent border-transparent border border-solid flex-shrink-0 cursor-pointer transition-all duration-300 ease-in-out donace-button-w-fit flex items-center'
-                                                                >
-                                                                    <Pen className='stroke-2 w-3.5 h-3.5 flex-shrink-0 block align-middle translate-y-px' />
-                                                                </button>
-                                                            </div>
-                                                            <Modal
-                                                                isOpen={modalPayment.isOpen}
-                                                                onOpenChange={modalPayment.onOpenChange}
-                                                                size="xl"
-                                                                radius="lg"
-                                                                classNames={{
-                                                                    base: "flex flex-col relative",
-                                                                    closeButton: "hidden"
-                                                                }}
-                                                            >
-                                                                <ModalContent>
-                                                                    {(onClose) => (
-                                                                        <>
-                                                                            <ModalBody
-                                                                                className="w-full p-[1rem_1.25rem]"
-                                                                            >
-                                                                                <div className="flex flex-col">
-                                                                                    <div className="lux-alert-top pt-1">
-                                                                                        <div className="icon-wrapper m-[0.25rem_0px_0.75rem] w-14 h-14 rounded-full text-[#737577] dark:text-[#d2d4d7] bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)] justify-center flex items-center">
-                                                                                            <CreditCard className="w-8 h-8 block align-middle" />
-                                                                                        </div>
-                                                                                        <div className="title font-semibold text-xl mb-2">Liên kết <span className='text-red-500'>VN</span><span className='text-blue-500'>PAY</span></div>
-                                                                                        <div className="desc text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)]">Tài khoản của bạn chưa được thiết lập để chấp nhận thanh toán.</div>
-                                                                                        <div className='desc text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)]'>
-                                                                                            Chúng tôi sử dụng VNPay làm bộ xử lý thanh toán. Kết nối tài khoản VNPay của bạn để bắt đầu thanh toán. <strong>Phí quản lý là: 10.000 VND!</strong>
-                                                                                        </div>
-                                                                                        <Link
-                                                                                            href='https://sandbox.vnpayment.vn/apis/docs/huong-dan-tich-hop/'
-                                                                                            target='_blank'
-                                                                                            className='justify-end items-end flex text-sm pt-2'
-                                                                                        >
-                                                                                            <span>Click vào đây để làm theo hướng dẫn lấy keys.</span>
-                                                                                        </Link>
-                                                                                    </div>
-                                                                                    <div className='gap-4 mt-2 flex flex-col'>
-                                                                                        <div className='lux-input-wrapper medium max-w-[auto]'>
-                                                                                            <div className='inner-wrapper inline-block w-full'>
-                                                                                                <label className='text-sm block mb-1.5 font-medium text-black-more-blur-light-theme transition-all duration-300 ease-in-out'>
-                                                                                                    <div>Key</div>
-                                                                                                </label>
-                                                                                                <div className='input-wrapper flex items-baseline'>
-                                                                                                    <div className='flex-1 flex items-center'>
-                                                                                                        <div>&nbsp;</div>
-                                                                                                        <Input
-                                                                                                            placeholder='Điền key của bạn vào trong này.'
-                                                                                                            size='md'
-                                                                                                            variant='bordered'
-                                                                                                            type='password'
-                                                                                                            inputMode='text'
-                                                                                                            step={1}
-                                                                                                            min={1}
-                                                                                                            classNames={{
-                                                                                                                input: [
-                                                                                                                    "text-base"
-                                                                                                                ]
-                                                                                                            }}
-                                                                                                        />
-                                                                                                    </div>
-                                                                                                </div>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                        <div className='lux-input-wrapper medium max-w-[auto]'>
-                                                                                            <div className='inner-wrapper inline-block w-full'>
-                                                                                                <label className='text-sm block mb-1.5 font-medium text-black-more-blur-light-theme transition-all duration-300 ease-in-out'>
-                                                                                                    <div>Secret key</div>
-                                                                                                </label>
-                                                                                                <div className='input-wrapper flex items-baseline'>
-                                                                                                    <div className='flex-1 flex items-center'>
-                                                                                                        <div>&nbsp;</div>
-                                                                                                        <Input
-                                                                                                            size='md'
-                                                                                                            variant='bordered'
-                                                                                                            type='password'
-                                                                                                            inputMode='text'
-                                                                                                            step={1}
-                                                                                                            min={1}
-                                                                                                            placeholder='Điền secret key của bạn vào trong này.'
-                                                                                                            classNames={{
-                                                                                                                input: [
-                                                                                                                    "text-base"
-                                                                                                                ]
-                                                                                                            }}
-                                                                                                        />
-                                                                                                    </div>
-                                                                                                </div>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                        <div className='gap-2 flex justify-between items-center'>
-                                                                                            <Button
-                                                                                                type='submit'
-                                                                                                className='text-[#fff] bg-[#333537] border-[#333537] border border-solid cursor-pointer transition-all duration-300 ease-in-out donace-button mt-4 flex items-center m-0'
-                                                                                            >
-                                                                                                <div className='label'>Kết nối</div>
                                                                                             </Button>
                                                                                         </div>
                                                                                     </div>
