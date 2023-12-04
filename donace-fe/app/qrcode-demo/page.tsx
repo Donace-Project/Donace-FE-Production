@@ -21,12 +21,12 @@ const QRCodeDemoPage = () => {
     <div>
       <h1>QR Code Generator</h1>
 
-      <Button onPress={onOpen}>Open Modal</Button>
+      <Button onPress={onOpen}>Open Generator QR code</Button>
 
       <Modal isOpen={isOpen} onOpenChange={onOpenChange} placement='center' size='xs' >
         <ModalContent>
           {(onClose) => (
-            <>
+            <div>
               <ModalBody className='p-8'>
                 <div className='w-full h-full'>
                   <div className='w-min h-min p-8 rounded-lg bg-transparent backdrop-blur-sm border-dashed border-black border-2 m-auto'>
@@ -54,7 +54,7 @@ const QRCodeDemoPage = () => {
                   </div>
                 </div>
               </ModalBody>
-            </>
+            </div>
           )}
         </ModalContent>
       </Modal>
