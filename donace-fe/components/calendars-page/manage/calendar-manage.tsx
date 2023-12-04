@@ -87,17 +87,8 @@ export default function CalendarManage(props: any) {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const futureEventsData = await fetchWrapper.get(`api/Event?IsNew=${dateTimeTrue}-${dateTimeSubTrue}`);
-                setFutureEvents(futureEventsData.items);
-
-                const pastEventsData = await fetchWrapper.get(`api/Event?IsNew=${dateTimeFalse}-${dateTimeSubFalse}`);
-                setPastEvents(pastEventsData.items);
-
                 const calendarsData = await fetchWrapper.post(`api/Calendar/get-by-id?Id=${id}`, null);
                 setCalendars(calendarsData);
-
-                const calendarData = await fetchWrapper.post('/api/Calendar/get-list', { pageNumber: 1, pageSize: 9999 });
-                setCalendar(calendarData);
 
                 const eventsData = await fetchWrapper.get(`api/Event/list-event-by-calendar-${id}-${dateTimeTrue}-${dateTimeSubTrue}`);
                 setEvents(eventsData);
@@ -105,13 +96,12 @@ export default function CalendarManage(props: any) {
                 const pastEventsIdData = await fetchWrapper.get(`api/Event/list-event-by-calendar-${id}-${dateTimeFalse}-${dateTimeSubFalse}`);
                 setPastEventsId(pastEventsIdData);
 
-                setLoading(false); // Set loading to false once all data is fetched
+                setLoading(false);
             } catch (error) {
                 console.error('Error fetching data:', error);
                 setLoading(false);
             }
         };
-
         fetchData();
     }, []);
 

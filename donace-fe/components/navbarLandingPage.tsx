@@ -16,7 +16,7 @@ export default function NavbarLanding() {
                     href="/"
                     aria-label="Donace Home"
                     underline="none"
-                    className="relative z-[1] transition-global cursor-pointer"
+                    className="relative z-[1] transition-global cursor-pointer sm:justify-start"
                     target="_self"
                 >
                     <NavbarContent className="logo-light transition-all duration-300 ease-in-out flex items-center">
@@ -24,7 +24,7 @@ export default function NavbarLanding() {
                     </NavbarContent>
                 </Link>
             </NavbarBrand>
-            <NavbarContent justify="end" className="flex items-center">
+            <NavbarContent justify="end" className="flex items-center sm:justify-center">
                 <div className="text-[hsla(0,0%,100%,.5)] text-sm relative">
                     <ThoiGian />
                 </div>
