@@ -4,7 +4,7 @@ import React from 'react';
 import QRCodeGenerator from '@/components/QR/QRGenerator';
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Divider } from "@nextui-org/react";
 
-const QRCodeDemoPage = () => {
+const QRCodeDemoPage = ({ params }: { params: { id: string } }) => {
 
   var informations = {
     "name": "Trần Phú Đạt",
@@ -14,7 +14,7 @@ const QRCodeDemoPage = () => {
 
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
-  let qrCodeValue = "your-qr-code-value"; // Replace with your actual QR code value
+  let qrCodeValue = "1"; // Replace with your actual QR code value
 
 
   return (

@@ -1,31 +1,34 @@
 "use client"
+
 // QRScanner.js
 import React, { useState } from 'react';
 import QrReader from 'react-web-qr-reader';
 
-const QRScanner = () => {
-  const [result, setResult] = useState('no result');
+
+const QRScanner = ({onChildDataChange }) => {
+  // const [result, setResult] = useState('no result');
 
   const handleScan = (data) => {
     if (data) {
-      setResult(data.data);
-      console.log(data.data);
+      onChildDataChange(data.data);
+      // console.log(data.data);
     }
   };
 
   const handleError = (err) => {
     console.error(err);
+    onChildDataChange("error");
   };
 
   return (
-    <div>
+    <div className='w-full'>
       <QrReader
         delay={300}
         onError={handleError}
         onScan={handleScan}
         style={{ width: '100%' }}
       />
-      <p>{result}</p>
+      {/* <p>{result}</p> */}
     </div>
   );
 };
