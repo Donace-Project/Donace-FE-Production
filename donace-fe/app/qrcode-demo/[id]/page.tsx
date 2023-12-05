@@ -3,6 +3,7 @@
 import React from 'react';
 import QRCodeGenerator from '@/components/QR/QRGenerator';
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Divider } from "@nextui-org/react";
+import NavbarComponents from '@/components/navbar';
 
 const QRCodeDemoPage = ({ params }: { params: { id: string } }) => {
 
@@ -18,7 +19,10 @@ const QRCodeDemoPage = ({ params }: { params: { id: string } }) => {
 
 
   return (
-    <div>
+    <div className="page-wrapper">
+            <NavbarComponents/>
+            <div className="main">
+            <div>
       <h1>QR Code Generator</h1>
 
       <Button onPress={onOpen}>Open Generator QR code</Button>
@@ -29,7 +33,7 @@ const QRCodeDemoPage = ({ params }: { params: { id: string } }) => {
             <div>
               <ModalBody className='p-8'>
                 <div className='w-full h-full'>
-                  <div className='w-min h-min p-8 rounded-lg bg-transparent backdrop-blur-sm border-dashed border-black border-2 m-auto'>
+                  <div className='w-min h-min p-8 rounded-lg bg-[rgba(255,255,255,0.5)] backdrop-blur-sm border-dashed border-black border-2 m-auto'>
                     <QRCodeGenerator value={qrCodeValue} />
                   </div>
                   <Divider orientation="horizontal" className='my-4' />
@@ -59,6 +63,9 @@ const QRCodeDemoPage = ({ params }: { params: { id: string } }) => {
         </ModalContent>
       </Modal>
     </div>
+            </div>
+        </div>
+    
   );
 };
 
