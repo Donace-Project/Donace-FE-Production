@@ -88,6 +88,7 @@ export default function CalendarManage(props: any) {
         const fetchData = async () => {
             try {
                 const calendarsData = await fetchWrapper.post(`api/Calendar/get-by-id?Id=${id}`, null);
+                //console.log(calendarsData)
                 setCalendars(calendarsData);
 
                 const eventsData = await fetchWrapper.get(`api/Event/list-event-by-calendar-${id}-${dateTimeTrue}-${dateTimeSubTrue}`);
@@ -104,7 +105,7 @@ export default function CalendarManage(props: any) {
         };
         fetchData();
     }, []);
-
+console.log(getCalendars)
     return (
         <div className="page-content">
             <div className="page-header opacity-[2] pl-4 pr-4 pt-12 max-width-global margin-global">
@@ -149,14 +150,31 @@ export default function CalendarManage(props: any) {
                                 </div>
                             )}
                         </h1>
-                        <Link
+                        
+                        {getCalendars?.isHost ? (
+                            <></>
+                        ) : (
+                            getCalendars?.isSub ? (
+                                <></>
+                            ) : (
+                                <Link
+                            className="text-black-more-blur-light-theme dark:text-[rgba(255,255,255,0.64)] bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)] border-transparent border border-solid transition-all duration-300 ease-in-out donace-button-w-fit flex items-center cursor-pointer"
+                            underline="none"
+                            >
+                                <div className="label">Tham gia</div>
+                            </Link>
+                            )
+                        )}
+                        
+                            <Link
                             href="/calendars"
                             className="text-black-more-blur-light-theme dark:text-[rgba(255,255,255,0.64)] bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)] border-transparent border border-solid transition-all duration-300 ease-in-out donace-button-w-fit flex items-center cursor-pointer"
                             underline="none"
-                        >
-                            <div className="label">Lịch</div>
-                            <ArrowUpRight className="ml-1.5 stroke-2 w-3.5 h-3.5 flex-shrink-0 block align-middle" />
-                        </Link>
+                            >
+                                <div className="label">Lịch</div>
+                                <ArrowUpRight className="ml-1.5 stroke-2 w-3.5 h-3.5 flex-shrink-0 block align-middle" />
+                            </Link>                        
+                        
                     </div>
                 )}
             </div>

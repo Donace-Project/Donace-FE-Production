@@ -134,6 +134,8 @@ export type GetCalendarById = {
     long: string;
     addressName: string;
     totalSubcribed: number
+    isSub: boolean
+    isHost: boolean
 }
 // **************
 

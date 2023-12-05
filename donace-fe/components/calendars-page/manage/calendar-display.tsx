@@ -27,14 +27,14 @@ export default function CalendarDisplay(props: any) {
     var { id } = props
 
     const [getCalendars, setCalendars] = useState<GetCalendarById | null>(null);
-    var [calendars, setCalendar] = useState<Calendar | null>(null);
+    //var [calendars, setCalendar] = useState<Calendar | null>(null);
 
     useEffect(() => {
         fetchWrapper.post(`api/Calendar/get-by-id?Id=${id}`, null)
             .then(data => setCalendars(data));
 
-        fetchWrapper.post('/api/Calendar/get-list', { pageNumber: 1, pageSize: 9999 })
-            .then(data => setCalendar(data))
+        // fetchWrapper.post('/api/Calendar/get-list', { pageNumber: 1, pageSize: 9999 })
+        //     .then(data => setCalendar(data))
     }, []);
     return (
         <div className="page-content">
