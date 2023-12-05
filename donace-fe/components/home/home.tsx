@@ -158,7 +158,7 @@ export default function HomeEvents() {
                               <div className="container sticky">
                                 <div className="timeline-title">
                                   <div className="content animated transition-all duration-300 ease-in-out">
-                                    <div className="date font-medium">{CovertDate(event.startDate)[0]}</div>
+                                    <div className="date font-medium">{ConvertDateTime(event.startDate).day}/{ConvertDateTime(event.startDate).month}/{ConvertDateTime(event.startDate).year}</div>
                                     <div className="text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)]">{DayOfWeek(CovertDate(event.startDate)[0])}</div>
                                   </div>
                                 </div>
@@ -294,7 +294,7 @@ export default function HomeEvents() {
                               <div className="container sticky">
                                 <div className="timeline-title">
                                   <div className="content animated transition-all duration-300 ease-in-out">
-                                    <div className="date font-medium">{CovertDate(event.startDate)[0]}</div>
+                                    <div className="date font-medium">{ConvertDateTime(event.startDate).day}/{ConvertDateTime(event.startDate).month}/{ConvertDateTime(event.startDate).year}</div>
                                     <div className="text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)]">{DayOfWeek(CovertDate(event.startDate)[0])}</div>
                                   </div>
                                 </div>

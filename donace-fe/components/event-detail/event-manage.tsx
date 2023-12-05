@@ -97,7 +97,7 @@ export default function EventManage(props: any) {
                         </Link>
                     </div>
                 ) : (
-                    <div></div>
+                    <div className="hidden"></div>
                 )}
             </div>
             <div className="tab-wrapper m-auto pt-2">
@@ -106,17 +106,36 @@ export default function EventManage(props: any) {
                         <div className="tabs flex max-w-full overflow-auto min-w-0 gap-4 flex-1">
                             <div className="side-padding"></div>
                             <Link
-                                href=""
+                                href={`/events/manage/${eventDetail?.id}`}
                                 className="text-black-light-theme dark:text-[#fff] border-b-2 border-solid border-[rgb(19,21,23)] dark:border-[#fff] whitespace-nowrap inline-block pb-2 transition-all duration-300 ease-in-out cursor-pointer"
                                 underline="none"
                             >
-                                Tổng thể
+                                Sự kiện
+                            </Link>
+                            <Link
+                                href={`/events/manage/${eventDetail?.id}/guests`}
+                                className="text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)] border-b-2 border-solid border-transparent whitespace-nowrap inline-block pb-2 transition-all duration-300 ease-in-out cursor-pointer"
+                                underline="none"
+                            >
+                                Khách
                             </Link>
                             <Link
                                 className="text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)] border-b-2 border-solid border-transparent whitespace-nowrap inline-block pb-2 transition-all duration-300 ease-in-out cursor-pointer"
                                 underline="none"
                             >
-                                Người tham gia
+                                Thanh toán
+                            </Link>
+                            <Link
+                                className="text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)] border-b-2 border-solid border-transparent whitespace-nowrap inline-block pb-2 transition-all duration-300 ease-in-out cursor-pointer"
+                                underline="none"
+                            >
+                                Doanh thu
+                            </Link>
+                            <Link
+                                className="text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)] border-b-2 border-solid border-transparent whitespace-nowrap inline-block pb-2 transition-all duration-300 ease-in-out cursor-pointer"
+                                underline="none"
+                            >
+                                Khác
                             </Link>
                         </div>
                     </div>
