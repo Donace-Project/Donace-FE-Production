@@ -45,26 +45,14 @@ import { CreateEventModel, PaymentModel } from "@/types/DonaceType";
 import { fetchWrapper } from "@/helpers/fetch-wrapper";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { Calendar } from "../../types/DonaceType";
+import { useSearchParams } from "next/navigation";
 
-const goongGeocoder = require('@goongmaps/goong-geocoder');
-export type Calendar = {
-  code: string;
-  success: boolean;
-  result: Result[];
-  pageInfo: any;
-};
-
-export type Result = {
-  sorted: number;
-  id: string;
-  name: string;
-  totalSubcriber: number;
-  avatar: string;
-  userId: string;
-  isSubcribed: boolean;
-};
+const goongGeocoder = require("@goongmaps/goong-geocoder");
 
 export default function CreateFormFinal() {
+  const searchParams = useSearchParams();
+  const calendarId = searchParams?.get("calendarId");
   let goongjs = useRef<any>(null);
 
   // ?: options chọn địa điểm
@@ -104,7 +92,8 @@ export default function CreateFormFinal() {
   const [hashSecret, setHashSecret] = useState<string>("");
   const [isError, setIsError] = useState(false);
 
-  var [calendars, setCalendar] = useState<Calendar | null>(null);
+  const [lstCalendar, setLstCalendar] = useState<Calendar[]>([]);
+  const [selectedCalendar, SetSelectedCalendar] = useState<Calendar>();
   const iconRef = useRef<HTMLDivElement | null>(null);
 
   const [calendarReq, setCalendarReq] = useState({
@@ -185,24 +174,6 @@ export default function CreateFormFinal() {
     }
   };
 
-  useEffect(() => {
-    const fetchCalendar = async () => {
-      try {
-        const calendarData = await fetchWrapper.post("/api/Calendar/get-list", {
-          pageNumber: 1,
-          pageSize: 9999,
-        });
-        setCalendar(calendarData);
-        console.log("Dữ liệu trả về từ API:", calendarData);
-        setCalendar(calendarData);
-        console.log("State calendars sau khi cập nhật:", calendars);
-      } catch (error) {
-        console.error("Error fetching calendar:", error);
-      }
-    };
-    fetchCalendar();
-  }, []);
-
   const [lat, setLat] = useState(10.8537915);
   const [lng, setLng] = useState(106.6234887);
   const [addressLat, setAddressLat] = useState(null);
@@ -256,6 +227,10 @@ export default function CreateFormFinal() {
   const handleSaveLocation = () => {
     setShowOfflineContent(true);
     setSelectedLocation({ lat: lat, lng: lng });
+  };
+
+  const handleSelectedCalendar = (e: any, id: string) => {
+    SetSelectedCalendar(lstCalendar.filter((c) => c.id == id)[0]);
   };
 
   const [getEventReq, setEventReq] = useState({
@@ -317,7 +292,28 @@ export default function CreateFormFinal() {
       setIsCreating(false);
     }
   };
+
   useEffect(() => {
+    const fetchCalendar = async () => {
+      try {
+        const calendarRes = await fetchWrapper.post("/api/Calendar/get-list", {
+          pageNumber: 1,
+          pageSize: 9999,
+        });
+        let lstCalendarTemp = calendarRes.result as Calendar[];
+        setLstCalendar(lstCalendarTemp);
+
+        let foundCalendars = lstCalendarTemp.filter((c) => c.id == calendarId);
+        if (foundCalendars.length > 0) {
+          SetSelectedCalendar(foundCalendars[0]);
+        } else {
+          SetSelectedCalendar(lstCalendarTemp[0]);
+        }
+      } catch (error) {
+        console.error("Error fetching calendar:", error);
+      }
+    };
+
     async function ImportMap() {
       goongjs.current = await require("@goongmaps/goong-js");
       goongjs.current.accessToken = "wnicbAmnNkoMHNYUKWnlFHezV189FjmMwkNJ7hKW";
@@ -328,10 +324,7 @@ export default function CreateFormFinal() {
         })
       );
     }
-    ImportMap();
-  }, []);
 
-  useEffect(() => {
     const fetchPayment = async () => {
       try {
         const paymentData = await fetchWrapper.get("/api/Payment/get-connect");
@@ -350,8 +343,15 @@ export default function CreateFormFinal() {
         console.error("Error fetching Payment:", error);
       }
     };
-    fetchPayment();
+
+    ImportMap();
+    fetchCalendar();
+    // fetchPayment();
   }, []);
+
+  // useEffect(() => {
+
+  // }, [selectedCalendar])
 
   useEffect(() => {
     // Khởi tạo bản đồ khi component được mount
@@ -427,7 +427,7 @@ export default function CreateFormFinal() {
                                 </div>
                                 <div className="gap-1 flex items-center">
                                   <div className="font-medium overflow-hidden text-ellipsis whitespace-nowrap text-sm">
-                                    Lịch cá nhân
+                                    {selectedCalendar?.name}
                                   </div>
                                 </div>
                               </div>
@@ -443,7 +443,7 @@ export default function CreateFormFinal() {
                           >
                             {/* @ts-ignore */}
                             <DropdownSection title="Chọn Lịch để tạo Sự kiện:">
-                              <DropdownItem
+                              {/* <DropdownItem
                                 endContent={
                                   <CheckCircle2 className="block w-4 h-4 align-middle" />
                                 }
@@ -456,11 +456,13 @@ export default function CreateFormFinal() {
                                     src: "https://avatars.githubusercontent.com/u/143386751?s=200&v=4",
                                   }}
                                 />
-                              </DropdownItem>
-                              {calendars ? (
-                                calendars.result.length > 0 ? (
-                                  calendars.result.map((calendar, index) => (
-                                    <DropdownItem>
+                              </DropdownItem> */}
+                              {lstCalendar ? (
+                                lstCalendar.length > 0 ? (
+                                  lstCalendar.map((calendar, index) => (
+                                    <DropdownItem key={calendar.id}
+                                    onClick={(e) => handleSelectedCalendar(e, calendar.id)}
+                                    >
                                       <User
                                         name={calendar.name}
                                         avatarProps={{

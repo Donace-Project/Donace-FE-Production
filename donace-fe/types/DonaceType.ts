@@ -1,3 +1,20 @@
+export type CommonResponse<T> = {
+    code: string;
+    success: boolean;
+    result: T[];
+    pageInfo: any;
+}
+
+export type Calendar = {
+    sorted: number;
+    id: string;
+    name: string;
+    totalSubcriber: number;
+    avatar: string;
+    userId: string;
+    isSubcribed: boolean;
+};
+
 export type AppUser = {
     id: string;
     userName: string;
@@ -63,14 +80,14 @@ export type ItemEventsProfile = {
 }
 
 
-export type UpdateProfile ={
-    code : string;
-    success : true;
-    result : ResultUpdateProfile;
+export type UpdateProfile = {
+    code: string;
+    success: true;
+    result: ResultUpdateProfile;
     pageInfor: any;
 }
 
-export type ResultUpdateProfile ={
+export type ResultUpdateProfile = {
     userName: string;
     avatar: string;
     bio: string;
