@@ -37,12 +37,12 @@ export default function SignUp() {
       return;
     }
 
-    debugger;
-    if(isInvalidEmail) {
+    if (isInvalidEmail) {
       setError("Vui lòng nhập email hợp lệ");
       return;
     }
 
+    // Đăng ký tài khoản
     SetIsLoading(true);
     var resultRegister = await fetchWrapper.post(
       "/api/Authentication/register",
@@ -63,6 +63,20 @@ export default function SignUp() {
       return;
     }
 
+    // Đăng lý lịch mặc định
+    try {
+      await fetchWrapper.postWithToken(
+        "api/Calendar/create-calendar",
+        {
+          name: "Cá nhân",
+        },
+        resultRegister?.token
+      );
+    } catch (ex) {
+      console.log(ex);
+    }
+
+    // Dùng tài khoản đã đăng ký để login
     const resultLogin = await signIn("credentials", {
       email: email,
       password: password,
@@ -130,6 +144,7 @@ export default function SignUp() {
                 )}
               </div>
               <Button
+                isDisabled={isLoading}
                 type="button"
                 onClick={submit}
                 className="mb-12 text-[#fff] bg-[#333537] border-[#333537] border border-solid w-full cursor-pointer transition-all duration-300 ease-in-out font-medium rounded-lg relative whitespace-nowrap justify-center outline-none max-w-full text-base p-[0.625rem_0.875rem] h-[calc(2.25rem+2*1px)] flex items-center m-0 leading-6"
