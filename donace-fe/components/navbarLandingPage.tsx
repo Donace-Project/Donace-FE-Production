@@ -2,7 +2,6 @@ import { Link } from "@nextui-org/link";
 import { Navbar, NavbarBrand, NavbarContent } from "@nextui-org/navbar";
 import { GraduationCap } from "lucide-react";
 import ThoiGian from "./clock/clock";
-import { Button } from "@nextui-org/button";
 
 export default function NavbarLanding() {
     return (
@@ -25,6 +24,7 @@ export default function NavbarLanding() {
                 </Link>
             </NavbarBrand>
             <NavbarContent justify="end" className="flex items-center sm:justify-center">
+                {/* @ts-ignore */}
                 <div className="text-[hsla(0,0%,100%,.5)] text-sm relative">
                     <ThoiGian />
                 </div>

@@ -2,11 +2,11 @@
 import React, { useEffect, useState } from "react";
 import { Button } from "@nextui-org/button";
 import { Link } from "@nextui-org/link";
-import { ArrowRight, CalendarClock, Frown, MapPin, Plus, Radio, ScanLine, Users2, Video } from "lucide-react";
+import { ArrowRight, CalendarClock, Frown, MapPin, Plus, Radio, ScanLine, Users2 } from "lucide-react";
 import "@/styles/globals.css";
 import { fetchWrapper } from "@/helpers/fetch-wrapper";
 import { Image } from "@nextui-org/image";
-import { Tabs, Tab, Card } from "@nextui-org/react";
+import { Tabs, Tab } from "@nextui-org/react";
 import { Skeleton } from "@nextui-org/skeleton";
 interface DateTimeInfo {
   year: string;

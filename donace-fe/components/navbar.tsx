@@ -147,6 +147,7 @@ export default function NavbarComponents() {
         >
           <NavbarItem
           >
+            {/* @ts-ignore */}
             <ThoiGian />
           </NavbarItem>
           <Link
