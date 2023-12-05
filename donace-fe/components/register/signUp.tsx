@@ -69,6 +69,7 @@ export default function SignUp() {
         "api/Calendar/create-calendar",
         {
           name: "Cá nhân",
+          avatar: 'https://cdn.lu.ma/cdn-cgi/image/format=auto,fit=cover,dpr=2,background=white,quality=75,width=64,height=64/avatars-default/community_avatar_13.png'
         },
         resultRegister?.token
       );
