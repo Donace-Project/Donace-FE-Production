@@ -381,6 +381,7 @@ export default function EventManage(props: any) {
                                             />
                                         </div>
                                     </div>
+                                    <hr className="mt-6 border-solid border-[rgba(19,21,23,0.08)] border-b"></hr>
                                 </div>
                                 <div className="location w-full mt-2">
                                 <div className="time-title font-semibold text-lg">Chọn địa điểm</div>
