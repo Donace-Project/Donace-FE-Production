@@ -2,7 +2,6 @@
 
 import { Avatar } from "@nextui-org/avatar";
 import { Input, Textarea } from "@nextui-org/input";
-
 import {
   ArrowUp,
   ArrowUpToLine,
@@ -11,18 +10,15 @@ import {
   ChevronDownIcon,
   Coins,
   CreditCard,
-  Globe,
   MapPin,
   Pen,
   Plus,
-  PlusIcon,
   Ticket,
   Upload,
   UserCheck,
 } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { Spinner, Switch, User } from "@nextui-org/react";
-
 import {
   Modal,
   ModalContent,
@@ -40,8 +36,6 @@ import {
 import { Button, ButtonGroup } from "@nextui-org/button";
 import { Divider } from "@nextui-org/divider";
 import { Image } from "@nextui-org/react";
-
-import GoongGeocoder from "@goongmaps/goong-geocoder";
 import { Link } from "@nextui-org/link";
 import React from "react";
 import { Player } from "@lottiefiles/react-lottie-player";
@@ -52,6 +46,7 @@ import { fetchWrapper } from "@/helpers/fetch-wrapper";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
+const goongGeocoder = require('@goongmaps/goong-geocoder');
 export type Calendar = {
   code: string;
   success: boolean;
@@ -327,7 +322,7 @@ export default function CreateFormFinal() {
       goongjs.current = await require("@goongmaps/goong-js");
       goongjs.current.accessToken = "wnicbAmnNkoMHNYUKWnlFHezV189FjmMwkNJ7hKW";
       setGeocoder(
-        new GoongGeocoder({
+        new goongGeocoder({
           accessToken: "sbRzCkkevuDa7mTtXzH1mE1i3CZGdFjGAcG01XqF",
           goongjs: goongjs.current,
         })
