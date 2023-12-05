@@ -146,7 +146,6 @@ export default function NavbarComponents() {
           justify="end"
         >
           <NavbarItem
-            as={"div"}
           >
             <ThoiGian />
           </NavbarItem>
