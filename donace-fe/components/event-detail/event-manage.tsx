@@ -383,8 +383,9 @@ export default function EventManage(props: any) {
                                     </div>
                                 </div>
                                 <div className="location w-full mt-2">
+                                <div className="time-title font-semibold text-lg">Chọn địa điểm</div>
                                     <div className="gap-4 flex items-center">
-                                        <MapPin className="w-7 h-7 block align-middle" />
+                                        {/* <MapPin className="w-7 h-7 block align-middle" /> */}
                                         <div
                                             className="w-full p-[0.25rem_1rem_0.25rem] cursor-pointer transition-all duration-300 ease-in-out block relative rounded-xl bg-[#f3f4f5] dark:bg-[rgba(255,255,255,0.04)] border border-solid border-[#fff] dark:border-[rgba(255,255,255,0.04)] overflow-hidden"
                                         >
