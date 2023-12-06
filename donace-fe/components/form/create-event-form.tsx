@@ -106,6 +106,7 @@ export default function CreateFormFinal() {
     long: "",
     addressName: "",
   });
+
   const handleAvatarUpload = async (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -233,7 +234,7 @@ export default function CreateFormFinal() {
     SetSelectedCalendar(lstCalendar.filter((c) => c.id == id)[0]);
   };
 
-  const [getEventReq, setEventReq] = useState({
+  const [eventReq, SetEventReq] = useState<any>({
     startDate: "",
     endDate: "",
     addressName: "",
@@ -254,32 +255,32 @@ export default function CreateFormFinal() {
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-    const dataToSend = {
-      startDate: getEventReq.startDate,
-      endDate: getEventReq.endDate,
-      addressName: getEventReq.addressName,
-      lat: getEventReq.lat,
-      long: getEventReq.long,
-      capacity: getEventReq.capacity,
-      cover: getEventReq.cover,
-      name: getEventReq.name,
-      theme: getEventReq.theme,
-      color: getEventReq.color,
-      fontSize: getEventReq.fontSize,
-      instructions: getEventReq.instructions,
-      duration: getEventReq.duration,
-      calendarId: getEventReq.calendarId,
-    };
+    // const dataToSend = {
+    //   startDate: eventReq.startDate,
+    //   endDate: eventReq.endDate,
+    //   addressName: eventReq.addressName,
+    //   lat: eventReq.lat,
+    //   long: eventReq.long,
+    //   capacity: eventReq.capacity,
+    //   cover: eventReq.cover,
+    //   name: eventReq.name,
+    //   theme: eventReq.theme,
+    //   color: eventReq.color,
+    //   fontSize: eventReq.fontSize,
+    //   instructions: eventReq.instructions,
+    //   duration: eventReq.duration,
+    //   calendarId: eventReq.calendarId,
+    // };
 
     setIsCreating(true);
 
     try {
-      if (!dataToSend.name) {
+      if (!eventReq.name) {
         console.error("Name field is required.");
         setIsCreating(false);
         return;
       }
-      const response = await fetchWrapper.post("/api/Event", dataToSend);
+      const response = await fetchWrapper.post("/api/Event", eventReq);
 
       if (!response.success) {
         console.error(`Lỗi khi tạo sự kiện: ${response.error}`);
@@ -287,6 +288,8 @@ export default function CreateFormFinal() {
         return;
       }
       console.log(<b>Sự kiện đã tạo thành công!</b>);
+
+      // TODO: redirect manager event
     } catch (error) {
       console.error(`Lỗi: ${String(Error)}`);
       setIsCreating(false);
@@ -349,9 +352,11 @@ export default function CreateFormFinal() {
     // fetchPayment();
   }, []);
 
-  // useEffect(() => {
-
-  // }, [selectedCalendar])
+  useEffect(() => {
+    eventReq.calendarId = selectedCalendar?.id;
+    console.log("update calendarId");
+    console.log(eventReq);
+  }, [selectedCalendar]);
 
   useEffect(() => {
     // Khởi tạo bản đồ khi component được mount
@@ -385,12 +390,17 @@ export default function CreateFormFinal() {
           lng: e.result.result.name,
         });
 
-        setEventReq((prevState) => ({
-          ...prevState,
+        SetEventReq({
+          ...eventReq,
+          addressName: e.result.result.formatted_address,
           lat: e.result.result.geometry.location.lat,
           long: e.result.result.geometry.location.lng,
           // Các giá trị khác nếu cần
-        }));
+        });
+        
+        console.log("update location");
+
+        console.log(eventReq);
         // console.log(e.result.result.formatted_address); // log the place name
         // console.log(e.result.geometry); // log the coordinates [longitude, latitude]
       });
@@ -460,8 +470,11 @@ export default function CreateFormFinal() {
                               {lstCalendar ? (
                                 lstCalendar.length > 0 ? (
                                   lstCalendar.map((calendar, index) => (
-                                    <DropdownItem key={calendar.id}
-                                    onClick={(e) => handleSelectedCalendar(e, calendar.id)}
+                                    <DropdownItem
+                                      key={calendar.id}
+                                      onClick={(e) =>
+                                        handleSelectedCalendar(e, calendar.id)
+                                      }
                                     >
                                       <User
                                         name={calendar.name}
@@ -605,10 +618,10 @@ export default function CreateFormFinal() {
                       </div>
                       <div className="name-input-wrapper -ml-2 m-6 flex">
                         <Textarea
-                          value={getEventReq.name}
+                          value={eventReq.name}
                           onChange={(e) =>
-                            setEventReq({
-                              ...getEventReq,
+                            SetEventReq({
+                              ...eventReq,
                               name: e.target.value,
                             })
                           }
@@ -646,10 +659,10 @@ export default function CreateFormFinal() {
                                         <Input
                                           type="date"
                                           id="date"
-                                          value={getEventReq.startDate}
+                                          value={eventReq.startDate}
                                           onChange={(e) =>
-                                            setEventReq({
-                                              ...getEventReq,
+                                            SetEventReq({
+                                              ...eventReq,
                                               startDate: e.target.value,
                                             })
                                           }
@@ -665,10 +678,10 @@ export default function CreateFormFinal() {
                                         <Input
                                           type="time"
                                           id="time"
-                                          value={getEventReq.startDate}
+                                          value={eventReq.startDate}
                                           onChange={(e) =>
-                                            setEventReq({
-                                              ...getEventReq,
+                                            SetEventReq({
+                                              ...eventReq,
                                               startDate: e.target.value,
                                             })
                                           }
@@ -692,10 +705,10 @@ export default function CreateFormFinal() {
                                         <Input
                                           type="date"
                                           id="date"
-                                          value={getEventReq.endDate}
+                                          value={eventReq.endDate}
                                           onChange={(e) =>
-                                            setEventReq({
-                                              ...getEventReq,
+                                            SetEventReq({
+                                              ...eventReq,
                                               endDate: e.target.value,
                                             })
                                           }
@@ -747,20 +760,20 @@ export default function CreateFormFinal() {
                                       <div className="min-w-0">
                                         <Input
                                           className="hidden"
-                                          value={getEventReq.lat}
+                                          value={eventReq.lat}
                                           onChange={(e) =>
-                                            setEventReq({
-                                              ...getEventReq,
+                                            SetEventReq({
+                                              ...eventReq,
                                               lat: e.target.value,
                                             })
                                           }
                                         />
                                         <Input
                                           className="hidden"
-                                          value={getEventReq.long}
+                                          value={eventReq.long}
                                           onChange={(e) =>
-                                            setEventReq({
-                                              ...getEventReq,
+                                            SetEventReq({
+                                              ...eventReq,
                                               long: e.target.value,
                                             })
                                           }
@@ -1300,13 +1313,13 @@ export default function CreateFormFinal() {
                                                     classNames={{
                                                       input: ["text-base"],
                                                     }}
-                                                    value={getEventReq.capacity}
+                                                    value={eventReq.capacity}
                                                     onChange={(e) => {
                                                       setCapacity(
                                                         e.target.value
                                                       );
-                                                      setEventReq({
-                                                        ...getEventReq,
+                                                      SetEventReq({
+                                                        ...eventReq,
                                                         capacity:
                                                           e.target.value,
                                                       });
@@ -1346,10 +1359,10 @@ export default function CreateFormFinal() {
                           </div>
                           <div className="options-row">
                             <Input
-                              value={getEventReq.addressName}
+                              value={eventReq.addressName}
                               onChange={(e) =>
-                                setEventReq({
-                                  ...getEventReq,
+                                SetEventReq({
+                                  ...eventReq,
                                   addressName: e.target.value,
                                 })
                               }
@@ -1360,10 +1373,10 @@ export default function CreateFormFinal() {
                           </div>
                           <div className="options-row">
                             <Input
-                              value={getEventReq.calendarId}
+                              value={eventReq.calendarId}
                               onChange={(e) =>
-                                setEventReq({
-                                  ...getEventReq,
+                                SetEventReq({
+                                  ...eventReq,
                                   calendarId: e.target.value,
                                 })
                               }
@@ -1374,10 +1387,10 @@ export default function CreateFormFinal() {
                           </div>
                           <div className="options-row">
                             <Input
-                              value={getEventReq.color}
+                              value={eventReq.color}
                               onChange={(e) =>
-                                setEventReq({
-                                  ...getEventReq,
+                                SetEventReq({
+                                  ...eventReq,
                                   color: e.target.value,
                                 })
                               }
@@ -1388,10 +1401,10 @@ export default function CreateFormFinal() {
                           </div>
                           <div className="options-row">
                             <Input
-                              value={getEventReq.cover}
+                              value={eventReq.cover}
                               onChange={(e) =>
-                                setEventReq({
-                                  ...getEventReq,
+                                SetEventReq({
+                                  ...eventReq,
                                   cover: e.target.value,
                                 })
                               }
@@ -1402,10 +1415,10 @@ export default function CreateFormFinal() {
                           </div>
                           <div className="options-row">
                             <Input
-                              value={getEventReq.duration}
+                              value={eventReq.duration}
                               onChange={(e) =>
-                                setEventReq({
-                                  ...getEventReq,
+                                SetEventReq({
+                                  ...eventReq,
                                   duration: e.target.value,
                                 })
                               }
@@ -1416,10 +1429,10 @@ export default function CreateFormFinal() {
                           </div>
                           <div className="options-row">
                             <Input
-                              value={getEventReq.fontSize}
+                              value={eventReq.fontSize}
                               onChange={(e) =>
-                                setEventReq({
-                                  ...getEventReq,
+                                SetEventReq({
+                                  ...eventReq,
                                   fontSize: e.target.value,
                                 })
                               }
@@ -1430,10 +1443,10 @@ export default function CreateFormFinal() {
                           </div>
                           <div className="options-row">
                             <Input
-                              value={getEventReq.instructions}
+                              value={eventReq.instructions}
                               onChange={(e) =>
-                                setEventReq({
-                                  ...getEventReq,
+                                SetEventReq({
+                                  ...eventReq,
                                   instructions: e.target.value,
                                 })
                               }
@@ -1444,10 +1457,10 @@ export default function CreateFormFinal() {
                           </div>
                           <div className="options-row">
                             <Input
-                              value={getEventReq.theme}
+                              value={eventReq.theme}
                               onChange={(e) =>
-                                setEventReq({
-                                  ...getEventReq,
+                                SetEventReq({
+                                  ...eventReq,
                                   theme: e.target.value,
                                 })
                               }
