@@ -369,7 +369,7 @@ console.log(getCalendars)
                                                     <div className="mt-6 justify-center flex items-center">
                                                         <Button
                                                             as={Link}
-                                                            href="/create"
+                                                            href={`/create/?calendarId=${id}`}
                                                             type="button"
                                                             className="text-black-more-blur-light-theme dark:text-[rgba(255,255,255,0.64)] bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)] border-transparent border border-solid cursor-pointer transition-all duration-300 ease-in-out donace-button-w-fit flex items-center m-0"
                                                         >
@@ -476,7 +476,7 @@ console.log(getCalendars)
                                                     <div className="mt-6 justify-center flex items-center">
                                                         <Button
                                                             as={Link}
-                                                            href="/create"
+                                                            href={`/create/?calendarId=${id}`}
                                                             type="button"
                                                             className="text-black-more-blur-light-theme dark:text-[rgba(255,255,255,0.64)] bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)] border-transparent border border-solid cursor-pointer transition-all duration-300 ease-in-out donace-button-w-fit flex items-center m-0"
                                                         >

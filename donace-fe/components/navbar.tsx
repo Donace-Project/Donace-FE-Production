@@ -146,8 +146,8 @@ export default function NavbarComponents() {
           justify="end"
         >
           <NavbarItem
-            as={"div"}
           >
+            {/* @ts-ignore */}
             <ThoiGian />
           </NavbarItem>
           <Link

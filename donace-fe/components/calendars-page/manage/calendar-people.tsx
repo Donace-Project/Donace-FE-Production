@@ -132,6 +132,8 @@ export default function CalendarPeople(props: any) {
     const [thoiGian, setThoiGian] = useState(new Date());
     const [getUsers, setUsers] = useState<User | null>(null);
     const [getdataModal, setDataModal] = useState<detailUserJoin | null>(null);
+    const [getDataSendMail, setDataSendMail] = useState<any | null>(null);
+    const [getStatusSendMail, setStatusSendMail] = useState(false);
 
     const handleOpenModal = (value: detailUserJoin) => {
         setDataModal(value);
@@ -145,11 +147,12 @@ export default function CalendarPeople(props: any) {
 
     //const router = useRouter();
     const currentUrl = typeof window !== 'undefined' ? window.location.href : '';
+
     const sendMailInviteJoin = () => {
         console.log(currentUrl);
-        useEffect(() => {
-            fetchWrapper.post(`/api/Calendar/invite-mail`, {email: value, urlInfo: currentUrl.substring(0, currentUrl.lastIndexOf('/')), calendarName: getCalendars?.name})
-        }, []);
+        setStatusSendMail(true);
+        setDataSendMail({email: value, urlInfo: currentUrl, calendarName: getCalendars?.name});
+        console.log(getDataSendMail);
     }
     
     useEffect(() => {
@@ -171,10 +174,14 @@ export default function CalendarPeople(props: any) {
 
         fetchWrapper.post('/api/Calendar/get-list-user', { pageNumber: 1, pageSize: 1000, id: id, keyword: "", isSubcribed: true})
             .then((data: User) => {
-                //console.log(data);
                 setUsers(data);
-            })
-        //sendMailInviteJoin()
+            });
+        
+        if(getStatusSendMail === true){
+            fetchWrapper.post(`/api/Calendar/invite-mail`, getDataSendMail)
+                .then()
+        }
+        
     }, []);
 
     const gio = thoiGian.getHours();

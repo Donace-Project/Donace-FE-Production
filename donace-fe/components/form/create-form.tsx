@@ -372,7 +372,7 @@ export default function CreateForm() {
                                                     {/* phần hình ảnh chỗ này thì tui chưa làm được làm thế nào để nó mở file lên */}
                                                     <div className='z-20 absolute bottom-[-2px] right-[-2px] w-[calc(2rem+2px)] h-[calc(2rem+2px)] text-[#fff] dark:text-[rgb(19,21,23)] bg-[rgb(19,21,23)] dark:bg-[#fff] border-2 border-solid border-[#fff] dark:border-[rgb(19,21,23)] rounded-lg transition-all duration-300 ease-in-out justify-center flex items-center'>
                                                         <FileImage className='block w-4 h-4 align-middle' />
-                                                        <input type="file" id="image" name="image" className='-z-0 hidden' accept="image/*" onChange={handleImageChange} />
+                                                        <input aria-label='upload cover' type="file" id="image" name="image" className='-z-0 hidden' accept="image/*" onChange={handleImageChange} />
                                                         {formData.cover && <img src={formData.cover} alt="Preview" />}
                                                     </div>
                                                 </div>

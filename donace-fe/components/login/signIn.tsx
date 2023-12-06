@@ -16,7 +16,6 @@ export default function SignIn() {
   const [isVisible, setIsVisible] = React.useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
 
@@ -39,15 +38,16 @@ export default function SignIn() {
       redirect: false,
     });
 
+    // debugger;
     if (result?.ok) {
       router.push("/home");
     } else {
       // Xử lý hiển thị lỗi
       setError("Sai tài khoản hoặc mật khẩu.");
+      setIsLoading(false);
+      return;
     }
-    setIsLoading(false);
   };
-
 
   return (
     <div className="onboarding-page">
@@ -78,9 +78,7 @@ export default function SignIn() {
               placeholder="Email của bạn"
               className="text-base h-auto transition-all duration-300 leading-4 rounded-lg w-full m-0"
               classNames={{
-                errorMessage: [
-                  "text-base"
-                ]
+                errorMessage: ["text-base"],
               }}
             />
             <Input
@@ -93,9 +91,11 @@ export default function SignIn() {
               type={isVisible ? "text" : "password"}
             />
             <div className="mb-3 ml-1">
-              {error && <div className="text-[#f3236a]">
-                <div className="label break-words">{error}</div>
-              </div>}
+              {error && (
+                <div className="text-[#f3236a]">
+                  <div className="label break-words">{error}</div>
+                </div>
+              )}
             </div>
             <Button
               isDisabled={isLoading}
@@ -106,12 +106,18 @@ export default function SignIn() {
               <div className="label">
                 {isLoading ? (
                   <>
-                    <Spinner size="sm" color="success" className="translate-y-0.5 mr-2"/>
+                    <Spinner
+                      size="sm"
+                      color="success"
+                      className="translate-y-0.5 mr-2"
+                    />
                     <span className="label">Đang đăng nhập..</span>
                   </>
                 ) : (
                   <>
-                    <div id="label" className="...">Đăng nhập</div>
+                    <div id="label" className="...">
+                      Đăng nhập
+                    </div>
                   </>
                 )}
               </div>
