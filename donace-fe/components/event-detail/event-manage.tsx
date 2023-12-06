@@ -127,6 +127,7 @@ export default function EventManage(props: any) {
                                 Thanh toán
                             </Link>
                             <Link
+                                href={`/events/manage/${eventDetail?.id}/insights`}
                                 className="text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)] border-b-2 border-solid border-transparent whitespace-nowrap inline-block pb-2 transition-all duration-300 ease-in-out cursor-pointer"
                                 underline="none"
                             >

@@ -4,7 +4,7 @@ import { EventDetailModels } from "@/types/DonaceType";
 import { Link } from "@nextui-org/link";
 import { ArrowUpRight, ArrowUpToLine, MailOpen, PencilLine, SearchIcon, Send, Sparkles, Trash, Users, XCircle } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Avatar, Divider, Progress } from "@nextui-org/react";
+import { Avatar, Divider, Progress, Radio, RadioGroup } from "@nextui-org/react";
 import React from "react";
 import { Button } from "@nextui-org/button";
 import { Select, SelectItem } from "@nextui-org/react";
@@ -12,6 +12,7 @@ import { usersAll } from "../data"
 import { Input } from "@nextui-org/input";
 import { Modal, ModalContent, ModalHeader, ModalBody, useDisclosure, ModalFooter } from "@nextui-org/modal";
 import { Checkbox, User } from "@nextui-org/react";
+import { Table, TableHeader, TableBody, TableColumn, TableRow, TableCell } from "@nextui-org/react";
 
 interface DateTimeInfo {
     year: string;
@@ -32,7 +33,11 @@ const ConvertDateTime = (dateTime: any): DateTimeInfo => {
     return { year, month, day, hour, minute };
 };
 
+const colors = ["default", "primary", "secondary", "success", "warning", "danger"];
+
 export default function EventUserJoin(props: any) {
+
+    const [selectedColor, setSelectedColor] = React.useState("default");
 
     const modalInviteUser = useDisclosure();
     const [showEmailContent, setShowEmailContent] = useState(false);
@@ -136,6 +141,7 @@ export default function EventUserJoin(props: any) {
                                 Thanh toán
                             </Link>
                             <Link
+                                href={`/events/manage/${eventDetail?.id}/insights`}
                                 className="text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)] border-b-2 border-solid border-transparent whitespace-nowrap inline-block pb-2 transition-all duration-300 ease-in-out cursor-pointer"
                                 underline="none"
                             >
@@ -397,42 +403,42 @@ export default function EventUserJoin(props: any) {
                                                         <div className="guests text-black-more-blur-light-theme font-normal">2 người</div>
                                                         <div className="select cursor-pointer text-black-more-blur-light-theme font-normal">Chọn hết</div>
                                                     </div>
-                                                    <Button
-                                                        as={"div"}
-                                                        type="button"
-                                                        className="p-[0.3125rem_0.625rem] rounded-lg w-full box-border flex items-center justify-between cursor-pointer transition-all duration-300 ease-in-out bg-transparent border border-solid border-transparent mb-4"
-                                                    >
-                                                        <div className="gap-2 flex items-center">
-                                                            <User
-                                                                name="Nguyễn Hoàng Tùng"
-                                                                description="tung@gmail.com"
-                                                                avatarProps={{
-                                                                    src: "https://cdn.lu.ma/cdn-cgi/image/format=auto,fit=cover,dpr=2,background=white,quality=75,width=32,height=32/avatars-default/avatar_30.png"
-                                                                }}
-                                                            />
-                                                        </div>
-                                                        <Checkbox
-                                                            radius="full"
-                                                        ></Checkbox>
-                                                    </Button>
-                                                    <Button
-                                                        as={"div"}
-                                                        type="button"
-                                                        className="p-[0.3125rem_0.625rem] rounded-lg w-full box-border flex items-center justify-between cursor-pointer transition-all duration-300 ease-in-out bg-transparent border border-solid border-transparent mb-4"
-                                                    >
-                                                        <div className="gap-2 flex items-center">
-                                                            <User
-                                                                name="Nguyễn Hoàng Tùng"
-                                                                description="tung@gmail.com"
-                                                                avatarProps={{
-                                                                    src: "https://cdn.lu.ma/cdn-cgi/image/format=auto,fit=cover,dpr=2,background=white,quality=75,width=32,height=32/avatars-default/avatar_30.png"
-                                                                }}
-                                                            />
-                                                        </div>
-                                                        <Checkbox
-                                                            radius="full"
-                                                        ></Checkbox>
-                                                    </Button>
+                                                    <div className="flex flex-col gap-3">
+                                                        <Table
+                                                            isStriped
+                                                            color="default"
+                                                            selectionMode="multiple"
+                                                            aria-label="Example static collection table"
+                                                        >
+                                                            <TableHeader>
+                                                                <TableColumn>Tên</TableColumn>
+                                                            </TableHeader>
+                                                            <TableBody className="flex justify-start items-start">
+                                                                <TableRow key="1">
+                                                                    <TableCell>
+                                                                        <User
+                                                                            name="Nguyễn Hoàng Tùng"
+                                                                            description="nguyenhoangtung@gmail.com"
+                                                                            avatarProps={{
+                                                                                src: "https://cdn.lu.ma/cdn-cgi/image/format=auto,fit=cover,dpr=2,background=white,quality=75,width=32,height=32/avatars-default/avatar_30.png"
+                                                                            }}
+                                                                        />
+                                                                    </TableCell>
+                                                                </TableRow>
+                                                                <TableRow key="2">
+                                                                    <TableCell>
+                                                                        <User
+                                                                            name="Nguyễn Hoàng Tùng"
+                                                                            description="nguyenhoangtung@gmail.com"
+                                                                            avatarProps={{
+                                                                                src: "https://cdn.lu.ma/cdn-cgi/image/format=auto,fit=cover,dpr=2,background=white,quality=75,width=32,height=32/avatars-default/avatar_30.png"
+                                                                            }}
+                                                                        />
+                                                                    </TableCell>
+                                                                </TableRow>
+                                                            </TableBody>
+                                                        </Table>
+                                                    </div>
                                                 </div>
                                             </div>
                                         )}
@@ -477,47 +483,41 @@ export default function EventUserJoin(props: any) {
                                                         </Button>
                                                     </div>
                                                 </div>
-                                                <div className="pl-4 pr-4 pb-2 pt-4 overflow-auto">
-                                                    <Button
-                                                        as={"div"}
-                                                        type="button"
-                                                        className="p-[0.3125rem_0.625rem] rounded-lg w-full box-border flex items-center justify-between cursor-pointer transition-all duration-300 ease-in-out bg-transparent border border-solid border-transparent mb-4"
+                                                <div className="flex flex-col gap-3 mt-6">
+                                                    <Table
+                                                        isStriped
+                                                        color="default"
+                                                        selectionMode="multiple"
+                                                        aria-label="Example static collection table"
                                                     >
-                                                        <div className="gap-2 flex items-center">
-                                                            <User
-                                                                name="Nguyễn Hoàng Tùng"
-                                                                description="tung@gmail.com"
-                                                                avatarProps={{
-                                                                    src: "https://cdn.lu.ma/cdn-cgi/image/format=auto,fit=cover,dpr=2,background=white,quality=75,width=32,height=32/avatars-default/avatar_30.png"
-                                                                }}
-                                                            />
-                                                        </div>
-                                                        <Checkbox
-                                                            icon={<Trash />}
-                                                            color="danger"
-                                                            radius="full"
-                                                        ></Checkbox>
-                                                    </Button>
-                                                    <Button
-                                                        as={"div"}
-                                                        type="button"
-                                                        className="p-[0.3125rem_0.625rem] rounded-lg w-full box-border flex items-center justify-between cursor-pointer transition-all duration-300 ease-in-out bg-transparent border border-solid border-transparent mb-4"
-                                                    >
-                                                        <div className="gap-2 flex items-center">
-                                                            <User
-                                                                name="Nguyễn Hoàng Tùng"
-                                                                description="tung@gmail.com"
-                                                                avatarProps={{
-                                                                    src: "https://cdn.lu.ma/cdn-cgi/image/format=auto,fit=cover,dpr=2,background=white,quality=75,width=32,height=32/avatars-default/avatar_30.png"
-                                                                }}
-                                                            />
-                                                        </div>
-                                                        <Checkbox
-                                                            icon={<Trash />}
-                                                            color="danger"
-                                                            radius="full"
-                                                        ></Checkbox>
-                                                    </Button>
+                                                        <TableHeader>
+                                                            <TableColumn>Tên</TableColumn>
+                                                        </TableHeader>
+                                                        <TableBody className="flex justify-start items-start">
+                                                            <TableRow key="1">
+                                                                <TableCell>
+                                                                    <User
+                                                                        name="Nguyễn Hoàng Tùng"
+                                                                        description="nguyenhoangtung@gmail.com"
+                                                                        avatarProps={{
+                                                                            src: "https://cdn.lu.ma/cdn-cgi/image/format=auto,fit=cover,dpr=2,background=white,quality=75,width=32,height=32/avatars-default/avatar_30.png"
+                                                                        }}
+                                                                    />
+                                                                </TableCell>
+                                                            </TableRow>
+                                                            <TableRow key="2">
+                                                                <TableCell>
+                                                                    <User
+                                                                        name="Nguyễn Hoàng Tùng"
+                                                                        description="nguyenhoangtung@gmail.com"
+                                                                        avatarProps={{
+                                                                            src: "https://cdn.lu.ma/cdn-cgi/image/format=auto,fit=cover,dpr=2,background=white,quality=75,width=32,height=32/avatars-default/avatar_30.png"
+                                                                        }}
+                                                                    />
+                                                                </TableCell>
+                                                            </TableRow>
+                                                        </TableBody>
+                                                    </Table>
                                                 </div>
                                             </div>
                                         )}
