@@ -1,14 +1,16 @@
 'use client';
+
 import { fetchWrapper } from "@/helpers/fetch-wrapper";
 import { EventDetailModels } from "@/types/DonaceType";
-import { Button, Link, Select, SelectItem, Spinner } from "@nextui-org/react";
-import { ArrowUpRight, Sheet } from "lucide-react";
+import { Button } from "@nextui-org/button";
+import { Link } from "@nextui-org/link";
+import { ArrowUpRight, Copy, XCircle } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Table, TableHeader, TableBody, TableColumn, TableRow, TableCell } from "@nextui-org/react";
-import { RevenueIndex } from "../data";
-import React from "react";
+import DatePicker from "react-datepicker";
 
-export default function EventRevenue(props: any) {
+
+export default function EventMore(props: any) {
+    const [startDate, setStartDate] = useState(new Date());
 
 
     var { id } = props
@@ -17,6 +19,7 @@ export default function EventRevenue(props: any) {
         fetchWrapper.get(`api/Event/detail-by-id?id=${id}`)
             .then(data => setEventDetail(data));
     }, []);
+
     return (
         <div className="page-content">
             <div className="page-header opacity-[2] pl-4 pr-4 pt-12 max-width-global margin-global">
@@ -69,14 +72,14 @@ export default function EventRevenue(props: any) {
                             </Link>
                             <Link
                                 href={`/events/manage/${eventDetail?.id}/insights`}
-                                className="text-black-light-theme dark:text-[#fff] border-b-2 border-solid border-[rgb(19,21,23)] dark:border-[#fff] whitespace-nowrap inline-block pb-2 transition-all duration-300 ease-in-out cursor-pointer"
+                                className="text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)] border-b-2 border-solid border-transparent whitespace-nowrap inline-block pb-2 transition-all duration-300 ease-in-out cursor-pointer"
                                 underline="none"
                             >
                                 Doanh thu
                             </Link>
                             <Link
                                 href={`/events/manage/${eventDetail?.id}/more`}
-                                className="text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)] border-b-2 border-solid border-transparent whitespace-nowrap inline-block pb-2 transition-all duration-300 ease-in-out cursor-pointer"
+                                className="text-black-light-theme dark:text-[#fff] border-b-2 border-solid border-[rgb(19,21,23)] dark:border-[#fff] whitespace-nowrap inline-block pb-2 transition-all duration-300 ease-in-out cursor-pointer"
                                 underline="none"
                             >
                                 Khác
@@ -90,56 +93,59 @@ export default function EventRevenue(props: any) {
                 <div className="can-divide with-divider medium">
                     <div className="section-title-wrapper medium">
                         <div className="section-title-row mb-5 flex justify-between items-center">
-                            <h2 className="text-xl font-semibold text-black-light-theme mb-0 mt-0">Thống kê doanh thu</h2>
+                            <h2 className="text-xl font-semibold text-black-light-theme mb-0 mt-0">Sao chép Sự kiện</h2>
+                        </div>
+                        <div className="section-subtitle -mt-3.5 mb-5 text-[#737577] text-base">
+                            <span>
+                                Tạo Sự kiện mới với thông tin giống như Sự kiện này. Mọi thứ trừ danh sách khách mời sẽ được sao chép qua.
+                            </span>
                         </div>
                     </div>
-                    <div className="main-content">
-                        <Table
-                            isStriped
-                            aria-label="Example static collection table"
+                    <form action={"#"}>
+                        <div className="create-wrapper mt-6">
+                            <div className="date-picker-container flex flex-col flex-grow-0">
+                                <div className="label">Thời gian bắt đầu</div>
+                                <DatePicker
+                                    todayButton="Hôm nay"
+                                    selected={startDate}
+                                    onChange={(date: any) => setStartDate(date)}
+                                    startDate={startDate}
+                                    timeInputLabel="Time:"
+                                    dateFormat="MM/dd/yyyy h:mm aa"
+                                    showTimeInput
+                                    fixedHeight
+                                    className="border-2 border-solid border-[#babac1] focus:border-[rgb(19,21,23)] rounded-lg pl-16 pr-8 mt-2"
+                                    placeholderText="Ngày Bắt đầu sự kiện"
+                                />
+                            </div>
+                        </div>
+                        <Button
+                            type="button"
+                            className="text-[#fff] dark:text-[rgb(19,21,23)] bg-[#333537] dark:bg-[#fff] hover:bg-gray-700 border-[#333537] dark:border-[#fff] border border-solid cursor-pointer transition-all duration-300 ease-in-out donace-button-w-fit mt-6 flex items-center"
                         >
-                            <TableHeader>
-                                <TableColumn>Mã thanh toán</TableColumn>
-                                <TableColumn>Email</TableColumn>
-                                <TableColumn>Trạng thái</TableColumn>
-                                <TableColumn>Thời điểm thanh toán</TableColumn>
-                                <TableColumn>Thành tiền</TableColumn>
-                            </TableHeader>
-                            <TableBody>
-                                <TableRow key="1">
-                                    <TableCell>29321351</TableCell>
-                                    <TableCell>tungnh230802@gmail.com</TableCell>
-                                    <TableCell>Đã thanh toán</TableCell>
-                                    <TableCell>23-08-2023</TableCell>
-                                    <TableCell>59.000 VND</TableCell>
-                                </TableRow>
-                                <TableRow key="2">
-                                    <TableCell>29321352</TableCell>
-                                    <TableCell>tungnh230802@gmail.com</TableCell>
-                                    <TableCell>Đã thanh toán</TableCell>
-                                    <TableCell>23-08-2023</TableCell>
-                                    <TableCell>59.000 VND</TableCell>
-                                </TableRow>
-                                <TableRow key="3">
-                                    <TableCell>29321353</TableCell>
-                                    <TableCell>tungnh230802@gmail.com</TableCell>
-                                    <TableCell>Đã thanh toán</TableCell>
-                                    <TableCell>23-08-2023</TableCell>
-                                    <TableCell>59.000 VND</TableCell>
-                                </TableRow>
-                            </TableBody>
-                        </Table>
-                        <div className="flex justify-end mt-4">
-
-                            <Button
-                                color="success"
-                                className="text-[#fff] font-medium text-base w-fit"
-                            >
-                                <Sheet className="block align-middle w-4 h-4 mr-2 stroke-2"/>
-                                <div className="label">Xuất file Excel</div>
-                            </Button>
+                            <Copy className="block align-middle w-4 h-4 flex-shrink-0 mr-2" />
+                            <div className="label">Sao chép</div>
+                        </Button>
+                    </form>
+                </div>
+                <div className="can-divide with-divider medium mt-8 pt-8 border-t border-solid border-[rgba(19,21,23,0.08)]">
+                    <div className="section-title-wrapper medium">
+                        <div className="section-title-row mb-5 flex justify-between items-center">
+                            <h2 className="text-xl font-semibold text-black-light-theme mb-0 mt-0">Hủy Sự kiện</h2>
+                        </div>
+                        <div className="section-subtitle -mt-3.5 mb-5 text-[#737577] text-base">
+                            <span>
+                                Hủy và xóa vĩnh viễn Sự kiện này. Thao tác này không thể hoàn tác. Nếu có khách đã đăng ký, chúng tôi sẽ thông báo cho họ rằng Sự kiện đã bị hủy.
+                            </span>
                         </div>
                     </div>
+                    <Button
+                        type="button"
+                        className="text-[#fff] bg-[#e83b47] border border-solid border-[#e83b47] transition-all duration-300 ease-in-out cursor-pointer donace-button-w-fit flex items-center mt-6"
+                    >
+                        <XCircle className="block align-middle w-4 h-4 flex-shrink-0 mr-2" />
+                        <div className="label">Hủy Sự kiện</div>
+                    </Button>
                 </div>
             </div>
         </div>
