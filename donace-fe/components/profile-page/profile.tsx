@@ -36,6 +36,19 @@ interface DateInfo {
   day: string;
 }
 
+interface FormDataProfile {
+  userName: string;
+  avatar: string;
+  bio: string;
+  instagram: string;
+  twitter: string;
+  youtube: string;
+  tiktok: string;
+  linkedIn: string;
+  website: string;
+}
+
+
 const ConvertDate = (date: string): DateInfo => {
   const dateArray = date.split("-");
   const year = dateArray[0]; // Lấy thông tin về năm từ phần tử đầu tiên trong mảng
@@ -60,6 +73,19 @@ export default function ProfilePage() {
   let [userProfile, setUserProfile] = useState<null | UserProfile>(null);
   var [futureEvents, setFutureEvents] = useState<ItemEventsProfile[]>();
 
+  const [formData, setFormData] = useState<FormDataProfile>({
+    userName: "",
+    avatar: "",
+    bio: "",
+    instagram: "",
+    twitter: "",
+    youtube: "",
+    tiktok: "",
+    linkedIn: "",
+    website: "",
+  });
+
+
   useEffect(() => {
     // Gọi API profile và gán dữ liệu cho biến profile
     fetchWrapper
@@ -82,13 +108,34 @@ export default function ProfilePage() {
     React.useState<ModalProps["scrollBehavior"]>("inside");
   const placements = ["outside"];
   const variants = ["bordered"];
+
   const imageUrl =
     "https://cdn.lu.ma/cdn-cgi/image/format=auto,fit=cover,dpr=2,quality=75,width=400/event-defaults/1-1/standard3.png";
+
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+
+  const handleImageChange = async (
+    e: any
+  ) => {
+
+    const selectedFile = e.target.files[0];
+    if (!selectedFile) return;
+
+    const FileData = new FormData();
+    FileData.append("file", selectedFile);
+    const url = await fetchWrapper.postFile("api/Common/upload-file", FileData);
+    // setBackgrounUrl(text);
+
+    formData.avatar = url;
+    setSelectedImage(url);
+    console.log("🚀 ~ file: profile.tsx:36 ~ updateProfileHandle ~ res:", url);
+  };
   const updateProfileHandle = async () => {
+
     const res = await fetchWrapper
       .put("/api/User/update-profile", {
         userName: formData.userName || userProfile?.result.userName,
-        avatar: selectedImage || userProfile?.result.avatar,
+        avatar: formData.avatar || userProfile?.result.avatar,
         bio: formData.bio || userProfile?.result.bio,
         instagram: formData.instagram || userProfile?.result.instagram,
         twitter: formData.twitter || userProfile?.result.twitter,
@@ -100,24 +147,11 @@ export default function ProfilePage() {
       .then(() => {
         location.reload(); // Làm mới trang khi nút được nhấn
       });
-    console.log(res);
+
     console.log("🚀 ~ file: profile.tsx:36 ~ updateProfileHandle ~ res:", res);
   };
 
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
-  const handleImageChange = (e: any) => {
-    const file = e.target.files[0];
 
-    if (file) {
-      const reader = new FileReader();
-
-      reader.onloadend = () => {
-        setSelectedImage(reader.result as string);
-      };
-
-      reader.readAsDataURL(file);
-    }
-  };
 
   // call api hinh
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -127,18 +161,6 @@ export default function ProfilePage() {
       fileInputRef.current.click();
     }
   };
-
-  const [formData, setFormData] = useState({
-    userName: "",
-    avatar: "",
-    bio: "",
-    instagram: "",
-    twitter: "",
-    youtube: "",
-    tiktok: "",
-    linkedIn: "",
-    website: "",
-  });
 
   return (
     <div className="page-content">
@@ -158,9 +180,10 @@ export default function ProfilePage() {
                         <div className="avatar-wrapper">
                           <Avatar
                             src={
-                              userProfile?.result.avatar.trim()
-                                ? userProfile.result.avatar
-                                : "https://cdn.lu.ma/cdn-cgi/image/format=auto,fit=cover,dpr=2,background=white,quality=75,width=32,height=32/avatars-default/avatar_8.png"
+                              selectedImage ||
+                              userProfile?.result.avatar ||
+                              selectedImage ||
+                              "https://cdn.lu.ma/cdn-cgi/image/format=auto,fit=cover,dpr=2,quality=75,width=100,height=100/avatars-default/avatar_8.png"
                             }
                             radius="full"
                             name="Donace"
@@ -307,6 +330,7 @@ export default function ProfilePage() {
                                                 className="w-24 h-24 bg-center bg-cover flex justify-center items-center bg-[#ebeced]"
                                                 radius="full"
                                                 src={
+                                                  selectedImage ||
                                                   userProfile?.result.avatar ||
                                                   selectedImage ||
                                                   "https://cdn.lu.ma/cdn-cgi/image/format=auto,fit=cover,dpr=2,quality=75,width=100,height=100/avatars-default/avatar_8.png"
@@ -679,11 +703,10 @@ export default function ProfilePage() {
                                             </div>
                                             <div className="text-sm flex-wrap mt-1 flex items-center">
                                               <div
-                                                className={`event-time ${
-                                                  event.isLive
-                                                    ? "starting-soon text-[#ec660d]"
-                                                    : "not-starting text-[#82aad8]"
-                                                }`}
+                                                className={`event-time ${event.isLive
+                                                  ? "starting-soon text-[#ec660d]"
+                                                  : "not-starting text-[#82aad8]"
+                                                  }`}
                                               >
                                                 {event.isLive
                                                   ? "Đang diễn ra"
