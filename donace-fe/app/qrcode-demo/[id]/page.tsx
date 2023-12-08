@@ -15,7 +15,7 @@ const QRCodeDemoPage = ({ params }: { params: { id: string } }) => {
 
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
-  let qrCodeValue = "1"; // Replace with your actual QR code value
+  let qrCodeValue = params.id; // Replace with your actual QR code value
 
 
   return (
