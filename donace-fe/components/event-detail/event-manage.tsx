@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, Image, Divider, ModalFooter } from "@nextui-org/react";
 import { ArrowUpRight, MapPin, ScanLine } from "lucide-react";
-import { EventDetailModels, GetCalendarById } from "@/types/DonaceType";
+import { CreateEventModel, EventDetailModels, GetCalendarById } from "@/types/DonaceType";
 import { fetchWrapper } from "@/helpers/fetch-wrapper";
 import { Button } from "@nextui-org/button";
 import { Modal, ModalContent, ModalHeader, ModalBody, useDisclosure } from "@nextui-org/react";
@@ -61,6 +61,10 @@ const DayOfWeek = (date: string) => {
 export default function EventManage(props: any) {
     var { id } = props
 
+    const [getCreateEvent, setCreateEvent] = useState<CreateEventModel | null>(
+        null
+    );
+
     const modalEditEvent = useDisclosure();
 
     const [startDate, setStartDate] = useState(new Date());
@@ -68,12 +72,41 @@ export default function EventManage(props: any) {
 
     const [getCalendars, setCalendars] = useState<GetCalendarById | null>(null);
     var [eventDetail, setEventDetail] = useState<EventDetailModels | null>(null);
+
+    const [eventReq, SetEventReq] = useState<any>({
+        startDate: String,
+        calendarId: String,
+    });
+
+    const handleClick = async () => {
+        await handleSubmit(eventDetail);
+    };
+
+    const handleSubmit = async (e: any) => {
+        // debugger;
+        e.preventDefault();
+        try {
+            if (!eventReq.name) {
+                console.error("Name field is required.");
+                return;
+            }
+            const response = await fetchWrapper.post("/api/Event", eventReq);
+
+            if (!response.success) {
+                console.error(`Lỗi khi tạo sự kiện: ${response.error}`);
+                return;
+            }
+            console.log(<b>Sự kiện đã tạo thành công!</b>);
+
+            // TODO: redirect manager event
+        } catch (error) {
+            console.error(`Lỗi: ${String(Error)}`);
+        }
+    };
+
     useEffect(() => {
         fetchWrapper.get(`api/Event/detail-by-id?id=${id}`)
             .then(data => setEventDetail(data));
-
-        fetchWrapper.post(`api/Calendar/get-by-id?Id=${id}`, null)
-            .then(data => setCalendars(data));
     }, []);
 
     return (
@@ -279,135 +312,138 @@ export default function EventManage(props: any) {
                 <ModalContent>
                     {(onClose) => (
                         <>
-                            <ModalHeader className="flex flex-col gap-1">Chỉnh sửa sự kiện</ModalHeader>
-                            <Divider />
-                            <ModalBody>
-                                <div className="title font-semibold text-lg">Thông tin cơ bản</div>
-                                <div className="event-name w-full pb-2 mt-2">
-                                    <Input
-                                        type="text"
-                                        variant="bordered"
-                                        labelPlacement="outside"
-                                        label="Tên sự kiện"
-                                        placeholder={eventDetail?.name}
-                                        classNames={{
-                                            inputWrapper: [
-                                                "h-[calc(2.625rem+2*1px)]",
-                                                "bg-[#fff]",
-                                                "rounded-lg",
-                                                "border",
-                                                "border-solid",
-                                                "border-[#ebeced]",
-                                                "transition-all",
-                                                "duration-300",
-                                                "ease-in-out"
-                                            ],
-                                            input: [
-                                                "text-lg",
-                                                "font-medium",
-                                                "text-[rgb(19,21,23)]"
-                                            ],
-                                            label: [
-                                                "text-sm",
-                                                "font-medium",
-                                                "text-[rgba(19,21,23,0.64)]"
-                                            ]
-                                        }}
-                                    />
-                                </div>
-                                <div className="desc w-full pb-2 mt-2">
-                                    <Textarea
-                                        type="text"
-                                        variant="bordered"
-                                        labelPlacement="outside"
-                                        label="Mô tả"
-                                        placeholder="Ai sẽ tham gia Sự kiện? Sự kiện này sẽ tổ chức về cái gì?"
-                                        classNames={{
-                                            inputWrapper: [
-                                                "h-[calc(2.625rem+2*1px)]",
-                                                "bg-[#fff]",
-                                                "rounded-lg",
-                                                "border",
-                                                "border-solid",
-                                                "border-[#ebeced]",
-                                                "transition-all",
-                                                "duration-300",
-                                                "ease-in-out"
-                                            ],
-                                            input: [
-                                                "text-base",
-                                                "font-normal",
-                                                "text-[rgb(19,21,23)]"
-                                            ],
-                                            label: [
-                                                "text-sm",
-                                                "font-medium",
-                                                "text-[rgba(19,21,23,0.64)]"
-                                            ]
-                                        }}
-                                    />
-                                    <hr className="mt-6 border-solid border-[rgba(19,21,23,0.08)] border-b"></hr>
-                                </div>
-                                <div className="time w-full pt-1.5 mb-2">
-                                    <div className="time-title font-semibold text-lg">Thời gian</div>
-                                    <div className="w-full gap-2 flex justify-between pt-4">
-                                        <div className="date-picker-container flex flex-col flex-grow-0">
-                                            <div className="label">Bắt đầu</div>
-                                            <DatePicker
-                                                todayButton="Hôm nay"
-                                                selected={startDate}
-                                                onChange={(date: any) => setStartDate(date)}
-                                                startDate={startDate}
-                                                endDate={endDate}
-                                                timeInputLabel="Time:"
-                                                dateFormat="MM/dd/yyyy h:mm aa"
-                                                showTimeInput
-                                                fixedHeight
-                                                className="border-2 border-solid border-[#babac1] focus:border-[rgb(19,21,23)] rounded-lg pl-16 pr-8 mt-2"
-                                                placeholderText="Ngày Bắt đầu sự kiện"
-                                            />
+                            <form action={handleSubmit}>
+                                <ModalHeader className="flex flex-col gap-1">Chỉnh sửa sự kiện</ModalHeader>
+                                <Divider />
+                                <ModalBody>
+                                    <div className="title font-semibold text-lg">Thông tin cơ bản</div>
+                                    <div className="event-name w-full pb-2 mt-2">
+                                        <Input
+                                            type="text"
+                                            variant="bordered"
+                                            labelPlacement="outside"
+                                            label="Tên sự kiện"
+                                            placeholder={eventDetail?.name}
+                                            classNames={{
+                                                inputWrapper: [
+                                                    "h-[calc(2.625rem+2*1px)]",
+                                                    "bg-[#fff]",
+                                                    "rounded-lg",
+                                                    "border",
+                                                    "border-solid",
+                                                    "border-[#ebeced]",
+                                                    "transition-all",
+                                                    "duration-300",
+                                                    "ease-in-out"
+                                                ],
+                                                input: [
+                                                    "text-lg",
+                                                    "font-medium",
+                                                    "text-[rgb(19,21,23)]"
+                                                ],
+                                                label: [
+                                                    "text-sm",
+                                                    "font-medium",
+                                                    "text-[rgba(19,21,23,0.64)]"
+                                                ]
+                                            }}
+                                        />
+                                    </div>
+                                    <div className="desc w-full pb-2 mt-2">
+                                        <Textarea
+                                            type="text"
+                                            variant="bordered"
+                                            labelPlacement="outside"
+                                            label="Mô tả"
+                                            placeholder="Ai sẽ tham gia Sự kiện? Sự kiện này sẽ tổ chức về cái gì?"
+                                            classNames={{
+                                                inputWrapper: [
+                                                    "h-[calc(2.625rem+2*1px)]",
+                                                    "bg-[#fff]",
+                                                    "rounded-lg",
+                                                    "border",
+                                                    "border-solid",
+                                                    "border-[#ebeced]",
+                                                    "transition-all",
+                                                    "duration-300",
+                                                    "ease-in-out"
+                                                ],
+                                                input: [
+                                                    "text-base",
+                                                    "font-normal",
+                                                    "text-[rgb(19,21,23)]"
+                                                ],
+                                                label: [
+                                                    "text-sm",
+                                                    "font-medium",
+                                                    "text-[rgba(19,21,23,0.64)]"
+                                                ]
+                                            }}
+                                        />
+                                        <hr className="mt-6 border-solid border-[rgba(19,21,23,0.08)] border-b"></hr>
+                                    </div>
+                                    <div className="time w-full pt-1.5 mb-2">
+                                        <div className="time-title font-semibold text-lg">Thời gian</div>
+                                        <div className="w-full gap-2 flex justify-between pt-4">
+                                            <div className="date-picker-container flex flex-col flex-grow-0">
+                                                <div className="label">Bắt đầu</div>
+                                                <DatePicker
+                                                    todayButton="Hôm nay"
+                                                    selected={startDate}
+                                                    onChange={(date: any) => setStartDate(date)}
+                                                    startDate={startDate}
+                                                    endDate={endDate}
+                                                    timeInputLabel="Time:"
+                                                    dateFormat="MM/dd/yyyy h:mm aa"
+                                                    showTimeInput
+                                                    fixedHeight
+                                                    className="border-2 border-solid border-[#babac1] focus:border-[rgb(19,21,23)] rounded-lg pl-16 pr-8 mt-2"
+                                                    placeholderText="Ngày Bắt đầu sự kiện"
+                                                />
+                                            </div>
+                                            <div className="date-picker-container flex flex-col flex-grow-0">
+                                                <div className="label">Kết thúc</div>
+                                                <DatePicker
+                                                    fixedHeight
+                                                    selected={endDate}
+                                                    onChange={(date: any) => setEndDate(date)}
+                                                    selectsEnd
+                                                    startDate={startDate}
+                                                    endDate={endDate}
+                                                    minDate={startDate}
+                                                    timeInputLabel="Time:"
+                                                    dateFormat="MM/dd/yyyy h:mm aa"
+                                                    className="border-2 border-solid border-[#babac1] focus:border-[rgb(19,21,23)] rounded-lg pl-16 pr-8 mt-2"
+                                                    placeholderText="Ngày Kết thúc sự kiện"
+                                                />
+                                            </div>
                                         </div>
-                                        <div className="date-picker-container flex flex-col flex-grow-0">
-                                            <div className="label">Kết thúc</div>
-                                            <DatePicker
-                                                fixedHeight
-                                                selected={endDate}
-                                                onChange={(date: any) => setEndDate(date)}
-                                                selectsEnd
-                                                startDate={startDate}
-                                                endDate={endDate}
-                                                minDate={startDate}
-                                                timeInputLabel="Time:"
-                                                dateFormat="MM/dd/yyyy h:mm aa"
-                                                className="border-2 border-solid border-[#babac1] focus:border-[rgb(19,21,23)] rounded-lg pl-16 pr-8 mt-2"
-                                                placeholderText="Ngày Kết thúc sự kiện"
-                                            />
+                                        <hr className="mt-6 border-solid border-[rgba(19,21,23,0.08)] border-b"></hr>
+                                    </div>
+                                    <div className="location w-full mt-2">
+                                        <div className="time-title font-semibold text-lg">Chọn địa điểm</div>
+                                        <div className="gap-4 flex items-center">
+                                            {/* <MapPin className="w-7 h-7 block align-middle" /> */}
+                                            <div
+                                                className="w-full p-[0.25rem_1rem_0.25rem] cursor-pointer transition-all duration-300 ease-in-out block relative rounded-xl bg-[#f3f4f5] dark:bg-[rgba(255,255,255,0.04)] border border-solid border-[#fff] dark:border-[rgba(255,255,255,0.04)] overflow-hidden"
+                                            >
+                                                <div className="font-medium">Thêm địa điểm</div>
+                                                <div className="text-sm text-[#737577] dark:text-[#d2d4d7]">Online hoặc Offline</div>
+                                            </div>
                                         </div>
                                     </div>
-                                    <hr className="mt-6 border-solid border-[rgba(19,21,23,0.08)] border-b"></hr>
-                                </div>
-                                <div className="location w-full mt-2">
-                                <div className="time-title font-semibold text-lg">Chọn địa điểm</div>
-                                    <div className="gap-4 flex items-center">
-                                        {/* <MapPin className="w-7 h-7 block align-middle" /> */}
-                                        <div
-                                            className="w-full p-[0.25rem_1rem_0.25rem] cursor-pointer transition-all duration-300 ease-in-out block relative rounded-xl bg-[#f3f4f5] dark:bg-[rgba(255,255,255,0.04)] border border-solid border-[#fff] dark:border-[rgba(255,255,255,0.04)] overflow-hidden"
-                                        >
-                                            <div className="font-medium">Thêm địa điểm</div>
-                                            <div className="text-sm text-[#737577] dark:text-[#d2d4d7]">Online hoặc Offline</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </ModalBody>
-                            <ModalFooter>
-                                <Button
-                                    color="success"
-                                    type="submit"
-                                    className="text-[#ffff] font-medium text-xs border-transparent border border-solid cursor-pointer transition-all duration-300 ease-in-out donace-button-w-fit flex items-center m-0"
-                                >
-                                    Cập nhật Sự kiện
-                                </Button>
-                            </ModalFooter>
+                                </ModalBody>
+                                <ModalFooter>
+                                    <Button
+                                        onClick={handleClick}
+                                        color="success"
+                                        type="submit"
+                                        className="text-[#ffff] font-medium text-xs border-transparent border border-solid cursor-pointer transition-all duration-300 ease-in-out donace-button-w-fit flex items-center m-0"
+                                    >
+                                        Cập nhật Sự kiện
+                                    </Button>
+                                </ModalFooter>
+                            </form>
                         </>
                     )}
                 </ModalContent>
