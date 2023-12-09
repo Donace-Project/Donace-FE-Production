@@ -181,7 +181,7 @@ export default function NavbarComponents() {
                 <DropdownSection as={"div"} showDivider>
                   <DropdownItem as={"div"}>
                     <Link
-                      href="/home"
+                      href="/profile"
                       className="transition-all duration-300 ease-in-out cursor-pointer"
                       underline="none"
                     >

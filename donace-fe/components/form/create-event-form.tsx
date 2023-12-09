@@ -43,7 +43,6 @@ import Animation from "../Animation_1701106485452.json";
 import { NumericFormat } from "react-number-format";
 import { CreateEventModel, PaymentModel } from "@/types/DonaceType";
 import { fetchWrapper } from "@/helpers/fetch-wrapper";
-import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { Calendar } from "../../types/DonaceType";
 import { useSearchParams } from "next/navigation";
@@ -76,7 +75,9 @@ export default function CreateFormFinal() {
   const modalPriceEvent = useDisclosure();
   const modalMaintenance = useDisclosure();
 
-  const [startDate, setStartDate] = useState("");
+  const [error, setError] = useState("loi tao su kien");
+
+  // const [startDate, setStartDate] = useState("");
   const [startTime, setStartTime] = useState("");
 
   const [endDate, setEndDate] = useState("");
@@ -90,7 +91,8 @@ export default function CreateFormFinal() {
   const [getModalPriceEvent, setModalPriceEvent] = useState(false);
   const [tmnCode, setTmnCode] = useState<string>("");
   const [hashSecret, setHashSecret] = useState<string>("");
-  const [isError, setIsError] = useState(false);
+  const [isErrork, setIsError] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const [lstCalendar, setLstCalendar] = useState<Calendar[]>([]);
   const [selectedCalendar, SetSelectedCalendar] = useState<Calendar>();
@@ -158,6 +160,7 @@ export default function CreateFormFinal() {
         return;
       }
 
+      debugger;
       const response = await fetchWrapper.post(
         "/api/Calendar/create-calendar",
         dataToSend
@@ -215,7 +218,6 @@ export default function CreateFormFinal() {
   const handleInputChange = (event: any) => {
     console.log(event.target.value);
   };
-  //
 
   const handleCalendarClick = async () => {
     await handleCalendarSubmit;
@@ -235,45 +237,34 @@ export default function CreateFormFinal() {
   };
 
   const [eventReq, SetEventReq] = useState<any>({
-    startDate: "",
-    endDate: "",
-    addressName: "",
-    lat: "",
-    long: "",
-    capacity: "",
-    isOverCapacity: "",
-    cover: "",
-    name: "",
-    theme: "",
-    color: "",
-    fontSize: "",
-    instructions: "",
-    isMultiSection: "",
-    duration: "",
-    calendarId: "",
+    startDate: String,
+    calendarId: String,
   });
 
+  const [startDate, SetStartDate] = useState<any>({
+    date: "2023-09-22",
+    time: "12:00",
+  })
+
+  const updateStartDate = (type: string, newValue: string) => {
+    console.log(newValue);
+    if (type === "date") {
+      SetStartDate({ ...startDate, date: newValue });
+    } else {
+      SetStartDate({ ...startDate, time: newValue });
+    }
+
+    SetEventReq({
+      ...eventReq,
+      startDate: `${startDate.date}T${startDate.time}`,
+    });
+  };
+  console.log(`${eventReq.startDate}`);
+
   const handleSubmit = async (e: any) => {
+    // debugger;
     e.preventDefault();
-    // const dataToSend = {
-    //   startDate: eventReq.startDate,
-    //   endDate: eventReq.endDate,
-    //   addressName: eventReq.addressName,
-    //   lat: eventReq.lat,
-    //   long: eventReq.long,
-    //   capacity: eventReq.capacity,
-    //   cover: eventReq.cover,
-    //   name: eventReq.name,
-    //   theme: eventReq.theme,
-    //   color: eventReq.color,
-    //   fontSize: eventReq.fontSize,
-    //   instructions: eventReq.instructions,
-    //   duration: eventReq.duration,
-    //   calendarId: eventReq.calendarId,
-    // };
-
     setIsCreating(true);
-
     try {
       if (!eventReq.name) {
         console.error("Name field is required.");
@@ -350,8 +341,11 @@ export default function CreateFormFinal() {
     ImportMap();
     fetchCalendar();
     // fetchPayment();
+
+    // SetEventReq({...eventReq, startDateTime: '00:00'})
   }, []);
 
+  // Thay đổi lịch
   useEffect(() => {
     eventReq.calendarId = selectedCalendar?.id;
     console.log("update calendarId");
@@ -381,7 +375,6 @@ export default function CreateFormFinal() {
         setCompoundLatProvince(e.result.result.compound.province);
         setCompoundLngProvince(e.result.result.compound.province);
 
-        // console.log(e.result.result.geometry.location.lng);
         console.log(e.result.result);
         console.log(e.result.result.name);
         console.log(e.result.result.compound);
@@ -397,12 +390,9 @@ export default function CreateFormFinal() {
           long: e.result.result.geometry.location.lng,
           // Các giá trị khác nếu cần
         });
-        
-        console.log("update location");
 
+        console.log("update location");
         console.log(eventReq);
-        // console.log(e.result.result.formatted_address); // log the place name
-        // console.log(e.result.geometry); // log the coordinates [longitude, latitude]
       });
       return () => {
         map.remove();
@@ -659,12 +649,12 @@ export default function CreateFormFinal() {
                                         <Input
                                           type="date"
                                           id="date"
-                                          value={eventReq.startDate}
+                                          value={startDate.date}
                                           onChange={(e) =>
-                                            SetEventReq({
-                                              ...eventReq,
-                                              startDate: e.target.value,
-                                            })
+                                            updateStartDate(
+                                              "date",
+                                              e.target.value
+                                            )
                                           }
                                           className="bg-transparent dark:bg-[rgba(255,255,255,0.08)] dark:text-[#fff]"
                                           variant="flat"
@@ -678,12 +668,12 @@ export default function CreateFormFinal() {
                                         <Input
                                           type="time"
                                           id="time"
-                                          value={eventReq.startDate}
+                                          value={startDate.time}
                                           onChange={(e) =>
-                                            SetEventReq({
-                                              ...eventReq,
-                                              startDate: e.target.value,
-                                            })
+                                            updateStartDate(
+                                              "time",
+                                              e.target.value
+                                            )
                                           }
                                           className="bg-transparent dark:bg-[rgba(255,255,255,0.08)] dark:text-[#fff]"
                                           variant="flat"
@@ -1357,127 +1347,40 @@ export default function CreateFormFinal() {
                               </ModalContent>
                             </Modal>
                           </div>
-                          <div className="options-row">
-                            <Input
-                              value={eventReq.addressName}
-                              onChange={(e) =>
-                                SetEventReq({
-                                  ...eventReq,
-                                  addressName: e.target.value,
-                                })
-                              }
-                              className="addressName mt-2"
-                              variant="bordered"
-                              placeholder="Address Name"
-                            />
-                          </div>
-                          <div className="options-row">
-                            <Input
-                              value={eventReq.calendarId}
-                              onChange={(e) =>
-                                SetEventReq({
-                                  ...eventReq,
-                                  calendarId: e.target.value,
-                                })
-                              }
-                              className="addressName mt-2"
-                              variant="bordered"
-                              placeholder="CalendarID"
-                            />
-                          </div>
-                          <div className="options-row">
-                            <Input
-                              value={eventReq.color}
-                              onChange={(e) =>
-                                SetEventReq({
-                                  ...eventReq,
-                                  color: e.target.value,
-                                })
-                              }
-                              className="addressName mt-2"
-                              variant="bordered"
-                              placeholder="Color"
-                            />
-                          </div>
-                          <div className="options-row">
-                            <Input
-                              value={eventReq.cover}
-                              onChange={(e) =>
-                                SetEventReq({
-                                  ...eventReq,
-                                  cover: e.target.value,
-                                })
-                              }
-                              className="addressName mt-2"
-                              variant="bordered"
-                              placeholder="Cover"
-                            />
-                          </div>
-                          <div className="options-row">
-                            <Input
-                              value={eventReq.duration}
-                              onChange={(e) =>
-                                SetEventReq({
-                                  ...eventReq,
-                                  duration: e.target.value,
-                                })
-                              }
-                              className="addressName mt-2"
-                              variant="bordered"
-                              placeholder="Duration"
-                            />
-                          </div>
-                          <div className="options-row">
-                            <Input
-                              value={eventReq.fontSize}
-                              onChange={(e) =>
-                                SetEventReq({
-                                  ...eventReq,
-                                  fontSize: e.target.value,
-                                })
-                              }
-                              className="addressName mt-2"
-                              variant="bordered"
-                              placeholder="Font size"
-                            />
-                          </div>
-                          <div className="options-row">
-                            <Input
-                              value={eventReq.instructions}
-                              onChange={(e) =>
-                                SetEventReq({
-                                  ...eventReq,
-                                  instructions: e.target.value,
-                                })
-                              }
-                              className="addressName mt-2"
-                              variant="bordered"
-                              placeholder="instructions"
-                            />
-                          </div>
-                          <div className="options-row">
-                            <Input
-                              value={eventReq.theme}
-                              onChange={(e) =>
-                                SetEventReq({
-                                  ...eventReq,
-                                  theme: e.target.value,
-                                })
-                              }
-                              className="addressName mt-2"
-                              variant="bordered"
-                              placeholder="theme"
-                            />
-                          </div>
                         </div>
                       </div>
-                      <div className="pt-2 mt-6">
+
+                      <div className="ml-1 mt-3">
+                        {error && (
+                          <div className="text-[#f3236a]">
+                            <div className="label break-words">{error}</div>
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="mt-3">
                         <Button
+                          isDisabled={isLoading}
                           onSubmit={handleClick}
                           type="submit"
                           className="text-[#fff] dark:text-[rgb(19,21,23)] bg-[#333537] dark:bg-[#fff] border-[#333537] dark:border-[#fff] border border-solid cursor-pointer transition-all duration-300 ease-in-out donace-button flex items-center m-0"
                         >
-                          <div className="label">Tạo Sự kiện</div>
+                          <div className="label">
+                            {isLoading ? (
+                              <>
+                                <Spinner
+                                  size="sm"
+                                  color="success"
+                                  className="translate-y-0.5 mr-2"
+                                />
+                                <span className="label">Đang đăng nhập..</span>
+                              </>
+                            ) : (
+                              <>
+                                <div className="label">Tạo Sự kiện</div>
+                              </>
+                            )}
+                          </div>
                         </Button>
                       </div>
                     </form>
