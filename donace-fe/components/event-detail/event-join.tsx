@@ -2,7 +2,7 @@
 import { fetchWrapper } from "@/helpers/fetch-wrapper";
 import { EventDetailModels } from "@/types/DonaceType";
 import { Link } from "@nextui-org/link";
-import { ArrowUpRight, ArrowUpToLine, MailOpen, PencilLine, SearchIcon, Send, Sparkles, Trash, Users, XCircle } from "lucide-react";
+import { AlertCircle, ArrowUpRight, ArrowUpToLine, CheckCircle2, MailOpen, PencilLine, SearchIcon, Send, Sparkles, Trash, Upload, Users, XCircle } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Avatar, Divider, Progress, Radio, RadioGroup } from "@nextui-org/react";
 import React from "react";
@@ -40,6 +40,7 @@ export default function EventUserJoin(props: any) {
     const [selectedColor, setSelectedColor] = React.useState("default");
 
     const modalInviteUser = useDisclosure();
+    const modalEditCapacity = useDisclosure();
     const [showEmailContent, setShowEmailContent] = useState(false);
     const [showNoContent, setShowNoContent] = useState(false);
     const [showSuggestedContent, setShowSuggestedContent] = useState(false);
@@ -189,6 +190,13 @@ export default function EventUserJoin(props: any) {
                             </div>
                         </div>
                     </div>
+                    {/* TODO: Sẽ xuất hiện khi mà sự kiện bị đóng để thông báo */}
+                    {/* <div className="pt-1 translate-x-2 text-[#737577] gap-2 flex items-baseline">
+                        <div className="icon-wrapper flex items-center">
+                            <AlertCircle className="translate-y-0.5 block w-4 h-4 align-middle" />
+                        </div>
+                        <div>Sự kiện đã bị đóng.</div>
+                    </div> */}
                     <div className="quick-actions-wrapper mt-6">
                         <div className="quick-actions grid grid-cols-3 gap-2">
                             <Button
@@ -207,6 +215,7 @@ export default function EventUserJoin(props: any) {
                                 </div>
                             </Button>
                             <Button
+                                onPress={modalEditCapacity.onOpen}
                                 type="button"
                                 className="bg-[#f4f5f6] rounded-xl h-auto borde-0 font-medium overflow-hidden p-[0.5rem_0.75rem_0.5rem_0.5rem] relative transition-all duration-300 ease-in-out cursor-pointer flex m-0"
                             >
@@ -219,6 +228,87 @@ export default function EventUserJoin(props: any) {
                                     </div>
                                 </div>
                             </Button>
+                            <Modal
+                                isOpen={modalEditCapacity.isOpen}
+                                onOpenChange={modalEditCapacity.onOpenChange}
+                                size="sm"
+                                radius="lg"
+                                classNames={{
+                                    base: "flex flex-col relative",
+                                    closeButton: "hidden",
+                                }}
+                            >
+                                <ModalContent>
+                                    {(onClose) => (
+                                        <>
+                                            <ModalBody className="w-full p-[1rem_1.25rem]">
+                                                <div className="flex flex-col">
+                                                    <div className="lux-alert-top pt-1">
+                                                        <div className="icon-wrapper m-[0.25rem_0px_0.75rem] w-14 h-14 rounded-full text-[#737577] dark:text-[#d2d4d7] bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)] justify-center flex items-center">
+                                                            <Upload className="w-8 h-8 block align-middle" />
+                                                        </div>
+                                                        <div className="title font-semibold text-xl mb-2">
+                                                            Chỉnh sửa Số lượng
+                                                        </div>
+                                                        <div className="desc text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)]">
+                                                            Đóng đăng ký tự động khi đã đạt số
+                                                            lượng đăng ký. Chỉ những khách mời
+                                                            được phê duyệt mới được tính vào số
+                                                            lượng đã đủ.
+                                                        </div>
+                                                    </div>
+                                                    <div className="gap-4 pt-1 mt-2 flex flex-col">
+                                                        <div className="lux-input-wrapper medium max-w-[auto]">
+                                                            <div className="inner-wrapper inline-block w-full">
+                                                                <label className="text-sm cursor-pointer block mb-1.5 font-medium text-black-more-blur-light-theme transition-all duration-300 ease-in-out">
+                                                                    <div>Số lượng</div>
+                                                                </label>
+                                                                <div className="input-wrapper flex items-baseline">
+                                                                    <div className="flex-1 flex items-center">
+                                                                        <div>&nbsp;</div>
+                                                                        <Input
+                                                                            placeholder="99"
+                                                                            size="md"
+                                                                            variant="bordered"
+                                                                            type="number"
+                                                                            inputMode="numeric"
+                                                                            step={1}
+                                                                            min={1}
+                                                                            classNames={{
+                                                                                input: ["text-base"],
+                                                                            }}
+                                                                        />
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div className="gap-2 flex justify-between items-center">
+                                                            <Button
+                                                                onPress={modalEditCapacity.onClose}
+                                                                type="submit"
+                                                                className="text-[#fff] bg-[#333537] border-[#333537] border border-solid cursor-pointer transition-all duration-300 ease-in-out donace-button mt-4 flex items-center m-0"
+                                                            >
+                                                                <div className="label">
+                                                                    Đặt giới hạn
+                                                                </div>
+                                                            </Button>
+                                                            <Button
+                                                                onPress={modalEditCapacity.onClose}
+                                                                type="button"
+                                                                className="text-black-more-blur-light-theme bg-[rgba(19,21,23,0.04)] border-transparent border border-solid cursor-pointer transition-all duration-300 ease-in-out donace-button mt-4 flex items-center m-0"
+                                                            >
+                                                                <div className="label">
+                                                                    Không giới hạn
+                                                                </div>
+                                                            </Button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </ModalBody>
+                                        </>
+                                    )}
+                                </ModalContent>
+                            </Modal>
                             <Button
                                 type="button"
                                 className="bg-[#f4f5f6] rounded-xl h-auto borde-0 font-medium overflow-hidden p-[0.5rem_0.75rem_0.5rem_0.5rem] relative transition-all duration-300 ease-in-out cursor-pointer flex m-0"
@@ -227,6 +317,10 @@ export default function EventUserJoin(props: any) {
                                     <div className="icon rounded-lg bg-[#e83b4722] text-[#e83b47] p-2 pointer-events-none justify-center flex items-center">
                                         <XCircle className="w-6 h-6 block align-middle" />
                                     </div>
+                                    {/* TODO: Khi mà event hủy đăng ký thì sẽ hiển thị */}
+                                    {/* <div className="icon rounded-lg bg-[#07a46022] text-[#07a460] p-2 pointer-events-none justify-center flex items-center">
+                                        <CheckCircle2 className="w-6 h-6 block align-middle" />
+                                    </div> */}
                                     <div className="name text-black-light-theme pointer-events-none transition-all duration-300 ease-in-out whitespace-nowrap flex-1 flex">
                                         Tắt đăng ký tham gia
                                     </div>

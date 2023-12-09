@@ -5,12 +5,10 @@ import { Button } from "@nextui-org/button";
 import { Divider } from "@nextui-org/divider";
 import { Image } from "@nextui-org/image";
 import { Link } from "@nextui-org/link";
-import { Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure } from "@nextui-org/modal";
+import { Modal, ModalBody, ModalContent, ModalHeader, useDisclosure } from "@nextui-org/modal";
 import { ArrowUpRight, MapPin, MapPinned, Send, Users } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Input, Textarea } from "@nextui-org/input";
-import { Card } from "@nextui-org/card";
-import { Skeleton } from "@nextui-org/skeleton";
 import { EventDetailModels, UserProfile } from "@/types/DonaceType";
 
 interface DateTimeInfo {
