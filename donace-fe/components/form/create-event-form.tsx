@@ -89,7 +89,7 @@ export default function CreateFormFinal() {
   const [compoundLngDistrict, setCompoundLngDistrict] = useState(null);
   const [compoundLatProvince, setCompoundLatProvince] = useState(null);
   const [compoundLngProvince, setCompoundLngProvince] = useState(null);
-  const [capacity, setCapacity] = useState("");
+  const [capacity, setCapacity] = useState("0");
   const [geocoder, setGeocoder] = useState<any>(null);
   const today = new Date();
   const formattedDate = formatDate(today, "yyyy-mm-dd");
@@ -324,7 +324,7 @@ export default function CreateFormFinal() {
     }
     SetEventReq({
       ...eventReq,
-      startDate: `${startDate.date}T${startDate.time}`,
+      endDate: `${endDate.date}T${endDate.time}`,
     });
   };
 
@@ -1473,7 +1473,6 @@ export default function CreateFormFinal() {
                                                 <div className="flex-1 flex items-center">
                                                   <div>&nbsp;</div>
                                                   <Input
-                                                    placeholder="99"
                                                     size="md"
                                                     variant="bordered"
                                                     type="number"
@@ -1483,16 +1482,14 @@ export default function CreateFormFinal() {
                                                     classNames={{
                                                       input: ["text-base"],
                                                     }}
-                                                    value={eventReq.capacity}
+                                                    // onFocus={(e) =>
+                                                    //   setCapacity("")
+                                                    // }
+                                                    value={capacity}
                                                     onChange={(e) => {
                                                       setCapacity(
                                                         e.target.value
                                                       );
-                                                      SetEventReq({
-                                                        ...eventReq,
-                                                        capacity:
-                                                          e.target.value,
-                                                      });
                                                     }}
                                                   />
                                                 </div>
@@ -1503,9 +1500,14 @@ export default function CreateFormFinal() {
                                             <Button
                                               onPress={modalCapacity.onClose}
                                               type="button"
-                                              onClick={(e) =>
-                                                setIsUnlimitedCapacity(false)
-                                              }
+                                              onClick={(e) => {
+                                                setIsUnlimitedCapacity(false);
+                                                SetEventReq({
+                                                  ...eventReq,
+                                                  isUnlimited: false,
+                                                  capacity: capacity,
+                                                });
+                                              }}
                                               className="text-[#fff] bg-[#333537] border-[#333537] border border-solid cursor-pointer transition-all duration-300 ease-in-out donace-button mt-4 flex items-center m-0"
                                             >
                                               <div className="label">
@@ -1514,9 +1516,14 @@ export default function CreateFormFinal() {
                                             </Button>
                                             <Button
                                               onPress={modalCapacity.onClose}
-                                              onClick={(e) =>
-                                                setIsUnlimitedCapacity(true)
-                                              }
+                                              onClick={(e) => {
+                                                setIsUnlimitedCapacity(true);
+                                                SetEventReq({
+                                                  ...eventReq,
+                                                  isUnlimited: true,
+                                                  capacity: 0,
+                                                });
+                                              }}
                                               type="button"
                                               className="text-black-more-blur-light-theme bg-[rgba(19,21,23,0.04)] border-transparent border border-solid cursor-pointer transition-all duration-300 ease-in-out donace-button mt-4 flex items-center m-0"
                                             >
