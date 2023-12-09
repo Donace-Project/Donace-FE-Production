@@ -318,9 +318,9 @@ export default function CreateFormFinal() {
 
   const updateEndDate = (type: string, newValue: string) => {
     if (type === "date") {
-      SetEndDate({ ...startDate, date: newValue });
+      SetEndDate({ ...endDate, date: newValue });
     } else {
-      SetEndDate({ ...startDate, time: newValue });
+      SetEndDate({ ...endDate, time: newValue });
     }
     SetEventReq({
       ...eventReq,
