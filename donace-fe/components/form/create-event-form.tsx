@@ -40,32 +40,41 @@ import React from "react";
 import { Player } from "@lottiefiles/react-lottie-player";
 import Animation from "../Animation_1701106485452.json";
 import { NumericFormat } from "react-number-format";
-import { CreateEventModel, PaymentModel } from "@/types/DonaceType";
 import { fetchWrapper } from "@/helpers/fetch-wrapper";
 import "react-datepicker/dist/react-datepicker.css";
 import { Calendar } from "../../types/DonaceType";
-import { useSearchParams } from "next/navigation";
-
+import { useRouter, useSearchParams } from "next/navigation";
 const goongGeocoder = require("@goongmaps/goong-geocoder");
 
 export default function CreateFormFinal() {
+  // ---------------Start: Local variable---------------
   const searchParams = useSearchParams();
   const calendarId = searchParams?.get("calendarId");
   let goongjs = useRef<any>(null);
+  let map: any;
+  const currentDate = new Date();
+  const day = currentDate.getDate();
+  const month = currentDate.getMonth() + 1;
+  const labelsMap = {
+    offline: "Offline",
+    online: "Online",
+  };
+  const router = useRouter();
+  // ---------------End: Local variable---------------
 
-  // ?: options chọn địa điểm
+  // ---------------Start: UseState---------------
   const [selectedOption, setSelectedOption] = React.useState(
     new Set(["offline"])
   );
   const [showOfflineContent, setShowOfflineContent] = React.useState(true);
-  let map: any;
   const modalMap = useDisclosure();
   const modalCapacity = useDisclosure();
   const modalPayment = useDisclosure();
   const modalCreateCalendar = useDisclosure();
   const modalPriceEvent = useDisclosure();
-  const [error, setError] = useState("");
-  const [paymentReq, setPayment] = useState(null);
+  const [creatEventErrorMessage, setCreatEventErrorMessage] = useState("");
+  const [connectVnPayErrorMessage, setconnectVnPayErrorMessage] = useState("");
+  const [loadingConnectVnPay, setloadingConnectVnPay] = useState(false);
   const [isVnpayConnected, setVnpayConnected] = useState(false);
   const [tmnCode, setTmnCode] = useState<string>("");
   const [hashSecret, setHashSecret] = useState<string>("");
@@ -88,18 +97,10 @@ export default function CreateFormFinal() {
     date: formattedDate,
     time: "12:00",
   });
-
   const [endDate, SetEndDate] = useState<any>({
     date: formattedDate,
     time: "12:00",
   });
-
-  let refCoverUrl = useRef(
-    "https://cdn.lu.ma/cdn-cgi/image/format=auto,fit=cover,dpr=2,quality=75,width=400,height=400/event-defaults/1-1/standard1.png"
-  );
-  let refAvatarUrl = useRef(
-    "https://cdn.lu.ma/cdn-cgi/image/format=auto,fit=cover,dpr=2,background=white,quality=75,width=64,height=64/avatars-default/community_avatar_13.png"
-  );
   const [lstCalendar, setLstCalendar] = useState<Calendar[]>([]);
   const [selectedCalendar, SetSelectedCalendar] = useState<Calendar>();
   const refDivBackground = useRef<HTMLDivElement | null>(null);
@@ -116,7 +117,6 @@ export default function CreateFormFinal() {
     avatar: "",
     description: "",
   });
-
   const [eventReq, SetEventReq] = useState<any>({
     name: "",
     startDate: String,
@@ -135,7 +135,18 @@ export default function CreateFormFinal() {
     },
     capacity: 0,
   });
+  // ---------------End: UseState---------------
 
+  // ---------------Begin: UseRef---------------
+  let refCoverUrl = useRef(
+    "https://cdn.lu.ma/cdn-cgi/image/format=auto,fit=cover,dpr=2,quality=75,width=400,height=400/event-defaults/1-1/standard1.png"
+  );
+  let refAvatarUrl = useRef(
+    "https://cdn.lu.ma/cdn-cgi/image/format=auto,fit=cover,dpr=2,background=white,quality=75,width=64,height=64/avatars-default/community_avatar_13.png"
+  );
+  // ---------------End: UseRef---------------
+
+  // ---------------Start: Handle event---------------
   const handleConfirmPrice = () => {
     modalPriceEvent.onClose();
     SetEventReq({
@@ -182,6 +193,10 @@ export default function CreateFormFinal() {
       if (refDivBackground.current && url) {
         refDivBackground.current.style.backgroundImage = `url(${url})`;
         refCoverUrl.current = url;
+        SetEventReq({
+          ...eventReq,
+          cover: url,
+        });
       }
     } catch (error) {
       console.error("Lỗi khi upload ảnh:", error);
@@ -256,14 +271,6 @@ export default function CreateFormFinal() {
     } catch (error) {
       console.error(`Lỗi: ${String(Error)}`);
     }
-  };
-
-  const currentDate = new Date();
-  const day = currentDate.getDate();
-  const month = currentDate.getMonth() + 1;
-  const labelsMap = {
-    offline: "Offline",
-    online: "Online",
   };
 
   const selectedOptionValue = Array.from(selectedOption)[0];
@@ -347,40 +354,63 @@ export default function CreateFormFinal() {
       ...eventReq,
       startDate: `${startDate.date}T${startDate.time}`,
       endDate: `${endDate.date}T${endDate.time}`,
-      cover: refCoverUrl.current,
     });
 
     let startDateTemp = new Date(`${startDate.date}T${startDate.time}`);
     let endDateTemp = new Date(`${endDate.date}T${endDate.time}`);
-    if (endDateTemp > startDateTemp) {
-      setError("Ngày Bắt đầu phải lớn hơn ngày kết thúc!");
+    if (startDateTemp > endDateTemp) {
+      setCreatEventErrorMessage("Ngày Bắt đầu phải lớn hơn ngày kết thúc!");
       return;
     }
     // Validation
     if (eventReq.name.trim() == "") {
-      setError("Vui lòng nhập tên sự kiện!");
+      setCreatEventErrorMessage("Vui lòng nhập tên sự kiện!");
       return;
     }
 
     setIsLoading(true);
     try {
-      if (!eventReq.name) {
-        console.error("Name field is required.");
-        return;
-      }
       const response = await fetchWrapper.post("/api/Event", eventReq);
 
-      if (!response.success) {
-        console.error(`Lỗi khi tạo sự kiện: ${response.error}`);
+      if (response.id) {
+        // Redirect
+        router.push(`/events/manage/${response.id}`);
+        console.log(response.id);
         return;
       }
-
-      // TODO: redirect manager event
+      setCreatEventErrorMessage("không thể tạo sự kiện!");
+      setIsLoading(false);
     } catch (error) {
       console.error(`Lỗi: ${String(Error)}`);
+      setIsLoading(false);
     }
   };
 
+  const handleConnectVnPay = async () => {
+    if (tmnCode === "" || hashSecret === "") {
+      setconnectVnPayErrorMessage("Vui lòng nhập đầy đủ thông tin!");
+      return;
+    }
+    setloadingConnectVnPay(true);
+    debugger;
+    const res = await fetchWrapper.post("/api/Payment/connect", {
+      tmnCode,
+      hashSecret,
+    });
+    if (res.result === false) {
+      setloadingConnectVnPay(false);
+      setconnectVnPayErrorMessage(res.message);
+      return;
+    }
+    debugger;
+    setVnpayConnected(true);
+    setloadingConnectVnPay(false);
+    modalPayment.onClose();
+    modalPriceEvent.onOpen();
+  };
+  // ---------------End: Handle event---------------
+
+  // ---------------Start: Use Effect---------------
   useEffect(() => {
     const fetchCalendar = async () => {
       try {
@@ -404,7 +434,6 @@ export default function CreateFormFinal() {
 
     const fetchPayment = async () => {
       try {
-        debugger;
         const paymentData = await fetchWrapper.get("/api/Payment/get-connect");
         if (paymentData === "") {
           setVnpayConnected(false);
@@ -465,6 +494,7 @@ export default function CreateFormFinal() {
       };
     }
   }, [modalMap.isOpen, showOfflineContent]);
+  // ---------------Start: Use Effect---------------
   return (
     <>
       <div className="page-content">
@@ -1222,13 +1252,43 @@ export default function CreateFormFinal() {
                                                 </div>
                                               </div>
                                             </div>
+                                            <div>
+                                              {connectVnPayErrorMessage && (
+                                                <div className="text-[#f3236a]">
+                                                  <div className="label break-words">
+                                                    {connectVnPayErrorMessage}
+                                                  </div>
+                                                </div>
+                                              )}
+                                            </div>
                                             <div className="gap-2 flex justify-between items-center">
                                               <Button
+                                                disabled={loadingConnectVnPay}
                                                 type="button"
+                                                onClick={(e) =>
+                                                  handleConnectVnPay()
+                                                }
                                                 className="text-[#fff] bg-[#333537] border-[#333537] border border-solid cursor-pointer transition-all duration-300 ease-in-out donace-button mt-4 flex items-center m-0"
                                               >
                                                 <div className="label">
-                                                  Kết nối
+                                                  {loadingConnectVnPay ? (
+                                                    <>
+                                                      <Spinner
+                                                        size="sm"
+                                                        color="success"
+                                                        className="translate-y-0.5 mr-2"
+                                                      />
+                                                      <span className="label">
+                                                        Đang kết nối...
+                                                      </span>
+                                                    </>
+                                                  ) : (
+                                                    <>
+                                                      <div className="label">
+                                                        Kết nối
+                                                      </div>
+                                                    </>
+                                                  )}
                                                 </div>
                                               </Button>
                                             </div>
@@ -1296,14 +1356,12 @@ export default function CreateFormFinal() {
                                             <div className="gap-2 flex justify-between items-center">
                                               <Button
                                                 type="button"
+                                                onClick={(e) =>
+                                                  handleConfirmPrice()
+                                                }
                                                 className="text-[#fff] bg-[#333537] border-[#333537] border border-solid cursor-pointer transition-all duration-300 ease-in-out donace-button mt-4 flex items-center m-0"
                                               >
-                                                <div
-                                                  onClick={(e) =>
-                                                    handleConfirmPrice()
-                                                  }
-                                                  className="label"
-                                                >
+                                                <div className="label">
                                                   Xác nhận
                                                 </div>
                                               </Button>
@@ -1479,9 +1537,11 @@ export default function CreateFormFinal() {
                       </div>
 
                       <div className="ml-1 mt-3">
-                        {error && (
+                        {creatEventErrorMessage && (
                           <div className="text-[#f3236a]">
-                            <div className="label break-words">{error}</div>
+                            <div className="label break-words">
+                              {creatEventErrorMessage}
+                            </div>
                           </div>
                         )}
                       </div>
@@ -1502,7 +1562,7 @@ export default function CreateFormFinal() {
                                   className="translate-y-0.5 mr-2"
                                 />
                                 <span className="label">
-                                  Đang tạo sự kiện..
+                                  Đang tạo sự kiện...
                                 </span>
                               </>
                             ) : (
