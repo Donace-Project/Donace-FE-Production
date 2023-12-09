@@ -147,12 +147,17 @@ export default function CalendarPeople(props: any) {
 
     //const router = useRouter();
     const currentUrl = typeof window !== 'undefined' ? window.location.href : '';
-
-    const sendMailInviteJoin = () => {
-        console.log(currentUrl);
-        setStatusSendMail(true);
-        setDataSendMail({email: value, urlInfo: currentUrl, calendarName: getCalendars?.name});
-        console.log(getDataSendMail);
+    const sendMailInviteJoin = (e : any) => {
+        e.preventDefault();
+        try{
+            fetchWrapper.post(`/api/Calendar/invite-mail`, {
+                email: value, urlInfo: currentUrl, calendarName: getCalendars?.name
+            })
+            modalInvite.onClose()
+        }
+        catch(error){
+            console.error("Lỗi khi mời:", error);
+        }
     }
     
     useEffect(() => {
@@ -177,10 +182,7 @@ export default function CalendarPeople(props: any) {
                 setUsers(data);
             });
         
-        if(getStatusSendMail === true){
-            fetchWrapper.post(`/api/Calendar/invite-mail`, getDataSendMail)
-                .then()
-        }
+        
         
     }, []);
 
@@ -388,15 +390,22 @@ export default function CalendarPeople(props: any) {
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div className='gap-2 flex justify-end items-center'>
-                                                            <Link
-                                                                onClick={sendMailInviteJoin}
-                                                                className='text-[#fff] bg-[#333537] border-[#333537] border border-solid cursor-pointer transition-all duration-300 ease-in-out donace-button-w-fit mt-4 flex items-center m-0'
-                                                            >
-                                                                <Send className="w-5 h-5 block align-middle translate-y-px" />
-                                                                <div className='label'>Gửi</div>
-                                                            </Link>
-                                                        </div>
+                                                        <form
+                                                            action={"#"}
+                                                            onSubmit={sendMailInviteJoin}
+                                                            className="gap-6 flex flex-col">
+                                                                <div className='gap-2 flex justify-end items-center'>
+                                                                    <Button
+                                                                        onClick={sendMailInviteJoin}
+                                                                        type="button"
+                                                                        className='text-[#fff] bg-[#333537] border-[#333537] border border-solid cursor-pointer transition-all duration-300 ease-in-out donace-button-w-fit mt-4 flex items-center m-0'
+                                                                    >
+                                                                        <Send className="w-5 h-5 block align-middle translate-y-px" />
+                                                                        <div className='label'>Gửi</div>
+                                                                    </Button>
+                                                                </div>
+                                                        </form>
+                                                        
                                                     </div>
                                                 </div>
                                             </ModalBody>
@@ -519,9 +528,16 @@ export default function CalendarPeople(props: any) {
                                                             <div className="cursor-copy text-sm text-[#737577] dark:text-[#d2d4d7]">{getdataModal?.email}</div>
                                                         </div>
                                                     </div>
-                                                    <button type="button" className="text-black-more-blur-light-theme dark:text-[rgba(255,255,255,0.64)] border-transparent bg-transparent p-0 h-auto border-none rounded-none outline-offset-[.375rem] cursor-pointer transition-all duration-300 ease-in-out donace-button-w-fit flex items-center m-0">
-                                                        <div className="label">Xóa</div>
-                                                    </button>
+                                                    {
+                                                        getCalendars?.isHost ? (
+                                                            <></>
+                                                        ) : (
+                                                            <button type="button" className="text-black-more-blur-light-theme dark:text-[rgba(255,255,255,0.64)] border-transparent bg-transparent p-0 h-auto border-none rounded-none outline-offset-[.375rem] cursor-pointer transition-all duration-300 ease-in-out donace-button-w-fit flex items-center m-0">
+                                                                <div className="label">Xóa</div>
+                                                            </button>
+                                                        )
+                                                    }
+                                                    
                                                 </div>
                                             </div>
                                             <div className="can-divide with-divider small mt-5 pt-5 border-t border-solid border-[rgba(19,21,23,0.08)] dark:border-[rgba(255,255,255,0.08)]">
@@ -553,7 +569,7 @@ export default function CalendarPeople(props: any) {
                                                                                 color="danger"
                                                                                 className="p-[0.25rem_0.4375rem] text-xs whitespace-nowrap inline-flex items-center font-medium"
                                                                             >
-                                                                                <div>Chưa tham gia</div>
+                                                                                <div>Quản lý</div>
                                                                             </Chip>
                                                                         )}
                                                                     </div>
