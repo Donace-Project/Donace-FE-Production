@@ -228,14 +228,16 @@ export type CreateEventModel = {
     capacity: number
     isOverCapacity: boolean
     cover: string
-    name: string
+    name: ''
     theme: string
     color: string
     fontSize: number
     instructions: string
     isMultiSection: boolean
     duration: number
-    calendarId: string
+    calendarId: string,
+    isOnline: false,
+    onlineLink: string
 }
 // ****************
 

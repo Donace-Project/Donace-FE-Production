@@ -5,7 +5,6 @@ import { Input, Textarea } from "@nextui-org/input";
 import {
   ArrowUp,
   ArrowUpToLine,
-  CheckCircle2,
   ChevronDown,
   ChevronDownIcon,
   Coins,
@@ -35,7 +34,6 @@ import {
 } from "@nextui-org/dropdown";
 import { Button, ButtonGroup } from "@nextui-org/button";
 import { Divider } from "@nextui-org/divider";
-import { Image } from "@nextui-org/react";
 import { Link } from "@nextui-org/link";
 import React from "react";
 import { Player } from "@lottiefiles/react-lottie-player";
@@ -59,27 +57,13 @@ export default function CreateFormFinal() {
     new Set(["offline"])
   );
   const [showOfflineContent, setShowOfflineContent] = React.useState(true);
-  const [getCreateEvent, setCreateEvent] = useState<CreateEventModel | null>(
-    null
-  );
-  const [selectedLocation, setSelectedLocation] = useState<{
-    lat: number | null;
-    lng: number | null;
-  }>({ lat: null, lng: null });
-
   let map: any;
   const modalMap = useDisclosure();
   const modalCapacity = useDisclosure();
   const modalPayment = useDisclosure();
   const modalCreateCalendar = useDisclosure();
   const modalPriceEvent = useDisclosure();
-  const modalMaintenance = useDisclosure();
-
   const [error, setError] = useState("");
-
-  const [selectedImage, setSelectedImage] = useState<File | null>(null);
-  const [result, setResult] = useState("");
-
   const [payment, setPayment] = useState(null);
   const [getModalPayment, setModalPayment] = useState(false);
   const [getModalPriceEvent, setModalPriceEvent] = useState(false);
@@ -87,22 +71,47 @@ export default function CreateFormFinal() {
   const [hashSecret, setHashSecret] = useState<string>("");
   const [isError, setIsError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  let refCover = useRef(
+  const [lat, setLat] = useState(10.8537915);
+  const [lng, setLng] = useState(106.6234887);
+  const [addressLat, setAddressLat] = useState(null);
+  const [addressLng, setAddressLng] = useState(null);
+  const [compoundLatCommune, setCompoundLatCommune] = useState(null);
+  const [compoundLngCommune, setCompoundLngCommune] = useState(null);
+  const [compoundLatDistrict, setCompoundLatDistrict] = useState(null);
+  const [compoundLngDistrict, setCompoundLngDistrict] = useState(null);
+  const [compoundLatProvince, setCompoundLatProvince] = useState(null);
+  const [compoundLngProvince, setCompoundLngProvince] = useState(null);
+  const [capacity, setCapacity] = useState("");
+  const [geocoder, setGeocoder] = useState<any>(null);
+  const today = new Date();
+  const formattedDate = formatDate(today, "yyyy-mm-dd");
+  const [startDate, SetStartDate] = useState<any>({
+    date: formattedDate,
+    time: "12:00",
+  });
+
+  const [endDate, SetEndDate] = useState<any>({
+    date: formattedDate,
+    time: "12:00",
+  });
+
+  let refCoverUrl = useRef(
     "https://cdn.lu.ma/cdn-cgi/image/format=auto,fit=cover,dpr=2,quality=75,width=400,height=400/event-defaults/1-1/standard1.png"
+  );
+  let refAvatarUrl = useRef(
+    "https://cdn.lu.ma/cdn-cgi/image/format=auto,fit=cover,dpr=2,background=white,quality=75,width=64,height=64/avatars-default/community_avatar_13.png"
   );
   const [lstCalendar, setLstCalendar] = useState<Calendar[]>([]);
   const [selectedCalendar, SetSelectedCalendar] = useState<Calendar>();
-  const backgroundRef = useRef<HTMLDivElement | null>(null);
+  const refDivBackground = useRef<HTMLDivElement | null>(null);
+  const refDivAvatarCalendar = useRef<HTMLDivElement | null>(null);
+  const [onlineLink, setOnlineLink] = useState("");
   const [isUploading, setIsUploading] = useState(false);
+  const [isAvatarUploading, setIsAvatarUploading] = useState(false);
   const [calendarReq, setCalendarReq] = useState({
     name: "",
-    cover: "",
     avatar: "",
-    color: "",
-    publicURL: "",
-    lat: "",
-    long: "",
-    addressName: "",
+    description: "",
   });
 
   const [eventReq, SetEventReq] = useState<any>({
@@ -113,12 +122,13 @@ export default function CreateFormFinal() {
     long: String,
     addressName: String,
     cover: String,
+    isOnline: false,
+    linkMeet: String,
   });
 
-  const handleBackgroundUpload = async (
+  const handleUploadEventBackground = async (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    // debugger;
     if (!event.target.files) return;
 
     const selectedFile = event.target.files[0];
@@ -132,17 +142,9 @@ export default function CreateFormFinal() {
         formData
       );
 
-      if (backgroundRef.current && url) {
-        backgroundRef.current.style.backgroundImage = `url(${url})`;
-
-        debugger;
-        // SetEventReq({
-        //   ...eventReq,
-        //   cover: url,
-        // });
-        refCover.current = url;
-
-        console.log(eventReq);
+      if (refDivBackground.current && url) {
+        refDivBackground.current.style.backgroundImage = `url(${url})`;
+        refCoverUrl.current = url;
       }
     } catch (error) {
       console.error("Lỗi khi upload ảnh:", error);
@@ -151,65 +153,67 @@ export default function CreateFormFinal() {
     }
   };
 
+  const handleUploadCalendarAvatar = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    if (!event.target.files) return;
+
+    const selectedFile = event.target.files[0];
+    const formData = new FormData();
+    formData.append("file", selectedFile);
+    debugger;
+    try {
+      setIsAvatarUploading(true);
+      const url = await fetchWrapper.postFile(
+        "api/Common/upload-file",
+        formData
+      );
+
+      if (refDivAvatarCalendar.current && url) {
+        refDivAvatarCalendar.current.style.backgroundImage = `url(${url})`;
+        refAvatarUrl.current = url;
+      }
+    } catch (error) {
+      console.error("Lỗi khi upload ảnh:", error);
+    } finally {
+      setIsAvatarUploading(false);
+    }
+  };
+
   const handleCalendarSubmit = async (e: any) => {
     e.preventDefault();
-    const dataToSend = {
-      name: calendarReq.name,
-      cover: calendarReq.cover,
-      avatar: calendarReq.avatar,
-      color: calendarReq.color,
-      publicURL: calendarReq.publicURL,
-      lat: calendarReq.lat,
-      long: calendarReq.long,
-      addressName: calendarReq.addressName,
-    };
+    debugger;
+    if (calendarReq.name == "") {
+      return;
+    }
 
-    setIsCreating(true);
-
+    calendarReq.avatar = refAvatarUrl.current;
     try {
-      if (!dataToSend.name) {
-        setIsCreating(false);
-        return;
-      }
-
-      debugger;
       const response = await fetchWrapper.post(
         "/api/Calendar/create-calendar",
-        dataToSend
+        calendarReq
       );
 
       if (!response.success) {
         console.error(`Lỗi khi tạo lịch: ${response.error}`);
-        setIsCreating(false);
         return;
       }
+      debugger;
+      let lstCalendarTemp = await GetCalendars(setLstCalendar);
+      SetCurrentCalendar(
+        lstCalendarTemp,
+        response.result.id,
+        SetSelectedCalendar
+      );
+      modalCreateCalendar.onClose();
     } catch (error) {
       console.error(`Lỗi: ${String(Error)}`);
-      setIsCreating(false);
     }
   };
-
-  const [lat, setLat] = useState(10.8537915);
-  const [lng, setLng] = useState(106.6234887);
-  const [addressLat, setAddressLat] = useState(null);
-  const [addressLng, setAddressLng] = useState(null);
-  const [compoundLatCommune, setCompoundLatCommune] = useState(null);
-  const [compoundLngCommune, setCompoundLngCommune] = useState(null);
-  const [compoundLatDistrict, setCompoundLatDistrict] = useState(null);
-  const [compoundLngDistrict, setCompoundLngDistrict] = useState(null);
-  const [compoundLatProvince, setCompoundLatProvince] = useState(null);
-  const [compoundLngProvince, setCompoundLngProvince] = useState(null);
-
-  const [isCreating, setIsCreating] = useState(false);
-
-  const [capacity, setCapacity] = useState("");
 
   const currentDate = new Date();
   const day = currentDate.getDate();
   const month = currentDate.getMonth() + 1;
-
-  const [geocoder, setGeocoder] = useState<any>(null);
-
   const labelsMap = {
     offline: "Offline",
     online: "Online",
@@ -226,19 +230,8 @@ export default function CreateFormFinal() {
     }
   };
 
-  const handleInputChange = (event: any) => {};
-
-  const handleCalendarClick = async () => {
-    await handleCalendarSubmit;
-  };
-
-  const handleClick = async () => {
-    await handleSubmit;
-  };
-
   const handleSaveLocation = () => {
     setShowOfflineContent(true);
-    setSelectedLocation({ lat: lat, lng: lng });
   };
 
   const handleSelectedCalendar = (e: any, id: string) => {
@@ -252,22 +245,8 @@ export default function CreateFormFinal() {
       yy: date.getFullYear().toString().slice(-2),
       yyyy: date.getFullYear().toString(),
     };
-
     return format.replace(/mm|dd|yy|yyyy/gi, (matched) => map[matched]);
   }
-
-  const today = new Date();
-  const formattedDate = formatDate(today, "yyyy-mm-dd");
-
-  const [startDate, SetStartDate] = useState<any>({
-    date: formattedDate,
-    time: "12:00",
-  });
-
-  const [endDate, SetEndDate] = useState<any>({
-    date: formattedDate,
-    time: "12:00",
-  });
 
   const updateStartDate = (type: string, newValue: string) => {
     if (type === "date") {
@@ -288,11 +267,26 @@ export default function CreateFormFinal() {
     } else {
       SetEndDate({ ...startDate, time: newValue });
     }
-
     SetEventReq({
       ...eventReq,
       startDate: `${startDate.date}T${startDate.time}`,
     });
+  };
+
+  const handleSaveOnlineLink = () => {
+    debugger;
+    SetEventReq({
+      ...eventReq,
+      isOnline: true,
+      lat: "",
+      long: "",
+      addressName: "",
+      linkMeet: onlineLink,
+    });
+
+    modalMap.onClose();
+    console.log("Online link:");
+    console.log(eventReq);
   };
 
   const handleSubmit = async (e: any) => {
@@ -303,7 +297,7 @@ export default function CreateFormFinal() {
       ...eventReq,
       startDate: `${startDate.date}T${startDate.time}`,
       endDate: `${endDate.date}T${endDate.time}`,
-      cover: refCover.current,
+      cover: refCoverUrl.current,
     });
 
     let startDateTemp = new Date(`${startDate.date}T${startDate.time}`);
@@ -318,47 +312,31 @@ export default function CreateFormFinal() {
       return;
     }
 
-    // if
     setIsLoading(true);
     e.preventDefault();
-    setIsCreating(true);
     try {
       if (!eventReq.name) {
         console.error("Name field is required.");
-        setIsCreating(false);
         return;
       }
       const response = await fetchWrapper.post("/api/Event", eventReq);
 
       if (!response.success) {
         console.error(`Lỗi khi tạo sự kiện: ${response.error}`);
-        setIsCreating(false);
         return;
       }
 
       // TODO: redirect manager event
     } catch (error) {
       console.error(`Lỗi: ${String(Error)}`);
-      setIsCreating(false);
     }
   };
 
   useEffect(() => {
     const fetchCalendar = async () => {
       try {
-        const calendarRes = await fetchWrapper.post("/api/Calendar/get-list", {
-          pageNumber: 1,
-          pageSize: 9999,
-        });
-        let lstCalendarTemp = calendarRes.result as Calendar[];
-        setLstCalendar(lstCalendarTemp);
-
-        let foundCalendars = lstCalendarTemp.filter((c) => c.id == calendarId);
-        if (foundCalendars.length > 0) {
-          SetSelectedCalendar(foundCalendars[0]);
-        } else {
-          SetSelectedCalendar(lstCalendarTemp[0]);
-        }
+        let lstCalendarTemp = await GetCalendars(setLstCalendar);
+        SetCurrentCalendar(lstCalendarTemp, calendarId, SetSelectedCalendar);
       } catch (error) {
         console.error("Error fetching calendar:", error);
       }
@@ -426,23 +404,15 @@ export default function CreateFormFinal() {
         setCompoundLatProvince(e.result.result.compound.province);
         setCompoundLngProvince(e.result.result.compound.province);
 
-        // console.log(e.result.result);
-        // console.log(e.result.result.name);
-        // console.log(e.result.result.compound);
-        setSelectedLocation({
-          lat: e.result.result.name,
-          lng: e.result.result.name,
-        });
-
         SetEventReq({
           ...eventReq,
           addressName: e.result.result.formatted_address,
           lat: e.result.result.geometry.location.lat,
           long: e.result.result.geometry.location.lng,
+          isOnline: false,
+          linkMeet: "",
           // Các giá trị khác nếu cần
         });
-
-        console.log("update location");
       });
       return () => {
         map.remove();
@@ -458,7 +428,7 @@ export default function CreateFormFinal() {
               <div className="content-card p-[1rem_1.25rem] relative rounded-xl bg-[#f2f3f4] dark:bg-[#212325] border border-solid border-[#f2f3f4] dark:border-[rgba(255,255,255,0.04)] backdrop-blur-none shadow-none overflow-hidden">
                 <div className="content-container grid grid-cols-2 gap-10">
                   <div className="left min-w-0">
-                    <form action={"#"} onSubmit={handleSubmit}>
+                    <form action={"#"}>
                       <div>
                         <Dropdown>
                           <DropdownTrigger>
@@ -563,6 +533,7 @@ export default function CreateFormFinal() {
                             closeButton: "hidden",
                           }}
                         >
+                          {/* Tạo lịch */}
                           <ModalContent>
                             {(onClose) => (
                               <>
@@ -570,7 +541,6 @@ export default function CreateFormFinal() {
                                   <form
                                     action="#"
                                     className="gap-2 pt-2 flex flex-col"
-                                    onSubmit={handleCalendarSubmit}
                                   >
                                     <div>
                                       <div
@@ -578,17 +548,17 @@ export default function CreateFormFinal() {
                                         className="w-[54px] h-[54px] relative cursor-pointer"
                                       >
                                         <input
-                                          aria-label="avatarImage"
+                                          aria-label="avatarCalendarImage"
                                           type="file"
-                                          id="avatarImage"
+                                          id="avatarCalendarImage"
                                           className="hidden"
-                                          onChange={handleBackgroundUpload}
+                                          onChange={handleUploadCalendarAvatar}
                                         />
                                         <div
                                           onClick={() => {
                                             const fileInput =
                                               document.getElementById(
-                                                "avatarImage"
+                                                "avatarCalendarImage"
                                               );
                                             if (fileInput) {
                                               fileInput.click();
@@ -596,19 +566,27 @@ export default function CreateFormFinal() {
                                           }}
                                           className="upload-icon rounded-[0.5rem] bg-center bg-cover flex justify-center items-center text-[#fff] dark:text-[#212325] bg-[rgb(19,21,23)] dark:bg-[#fff] hover:bg-[#de3163] w-[35%] h-[35%] min-w-[24px] min-h-[24px] border-2 border-solid border-[#fff] dark:border-[#212325] absolute right-[-1px] bottom-[-1px] origin-center transition-all duration-300 ease-in-out"
                                         >
-                                          <ArrowUp className="stroke-2 w-[65%] h-[65%] block align-middle" />
+                                          {isAvatarUploading ? (
+                                            <Spinner
+                                              size="sm"
+                                              color="success"
+                                              className="mr-2 stroke-2 w-[65%] h-[65%] block align-middle spinner-uploading"
+                                            />
+                                          ) : (
+                                            <ArrowUp className="stroke-2 w-[65%] h-[65%] block align-middle" />
+                                          )}
                                         </div>
                                         <div
-                                          // ref={backgroundRef}
                                           onClick={() => {
                                             const fileInput =
                                               document.getElementById(
-                                                "avatarImage"
+                                                "avatarCalendarImage"
                                               );
                                             if (fileInput) {
                                               fileInput.click();
                                             }
                                           }}
+                                          ref={refDivAvatarCalendar}
                                           id="avatar square"
                                           className="bg-[url('https://cdn.lu.ma/cdn-cgi/image/format=auto,fit=cover,dpr=2,background=white,quality=75,width=64,height=64/avatars-default/community_avatar_13.png')] w-[54px] h-[54px] rounded-[0.5rem] bg-center bg-cover flex justify-center items-center bg-[#ebeced] dark:bg-[#333537]"
                                         ></div>
@@ -633,6 +611,13 @@ export default function CreateFormFinal() {
                                       </div>
                                       <div id="desc-input" className="p-2">
                                         <textarea
+                                          value={calendarReq.description}
+                                          onChange={(e) =>
+                                            setCalendarReq({
+                                              ...calendarReq,
+                                              description: e.target.value,
+                                            })
+                                          }
                                           id="lux-naked-input mounted"
                                           spellCheck="false"
                                           autoCapitalize="sentences"
@@ -643,7 +628,7 @@ export default function CreateFormFinal() {
                                       </div>
                                     </div>
                                     <Button
-                                      onClick={handleCalendarClick}
+                                      onClick={(e) => handleCalendarSubmit(e)}
                                       type="submit"
                                       className="text-[#fff] bg-[#333537] border-[#333537] cursor-pointer transition-all duration-300 ease-in-out donace-button mt-4 flex items-center m-0"
                                     >
@@ -795,13 +780,12 @@ export default function CreateFormFinal() {
                                 radius="sm"
                                 type="button"
                                 onPress={modalMap.onOpen}
-                                onClick={handleClick}
                               >
                                 <div className="inner min-h-unit-3.5 p-[0.375rem_0.75rem]">
                                   <div>
                                     <div>
                                       <div className="min-w-0">
-                                        <Input
+                                        {/* <Input
                                           className="hidden"
                                           value={eventReq.lat}
                                           onChange={(e) =>
@@ -820,7 +804,7 @@ export default function CreateFormFinal() {
                                               long: e.target.value,
                                             })
                                           }
-                                        />
+                                        /> */}
                                         <div className="text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)] font-medium overflow-hidden text-ellipsis whitespace-nowrap max-w-[19rem]">
                                           {addressLat && addressLng ? (
                                             <div>{addressLat}</div>
@@ -982,6 +966,12 @@ export default function CreateFormFinal() {
                                                     variant="underlined"
                                                     placeholder="Nhập Link của bạn."
                                                     isClearable
+                                                    value={onlineLink}
+                                                    onChange={(e) =>
+                                                      setOnlineLink(
+                                                        e.target.value
+                                                      )
+                                                    }
                                                     classNames={{
                                                       base: ["w-[38.5rem]"],
                                                       input: [
@@ -993,6 +983,9 @@ export default function CreateFormFinal() {
                                                 </div>
                                                 <div className="flex items-center">
                                                   <Button
+                                                    onClick={
+                                                      handleSaveOnlineLink
+                                                    }
                                                     type="submit"
                                                     className="text-[#fff] dark:text-[rgb(19,21,23)] bg-[#333537] dark:bg-[#fff] border-[#333537] dark:border-[#fff] border border-solid cursor-pointer transition-all duration-300 ease-in-out donace-button-w-fit flex items-center m-0"
                                                   >
@@ -1414,8 +1407,8 @@ export default function CreateFormFinal() {
                       <div className="mt-3">
                         <Button
                           isDisabled={isLoading}
-                          onSubmit={handleClick}
-                          type="submit"
+                          onSubmit={handleSubmit}
+                          type="button"
                           className="text-[#fff] dark:text-[rgb(19,21,23)] bg-[#333537] dark:bg-[#fff] border-[#333537] dark:border-[#fff] border border-solid cursor-pointer transition-all duration-300 ease-in-out donace-button flex items-center m-0"
                         >
                           <div className="label">
@@ -1450,7 +1443,7 @@ export default function CreateFormFinal() {
                           <div className="image has-image transition-all duration-300 ease-in-out">
                             <div className="img-aspect-ratio w-full bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)] overflow-hidden relative rounded-lg">
                               <div
-                                ref={backgroundRef}
+                                ref={refDivBackground}
                                 className="bg-[url('https://cdn.lu.ma/cdn-cgi/image/format=auto,fit=cover,dpr=2,quality=75,width=400,height=400/event-defaults/1-1/standard1.png')] cursor-pointer top-0 left-0  object-cover align-middle w-[auto] h-[380px] rounded-[0.5rem] bg-center bg-cover flex justify-center items-center bg-[#ebeced] dark:bg-[#333537]"
                               ></div>
                             </div>
@@ -1461,7 +1454,7 @@ export default function CreateFormFinal() {
                               type="file"
                               id="avatarImage"
                               className="hidden"
-                              onChange={handleBackgroundUpload}
+                              onChange={handleUploadEventBackground}
                             />
                             <div
                               onClick={() => {
@@ -1493,4 +1486,30 @@ export default function CreateFormFinal() {
       </div>
     </>
   );
+}
+function SetCurrentCalendar(
+  lstCalendarTemp: Calendar[],
+  calendarId: string | null | undefined,
+  SetSelectedCalendar: React.Dispatch<
+    React.SetStateAction<Calendar | undefined>
+  >
+) {
+  let foundCalendars = lstCalendarTemp.filter((c) => c.id == calendarId);
+  if (foundCalendars.length > 0) {
+    SetSelectedCalendar(foundCalendars[0]);
+  } else {
+    SetSelectedCalendar(lstCalendarTemp[0]);
+  }
+}
+
+async function GetCalendars(
+  setLstCalendar: React.Dispatch<React.SetStateAction<Calendar[]>>
+) {
+  const calendarRes = await fetchWrapper.post("/api/Calendar/get-list", {
+    pageNumber: 1,
+    pageSize: 9999,
+  });
+  let lstCalendarTemp = calendarRes.result as Calendar[];
+  setLstCalendar(lstCalendarTemp);
+  return lstCalendarTemp;
 }
