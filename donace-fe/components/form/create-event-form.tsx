@@ -10,6 +10,7 @@ import {
   Coins,
   CreditCard,
   MapPin,
+  Video,
   Pen,
   Plus,
   Ticket,
@@ -64,12 +65,10 @@ export default function CreateFormFinal() {
   const modalCreateCalendar = useDisclosure();
   const modalPriceEvent = useDisclosure();
   const [error, setError] = useState("");
-  const [payment, setPayment] = useState(null);
-  const [getModalPayment, setModalPayment] = useState(false);
-  const [getModalPriceEvent, setModalPriceEvent] = useState(false);
+  const [paymentReq, setPayment] = useState(null);
+  const [isVnpayConnected, setVnpayConnected] = useState(false);
   const [tmnCode, setTmnCode] = useState<string>("");
   const [hashSecret, setHashSecret] = useState<string>("");
-  const [isError, setIsError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [lat, setLat] = useState(10.8537915);
   const [lng, setLng] = useState(106.6234887);
@@ -108,6 +107,10 @@ export default function CreateFormFinal() {
   const [onlineLink, setOnlineLink] = useState("");
   const [isUploading, setIsUploading] = useState(false);
   const [isAvatarUploading, setIsAvatarUploading] = useState(false);
+  const [price, setPrice] = useState<number | undefined>(0);
+  const [isFree, setIsFree] = useState(true);
+  const [isCorrectFormatLink, setIsCorrectFormatLink] = useState(true);
+  const [isUnlimitedCapacity, setIsUnlimitedCapacity] = useState(true);
   const [calendarReq, setCalendarReq] = useState({
     name: "",
     avatar: "",
@@ -124,7 +127,41 @@ export default function CreateFormFinal() {
     cover: String,
     isOnline: false,
     linkMeet: String,
+    isUnlimited: true,
+    ticket: {
+      isRequireApprove: false,
+      isFree: true,
+      price: 0,
+    },
+    capacity: 0,
   });
+
+  const handleConfirmPrice = () => {
+    modalPriceEvent.onClose();
+    SetEventReq({
+      ...eventReq,
+      ticket: {
+        ...eventReq.ticket,
+        isFree: false,
+        price: price,
+      },
+    });
+
+    setIsFree(false);
+  };
+
+  const handleConfirmFree = () => {
+    modalPriceEvent.onClose();
+    SetEventReq({
+      ...eventReq,
+      ticket: {
+        ...eventReq.ticket,
+        isFree: true,
+        price: 0,
+      },
+    });
+    setIsFree(true);
+  };
 
   const handleUploadEventBackground = async (
     event: React.ChangeEvent<HTMLInputElement>
@@ -180,6 +217,16 @@ export default function CreateFormFinal() {
     }
   };
 
+  const handelRequiedApproved = (e: any) => {
+    SetEventReq({
+      ...eventReq,
+      ticket: {
+        ...eventReq.ticket,
+        isRequireApprove: e.target.checked,
+      },
+    });
+  };
+
   const handleCalendarSubmit = async (e: any) => {
     e.preventDefault();
     debugger;
@@ -232,6 +279,7 @@ export default function CreateFormFinal() {
 
   const handleSaveLocation = () => {
     setShowOfflineContent(true);
+    setOnlineLink("");
   };
 
   const handleSelectedCalendar = (e: any, id: string) => {
@@ -275,6 +323,10 @@ export default function CreateFormFinal() {
 
   const handleSaveOnlineLink = () => {
     debugger;
+    if (!isURL(onlineLink)) {
+      setIsCorrectFormatLink(false);
+      return;
+    }
     SetEventReq({
       ...eventReq,
       isOnline: true,
@@ -283,15 +335,13 @@ export default function CreateFormFinal() {
       addressName: "",
       linkMeet: onlineLink,
     });
-
     modalMap.onClose();
-    console.log("Online link:");
-    console.log(eventReq);
+    setShowOfflineContent(false);
+    setIsCorrectFormatLink(true);
   };
 
-  const handleSubmit = async (e: any) => {
-    e.preventDefault();
-
+  const handleCreateEvent = async () => {
+    console.log("create event");
     debugger;
     SetEventReq({
       ...eventReq,
@@ -313,7 +363,6 @@ export default function CreateFormFinal() {
     }
 
     setIsLoading(true);
-    e.preventDefault();
     try {
       if (!eventReq.name) {
         console.error("Name field is required.");
@@ -355,17 +404,14 @@ export default function CreateFormFinal() {
 
     const fetchPayment = async () => {
       try {
+        debugger;
         const paymentData = await fetchWrapper.get("/api/Payment/get-connect");
-        if (paymentData !== "") {
-          console.log(paymentData);
-          setModalPayment(false);
-        } else if (paymentData === "") {
-          console.log("204 No Content");
-          setModalPayment(true);
+        if (paymentData === "") {
+          setVnpayConnected(false);
         } else {
-          console.log("Lỗi hệ thống rồi!!!");
+          console.log("204 No Content");
+          setVnpayConnected(true);
         }
-        setPayment(paymentData);
       } catch (error) {
         console.error("Error fetching Payment:", error);
       }
@@ -373,7 +419,7 @@ export default function CreateFormFinal() {
 
     ImportMap();
     fetchCalendar();
-    // fetchPayment();
+    fetchPayment();
   }, []);
 
   // Thay đổi lịch
@@ -382,7 +428,7 @@ export default function CreateFormFinal() {
   }, [selectedCalendar]);
 
   useEffect(() => {
-    // Khởi tạo bản đồ khi component được mount
+    console.log(lng, lat);
     if (modalMap.isOpen && showOfflineContent === true) {
       map = new goongjs.current.Map({
         container: "map", // ID của phần tử HTML để chứa bản đồ
@@ -436,7 +482,7 @@ export default function CreateFormFinal() {
                               <div className="avatar-wrapper small">
                                 <Avatar
                                   radius="full"
-                                  src="https://avatars.githubusercontent.com/u/143386751?s=200&v=4"
+                                  src={selectedCalendar?.avatar}
                                   name="Donace"
                                   className="w-6 h-6 relative"
                                 />
@@ -463,20 +509,6 @@ export default function CreateFormFinal() {
                           >
                             {/* @ts-ignore */}
                             <DropdownSection title="Chọn Lịch để tạo Sự kiện:">
-                              {/* <DropdownItem
-                                endContent={
-                                  <CheckCircle2 className="block w-4 h-4 align-middle" />
-                                }
-                              >
-                                <User
-                                  name="Lịch cá nhân"
-                                  avatarProps={{
-                                    radius: "sm",
-                                    size: "sm",
-                                    src: "https://avatars.githubusercontent.com/u/143386751?s=200&v=4",
-                                  }}
-                                />
-                              </DropdownItem> */}
                               {lstCalendar ? (
                                 lstCalendar.length > 0 ? (
                                   lstCalendar.map((calendar, index) => (
@@ -629,7 +661,7 @@ export default function CreateFormFinal() {
                                     </div>
                                     <Button
                                       onClick={(e) => handleCalendarSubmit(e)}
-                                      type="submit"
+                                      type="button"
                                       className="text-[#fff] bg-[#333537] border-[#333537] cursor-pointer transition-all duration-300 ease-in-out donace-button mt-4 flex items-center m-0"
                                     >
                                       <div className="label">Tạo lịch</div>
@@ -770,7 +802,11 @@ export default function CreateFormFinal() {
                         </div>
                         <div className="w-full gap-3 mb-4 flex items-start">
                           <div className="icon-container w-10 h-10 border border-solid border-[rgba(19,21,23,0.1)] dark:border-[rgba(255,255,255,0.08)] text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)] rounded-lg flex-shrink-0 mt-3.5 overflow-hidden justify-center flex items-center">
-                            <MapPin className="w-5 h-5 block align-middle" />
+                            {showOfflineContent ? (
+                              <MapPin className="w-5 h-5 block align-middle" />
+                            ) : (
+                              <Video className="w-5 h-5 block align-middle" />
+                            )}
                           </div>
                           <div className="location-picker-wrapper min-w-0 flex-1">
                             <div className="lux-menu-trigger-wrapper cursor-pointer inline-flex min-w-0 w-full">
@@ -785,51 +821,44 @@ export default function CreateFormFinal() {
                                   <div>
                                     <div>
                                       <div className="min-w-0">
-                                        {/* <Input
-                                          className="hidden"
-                                          value={eventReq.lat}
-                                          onChange={(e) =>
-                                            SetEventReq({
-                                              ...eventReq,
-                                              lat: e.target.value,
-                                            })
-                                          }
-                                        />
-                                        <Input
-                                          className="hidden"
-                                          value={eventReq.long}
-                                          onChange={(e) =>
-                                            SetEventReq({
-                                              ...eventReq,
-                                              long: e.target.value,
-                                            })
-                                          }
-                                        /> */}
                                         <div className="text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)] font-medium overflow-hidden text-ellipsis whitespace-nowrap max-w-[19rem]">
-                                          {addressLat && addressLng ? (
-                                            <div>{addressLat}</div>
+                                          {showOfflineContent ? (
+                                            addressLat && addressLng ? (
+                                              <div>{addressLat}</div>
+                                            ) : (
+                                              "Thêm địa điểm diễn ra sự kiện"
+                                            )
                                           ) : (
-                                            "Thêm địa điểm diễn ra sự kiện"
+                                            <>Online</>
                                           )}
                                         </div>
-                                        {compoundLatCommune &&
-                                        compoundLngCommune &&
-                                        compoundLatDistrict &&
-                                        compoundLngDistrict &&
-                                        compoundLatProvince &&
-                                        compoundLngProvince ? (
-                                          <div className="overflow-hidden text-ellipsis whitespace-nowrap text-sm text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)] max-w-[19rem]">
-                                            <p>
-                                              {compoundLatCommune},{" "}
-                                              {compoundLatDistrict},{" "}
-                                              {compoundLatProvince}
-                                            </p>
-                                          </div>
+
+                                        {showOfflineContent ? (
+                                          compoundLatCommune &&
+                                          compoundLngCommune &&
+                                          compoundLatDistrict &&
+                                          compoundLngDistrict &&
+                                          compoundLatProvince &&
+                                          compoundLngProvince ? (
+                                            <div className="overflow-hidden text-ellipsis whitespace-nowrap text-sm text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)] max-w-[19rem]">
+                                              <p>
+                                                {compoundLatCommune},{" "}
+                                                {compoundLatDistrict},{" "}
+                                                {compoundLatProvince}
+                                              </p>
+                                            </div>
+                                          ) : (
+                                            <div className="overflow-hidden text-ellipsis whitespace-nowrap text-sm text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)] max-w-[19rem]">
+                                              Tổ chức Online/Offline sự kiện của
+                                              bạn
+                                            </div>
+                                          )
                                         ) : (
-                                          <div className="overflow-hidden text-ellipsis whitespace-nowrap text-sm text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)] max-w-[19rem]">
-                                            Tổ chức Online/Offline sự kiện của
-                                            bạn
-                                          </div>
+                                          <>
+                                            <p className="short-description">
+                                              {onlineLink}
+                                            </p>
+                                          </>
                                         )}
                                       </div>
                                     </div>
@@ -942,6 +971,14 @@ export default function CreateFormFinal() {
                                                     alignItems: "center",
                                                   }}
                                                 ></Player>
+                                                {!isCorrectFormatLink && (
+                                                  <div className="text-[#f3236a]">
+                                                    <div className="label break-words ml-4">
+                                                      Vui lòng nhập đúng định
+                                                      dạng link online
+                                                    </div>
+                                                  </div>
+                                                )}
                                               </div>
                                             )}
                                           </div>
@@ -951,7 +988,7 @@ export default function CreateFormFinal() {
                                                 <Button
                                                   onPress={modalMap.onClose}
                                                   onClick={handleSaveLocation}
-                                                  type="submit"
+                                                  type="button"
                                                   className="text-[#fff] dark:text-[rgb(19,21,23)] bg-[#333537] dark:bg-[#fff] border-[#333537] dark:border-[#fff] border border-solid cursor-pointer transition-all duration-300 ease-in-out donace-button-w-fit flex items-center m-0"
                                                 >
                                                   <div className="label">
@@ -986,7 +1023,7 @@ export default function CreateFormFinal() {
                                                     onClick={
                                                       handleSaveOnlineLink
                                                     }
-                                                    type="submit"
+                                                    type="button"
                                                     className="text-[#fff] dark:text-[rgb(19,21,23)] bg-[#333537] dark:bg-[#fff] border-[#333537] dark:border-[#fff] border border-solid cursor-pointer transition-all duration-300 ease-in-out donace-button-w-fit flex items-center m-0"
                                                   >
                                                     <div className="label">
@@ -1020,29 +1057,63 @@ export default function CreateFormFinal() {
                               <div className="text-black-more-blur-light-theme select-none flex-1">
                                 Loại vé
                               </div>
-                              {getModalPayment ? (
+                              {isFree ? (
                                 <div className="gap-1 flex items-center">
                                   <div className="value">Miễn phí</div>
-                                  <button
-                                    onClick={modalPayment.onOpen}
-                                    aria-label="Button to open modalPayment"
-                                    type="button"
-                                    className="m-[-1px_-0.25rem_-1px_0px] text-black-blur-light-theme bg-transparent border-transparent border border-solid flex-shrink-0 cursor-pointer transition-all duration-300 ease-in-out donace-button-w-fit flex items-center"
-                                  >
-                                    <Pen className="stroke-2 w-3.5 h-3.5 flex-shrink-0 block align-middle translate-y-px" />
-                                  </button>
+                                  {isVnpayConnected ? (
+                                    <>
+                                      <button
+                                        onClick={modalPriceEvent.onOpen}
+                                        aria-label="Button to open modalPayment"
+                                        type="button"
+                                        className="m-[-1px_-0.25rem_-1px_0px] text-black-blur-light-theme bg-transparent border-transparent border border-solid flex-shrink-0 cursor-pointer transition-all duration-300 ease-in-out donace-button-w-fit flex items-center"
+                                      >
+                                        <Pen className="stroke-2 w-3.5 h-3.5 flex-shrink-0 block align-middle translate-y-px" />
+                                      </button>
+                                    </>
+                                  ) : (
+                                    <>
+                                      <button
+                                        onClick={modalPayment.onOpen}
+                                        aria-label="Button to open modalPayment"
+                                        type="button"
+                                        className="m-[-1px_-0.25rem_-1px_0px] text-black-blur-light-theme bg-transparent border-transparent border border-solid flex-shrink-0 cursor-pointer transition-all duration-300 ease-in-out donace-button-w-fit flex items-center"
+                                      >
+                                        <Pen className="stroke-2 w-3.5 h-3.5 flex-shrink-0 block align-middle translate-y-px" />
+                                      </button>
+                                    </>
+                                  )}
+                                  <></>
                                 </div>
                               ) : (
                                 <div className="gap-1 flex items-center">
-                                  <div className="value">Miễn phí</div>
-                                  <button
-                                    onClick={modalPriceEvent.onOpen}
-                                    aria-label="Button to open modalPayment"
-                                    type="button"
-                                    className="m-[-1px_-0.25rem_-1px_0px] text-black-blur-light-theme bg-transparent border-transparent border border-solid flex-shrink-0 cursor-pointer transition-all duration-300 ease-in-out donace-button-w-fit flex items-center"
-                                  >
-                                    <Pen className="stroke-2 w-3.5 h-3.5 flex-shrink-0 block align-middle translate-y-px" />
-                                  </button>
+                                  <div className="value">
+                                    {formatCurrency(price)}
+                                  </div>
+                                  {isVnpayConnected ? (
+                                    <>
+                                      <button
+                                        onClick={modalPriceEvent.onOpen}
+                                        aria-label="Button to open modalPayment"
+                                        type="button"
+                                        className="m-[-1px_-0.25rem_-1px_0px] text-black-blur-light-theme bg-transparent border-transparent border border-solid flex-shrink-0 cursor-pointer transition-all duration-300 ease-in-out donace-button-w-fit flex items-center"
+                                      >
+                                        <Pen className="stroke-2 w-3.5 h-3.5 flex-shrink-0 block align-middle translate-y-px" />
+                                      </button>
+                                    </>
+                                  ) : (
+                                    <>
+                                      <button
+                                        onClick={modalPayment.onOpen}
+                                        aria-label="Button to open modalPayment"
+                                        type="button"
+                                        className="m-[-1px_-0.25rem_-1px_0px] text-black-blur-light-theme bg-transparent border-transparent border border-solid flex-shrink-0 cursor-pointer transition-all duration-300 ease-in-out donace-button-w-fit flex items-center"
+                                      >
+                                        <Pen className="stroke-2 w-3.5 h-3.5 flex-shrink-0 block align-middle translate-y-px" />
+                                      </button>
+                                    </>
+                                  )}
+                                  <></>
                                 </div>
                               )}
                               <Modal
@@ -1153,7 +1224,7 @@ export default function CreateFormFinal() {
                                             </div>
                                             <div className="gap-2 flex justify-between items-center">
                                               <Button
-                                                type="submit"
+                                                type="button"
                                                 className="text-[#fff] bg-[#333537] border-[#333537] border border-solid cursor-pointer transition-all duration-300 ease-in-out donace-button mt-4 flex items-center m-0"
                                               >
                                                 <div className="label">
@@ -1210,18 +1281,13 @@ export default function CreateFormFinal() {
                                                       thousandSeparator={true}
                                                       allowNegative={false}
                                                       prefix={"₫ "} // Dấu tiền tệ Việt Nam đồng
+                                                      value={price}
                                                       placeholder={
                                                         "Nhập số tiền"
                                                       }
-                                                      onValueChange={(
-                                                        values
-                                                      ) => {
-                                                        handleInputChange({
-                                                          target: {
-                                                            value: values.value,
-                                                          },
-                                                        });
-                                                      }}
+                                                      onValueChange={(e) =>
+                                                        setPrice(e.floatValue)
+                                                      }
                                                     />
                                                   </div>
                                                 </div>
@@ -1229,16 +1295,21 @@ export default function CreateFormFinal() {
                                             </div>
                                             <div className="gap-2 flex justify-between items-center">
                                               <Button
-                                                type="submit"
+                                                type="button"
                                                 className="text-[#fff] bg-[#333537] border-[#333537] border border-solid cursor-pointer transition-all duration-300 ease-in-out donace-button mt-4 flex items-center m-0"
                                               >
-                                                <div className="label">
+                                                <div
+                                                  onClick={(e) =>
+                                                    handleConfirmPrice()
+                                                  }
+                                                  className="label"
+                                                >
                                                   Xác nhận
                                                 </div>
                                               </Button>
                                               <Button
-                                                onPress={
-                                                  modalPriceEvent.onClose
+                                                onClick={(e) =>
+                                                  handleConfirmFree()
                                                 }
                                                 type="button"
                                                 className="text-black-more-blur-light-theme bg-[rgba(19,21,23,0.04)] border-transparent border border-solid cursor-pointer transition-all duration-300 ease-in-out donace-button mt-4 flex items-center m-0"
@@ -1268,6 +1339,7 @@ export default function CreateFormFinal() {
                               </div>
                               <div className="gap-1 flex items-center">
                                 <Switch
+                                  onChange={(e) => handelRequiedApproved(e)}
                                   color="success"
                                   classNames={{
                                     thumb: ["bg-[#fff]"],
@@ -1288,7 +1360,11 @@ export default function CreateFormFinal() {
                               </div>
                               <div className="gap-1 flex items-center">
                                 <div className="value">
-                                  {capacity || "Không giới hạn"}
+                                  {isUnlimitedCapacity ? (
+                                    "Không giới hạn"
+                                  ) : (
+                                    <>{eventReq.capacity}</>
+                                  )}
                                 </div>
                                 <button
                                   aria-label="Button to open modalCapacity"
@@ -1368,7 +1444,10 @@ export default function CreateFormFinal() {
                                           <div className="gap-2 flex justify-between items-center">
                                             <Button
                                               onPress={modalCapacity.onClose}
-                                              type="submit"
+                                              type="button"
+                                              onClick={(e) =>
+                                                setIsUnlimitedCapacity(false)
+                                              }
                                               className="text-[#fff] bg-[#333537] border-[#333537] border border-solid cursor-pointer transition-all duration-300 ease-in-out donace-button mt-4 flex items-center m-0"
                                             >
                                               <div className="label">
@@ -1377,6 +1456,9 @@ export default function CreateFormFinal() {
                                             </Button>
                                             <Button
                                               onPress={modalCapacity.onClose}
+                                              onClick={(e) =>
+                                                setIsUnlimitedCapacity(true)
+                                              }
                                               type="button"
                                               className="text-black-more-blur-light-theme bg-[rgba(19,21,23,0.04)] border-transparent border border-solid cursor-pointer transition-all duration-300 ease-in-out donace-button mt-4 flex items-center m-0"
                                             >
@@ -1407,7 +1489,7 @@ export default function CreateFormFinal() {
                       <div className="mt-3">
                         <Button
                           isDisabled={isLoading}
-                          onSubmit={handleSubmit}
+                          onClick={handleCreateEvent}
                           type="button"
                           className="text-[#fff] dark:text-[rgb(19,21,23)] bg-[#333537] dark:bg-[#fff] border-[#333537] dark:border-[#fff] border border-solid cursor-pointer transition-all duration-300 ease-in-out donace-button flex items-center m-0"
                         >
@@ -1512,4 +1594,21 @@ async function GetCalendars(
   let lstCalendarTemp = calendarRes.result as Calendar[];
   setLstCalendar(lstCalendarTemp);
   return lstCalendarTemp;
+}
+
+function isURL(input: string): boolean {
+  const urlRegex =
+    /^(?:(?:(?:https?|ftp):)?\/\/)?(?:www\.)?[a-zA-Z0-9-]+(?:\.[a-zA-Z]{2,})+(?:\/[^\s]*)?$/;
+  return urlRegex.test(input);
+}
+
+function formatCurrency(value: number | undefined) {
+  if (value == undefined) return "0 đ";
+  const formattedValue = parseFloat(value.toString()).toLocaleString("vi-VN", {
+    style: "currency",
+    currency: "VND",
+  });
+
+  // Thêm ký tự 'đ' ở cuối số
+  return formattedValue.replace(/\₫/g, "") + " đ";
 }

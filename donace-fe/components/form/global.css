@@ -9,3 +9,10 @@
 .spinner-uploading {
   transform: translateY(-4px);
 }
+
+.short-description {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 30ch;
+}
