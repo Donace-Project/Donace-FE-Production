@@ -270,3 +270,25 @@ export type PaymentModel = {
     tmnCode: string
     hashSecret: string
 }
+
+// UPDATE EVENT
+export type UpdateEventModel = {
+    startDate: string
+    endDte: string
+    addressName: string
+    lat: string
+    long: string
+    capacity: number
+    isOverCapacity: boolean
+    cover: string
+    name: string
+    theme: string
+    color: string
+    fontSize: number
+    instructions: string
+    isMultiSection: boolean
+    duration: number
+    calendarId: string
+    id: string
+}
+// ***********8

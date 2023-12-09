@@ -10,10 +10,10 @@ import DatePicker from "react-datepicker";
 
 
 export default function EventMore(props: any) {
+    var { id } = props
     const [startDate, setStartDate] = useState(new Date());
 
 
-    var { id } = props
     var [eventDetail, setEventDetail] = useState<EventDetailModels | null>(null);
     useEffect(() => {
         fetchWrapper.get(`api/Event/detail-by-id?id=${id}`)
@@ -111,7 +111,7 @@ export default function EventMore(props: any) {
                                     onChange={(date: any) => setStartDate(date)}
                                     startDate={startDate}
                                     timeInputLabel="Time:"
-                                    dateFormat="MM/dd/yyyy h:mm aa"
+                                    dateFormat="dd/MM/yyyy h:mm aa"
                                     showTimeInput
                                     fixedHeight
                                     className="border-2 border-solid border-[#babac1] focus:border-[rgb(19,21,23)] rounded-lg pl-16 pr-8 mt-2"
