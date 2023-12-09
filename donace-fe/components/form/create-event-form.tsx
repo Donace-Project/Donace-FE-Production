@@ -1,5 +1,5 @@
 "use client";
-
+import "./global.css";
 import { Avatar } from "@nextui-org/avatar";
 import { Input, Textarea } from "@nextui-org/input";
 import {
@@ -75,13 +75,7 @@ export default function CreateFormFinal() {
   const modalPriceEvent = useDisclosure();
   const modalMaintenance = useDisclosure();
 
-  const [error, setError] = useState("loi tao su kien");
-
-  // const [startDate, setStartDate] = useState("");
-  const [startTime, setStartTime] = useState("");
-
-  const [endDate, setEndDate] = useState("");
-  const [endTime, setEndTime] = useState("");
+  const [error, setError] = useState("");
 
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [result, setResult] = useState("");
@@ -91,13 +85,15 @@ export default function CreateFormFinal() {
   const [getModalPriceEvent, setModalPriceEvent] = useState(false);
   const [tmnCode, setTmnCode] = useState<string>("");
   const [hashSecret, setHashSecret] = useState<string>("");
-  const [isErrork, setIsError] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-
+  const [isError, setIsError] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  let refCover = useRef(
+    "https://cdn.lu.ma/cdn-cgi/image/format=auto,fit=cover,dpr=2,quality=75,width=400,height=400/event-defaults/1-1/standard1.png"
+  );
   const [lstCalendar, setLstCalendar] = useState<Calendar[]>([]);
   const [selectedCalendar, SetSelectedCalendar] = useState<Calendar>();
-  const iconRef = useRef<HTMLDivElement | null>(null);
-
+  const backgroundRef = useRef<HTMLDivElement | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
   const [calendarReq, setCalendarReq] = useState({
     name: "",
     cover: "",
@@ -109,9 +105,20 @@ export default function CreateFormFinal() {
     addressName: "",
   });
 
-  const handleAvatarUpload = async (
+  const [eventReq, SetEventReq] = useState<any>({
+    name: "",
+    startDate: String,
+    calendarId: String,
+    lat: String,
+    long: String,
+    addressName: String,
+    cover: String,
+  });
+
+  const handleBackgroundUpload = async (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
+    // debugger;
     if (!event.target.files) return;
 
     const selectedFile = event.target.files[0];
@@ -119,22 +126,28 @@ export default function CreateFormFinal() {
     formData.append("file", selectedFile);
 
     try {
+      setIsUploading(true);
       const url = await fetchWrapper.postFile(
         "api/Common/upload-file",
         formData
       );
 
-      if (iconRef.current && url) {
-        iconRef.current.style.backgroundImage = `url(${url})`;
+      if (backgroundRef.current && url) {
+        backgroundRef.current.style.backgroundImage = `url(${url})`;
 
-        setCalendarReq({
-          ...calendarReq,
-          avatar: url,
-        });
+        debugger;
+        // SetEventReq({
+        //   ...eventReq,
+        //   cover: url,
+        // });
+        refCover.current = url;
+
+        console.log(eventReq);
       }
     } catch (error) {
       console.error("Lỗi khi upload ảnh:", error);
     } finally {
+      setIsUploading(false);
     }
   };
 
@@ -155,7 +168,6 @@ export default function CreateFormFinal() {
 
     try {
       if (!dataToSend.name) {
-        console.error("Name field is required.");
         setIsCreating(false);
         return;
       }
@@ -171,7 +183,6 @@ export default function CreateFormFinal() {
         setIsCreating(false);
         return;
       }
-      console.log(<b>Lịch đã tạo thành công!</b>);
     } catch (error) {
       console.error(`Lỗi: ${String(Error)}`);
       setIsCreating(false);
@@ -215,9 +226,7 @@ export default function CreateFormFinal() {
     }
   };
 
-  const handleInputChange = (event: any) => {
-    console.log(event.target.value);
-  };
+  const handleInputChange = (event: any) => {};
 
   const handleCalendarClick = async () => {
     await handleCalendarSubmit;
@@ -236,18 +245,31 @@ export default function CreateFormFinal() {
     SetSelectedCalendar(lstCalendar.filter((c) => c.id == id)[0]);
   };
 
-  const [eventReq, SetEventReq] = useState<any>({
-    startDate: String,
-    calendarId: String,
-  });
+  function formatDate(date: Date, format: string): string {
+    const map: Record<string, string> = {
+      mm: (date.getMonth() + 1).toString().padStart(2, "0"),
+      dd: date.getDate().toString().padStart(2, "0"),
+      yy: date.getFullYear().toString().slice(-2),
+      yyyy: date.getFullYear().toString(),
+    };
+
+    return format.replace(/mm|dd|yy|yyyy/gi, (matched) => map[matched]);
+  }
+
+  const today = new Date();
+  const formattedDate = formatDate(today, "yyyy-mm-dd");
 
   const [startDate, SetStartDate] = useState<any>({
-    date: "2023-09-22",
+    date: formattedDate,
     time: "12:00",
-  })
+  });
+
+  const [endDate, SetEndDate] = useState<any>({
+    date: formattedDate,
+    time: "12:00",
+  });
 
   const updateStartDate = (type: string, newValue: string) => {
-    console.log(newValue);
     if (type === "date") {
       SetStartDate({ ...startDate, date: newValue });
     } else {
@@ -259,10 +281,45 @@ export default function CreateFormFinal() {
       startDate: `${startDate.date}T${startDate.time}`,
     });
   };
-  console.log(`${eventReq.startDate}`);
+
+  const updateEndDate = (type: string, newValue: string) => {
+    if (type === "date") {
+      SetEndDate({ ...startDate, date: newValue });
+    } else {
+      SetEndDate({ ...startDate, time: newValue });
+    }
+
+    SetEventReq({
+      ...eventReq,
+      startDate: `${startDate.date}T${startDate.time}`,
+    });
+  };
 
   const handleSubmit = async (e: any) => {
-    // debugger;
+    e.preventDefault();
+
+    debugger;
+    SetEventReq({
+      ...eventReq,
+      startDate: `${startDate.date}T${startDate.time}`,
+      endDate: `${endDate.date}T${endDate.time}`,
+      cover: refCover.current,
+    });
+
+    let startDateTemp = new Date(`${startDate.date}T${startDate.time}`);
+    let endDateTemp = new Date(`${endDate.date}T${endDate.time}`);
+    if (endDateTemp > startDateTemp) {
+      setError("Ngày Bắt đầu phải lớn hơn ngày kết thúc!");
+      return;
+    }
+    // Validation
+    if (eventReq.name.trim() == "") {
+      setError("Vui lòng nhập tên sự kiện!");
+      return;
+    }
+
+    // if
+    setIsLoading(true);
     e.preventDefault();
     setIsCreating(true);
     try {
@@ -278,7 +335,6 @@ export default function CreateFormFinal() {
         setIsCreating(false);
         return;
       }
-      console.log(<b>Sự kiện đã tạo thành công!</b>);
 
       // TODO: redirect manager event
     } catch (error) {
@@ -322,7 +378,6 @@ export default function CreateFormFinal() {
     const fetchPayment = async () => {
       try {
         const paymentData = await fetchWrapper.get("/api/Payment/get-connect");
-        console.log(paymentData);
         if (paymentData !== "") {
           console.log(paymentData);
           setModalPayment(false);
@@ -341,15 +396,11 @@ export default function CreateFormFinal() {
     ImportMap();
     fetchCalendar();
     // fetchPayment();
-
-    // SetEventReq({...eventReq, startDateTime: '00:00'})
   }, []);
 
   // Thay đổi lịch
   useEffect(() => {
     eventReq.calendarId = selectedCalendar?.id;
-    console.log("update calendarId");
-    console.log(eventReq);
   }, [selectedCalendar]);
 
   useEffect(() => {
@@ -375,9 +426,9 @@ export default function CreateFormFinal() {
         setCompoundLatProvince(e.result.result.compound.province);
         setCompoundLngProvince(e.result.result.compound.province);
 
-        console.log(e.result.result);
-        console.log(e.result.result.name);
-        console.log(e.result.result.compound);
+        // console.log(e.result.result);
+        // console.log(e.result.result.name);
+        // console.log(e.result.result.compound);
         setSelectedLocation({
           lat: e.result.result.name,
           lng: e.result.result.name,
@@ -392,7 +443,6 @@ export default function CreateFormFinal() {
         });
 
         console.log("update location");
-        console.log(eventReq);
       });
       return () => {
         map.remove();
@@ -532,7 +582,7 @@ export default function CreateFormFinal() {
                                           type="file"
                                           id="avatarImage"
                                           className="hidden"
-                                          onChange={handleAvatarUpload}
+                                          onChange={handleBackgroundUpload}
                                         />
                                         <div
                                           onClick={() => {
@@ -549,7 +599,7 @@ export default function CreateFormFinal() {
                                           <ArrowUp className="stroke-2 w-[65%] h-[65%] block align-middle" />
                                         </div>
                                         <div
-                                          ref={iconRef}
+                                          // ref={backgroundRef}
                                           onClick={() => {
                                             const fileInput =
                                               document.getElementById(
@@ -645,7 +695,7 @@ export default function CreateFormFinal() {
                                 <div className="datetime-timezone w-auto max-w-full">
                                   <div className="datetime-input max-w-[13.5rem] flex items-stretch transition-all duration-300 ease-in-out">
                                     <div className="date-input border-r-0 rounded-tl rounded-tr-none rounded-br-none rounded-lr border-transparent transition-all duration-300 ease-in-out flex-1 flex items-center">
-                                      <div className="wrapper flex-1 relative flex items-center">
+                                      <div className="wrapper border-top-left flex-1 relative flex items-center">
                                         <Input
                                           type="date"
                                           id="date"
@@ -664,7 +714,7 @@ export default function CreateFormFinal() {
                                     </div>
                                     <div className="divider w-px bg-transparent transition-all duration-300 ease-in-out"></div>
                                     <div className="time-input border-l-0 rounded-tl-none rounded-tr rounded-br rounded-bl-none border border-solid border-transparent bg-[rgba(19,21,23,0.04)] transition-all duration-300 ease-in-out flex items-center">
-                                      <div className="lux-menu-trigger flex cursor-pointer min-w-0">
+                                      <div className="border-top-right lux-menu-trigger flex cursor-pointer min-w-0">
                                         <Input
                                           type="time"
                                           id="time"
@@ -685,22 +735,22 @@ export default function CreateFormFinal() {
                                 </div>
                               </div>
                             </div>
-                            <div className="end-row p-[0.25rem_0.25rem_0.25rem_0.75rem] flex justify-between items-baseline mb-2">
+                            <div className="end-row p-[0.25rem_0.25rem_0.25rem_0.75rem] flex justify-between items-baseline">
                               <div className="label w-12">Kết thúc</div>
                               <div className="pr-12 p-0">
                                 <div className="datetime-timezone w-auto max-w-full">
                                   <div className="datetime-input max-w-[13.5rem] flex items-stretch transition-all duration-300 ease-in-out">
                                     <div className="date-input border-r-0 rounded-tl rounded-tr-none rounded-br-none rounded-lr border-transparent transition-all duration-300 ease-in-out flex-1 flex items-center">
-                                      <div className="wrapper flex-1 relative flex items-center">
+                                      <div className="wrapper border-top-left flex-1 relative flex items-center">
                                         <Input
                                           type="date"
                                           id="date"
-                                          value={eventReq.endDate}
+                                          value={endDate.date}
                                           onChange={(e) =>
-                                            SetEventReq({
-                                              ...eventReq,
-                                              endDate: e.target.value,
-                                            })
+                                            updateEndDate(
+                                              "date",
+                                              e.target.value
+                                            )
                                           }
                                           className="bg-transparent dark:bg-[rgba(255,255,255,0.08)] dark:text-[#fff]"
                                           variant="flat"
@@ -710,18 +760,21 @@ export default function CreateFormFinal() {
                                     </div>
                                     <div className="divider w-px bg-transparent transition-all duration-300 ease-in-out"></div>
                                     <div className="time-input border-l-0 rounded-tl-none rounded-tr rounded-br rounded-bl-none border border-solid border-transparent bg-[rgba(19,21,23,0.04)] transition-all duration-300 ease-in-out flex items-center">
-                                      <div className="lux-menu-trigger flex cursor-pointer min-w-0">
-                                        {/* <Input
-                                                                                    type="time"
-                                                                                    id="time"
-                                                                                    value={getEventReq.endDate}
-                                                                                    onChange={(e) =>
-                                                                                        setEventReq({ ...getEventReq, endDate: e.target.value })
-                                                                                    }
-                                                                                    className='bg-transparent dark:bg-[rgba(255,255,255,0.08)] dark:text-[#fff]'
-                                                                                    variant='flat'
-                                                                                    radius='none'
-                                                                                /> */}
+                                      <div className="lux-menu-trigger border-top-right flex cursor-pointer min-w-0">
+                                        <Input
+                                          type="time"
+                                          id="time"
+                                          value={endDate.time}
+                                          onChange={(e) =>
+                                            updateEndDate(
+                                              "time",
+                                              e.target.value
+                                            )
+                                          }
+                                          className="bg-transparent dark:bg-[rgba(255,255,255,0.08)] dark:text-[#fff]"
+                                          variant="flat"
+                                          radius="none"
+                                        />
                                       </div>
                                     </div>
                                   </div>
@@ -1373,7 +1426,9 @@ export default function CreateFormFinal() {
                                   color="success"
                                   className="translate-y-0.5 mr-2"
                                 />
-                                <span className="label">Đang đăng nhập..</span>
+                                <span className="label">
+                                  Đang tạo sự kiện..
+                                </span>
                               </>
                             ) : (
                               <>
@@ -1392,27 +1447,39 @@ export default function CreateFormFinal() {
                           role="button"
                           className="photo-container bg-[rgba(19,21,23,0.04)] rounded-lg overflow-hidden outline-offset-2 outline-none transition-all duration-300 ease-in-out relative cursor-pointer"
                         >
-                          {/* <Input
-                                                        type='file'
-                                                        id="image" name="image"
-                                                        accept='image/*,.jpg,.jpeg,.png,.gif,.webp'
-                                                        onChange={handleImageChange}
-                                                        tabIndex={-1}
-                                                        className='hidden text-inherit m-0'
-                                                    /> */}
                           <div className="image has-image transition-all duration-300 ease-in-out">
                             <div className="img-aspect-ratio w-full bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)] overflow-hidden relative rounded-lg">
-                              <Image
-                                src="https://cdn.lu.ma/cdn-cgi/image/format=auto,fit=cover,dpr=2,quality=75,width=400,height=400/event-defaults/1-1/standard1.png"
-                                className="cursor-pointer top-0 left-0 w-full h-full object-cover align-middle"
-                              />
+                              <div
+                                ref={backgroundRef}
+                                className="bg-[url('https://cdn.lu.ma/cdn-cgi/image/format=auto,fit=cover,dpr=2,quality=75,width=400,height=400/event-defaults/1-1/standard1.png')] cursor-pointer top-0 left-0  object-cover align-middle w-[auto] h-[380px] rounded-[0.5rem] bg-center bg-cover flex justify-center items-center bg-[#ebeced] dark:bg-[#333537]"
+                              ></div>
                             </div>
                           </div>
-                          {/* phần hình ảnh chỗ này thì tui chưa làm được làm thế nào để nó mở file lên */}
-                          <div className="z-20 absolute bottom-[-2px] right-[-2px] w-[calc(2rem+2px)] h-[calc(2rem+2px)] text-[#fff] dark:text-[rgb(19,21,23)] bg-[rgb(19,21,23)] dark:bg-[#fff] border-2 border-solid border-[#fff] dark:border-[rgb(19,21,23)] rounded-lg transition-all duration-300 ease-in-out justify-center flex items-center">
-                            {/* <FileImage className='block w-4 h-4 align-middle' />
-                                                        <input type="file" id="image" name="image" className='-z-0 hidden' accept="image/*" onChange={handleImageChange} />
-                                                        {formData.cover && <img src={formData.cover} alt="Preview" />} */}
+                          <div className="z-20 absolute bottom-[-2px] right-[-2px] w-[calc(2rem+2px)] text-[#fff] dark:text-[rgb(19,21,23)] bg-[rgb(19,21,23)] dark:bg-[#fff] border-2 border-solid dark:border-[rgb(19,21,23)] rounded-lg transition-all duration-300 ease-in-out justify-center flex items-center border-[#bcc0ec]">
+                            <input
+                              aria-label="avatarImage"
+                              type="file"
+                              id="avatarImage"
+                              className="hidden"
+                              onChange={handleBackgroundUpload}
+                            />
+                            <div
+                              onClick={() => {
+                                const fileInput =
+                                  document.getElementById("avatarImage");
+                                if (fileInput) {
+                                  fileInput.click();
+                                }
+                              }}
+                              id="upload-icon"
+                              className="rounded-[0.5rem] bg-center bg-cover flex justify-center items-center text-[#fff] dark:text-[#212325] bg-[rgb(19,21,23)] dark:bg-[#fff] hover:bg-[#de3163] w-[35%] h-[35%] min-w-[30px] min-h-[30px] border-2 border-solid border-[#fff] dark:border-[#212325] absolute right-[-1px] bottom-[-1px] origin-center transition-all duration-300 ease-in-out"
+                            >
+                              {isUploading ? (
+                                <Spinner size="sm" color="default" />
+                              ) : (
+                                <ArrowUp className="stroke-[2.5] w-[65%] h-[65%] block align-middle" />
+                              )}{" "}
+                            </div>
                           </div>
                         </div>
                       </div>
