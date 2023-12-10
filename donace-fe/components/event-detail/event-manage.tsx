@@ -14,6 +14,7 @@ import { addHours } from "date-fns";
 import { Dropdown, DropdownItem, DropdownTrigger, DropdownMenu, DropdownSection, DropdownItemProps } from "@nextui-org/dropdown";
 import { Player } from "@lottiefiles/react-lottie-player";
 import Animation from "../Animation_1701106485452.json";
+import QRScanner from "../QR/QRScanner";
 
 
 const goongGeocoder = require("@goongmaps/goong-geocoder");
@@ -82,7 +83,7 @@ export default function EventManage(props: any) {
     const [editEventDesc, setEditEventDesc] = useState(null);
     const [editEventStartDate, setEventStartDate] = useState(null);
     const [editEventEndDate, setEventEndDate] = useState(null);
-
+    const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
     const [showOfflineContent, setShowOfflineContent] = React.useState(true);
     const [selectedOption, setSelectedOption] = React.useState(
@@ -280,6 +281,33 @@ export default function EventManage(props: any) {
         ImportMap();
     }, []);
 
+
+    // QR Code
+    const qrcodeList = useState<any>([]);
+    const handleChildDataChange = (dataFromChild: any) => {
+        // Xử lý dữ liệu từ component con ở đây
+        if (dataFromChild == "error") {
+            console.log("error")
+            return;
+        } else {
+            if (qrcodeList.includes(dataFromChild)) {
+                console.log("already in list")
+            } else {
+                qrcodeList.push(dataFromChild)
+                try {
+                    fetchWrapper.post("/api/UserTickets/Check-in", {
+                        dataFromChild,
+                        id
+                    }).then(data => console.log(data))
+                }
+                catch (error) {
+                    console.log(error)
+                }
+            }
+        }
+
+    };
+
     return (
         <div className="page-content">
             <div className="page-header opacity-[2] pl-4 pr-4 pt-12 max-width-global margin-global">
@@ -356,12 +384,13 @@ export default function EventManage(props: any) {
                             <div className="gap-3 flex items-center">
                                 <div className="font-medium">Sự kiện này đang diễn ra.</div>
                             </div>
-                            <Link
+                            <Button
                                 className="text-[#fff] dark:text-[rgb(9,21,23)] bg-[#d19d20] border-[#d19d20] border border-solid transition-all duration-300 ease-in-out donace-button-w-fit flex items-center cursor-pointer"
-                                underline="none"
+
                             >
                                 <div className="lael">Check In</div>
-                            </Link>
+                            </Button>
+
                         </div>
                     ) : (
                         <div className="hidden"></div>
@@ -435,13 +464,13 @@ export default function EventManage(props: any) {
                                                 </div>
                                             </div>
                                             <div className="text-sm text-[#737577] dark:text-[#d2d4d7] mt-4">Địa chỉ này sẽ được công khai trong trang Sự kiện.</div>
-                                            <Link
+                                            <Button onPress={onOpen}
                                                 className="text-black-more-blur-light-theme dark:text-[rgba(255,255,255,0.64)] bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)] border-transparent border border-solid transition-all duration-300 ease-in-out donace-button mt-4 flex items-center cursor-pointer"
-                                                underline="none"
+
                                             >
                                                 <ScanLine className="mr-1.5 stroke-2 w-3.5 h-3.5 flex-shrink-0 block align-middle mt-0.5" />
                                                 <div className="label">Check In</div>
-                                            </Link>
+                                            </Button>
                                         </div>
                                     </div>
                                     <div className="flex-1"></div>
@@ -615,7 +644,7 @@ export default function EventManage(props: any) {
                                     </div>
                                     <div className="location w-full mt-2">
                                         <div className="time-title font-semibold text-lg">Chọn địa điểm</div>
-                                        <div className="gap-4 flex items-center "  onClick={modalEditMap.onOpen}>
+                                        <div className="gap-4 flex items-center " onClick={modalEditMap.onOpen}>
                                             <Input
                                                 className="hidden"
                                                 value={eventReq.lat}
@@ -637,7 +666,7 @@ export default function EventManage(props: any) {
                                                 }
                                             />
                                             <div
-                                               
+
                                                 className="w-full p-[0.25rem_1rem_0.25rem] cursor-pointer transition-all duration-300 ease-in-out block relative rounded-xl bg-[#f3f4f5] dark:bg-[rgba(255,255,255,0.04)] border border-solid border-[#fff] dark:border-[rgba(255,255,255,0.04)] overflow-hidden"
                                             >
                                                 <div className="font-medium">
@@ -840,6 +869,21 @@ export default function EventManage(props: any) {
                                     </div>
                                 </div>
                             </ModalBody>
+                        </>
+                    )}
+                </ModalContent>
+            </Modal>
+            <Modal isOpen={isOpen} onOpenChange={onOpenChange} backdrop="blur" size="4xl">
+                <ModalContent>
+                    {(onClose) => (
+                        <>
+                            <ModalHeader className="flex flex-col gap-1">Scan QR code below</ModalHeader>
+                            <ModalBody>
+                                <div className='w-full  m-auto'>
+                                    <QRScanner onChildDataChange={handleChildDataChange} />
+                                </div>
+                            </ModalBody>
+
                         </>
                     )}
                 </ModalContent>

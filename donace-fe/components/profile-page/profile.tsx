@@ -30,6 +30,7 @@ import { FaTiktok } from "react-icons/fa";
 import { fetchWrapper } from "../../helpers/fetch-wrapper";
 import { ItemEventsProfile, UserProfile } from "@/types/DonaceType";
 
+
 interface DateInfo {
   year: string;
   month: string;
@@ -69,7 +70,7 @@ const pastDateFormatted = currentDate
 
 export default function ProfilePage() {
   const dateTimeTrue = true;
-
+  const [loading, setLoading] = useState(false);
   let [userProfile, setUserProfile] = useState<null | UserProfile>(null);
   var [futureEvents, setFutureEvents] = useState<ItemEventsProfile[]>();
 
@@ -117,17 +118,23 @@ export default function ProfilePage() {
   const handleImageChange = async (
     e: any
   ) => {
-
     const selectedFile = e.target.files[0];
     if (!selectedFile) return;
 
     const FileData = new FormData();
     FileData.append("file", selectedFile);
+
+    setLoading(true);
+
     const url = await fetchWrapper.postFile("api/Common/upload-file", FileData);
     // setBackgrounUrl(text);
-
+    if (url != null) {
+      console.log(url)
+      setLoading(false);
+    }
+    
     formData.avatar = url;
-    setSelectedImage(url);
+
     console.log("🚀 ~ file: profile.tsx:36 ~ updateProfileHandle ~ res:", url);
   };
   const updateProfileHandle = async () => {
@@ -148,10 +155,10 @@ export default function ProfilePage() {
         location.reload(); // Làm mới trang khi nút được nhấn
       });
 
+    setSelectedImage(formData.avatar);
+
     console.log("🚀 ~ file: profile.tsx:36 ~ updateProfileHandle ~ res:", res);
   };
-
-
 
   // call api hinh
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -163,7 +170,7 @@ export default function ProfilePage() {
   };
 
   return (
-    <div className="page-content">
+    <div className="page-content relative">
       <div className="profile-page-theme font-sans font-normal">
         <div>
           <div className="profile-page-wrapper">
@@ -182,7 +189,6 @@ export default function ProfilePage() {
                             src={
                               selectedImage ||
                               userProfile?.result.avatar ||
-                              selectedImage ||
                               "https://cdn.lu.ma/cdn-cgi/image/format=auto,fit=cover,dpr=2,quality=75,width=100,height=100/avatars-default/avatar_8.png"
                             }
                             radius="full"
@@ -330,9 +336,9 @@ export default function ProfilePage() {
                                                 className="w-24 h-24 bg-center bg-cover flex justify-center items-center bg-[#ebeced]"
                                                 radius="full"
                                                 src={
+                                                  formData.avatar ||
                                                   selectedImage ||
                                                   userProfile?.result.avatar ||
-                                                  selectedImage ||
                                                   "https://cdn.lu.ma/cdn-cgi/image/format=auto,fit=cover,dpr=2,quality=75,width=100,height=100/avatars-default/avatar_8.png"
                                                 }
                                               />
@@ -612,6 +618,16 @@ export default function ProfilePage() {
                                       </div>
                                     </form>
                                   </div>
+                                  {
+                                    loading ?
+                                      <div className="absolute top-0 bottom-0 w-full backdrop-blur-lg z-auto" >
+                                        <div className="flex flex-row gap-2 h-full justify-center items-center">
+                                          <div className="w-4 h-4 rounded-full bg-blue-700 animate-bounce [animation-delay:.7s]"></div>
+                                          <div className="w-4 h-4 rounded-full bg-blue-700 animate-bounce [animation-delay:.3s]"></div>
+                                          <div className="w-4 h-4 rounded-full bg-blue-700 animate-bounce [animation-delay:.7s]"></div>
+                                        </div>
+                                      </div> : <div></div>
+                                  }
                                 </ModalBody>
                                 <ModalFooter className="border-t border-solid border-t-[#eff3f5]">
                                   <Button
@@ -756,6 +772,8 @@ export default function ProfilePage() {
           </div>
         </div>
       </div>
+
+
     </div>
   );
 }

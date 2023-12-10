@@ -101,3 +101,23 @@ async function handleResponse(response: Response) {
   }
   return data;
 }
+
+
+//  ticket request body {
+//   "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+//   "eventId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+// }
+
+
+// async function checkInUserTicket(body: any) {
+//   const checkinUrl ="/api/UserTickets/Check-in";
+//   const requestOptions = {
+//     method: "POST",
+//     headers: { "Content-Type": "application/json", ...authHeader() },
+//     credentials: "include",
+//     body: JSON.stringify(body),
+//   } as RequestInit;
+
+//   const response = await fetchRelative(checkinUrl, requestOptions);
+//   return handleResponse(response);
+// }
