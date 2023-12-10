@@ -17,6 +17,9 @@ export default function EventPayment(props: any) {
     const [showPriceInput, setShowPriceInput] = useState(false);
     const [ticketPrice, setTicketPrice] = useState('');
 
+    const [tmnCode, setTmnCode] = useState<string>("");
+    const [hashSecret, setHashSecret] = useState<string>("");
+
     const handleTicketTypeChange = (event: any) => {
         setShowPriceInput(event.target.value === 'paid');
     };
@@ -32,6 +35,8 @@ export default function EventPayment(props: any) {
     useEffect(() => {
         fetchWrapper.get(`api/Event/detail-by-id?id=${id}`)
             .then(data => setEventDetail(data));
+
+        // fetchWrapper.post('api/Payment/connect', )
     }, []);
     return (
         <div className="page-content">

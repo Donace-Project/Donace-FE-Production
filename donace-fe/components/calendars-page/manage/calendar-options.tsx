@@ -4,7 +4,7 @@ import { GetCalendarById } from "@/types/DonaceType";
 import { Avatar } from "@nextui-org/avatar";
 import { Button } from "@nextui-org/button";
 import { Link } from "@nextui-org/link";
-import { ArrowUpRight, Settings2, Trash2 } from "lucide-react";
+import { ArrowUpRight, Settings2, Trash2, Wand2 } from "lucide-react";
 import { useEffect, useState } from "react";
 
 export type Calendar = {
@@ -141,17 +141,19 @@ export default function CalendarSettingOptions(props: any) {
                     <div className="sidebar">
                         <div className="tabs flex-col gap-3 sticky top-[6.5rem] flex">
                             <Link
+                                href={`/calendars/manage/${id}/settings`}
                                 className="transition-all duration-300 ease-in-out cursor-pointer"
                                 underline="none"
                             >
-                                <div className="tab gap-3 text-black-light-theme rounded-lg font-medium transition-all duration-300 ease-in-out flex items-center">
+                                <div className="tab gap-3 text-black-blur-light-theme hover:text-black rounded-lg font-medium transition-all duration-300 ease-in-out flex items-center">
                                     <div className="icon">
-                                        <Settings2 className="block w-4 h-4 align-middle" />
+                                        <Wand2 className="block w-4 h-4 align-middle" />
                                     </div>
                                     <div className="whitespace-nowrap">Hiển thị</div>
                                 </div>
                             </Link>
                             <Link
+                                href={`/calendars/manage/${id}/settings/options`}
                                 className="transition-all duration-300 ease-in-out cursor-pointer"
                                 underline="none"
                             >
@@ -159,7 +161,7 @@ export default function CalendarSettingOptions(props: any) {
                                     <div className="icon">
                                         <Settings2 className="block w-4 h-4 align-middle" />
                                     </div>
-                                    <div className="whitespace-nowrap">Cài đặt</div>
+                                    <div className="whitespace-nowrap">Tùy chọn</div>
                                 </div>
                             </Link>
                         </div>
@@ -169,18 +171,18 @@ export default function CalendarSettingOptions(props: any) {
                             <div className="can-divide with-divider medium">
                                 <div className="section-title-wrapper medium">
                                     <div className="section-title-row mb-5 flex justify-between items-center">
-                                        <h2 className="text-xl font-semibold text-black-light-theme mb-0">Delete Calendars</h2>
+                                        <h2 className="text-xl font-semibold text-black-light-theme mb-0">Xóa Lịch</h2>
                                     </div>
                                     <div className="section-title -mt-3.5 mb-5 text-[#737577] text-base">
-                                        Permanently delete this calendar. This operation cannot be undone. Subscribers won't be notified.
+                                        Xóa vĩnh viễn Lịch này. Thao tác này không thể hoàn tác. Người đăng ký sẽ không được thông báo.
                                     </div>
                                 </div>
                                 <Button
                                     type="button"
                                     className="text-[#fff] bg-[#e83b47] border-[#e83b47] border border-solid cursor-pointer transition-all duration-300 ease-in-out donace-button-w-fit flex items-center"
                                 >
-                                    <Trash2 className="mr-2 stroke-2 w-4 h-4 flex-shrink-0 block"/>
-                                    <div className="label">Delete Calendar</div>
+                                    <Trash2 className="mr-2 stroke-2 w-4 h-4 flex-shrink-0 block" />
+                                    <div className="label">Xóa</div>
                                 </Button>
                             </div>
                         </div>

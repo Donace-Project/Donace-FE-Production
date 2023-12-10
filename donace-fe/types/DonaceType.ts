@@ -293,4 +293,24 @@ export type UpdateEventModel = {
     calendarId: string
     id: string
 }
-// ***********8
+// ***********
+
+// USER JOIN EVENT
+export type ListUserJoinEvent = {
+    eventId: string
+    userId: string
+    status: number
+    id: string
+    name: string
+    avatar: string
+}
+
+// *************
+
+// USER JOIN EVENT
+export type UserJoinEvent = {
+    userId: string
+    calendarId: string
+    eventId: string
+}
+// ****************

@@ -1,17 +1,17 @@
 'use client';
 import { fetchWrapper } from "@/helpers/fetch-wrapper";
-import { EventDetailModels } from "@/types/DonaceType";
+import { EventDetailModels, ListUserJoinEvent, UserJoinEvent } from "@/types/DonaceType";
 import { Link } from "@nextui-org/link";
-import { AlertCircle, ArrowUpRight, ArrowUpToLine, CheckCircle2, MailOpen, PencilLine, SearchIcon, Send, Sparkles, Trash, Upload, Users, XCircle } from "lucide-react";
+import { ArrowUpRight, ArrowUpToLine, MailOpen, PencilLine, SearchIcon, Send, Sparkles, Upload, Users, XCircle } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Avatar, Divider, Progress, Radio, RadioGroup } from "@nextui-org/react";
+import { Avatar, Divider, Progress } from "@nextui-org/react";
 import React from "react";
 import { Button } from "@nextui-org/button";
 import { Select, SelectItem } from "@nextui-org/react";
 import { usersAll } from "../data"
 import { Input } from "@nextui-org/input";
 import { Modal, ModalContent, ModalHeader, ModalBody, useDisclosure, ModalFooter } from "@nextui-org/modal";
-import { Checkbox, User } from "@nextui-org/react";
+import { User } from "@nextui-org/react";
 import { Table, TableHeader, TableBody, TableColumn, TableRow, TableCell } from "@nextui-org/react";
 
 interface DateTimeInfo {
@@ -74,7 +74,10 @@ export default function EventUserJoin(props: any) {
     }, [email]);
 
     var { id } = props
+
     var [eventDetail, setEventDetail] = useState<EventDetailModels | null>(null);
+    const [userJoin, setUserJoin] = useState<ListUserJoinEvent | null>(null);
+    const setCancelEvent = useState(null);
 
     const [value, setValue] = React.useState(0);
     React.useEffect(() => {
@@ -85,9 +88,62 @@ export default function EventUserJoin(props: any) {
         return () => clearInterval(interval);
     }, []);
 
+    const [eventReq, setEventReq] = useState({
+        startDate: "",
+        endDate: "",
+        calendarId: "",
+        name: "",
+        lat: "",
+        long: "",
+        cover: "",
+        addressName: "",
+        capacity: "",
+    });
+
+    const handleClick = async () => {
+        await handleSubmit;
+    };
+
+    const handleSubmit = async (e: any) => {
+        e.preventDefault();
+        const dataToSend = {
+            id: eventDetail?.id,
+            calendarId: eventDetail?.calendarId,
+            name: eventDetail?.name,
+            startDate: eventDetail?.startDate,
+            endDate: eventDetail?.endDate,
+            lat: eventDetail?.lat,
+            long: eventDetail?.long,
+            addressName: eventDetail?.addressName,
+            capacity: eventReq.capacity,
+        };
+        try {
+            if (!dataToSend.name) {
+                console.error("Name field is required.");
+                return;
+            }
+            const response = await fetchWrapper.put("/api/Event", dataToSend);
+            if (!response.success) {
+                console.error(`Lỗi khi cập nhật số lượng: ${response.error}`);
+                return;
+            }
+            console.log(<b>Đã cập nhậtt số lượng thành công!</b>);
+        } catch (error) {
+            console.error(`Lỗi: ${String(Error)}`);
+        }
+    }
+
     useEffect(() => {
         fetchWrapper.get(`api/Event/detail-by-id?id=${id}`)
             .then(data => setEventDetail(data));
+
+        fetchWrapper.get(`api/Event/user-join-${id}`)
+            .then(data => setUserJoin(data));
+
+        // fetchWrapper.post('api/Event/user-join',)
+
+        // fetchWrapper.post(`api/Event/cancel?id=${id}`, null)
+        //     .then(data => setCancelEvent);
     }, []);
 
     return (
@@ -241,70 +297,81 @@ export default function EventUserJoin(props: any) {
                                 <ModalContent>
                                     {(onClose) => (
                                         <>
-                                            <ModalBody className="w-full p-[1rem_1.25rem]">
-                                                <div className="flex flex-col">
-                                                    <div className="lux-alert-top pt-1">
-                                                        <div className="icon-wrapper m-[0.25rem_0px_0.75rem] w-14 h-14 rounded-full text-[#737577] dark:text-[#d2d4d7] bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)] justify-center flex items-center">
-                                                            <Upload className="w-8 h-8 block align-middle" />
+                                            <form action={"#"} onSubmit={handleSubmit}>
+
+                                                <ModalBody className="w-full p-[1rem_1.25rem]">
+                                                    <div className="flex flex-col">
+                                                        <div className="lux-alert-top pt-1">
+                                                            <div className="icon-wrapper m-[0.25rem_0px_0.75rem] w-14 h-14 rounded-full text-[#737577] dark:text-[#d2d4d7] bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)] justify-center flex items-center">
+                                                                <Upload className="w-8 h-8 block align-middle" />
+                                                            </div>
+                                                            <div className="title font-semibold text-xl mb-2">
+                                                                Chỉnh sửa Số lượng
+                                                            </div>
+                                                            <div className="desc text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)]">
+                                                                Đóng đăng ký tự động khi đã đạt số
+                                                                lượng đăng ký. Chỉ những khách mời
+                                                                được phê duyệt mới được tính vào số
+                                                                lượng đã đủ.
+                                                            </div>
                                                         </div>
-                                                        <div className="title font-semibold text-xl mb-2">
-                                                            Chỉnh sửa Số lượng
-                                                        </div>
-                                                        <div className="desc text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)]">
-                                                            Đóng đăng ký tự động khi đã đạt số
-                                                            lượng đăng ký. Chỉ những khách mời
-                                                            được phê duyệt mới được tính vào số
-                                                            lượng đã đủ.
-                                                        </div>
-                                                    </div>
-                                                    <div className="gap-4 pt-1 mt-2 flex flex-col">
-                                                        <div className="lux-input-wrapper medium max-w-[auto]">
-                                                            <div className="inner-wrapper inline-block w-full">
-                                                                <label className="text-sm cursor-pointer block mb-1.5 font-medium text-black-more-blur-light-theme transition-all duration-300 ease-in-out">
-                                                                    <div>Số lượng</div>
-                                                                </label>
-                                                                <div className="input-wrapper flex items-baseline">
-                                                                    <div className="flex-1 flex items-center">
-                                                                        <div>&nbsp;</div>
-                                                                        <Input
-                                                                            placeholder="99"
-                                                                            size="md"
-                                                                            variant="bordered"
-                                                                            type="number"
-                                                                            inputMode="numeric"
-                                                                            step={1}
-                                                                            min={1}
-                                                                            classNames={{
-                                                                                input: ["text-base"],
-                                                                            }}
-                                                                        />
+                                                        <div className="gap-4 pt-1 mt-2 flex flex-col">
+                                                            <div className="lux-input-wrapper medium max-w-[auto]">
+                                                                <div className="inner-wrapper inline-block w-full">
+                                                                    <label className="text-sm cursor-pointer block mb-1.5 font-medium text-black-more-blur-light-theme transition-all duration-300 ease-in-out">
+                                                                        <div>Số lượng</div>
+                                                                    </label>
+                                                                    <div className="input-wrapper flex items-baseline">
+                                                                        <div className="flex-1 flex items-center">
+                                                                            <div>&nbsp;</div>
+                                                                            <Input
+                                                                                placeholder="99"
+                                                                                size="md"
+                                                                                variant="bordered"
+                                                                                type="number"
+                                                                                inputMode="numeric"
+                                                                                step={1}
+                                                                                min={1}
+                                                                                classNames={{
+                                                                                    input: ["text-base"],
+                                                                                }}
+                                                                                value={eventReq.capacity}
+                                                                                onChange={(e) =>
+                                                                                    setEventReq({
+                                                                                        ...eventReq,
+                                                                                        capacity: e.target.value,
+                                                                                    })
+                                                                                }
+                                                                            />
+                                                                        </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                        <div className="gap-2 flex justify-between items-center">
-                                                            <Button
-                                                                onPress={modalEditCapacity.onClose}
-                                                                type="submit"
-                                                                className="text-[#fff] bg-[#333537] border-[#333537] border border-solid cursor-pointer transition-all duration-300 ease-in-out donace-button mt-4 flex items-center m-0"
-                                                            >
-                                                                <div className="label">
-                                                                    Đặt giới hạn
-                                                                </div>
-                                                            </Button>
-                                                            <Button
-                                                                onPress={modalEditCapacity.onClose}
-                                                                type="button"
-                                                                className="text-black-more-blur-light-theme bg-[rgba(19,21,23,0.04)] border-transparent border border-solid cursor-pointer transition-all duration-300 ease-in-out donace-button mt-4 flex items-center m-0"
-                                                            >
-                                                                <div className="label">
-                                                                    Không giới hạn
-                                                                </div>
-                                                            </Button>
+                                                            <div className="gap-2 flex justify-between items-center">
+                                                                <Button
+                                                                    onPress={modalEditCapacity.onClose}
+                                                                    onClick={handleClick}
+                                                                    type="submit"
+                                                                    className="text-[#fff] bg-[#333537] border-[#333537] border border-solid cursor-pointer transition-all duration-300 ease-in-out donace-button mt-4 flex items-center m-0"
+                                                                >
+                                                                    <div className="label">
+                                                                        Đặt giới hạn
+                                                                    </div>
+                                                                </Button>
+                                                                <Button
+                                                                    onPress={modalEditCapacity.onClose}
+                                                                    type="button"
+                                                                    className="text-black-more-blur-light-theme bg-[rgba(19,21,23,0.04)] border-transparent border border-solid cursor-pointer transition-all duration-300 ease-in-out donace-button mt-4 flex items-center m-0"
+                                                                >
+                                                                    <div className="label">
+                                                                        Không giới hạn
+                                                                    </div>
+                                                                </Button>
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                            </ModalBody>
+                                                </ModalBody>
+                                            </form>
                                         </>
                                     )}
                                 </ModalContent>
@@ -375,36 +442,40 @@ export default function EventUserJoin(props: any) {
                                 <div className="label">5 tháng 9</div>
                             </div>
                         </div>
-                        <div className="simple-table-wrapper bg-[#f2f3f4] mt-2 border border-solid border-[rgba(19,21,23,0.08)] dark:border-[rgba(255,255,255,0.08)] dark:bg-[rgba(255,255,255,0.04)]">
-                            <div className="base-row border-b-0 border-t-0 p-[0.75rem_1rem] cursor-pointer transition-all duration-300 ease-in-out">
-                                <div className="gap-3 flex justify-between items-center">
-                                    <div className="avatar-wrapper small">
-                                        <Avatar
-                                            radius="full"
-                                            // src={userProfile?.result.avatar ? userProfile.result.avatar : "https://cdn.lu.ma/cdn-cgi/image/format=auto,fit=cover,dpr=2,background=white,quality=75,width=32,height=32/avatars-default/avatar_8.png"}
-                                            src="https://cdn.lu.ma/cdn-cgi/image/format=auto,fit=cover,dpr=2,background=white,quality=75,width=32,height=32/avatars-default/avatar_8.png"
-                                            name="Donace"
-                                            className="w-6 h-6 bg-center bg-cover bg-[#fff] relative"
-                                        />
-                                    </div>
-                                    <div className="info overflow-hidden text-ellipsis whitespace-nowrap text-[#b3b5b7] min-w-0 flex-1">
-                                        <div className="name inline">
-                                            <div className="inline font-medium overflow-hidden text-ellipsis whitespace-nowrap text-black-light-theme dark:text-[#fff] mr-2 min-w-0">Nguyễn Hoàng Tùng</div>
+                        {userJoin?.eventId ? (
+                            <div className="simple-table-wrapper bg-[#f2f3f4] mt-2 border border-solid border-[rgba(19,21,23,0.08)] dark:border-[rgba(255,255,255,0.08)] dark:bg-[rgba(255,255,255,0.04)]">
+                                <div className="base-row border-b-0 border-t-0 p-[0.75rem_1rem] cursor-pointer transition-all duration-300 ease-in-out">
+                                    <div className="gap-3 flex justify-between items-center">
+                                        <div className="avatar-wrapper small">
+                                            <Avatar
+                                                radius="full"
+                                                src={userJoin.avatar ? userJoin.avatar : "https://cdn.lu.ma/cdn-cgi/image/format=auto,fit=cover,dpr=2,background=white,quality=75,width=32,height=32/avatars-default/avatar_8.png"}
+                                                // src="https://cdn.lu.ma/cdn-cgi/image/format=auto,fit=cover,dpr=2,background=white,quality=75,width=32,height=32/avatars-default/avatar_8.png"
+                                                name="Donace"
+                                                className="w-6 h-6 bg-center bg-cover bg-[#fff] relative"
+                                            />
                                         </div>
-                                        <div className="email inline overflow-hidden text-ellipsis whitespace-nowrap text-[#b3b5b7] dark:text-[#939597] min-w-0">nguyenhoangtung@gmail.com</div>
+                                        <div className="info overflow-hidden text-ellipsis whitespace-nowrap text-[#b3b5b7] min-w-0 flex-1">
+                                            <div className="name inline">
+                                                <div className="inline font-medium overflow-hidden text-ellipsis whitespace-nowrap text-black-light-theme dark:text-[#fff] mr-2 min-w-0">{userJoin.name}</div>
+                                            </div>
+                                            {/* TODO: Thêm field Email */}
+                                            <div className="email inline overflow-hidden text-ellipsis whitespace-nowrap text-[#b3b5b7] dark:text-[#939597] min-w-0">{userJoin.name}</div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    <div className="lux-empty-state text-center mt-16 flex flex-col items-center">
-                        <div className="icon justify-center flex items-center">
-                            <Users className="w-16 h-16 text-black-blur-light-theme block align-middle" />
-                        </div>
-                        <h3 className="text-black-more-blur-light-theme p-0 mt-4 mb-0 text-lg font-semibold">Không có khách nào tham dự</h3>
-                        <div className="pl-12 pr-12 text-black-blur-light-theme mt-2">
-                            Chia sẻ hoặc Mời bạn bè tham gia sự kiện!
-                        </div>
+                        ) : (
+                            <div className="lux-empty-state text-center mt-16 flex flex-col items-center">
+                                <div className="icon justify-center flex items-center">
+                                    <Users className="w-16 h-16 text-black-blur-light-theme block align-middle" />
+                                </div>
+                                <h3 className="text-black-more-blur-light-theme p-0 mt-4 mb-0 text-lg font-semibold">Không có khách nào tham dự</h3>
+                                <div className="pl-12 pr-12 text-black-blur-light-theme mt-2">
+                                    Chia sẻ hoặc Mời bạn bè tham gia sự kiện!
+                                </div>
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>
@@ -463,7 +534,7 @@ export default function EventUserJoin(props: any) {
                                             </button>
                                         </div>
                                     </div>
-                                    <div className="right flex flex-col w-[70%] min-w-[350px] h-full relative">
+                                    <div className="right flex flex-col w-[70%] min-w-[350px] min-h-[70dvh] h-full relative">
                                         {showSuggestedContent && (
                                             <div className="min-h-0 flex-1 flex flex-col">
                                                 <div className="search-bar z-20 p-[1rem_1rem_0px] relative">

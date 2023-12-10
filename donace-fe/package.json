@@ -62,6 +62,7 @@
     "react-number-format": "^5.3.1",
     "react-payment-inputs": "^1.1.9",
     "react-router-dom": "^6.18.0",
+    "react-share": "^5.0.3",
     "react-type-animation": "^3.2.0",
     "react-web-qr-reader": "^1.0.4",
     "styled-components": "^6.1.1",
