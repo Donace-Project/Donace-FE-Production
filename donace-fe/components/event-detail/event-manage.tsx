@@ -2,7 +2,7 @@
 import "./global.css";
 import React, { useEffect, useRef, useState } from "react";
 import { Link, Divider, ModalFooter } from "@nextui-org/react";
-import { ArrowUpRight, ChevronDownIcon, MapPin, ScanLine } from "lucide-react";
+import { ArrowUpRight, ChevronDownIcon, MapPin, ScanLine, Video } from "lucide-react";
 import { EventDetailModels, GetCalendarById } from "@/types/DonaceType";
 import { fetchWrapper } from "@/helpers/fetch-wrapper";
 import { Button, ButtonGroup } from "@nextui-org/button";
@@ -57,10 +57,7 @@ const ConvertDateTime = (dateTime: string): DateTimeInfo => {
 const CovertDate = (date: string) => {
     return date.split("T");
 }
-
 const daysOfWeek = ["Chủ Nhật", "Thứ Hai", "Thứ Ba", "Thứ Tư", "Thứ Năm", "Thứ Sáu", "Thứ Bảy"];
-
-
 const DayOfWeek = (date: string) => {
     let currentDate = new Date(date).getDay();
     return daysOfWeek[currentDate]
@@ -75,7 +72,8 @@ export default function EventManage(props: any) {
     let map: any;
     // Lấy hostname và port
     const [currentURL, setCurrentURL] = useState('');
-    let endedEvent: boolean;
+    const [isEndedEvent, setIsEndedEvent] = useState(false);
+    let [truncatedLinkMeet, setTruncatedLinkMeet] = useState('');
     // -----------------End: Local Variable-----------------
 
     // -----------------Start: useDisclosure-----------------
@@ -315,11 +313,17 @@ export default function EventManage(props: any) {
         const hostname = window.location.hostname;
         const port = window.location.port;
         const finalPort = port === '80' || port === '' ? '3000' : port;
+        const currentDate = new Date();
         setCurrentURL(`http://${hostname}:${finalPort}`);
         console.log(currentURL)
         fetchWrapper.get(`api/Event/detail-by-id?id=${id}`)
             .then(data => {
                 setEventDetail(data)
+                data.linkMeet.length > 30 ? setTruncatedLinkMeet(data.linkMeet.slice(0, 30) + '...') : data.linkMeet;
+                let endedDate = new Date(data.endDate)
+                if (currentDate > endedDate) {
+                    setIsEndedEvent(true);
+                }
                 Refbackground.current.style.backgroundImage = `url(${data.cover})`;
             });
         ImportMap();
@@ -337,7 +341,7 @@ export default function EventManage(props: any) {
                             </div>
                         </h1>
                         <Link
-                            href={`/events/detail/${eventDetail.sorted}/${eventDetail.calendarId}`}
+                            href={`/user/join-event/${eventDetail.id}`}
                             target="_blank"
                             className="text-black-more-blur-light-theme dark:text-[rgba(255,255,255,0.64)] bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)] border-transparent border border-solid transition-all duration-300 ease-in-out donace-button-w-fit flex items-center cursor-pointer"
                             underline="none"
@@ -470,14 +474,26 @@ export default function EventManage(props: any) {
                                             <div>
                                                 <div className="gap-4 flex items-center">
                                                     <div className="icon w-11 h-11 text-[#b3b5b7] dark:text-[#939597] rounded-lg border border-solid border-[rgba(19,21,23,0.08)] dark:border-[rgba(255,255,255,0.08)] flex items-center justify-center flex-shrink-0">
-                                                        <MapPin className="w-5 h-5 block align-middle" />
+                                                        {eventDetail.isOnline ? (
+                                                            <Video className="w-5 h-5 block align-middle" />
+                                                        ) : (
+                                                            <MapPin className="w-5 h-5 block align-middle" />
+                                                        )}
                                                     </div>
                                                     <div>
-                                                        {eventDetail.addressName ? (
-                                                            <>  <div className="font-medium">{eventDetail.addressName}</div></>
-                                                        ) : (
-                                                            <>  <div className="font-medium">Cập nhật sau...</div></>
-                                                        )}
+                                                        {
+                                                            eventDetail.isOnline ? (
+                                                                <><Link href={eventDetail.linkMeet} className="">{truncatedLinkMeet}</Link></>
+
+                                                            ) :
+                                                                (
+                                                                    eventDetail.addressName ? (
+                                                                        <>  <div className="font-medium">{eventDetail.addressName}</div></>
+                                                                    ) : (
+                                                                        <>  <div className="font-medium">Cập nhật sau...</div>
+                                                                        </>
+                                                                    ))
+                                                        }
                                                     </div>
                                                 </div>
                                                 <div className="text-sm text-[#737577] dark:text-[#d2d4d7] mt-4">Địa chỉ này sẽ được công khai trong trang Sự kiện.</div>
@@ -485,44 +501,52 @@ export default function EventManage(props: any) {
                                             </div>
                                         </div>
                                     </div>
-                                    <div className="flex flex-wrap gap-2">
-                                        <Button onPress={onOpen}
-                                            className="text-black-more-blur-light-theme dark:text-[rgba(255,255,255,0.64)] bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)] border-transparent border border-solid transition-all duration-300 ease-in-out donace-button mt-4 flex items-center cursor-pointer"
+                                    {isEndedEvent ? (
+                                        <>
+                                            <div>
+                                                <h2 className="text-lg font-semibold mb-1">Sự kiện đã kết thúc.</h2>
+                                                <p className="text-sm font-normal mb-10">Cảm ơn bạn đã tổ chức sự kiện. Hi vọng đây là một sự kiện thành công!</p>
+                                            </div>
+                                        </>) : (
+                                        <div className="flex flex-wrap gap-2">
+                                            <Button onPress={onOpen}
+                                                className="text-black-more-blur-light-theme dark:text-[rgba(255,255,255,0.64)] bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)] border-transparent border border-solid transition-all duration-300 ease-in-out donace-button mt-4 flex items-center cursor-pointer"
 
-                                        >
-                                            <ScanLine className="mr-1.5 stroke-2 w-3.5 h-3.5 flex-shrink-0 block align-middle mt-0.5" />
-                                            <div className="label">Check In</div>
-                                        </Button>
-                                        {/* <div className="flex-1"></div> */}
-                                        <div className="buttons grid gap-2 grid-cols-2 justify-between w-full">
-                                            <Button
-                                                onPress={modalEditEvent.onOpen}
-                                                type="button"
-                                                className="text-black-more-blur-light-theme bg-[rgba(19,21,23,0.04)] border-transparent border border-solid cursor-pointer transition-all duration-300 ease-in-out donace-button flex items-center m-0"
                                             >
-                                                <div className="label">Chỉnh sửa Sự kiện</div>
+                                                <ScanLine className="mr-1.5 stroke-2 w-3.5 h-3.5 flex-shrink-0 block align-middle mt-0.5" />
+                                                <div className="label">Check In</div>
                                             </Button>
-                                            <input
-                                                aria-label="coverImage"
-                                                type="file"
-                                                id="coverImage"
-                                                className="hidden"
-                                                onChange={handleFileUpload}
-                                            />
-                                            <Button
-                                                onClick={() => {
-                                                    const fileInput = document.getElementById("coverImage");
-                                                    if (fileInput) {
-                                                        fileInput.click();
-                                                    }
-                                                }}
-                                                type="button"
-                                                className="text-black-more-blur-light-theme bg-[rgba(19,21,23,0.04)] border-transparent border border-solid cursor-pointer transition-all duration-300 ease-in-out donace-button flex items-center m-0"
-                                            >
-                                                <div className="label">Đổi Hình ảnh</div>
-                                            </Button>
+                                            <div className="buttons grid gap-2 grid-cols-2 justify-between w-full">
+                                                <Button
+                                                    onPress={modalEditEvent.onOpen}
+                                                    type="button"
+                                                    className="text-black-more-blur-light-theme bg-[rgba(19,21,23,0.04)] border-transparent border border-solid cursor-pointer transition-all duration-300 ease-in-out donace-button flex items-center m-0"
+                                                >
+                                                    <div className="label">Chỉnh sửa Sự kiện</div>
+                                                </Button>
+                                                <input
+                                                    aria-label="coverImage"
+                                                    type="file"
+                                                    id="coverImage"
+                                                    className="hidden"
+                                                    onChange={handleFileUpload}
+                                                />
+                                                <Button
+                                                    onClick={() => {
+                                                        const fileInput = document.getElementById("coverImage");
+                                                        if (fileInput) {
+                                                            fileInput.click();
+                                                        }
+                                                    }}
+                                                    type="button"
+                                                    className="text-black-more-blur-light-theme bg-[rgba(19,21,23,0.04)] border-transparent border border-solid cursor-pointer transition-all duration-300 ease-in-out donace-button flex items-center m-0"
+                                                >
+                                                    <div className="label">Đổi Hình ảnh</div>
+                                                </Button>
+                                            </div>
                                         </div>
-                                    </div>
+                                    )}
+
 
                                 </div>
                             ) : (

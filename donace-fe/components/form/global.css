@@ -16,3 +16,7 @@
   white-space: nowrap;
   max-width: 30ch;
 }
+
+.mapboxgl-canvas {
+  border-radius: 9px;
+}
