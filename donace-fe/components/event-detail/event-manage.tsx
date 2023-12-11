@@ -1,4 +1,5 @@
 'use client';
+import "./global.css";
 import React, { useEffect, useRef, useState } from "react";
 import { Link, Divider, ModalFooter } from "@nextui-org/react";
 import { ArrowUpRight, ChevronDownIcon, MapPin, ScanLine } from "lucide-react";
@@ -390,7 +391,6 @@ export default function EventManage(props: any) {
                             >
                                 <div className="lael">Check In</div>
                             </Button>
-
                         </div>
                     ) : (
                         <div className="hidden"></div>
@@ -433,69 +433,75 @@ export default function EventManage(props: any) {
                                 </div>
                             </div>
                             {eventDetail ? (
-                                <div className="when-where h-full gap-1 flex flex-col">
-                                    <h3 className="mt-2 text-lg font-semibold mb-4">Thời gian & Địa điểm</h3>
-                                    <div className="gap-4 flex flex-col">
-                                        <div className="gap-4 flex items-start">
-                                            <div className="calendar-card-wrapper flex">
-                                                <div className="calendar-card border border-solid border-[rgba(19,21,23,0.08)] dark:border-[rgba(255,255,255,0.08)] rounded-lg overflow-hidden bg-[#fff] dark:bg-[#212325] w-11 h-11">
-                                                    <div className="month bg-[rgba(19,21,23,0.08)] dark:bg-[rgba(255,255,255,0.08)] text-[0.625rem] font-semibold uppercase text-center text-[#b3b5b7] dark:text-[#939597]">{ConvertDateTime(eventDetail.startDate).month}</div>
-                                                    <div className="day text-lg text-center">{ConvertDateTime(eventDetail.startDate).day}</div>
+                                <div className="when-where h-full gap-1 flex flex-col justify-between">
+                                    <div>
+                                        <h3 className="mt-2 text-lg font-semibold mb-4">Thời gian & Địa điểm</h3>
+                                        <div className="gap-4 flex flex-col">
+                                            <div className="gap-4 flex items-start">
+                                                <div className="calendar-card-wrapper flex">
+                                                    <div className="calendar-card border border-solid border-[rgba(19,21,23,0.08)] dark:border-[rgba(255,255,255,0.08)] rounded-lg overflow-hidden bg-[#fff] dark:bg-[#212325] w-11 h-11">
+                                                        <div className="month bg-[rgba(19,21,23,0.08)] dark:bg-[rgba(255,255,255,0.08)] text-[0.625rem] font-semibold uppercase text-center text-[#b3b5b7] dark:text-[#939597]">{ConvertDateTime(eventDetail.startDate).month}</div>
+                                                        <div className="day text-lg text-center">{ConvertDateTime(eventDetail.startDate).day}</div>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <div className="font-medium">{DayOfWeek(CovertDate(eventDetail.startDate)[0])}</div>
+                                                    <div className="text-sm text-[#737577] dark:text-[#d2d4d7] text-ellipsis whitespace-nowrap overflow-hidden min-w-fit">{ConvertDateTime(eventDetail.startDate).day} tháng {ConvertDateTime(eventDetail.startDate).month}, {ConvertDateTime(eventDetail.startDate).hour}:{ConvertDateTime(eventDetail.startDate).minute} - {ConvertDateTime(eventDetail.endDate).day} tháng {ConvertDateTime(eventDetail.endDate).month}, {ConvertDateTime(eventDetail.endDate).hour}:{ConvertDateTime(eventDetail.endDate).minute} GMT+7</div>
                                                 </div>
                                             </div>
                                             <div>
-                                                <div className="font-medium">{DayOfWeek(CovertDate(eventDetail.startDate)[0])}</div>
-                                                <div className="text-sm text-[#737577] dark:text-[#d2d4d7] text-ellipsis whitespace-nowrap overflow-hidden min-w-fit">{ConvertDateTime(eventDetail.startDate).day} tháng {ConvertDateTime(eventDetail.startDate).month}, {ConvertDateTime(eventDetail.startDate).hour}:{ConvertDateTime(eventDetail.startDate).minute} - {ConvertDateTime(eventDetail.endDate).day} tháng {ConvertDateTime(eventDetail.endDate).month}, {ConvertDateTime(eventDetail.endDate).hour}:{ConvertDateTime(eventDetail.endDate).minute} GMT+7</div>
+                                                <div className="gap-4 flex items-center">
+                                                    <div className="icon w-11 h-11 text-[#b3b5b7] dark:text-[#939597] rounded-lg border border-solid border-[rgba(19,21,23,0.08)] dark:border-[rgba(255,255,255,0.08)] flex items-center justify-center flex-shrink-0">
+                                                        <MapPin className="w-5 h-5 block align-middle" />
+                                                    </div>
+                                                    <div>
+                                                        <div className="font-medium">{eventDetail.addressName}</div>
+                                                    </div>
+                                                </div>
+                                                <div className="text-sm text-[#737577] dark:text-[#d2d4d7] mt-4">Địa chỉ này sẽ được công khai trong trang Sự kiện.</div>
+
                                             </div>
                                         </div>
-                                        <div>
-                                            <div className="gap-4 flex items-center">
-                                                <div className="icon w-11 h-11 text-[#b3b5b7] dark:text-[#939597] rounded-lg border border-solid border-[rgba(19,21,23,0.08)] dark:border-[rgba(255,255,255,0.08)] flex items-center justify-center flex-shrink-0">
-                                                    <MapPin className="w-5 h-5 block align-middle" />
-                                                </div>
-                                                <div>
-                                                    <div className="font-medium">{eventDetail.addressName}</div>
-                                                </div>
-                                            </div>
-                                            <div className="text-sm text-[#737577] dark:text-[#d2d4d7] mt-4">Địa chỉ này sẽ được công khai trong trang Sự kiện.</div>
-                                            <Button onPress={onOpen}
-                                                className="text-black-more-blur-light-theme dark:text-[rgba(255,255,255,0.64)] bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)] border-transparent border border-solid transition-all duration-300 ease-in-out donace-button mt-4 flex items-center cursor-pointer"
+                                    </div>
+                                    <div className="flex flex-wrap gap-2">
+                                        <Button onPress={onOpen}
+                                            className="text-black-more-blur-light-theme dark:text-[rgba(255,255,255,0.64)] bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)] border-transparent border border-solid transition-all duration-300 ease-in-out donace-button mt-4 flex items-center cursor-pointer"
 
+                                        >
+                                            <ScanLine className="mr-1.5 stroke-2 w-3.5 h-3.5 flex-shrink-0 block align-middle mt-0.5" />
+                                            <div className="label">Check In</div>
+                                        </Button>
+                                        {/* <div className="flex-1"></div> */}
+                                        <div className="buttons grid gap-2 grid-cols-2 justify-between w-full">
+                                            <Button
+                                                onPress={modalEditEvent.onOpen}
+                                                type="button"
+                                                className="text-black-more-blur-light-theme bg-[rgba(19,21,23,0.04)] border-transparent border border-solid cursor-pointer transition-all duration-300 ease-in-out donace-button flex items-center m-0"
                                             >
-                                                <ScanLine className="mr-1.5 stroke-2 w-3.5 h-3.5 flex-shrink-0 block align-middle mt-0.5" />
-                                                <div className="label">Check In</div>
+                                                <div className="label">Chỉnh sửa Sự kiện</div>
+                                            </Button>
+                                            <input
+                                                aria-label="coverImage"
+                                                type="file"
+                                                id="coverImage"
+                                                className="hidden"
+                                                onChange={handleFileUpload}
+                                            />
+                                            <Button
+                                                onClick={() => {
+                                                    const fileInput = document.getElementById("coverImage");
+                                                    if (fileInput) {
+                                                        fileInput.click();
+                                                    }
+                                                }}
+                                                type="button"
+                                                className="text-black-more-blur-light-theme bg-[rgba(19,21,23,0.04)] border-transparent border border-solid cursor-pointer transition-all duration-300 ease-in-out donace-button flex items-center m-0"
+                                            >
+                                                <div className="label">Đổi Hình ảnh</div>
                                             </Button>
                                         </div>
                                     </div>
-                                    <div className="flex-1"></div>
-                                    <div className="buttons grid gap-2 grid-cols-2">
-                                        <Button
-                                            onPress={modalEditEvent.onOpen}
-                                            type="button"
-                                            className="text-black-more-blur-light-theme bg-[rgba(19,21,23,0.04)] border-transparent border border-solid cursor-pointer transition-all duration-300 ease-in-out donace-button flex items-center m-0"
-                                        >
-                                            <div className="label">Chỉnh sửa Sự kiện</div>
-                                        </Button>
-                                        <input
-                                            aria-label="coverImage"
-                                            type="file"
-                                            id="coverImage"
-                                            className="hidden"
-                                            onChange={handleFileUpload}
-                                        />
-                                        <Button
-                                            onClick={() => {
-                                                const fileInput = document.getElementById("coverImage");
-                                                if (fileInput) {
-                                                    fileInput.click();
-                                                }
-                                            }}
-                                            type="button"
-                                            className="text-black-more-blur-light-theme bg-[rgba(19,21,23,0.04)] border-transparent border border-solid cursor-pointer transition-all duration-300 ease-in-out donace-button flex items-center m-0"
-                                        >
-                                            <div className="label">Đổi Hình ảnh</div>
-                                        </Button>
-                                    </div>
+
                                 </div>
                             ) : (
                                 <div className="hidden"></div>
