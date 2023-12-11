@@ -131,7 +131,6 @@ export default function EventManage(props: any) {
     const [selectedOption, setSelectedOption] = React.useState(
         new Set(["offline"])
     );
-    const qrcodeList = useState<any>([]);
     // -----------------End: useState-----------------
 
     // -----------------Start: Handler-----------------
@@ -209,6 +208,7 @@ export default function EventManage(props: any) {
     }
 
     // QR Code
+    const qrcodeList = useState<any>([]);
     const handleChildDataChange = (dataFromChild: any) => {
         // Xử lý dữ liệu từ component con ở đây
         if (dataFromChild == "error") {
@@ -216,9 +216,8 @@ export default function EventManage(props: any) {
             return;
         } else {
             if (qrcodeList.includes(dataFromChild)) {
-                console.log("already in list")
+                console.log("Đã check in")
             } else {
-                console.log(dataFromChild + " added")
                 qrcodeList.push(dataFromChild)
                 try {
                     fetchWrapper.post("/api/UserTickets/Check-in", {
