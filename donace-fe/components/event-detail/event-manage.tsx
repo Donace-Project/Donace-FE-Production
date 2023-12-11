@@ -17,7 +17,6 @@ import { Player } from "@lottiefiles/react-lottie-player";
 import Animation from "../Animation_1701106485452.json";
 import QRScanner from "../QR/QRScanner";
 
-
 const goongGeocoder = require("@goongmaps/goong-geocoder");
 
 export type Calendar = {
@@ -68,48 +67,37 @@ const DayOfWeek = (date: string) => {
 }
 export default function EventManage(props: any) {
     var { id } = props
-
-    const modalEditEvent = useDisclosure();
-    const modalEditMap = useDisclosure();
-
-    const backgroundRef = useRef<HTMLDivElement | null>(null);
-
-    const [startDate, setStartDate] = useState(new Date());
-    const [endDate, setEndDate] = useState(new Date());
-
-    const [getCalendars, setCalendars] = useState<GetCalendarById | null>(null);
-    var [eventDetail, setEventDetail] = useState<EventDetailModels | null>(null);
-
-    const [editEventName, setEditEventName] = useState(null);
-    const [editEventDesc, setEditEventDesc] = useState(null);
-    const [editEventStartDate, setEventStartDate] = useState(null);
-    const [editEventEndDate, setEventEndDate] = useState(null);
-    const { isOpen, onOpen, onOpenChange } = useDisclosure();
-
-    const [showOfflineContent, setShowOfflineContent] = React.useState(true);
-    const [selectedOption, setSelectedOption] = React.useState(
-        new Set(["offline"])
-    );
+    // -----------------Start: Local Variable-----------------
     const labelsMap = {
         offline: "Offline",
         online: "Online",
     };
-    const selectedOptionValue = Array.from(selectedOption)[0];
-    const handleSelectedOption = (option: any) => {
-        setSelectedOption(new Set([option]));
-        if (option === "offline") {
-            setShowOfflineContent(true);
-        } else {
-            setShowOfflineContent(false);
-        }
-    };
-    const handleSaveLocation = () => {
-        setShowOfflineContent(true);
-        setSelectedLocation({ lat: lat, lng: lng });
-    };
+    let map: any;
+    // Lấy hostname và port
+    const [currentURL, setCurrentURL] = useState('');
+    let endedEvent: boolean;
+    // -----------------End: Local Variable-----------------
 
+    // -----------------Start: useDisclosure-----------------
+    const modalEditEvent = useDisclosure();
+    const modalEditMap = useDisclosure();
+    const { isOpen, onOpen, onOpenChange } = useDisclosure();
+    // -----------------End: useDisclosure-----------------
 
+    const Refbackground = useRef<any>(null);
 
+    const [startDate, setStartDate] = useState(new Date());
+    const [endDate, setEndDate] = useState(new Date());
+    const [selectedLocation, setSelectedLocation] = useState<{
+        lat: number | null;
+        lng: number | null;
+    }>({ lat: null, lng: null });
+
+    const [geocoder, setGeocoder] = useState<any>(null);
+
+    // -----------------Start: useState-----------------
+    const [getCalendars, setCalendars] = useState<GetCalendarById | null>(null);
+    var [eventDetail, setEventDetail] = useState<EventDetailModels | null>(null);
     let goongjs = useRef<any>(null);
     const [lat, setLat] = useState(10.8537915);
     const [lng, setLng] = useState(106.6234887);
@@ -121,79 +109,10 @@ export default function EventManage(props: any) {
     const [compoundLngDistrict, setCompoundLngDistrict] = useState(null);
     const [compoundLatProvince, setCompoundLatProvince] = useState(null);
     const [compoundLngProvince, setCompoundLngProvince] = useState(null);
-    let map: any;
-    const [selectedLocation, setSelectedLocation] = useState<{
-        lat: number | null;
-        lng: number | null;
-    }>({ lat: null, lng: null });
-
-    const [geocoder, setGeocoder] = useState<any>(null);
-
-    async function ImportMap() {
-        goongjs.current = await require("@goongmaps/goong-js");
-        goongjs.current.accessToken = "wnicbAmnNkoMHNYUKWnlFHezV189FjmMwkNJ7hKW";
-        setGeocoder(
-            new goongGeocoder({
-                accessToken: "sbRzCkkevuDa7mTtXzH1mE1i3CZGdFjGAcG01XqF",
-                goongjs: goongjs.current,
-            })
-        );
-    }
-
-    useEffect(() => {
-        // Khởi tạo bản đồ khi component được mount
-        if (modalEditEvent.isOpen && modalEditMap.isOpen && showOfflineContent === true) {
-            map = new goongjs.current.Map({
-                container: "map", // ID của phần tử HTML để chứa bản đồ
-                style: "https://tiles.goong.io/assets/goong_map_web.json",
-                center: [lng, lat], // Tọa độ trung tâm
-                zoom: 9, // Mức độ zoom mặc định
-            });
-
-            map.addControl(geocoder);
-            geocoder.on("result", function (e: any) {
-                setLat(e.result.result.geometry.location.lat);
-                setLng(e.result.result.geometry.location.lng);
-                setAddressLat(e.result.result.name);
-                setAddressLng(e.result.result.name);
-                setCompoundLatCommune(e.result.result.compound.commune);
-                setCompoundLngCommune(e.result.result.compound.commune);
-                setCompoundLatDistrict(e.result.result.compound.district);
-                setCompoundLngDistrict(e.result.result.compound.district);
-                setCompoundLatProvince(e.result.result.compound.province);
-                setCompoundLngProvince(e.result.result.compound.province);
-
-                // console.log(e.result.result);
-                // console.log(e.result.result.name);
-                // console.log(e.result.result.compound);
-                setSelectedLocation({
-                    lat: e.result.result.name,
-                    lng: e.result.result.name,
-                });
-
-                setEventReq({
-                    ...eventReq,
-                    addressName: e.result.result.formatted_address,
-                    lat: e.result.result.geometry.location.lat,
-                    long: e.result.result.geometry.location.lng,
-                    // Các giá trị khác nếu cần
-                });
-
-                console.log("update location");
-            });
-            return () => {
-                map.remove();
-            };
-        }
-    }, [modalEditEvent.isOpen, modalEditMap.isOpen, showOfflineContent]);
-
-    const handleDateChange = (date: any) => {
-        setStartDate(date);
-    };
-
-    const handleEndDateChange = (date: any) => {
-        setEndDate(date);
-    };
+    const [editEventName, setEditEventName] = useState(null);
+    const [editEventDesc, setEditEventDesc] = useState(null);
+    const [editEventStartDate, setEventStartDate] = useState(null);
+    const [editEventEndDate, setEventEndDate] = useState(null);
     const [eventReq, setEventReq] = useState({
         startDate: "",
         endDate: "",
@@ -210,18 +129,33 @@ export default function EventManage(props: any) {
         time: "12:00",
     })
 
-    const updateStartDate = (type: string, newValue: string) => {
-        console.log(newValue);
-        if (type === "date") {
-            setEventStartDate({ ...getStartDate, date: newValue });
-        } else {
-            setEventStartDate({ ...getStartDate, time: newValue });
-        }
+    const [showOfflineContent, setShowOfflineContent] = React.useState(true);
+    const [selectedOption, setSelectedOption] = React.useState(
+        new Set(["offline"])
+    );
+    const qrcodeList = useState<any>([]);
+    // -----------------End: useState-----------------
 
-        setEventReq({
-            ...eventReq,
-            startDate: `${getStartDate.date}T${getStartDate.time}`,
-        });
+    // -----------------Start: Handler-----------------
+    const handleSelectedOption = (option: any) => {
+        setSelectedOption(new Set([option]));
+        if (option === "offline") {
+            setShowOfflineContent(true);
+        } else {
+            setShowOfflineContent(false);
+        }
+    };
+    const handleSaveLocation = () => {
+        setShowOfflineContent(true);
+        setSelectedLocation({ lat: lat, lng: lng });
+    };
+
+    const handleDateChange = (date: any) => {
+        setStartDate(date);
+    };
+
+    const handleEndDateChange = (date: any) => {
+        setEndDate(date);
     };
 
     const handleFileUpload = async (
@@ -233,8 +167,8 @@ export default function EventManage(props: any) {
         const formData = new FormData();
         formData.append("file", selectedFile);
         const url = await fetchWrapper.postFile("api/Common/upload-file", formData);
-        if (backgroundRef.current && url) {
-            backgroundRef.current.style.backgroundImage = `url(${url})`;
+        if (Refbackground.current && url) {
+            Refbackground.current.style.backgroundImage = `url(${url})`;
 
             setEventReq({
                 ...eventReq,
@@ -246,6 +180,7 @@ export default function EventManage(props: any) {
     const handleClick = async () => {
         await handleSubmit;
     };
+
     const handleSubmit = async (e: any) => {
         e.preventDefault();
         const dataToSend = {
@@ -275,16 +210,7 @@ export default function EventManage(props: any) {
         }
     }
 
-    useEffect(() => {
-        fetchWrapper.get(`api/Event/detail-by-id?id=${id}`)
-            .then(data => setEventDetail(data));
-
-
-        ImportMap();
-    }, []);
-
     // QR Code
-    const qrcodeList = useState<any>([]);
     const handleChildDataChange = (dataFromChild: any) => {
         // Xử lý dữ liệu từ component con ở đây
         if (dataFromChild == "error") {
@@ -308,6 +234,97 @@ export default function EventManage(props: any) {
         }
 
     };
+    // -----------------End: Handler-----------------
+
+    // -----------------Start: Local Method-----------------
+    const selectedOptionValue = Array.from(selectedOption)[0];
+
+    async function ImportMap() {
+        goongjs.current = await require("@goongmaps/goong-js");
+        goongjs.current.accessToken = "wnicbAmnNkoMHNYUKWnlFHezV189FjmMwkNJ7hKW";
+        setGeocoder(
+            new goongGeocoder({
+                accessToken: "sbRzCkkevuDa7mTtXzH1mE1i3CZGdFjGAcG01XqF",
+                goongjs: goongjs.current,
+            })
+        );
+    }
+
+    const updateStartDate = (type: string, newValue: string) => {
+        console.log(newValue);
+        if (type === "date") {
+            setEventStartDate({ ...getStartDate, date: newValue });
+        } else {
+            setEventStartDate({ ...getStartDate, time: newValue });
+        }
+
+        setEventReq({
+            ...eventReq,
+            startDate: `${getStartDate.date}T${getStartDate.time}`,
+        });
+    };
+
+    // -----------------End: Local Method-----------------
+
+    // -----------------Start: UseEffect-----------------
+    useEffect(() => {
+        // Khởi tạo bản đồ khi component được mount
+        if (modalEditEvent.isOpen && modalEditMap.isOpen && showOfflineContent === true) {
+            map = new goongjs.current.Map({
+                container: "map", // ID của phần tử HTML để chứa bản đồ
+                style: "https://tiles.goong.io/assets/goong_map_web.json",
+                center: [lng, lat], // Tọa độ trung tâm
+                zoom: 9, // Mức độ zoom mặc định
+            });
+
+            map.addControl(geocoder);
+            geocoder.on("result", function (e: any) {
+                setLat(e.result.result.geometry.location.lat);
+                setLng(e.result.result.geometry.location.lng);
+                setAddressLat(e.result.result.name);
+                setAddressLng(e.result.result.name);
+                setCompoundLatCommune(e.result.result.compound.commune);
+                setCompoundLngCommune(e.result.result.compound.commune);
+                setCompoundLatDistrict(e.result.result.compound.district);
+                setCompoundLngDistrict(e.result.result.compound.district);
+                setCompoundLatProvince(e.result.result.compound.province);
+                setCompoundLngProvince(e.result.result.compound.province);
+
+                setSelectedLocation({
+                    lat: e.result.result.name,
+                    lng: e.result.result.name,
+                });
+
+                setEventReq({
+                    ...eventReq,
+                    addressName: e.result.result.formatted_address,
+                    lat: e.result.result.geometry.location.lat,
+                    long: e.result.result.geometry.location.lng,
+                    // Các giá trị khác nếu cần
+                });
+
+                console.log("update location");
+            });
+            return () => {
+                map.remove();
+            };
+        }
+    }, [modalEditEvent.isOpen, modalEditMap.isOpen, showOfflineContent]);
+
+    useEffect(() => {
+        const hostname = window.location.hostname;
+        const port = window.location.port;
+        const finalPort = port === '80' || port === '' ? '3000' : port;
+        setCurrentURL(`http://${hostname}:${finalPort}`);
+        console.log(currentURL)
+        fetchWrapper.get(`api/Event/detail-by-id?id=${id}`)
+            .then(data => {
+                setEventDetail(data)
+                Refbackground.current.style.backgroundImage = `url(${data.cover})`;
+            });
+        ImportMap();
+    }, []);
+    // -----------------End: UseEffect-----------------
 
     return (
         <div className="page-content">
@@ -402,19 +419,19 @@ export default function EventManage(props: any) {
                             <div className="preview relative">
                                 <div className="relative">
                                     <div
-                                        ref={backgroundRef}
+                                        ref={Refbackground}
                                         role="button"
-                                        className="bg-[url('https://cdn.lu.ma/cdn-cgi/image/format=auto,fit=cover,dpr=2,quality=75,width=400,height=400/event-defaults/1-1/standard4.png')] aspect-square rounded-lg bg-[#ebeced] dark:bg-[#333537] block ml-auto mr-auto bg-center bg-cover overflow-hidden transition-all duration-300 ease-in-out relative cursor-pointer h-full"
+                                        className={`bg-[url('https://cdn.lu.ma/cdn-cgi/image/format=auto,fit=cover,dpr=2,quality=75,width=400,height=400/event-defaults/1-1/standard4.png')] aspect-square rounded-lg bg-[#ebeced] dark:bg-[#333537] block ml-auto mr-auto bg-center bg-cover overflow-hidden transition-all duration-300 ease-in-out relative cursor-pointer h-full`}
                                     ></div>
                                     <div className="url-wrapper absolute p-[0.375rem_0.75rem] rounded-lg bg-[rgba(19,21,23,0.32)] z-50 bottom-2 left-2 right-2 backdrop-blur-lg shadow-md text-sm">
                                         <div className="url amimated transition-all duration-300 ease-in-out gap-2 flex justify-between items-center">
                                             <Link
-                                                href={`/user/join-event/${eventDetail?.id}`}
+                                                href={`/ user / join - event / ${eventDetail?.id}`}
                                                 target="_blank"
                                                 className="text-[rgba(255,255,255,0.8)] gap-1 min-w-0 flex items-center transition-all duration-300 ease-in-out cursor-pointer"
                                                 underline="none"
                                             >
-                                                <div className="whitespace-nowrap overflow-hidden text-ellipsis min-w-0" id="myClipboard">
+                                                <div className="short-description whitespace-nowrap overflow-hidden text-ellipsis min-w-0 text-sm" id="myClipboard">
                                                     {`user/join-event/${eventDetail?.id}`}
                                                 </div>
                                                 <div className="flex items-center">
@@ -426,7 +443,8 @@ export default function EventManage(props: any) {
                                                 type="button"
                                                 className="text-[rgba(255,255,255,0.48)] border-[#939597] hover:text-[#fff] bg-transparent p-0 h-auto border-none rounded-none outline-offset-[.375rem] cursor-pointer transition-all duration-300 ease-in-out font-medium relative whitespace-nowrap justify-center outline-none max-w-full w-fit flex items-center m-0 leading-6"
                                             >
-                                                <div className="label">SAO CHÉP</div>
+                                                {/* // TODO: CSS hover cho nó nháy đén */}
+                                                <div className="label" onClick={(e) => navigator.clipboard.writeText(`${currentURL}/user/join-event/${eventDetail?.id}`)}>SAO CHÉP</div>
                                             </button>
                                         </div>
                                     </div>
@@ -455,7 +473,11 @@ export default function EventManage(props: any) {
                                                         <MapPin className="w-5 h-5 block align-middle" />
                                                     </div>
                                                     <div>
-                                                        <div className="font-medium">{eventDetail.addressName}</div>
+                                                        {eventDetail.addressName ? (
+                                                            <>  <div className="font-medium">{eventDetail.addressName}</div></>
+                                                        ) : (
+                                                            <>  <div className="font-medium">Cập nhật sau...</div></>
+                                                        )}
                                                     </div>
                                                 </div>
                                                 <div className="text-sm text-[#737577] dark:text-[#d2d4d7] mt-4">Địa chỉ này sẽ được công khai trong trang Sự kiện.</div>
@@ -508,8 +530,8 @@ export default function EventManage(props: any) {
                             )}
                         </div>
                     </div>
-                </div>
-            </div>
+                </div >
+            </div >
             <Modal
                 isOpen={modalEditEvent.isOpen}
                 onOpenChange={modalEditEvent.onOpenChange}
@@ -888,6 +910,6 @@ export default function EventManage(props: any) {
                     )}
                 </ModalContent>
             </Modal>
-        </div>
+        </div >
     )
 }
