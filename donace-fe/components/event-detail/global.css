@@ -4,3 +4,11 @@
   white-space: nowrap;
   max-width: 16ch;
 }
+
+.border-top-left div div {
+  border-radius: 6px 0 0 6px;
+}
+
+.border-top-right div div {
+  border-radius: 0 6px 6px 0;
+}

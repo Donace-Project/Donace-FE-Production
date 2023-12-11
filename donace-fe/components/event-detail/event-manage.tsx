@@ -3,37 +3,18 @@ import "./global.css";
 import React, { useEffect, useRef, useState } from "react";
 import { Link, Divider, ModalFooter, Spinner } from "@nextui-org/react";
 import { ArrowUpRight, ChevronDownIcon, MapPin, ScanLine, Video } from "lucide-react";
-import { EventDetailModels, GetCalendarById } from "@/types/DonaceType";
 import { fetchWrapper } from "@/helpers/fetch-wrapper";
 import { Button, ButtonGroup } from "@nextui-org/button";
 import { Modal, ModalContent, ModalHeader, ModalBody, useDisclosure } from "@nextui-org/react";
 import { Input } from "@nextui-org/input";
 import { Textarea } from "@nextui-org/input";
-import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { addHours } from "date-fns";
 import { Dropdown, DropdownItem, DropdownTrigger, DropdownMenu, DropdownSection, DropdownItemProps } from "@nextui-org/dropdown";
 import { Player } from "@lottiefiles/react-lottie-player";
 import Animation from "../Animation_1701106485452.json";
 import QRScanner from "../QR/QRScanner";
 
 const goongGeocoder = require("@goongmaps/goong-geocoder");
-
-export type Calendar = {
-    code: string
-    success: boolean
-    result: Result[]
-    pageInfo: any
-}
-
-export type Result = {
-    id: string
-    name: string
-    totalSubcriber: number
-    avatar: string
-    userId: string
-    sorted: number
-}
 
 interface DateTimeInfo {
     year: string;
@@ -86,16 +67,10 @@ export default function EventManage(props: any) {
 
     const [startDate, setStartDate] = useState(new Date());
     const [endDate, setEndDate] = useState(new Date());
-    const [selectedLocation, setSelectedLocation] = useState<{
-        lat: number | null;
-        lng: number | null;
-    }>({ lat: null, lng: null });
-
     const [geocoder, setGeocoder] = useState<any>(null);
 
     // -----------------Start: useState-----------------
-    const [getCalendars, setCalendars] = useState<GetCalendarById | null>(null);
-    var [eventDetail, setEventDetail] = useState<EventDetailModels | null>(null);
+    var [eventDetail, setEventDetail] = useState<any>(null);
     let goongjs = useRef<any>(null);
     const [lat, setLat] = useState(10.8537915);
     const [lng, setLng] = useState(106.6234887);
@@ -107,21 +82,6 @@ export default function EventManage(props: any) {
     const [compoundLngDistrict, setCompoundLngDistrict] = useState(null);
     const [compoundLatProvince, setCompoundLatProvince] = useState(null);
     const [compoundLngProvince, setCompoundLngProvince] = useState(null);
-    const [editEventName, setEditEventName] = useState(null);
-    const [editEventDesc, setEditEventDesc] = useState(null);
-    const [editEventStartDate, setEventStartDate] = useState(null);
-    const [editEventEndDate, setEventEndDate] = useState(null);
-    const [eventReq, setEventReq] = useState({
-        startDate: "",
-        endDate: "",
-        calendarId: "",
-        name: "",
-        lat: "",
-        long: "",
-        cover: "",
-        addressName: "",
-    });
-
     const [getStartDate, SetStartDate] = useState<any>({
         date: "2023-09-22",
         time: "12:00",
@@ -144,7 +104,7 @@ export default function EventManage(props: any) {
     };
     const handleSaveLocation = () => {
         setShowOfflineContent(true);
-        setSelectedLocation({ lat: lat, lng: lng });
+        // setSelectedLocation({ lat: lat, lng: lng });
     };
 
     const handleDateChange = (date: any) => {
@@ -168,7 +128,6 @@ export default function EventManage(props: any) {
         if (Refbackground.current && url) {
             Refbackground.current.style.backgroundImage = `url(${url})`;
             setIsUploadingBackground(false);
-            // debugger;
             await fetchWrapper.post("/api/Event/Update-cover", {
                 ...eventDetail,
                 cover: url,
@@ -176,29 +135,10 @@ export default function EventManage(props: any) {
         }
     };
 
-    const handleClick = async () => {
-        await handleSubmit;
-    };
-
     const handleSubmit = async (e: any) => {
         e.preventDefault();
-        const dataToSend = {
-            id: eventDetail?.id,
-            calendarId: eventDetail?.calendarId,
-            name: eventReq.name,
-            startDate: addHours(startDate, 7),
-            endDate: addHours(endDate, 7),
-            lat: eventReq.lat,
-            long: eventReq.long,
-            addressName: eventDetail?.addressName
-        };
-        console.log(Date.now);
         try {
-            if (!dataToSend.name) {
-                console.error("Name field is required.");
-                return;
-            }
-            const response = await fetchWrapper.put("/api/Event", dataToSend);
+            const response = await fetchWrapper.post("/api/Event/Update", eventDetail);
             if (!response.success) {
                 console.error(`Lỗi khi tạo sự kiện: ${response.error}`);
                 return;
@@ -252,16 +192,11 @@ export default function EventManage(props: any) {
 
     const updateStartDate = (type: string, newValue: string) => {
         console.log(newValue);
-        if (type === "date") {
-            setEventStartDate({ ...getStartDate, date: newValue });
-        } else {
-            setEventStartDate({ ...getStartDate, time: newValue });
-        }
-
-        setEventReq({
-            ...eventReq,
-            startDate: `${getStartDate.date}T${getStartDate.time}`,
-        });
+        // if (type === "date") {
+        //     setEventStartDate({ ...getStartDate, date: newValue });
+        // } else {
+        //     setEventStartDate({ ...getStartDate, time: newValue });
+        // }
     };
 
     // -----------------End: Local Method-----------------
@@ -290,20 +225,17 @@ export default function EventManage(props: any) {
                 setCompoundLatProvince(e.result.result.compound.province);
                 setCompoundLngProvince(e.result.result.compound.province);
 
-                setSelectedLocation({
-                    lat: e.result.result.name,
-                    lng: e.result.result.name,
-                });
+                // setSelectedLocation({
+                //     lat: e.result.result.name,
+                //     lng: e.result.result.name,
+                // });
 
-                setEventReq({
-                    ...eventReq,
+                setEventDetail({
+                    ...eventDetail,
                     addressName: e.result.result.formatted_address,
                     lat: e.result.result.geometry.location.lat,
                     long: e.result.result.geometry.location.lng,
-                    // Các giá trị khác nếu cần
                 });
-
-                console.log("update location");
             });
             return () => {
                 map.remove();
@@ -317,7 +249,7 @@ export default function EventManage(props: any) {
         const finalPort = port === '80' || port === '' ? '3000' : port;
         const currentDate = new Date();
         setCurrentURL(`http://${hostname}:${finalPort}`);
-        console.log(currentURL)
+
         fetchWrapper.get(`api/Event/detail-by-id?id=${id}`)
             .then(data => {
                 setEventDetail(data)
@@ -590,25 +522,24 @@ export default function EventManage(props: any) {
                 <ModalContent>
                     {(onClose) => (
                         <>
-                            <form action={"#"} onSubmit={handleSubmit}>
+                            <form>
                                 <ModalHeader className="flex flex-col gap-1">Chỉnh sửa sự kiện</ModalHeader>
                                 <Divider />
                                 <ModalBody>
                                     <div className="title font-semibold text-lg">Thông tin cơ bản</div>
-                                    <div className="event-name w-full pb-2 mt-2">
+                                    <div className="event-name w-full pb-2 mt-6">
                                         <Input
                                             type="text"
                                             variant="bordered"
                                             labelPlacement="outside"
                                             label="Tên sự kiện"
-                                            value={eventReq.name}
+                                            value={eventDetail.name}
                                             onChange={(e) =>
-                                                setEventReq({
-                                                    ...eventReq,
+                                                setEventDetail({
+                                                    ...eventDetail,
                                                     name: e.target.value,
                                                 })
                                             }
-                                            placeholder={eventDetail?.name}
                                             classNames={{
                                                 inputWrapper: [
                                                     "h-[calc(2.625rem+2*1px)]",
@@ -634,7 +565,7 @@ export default function EventManage(props: any) {
                                             }}
                                         />
                                     </div>
-                                    <div className="desc w-full pb-2 mt-2">
+                                    <div className="desc w-full pb-2">
                                         <Textarea
                                             type="text"
                                             variant="bordered"
@@ -672,33 +603,71 @@ export default function EventManage(props: any) {
                                         <div className="w-full gap-2 flex justify-between pt-4">
                                             <div className="date-picker-container flex flex-col flex-grow-0">
                                                 <div className="label">Bắt đầu</div>
-                                                <DatePicker
-                                                    todayButton="Hôm nay"
-                                                    selected={startDate}
-                                                    onChange={handleDateChange}
-                                                    startDate={startDate}
-                                                    timeInputLabel="Time:"
-                                                    dateFormat="dd/MM/yyyy h:mm aa"
-                                                    showTimeInput
-                                                    fixedHeight
-                                                    className="border-2 border-solid border-[#babac1] focus:border-[rgb(19,21,23)] rounded-lg pl-16 pr-8 mt-2"
-                                                    placeholderText="Ngày Bắt đầu sự kiện"
-                                                />
+                                                <div className="flex mt-3">
+                                                    <Input
+                                                        type="date"
+                                                        id="date"
+                                                        // value={startDate.date}
+                                                        // onChange={(e) =>
+                                                        //     updateStartDate(
+                                                        //         "date",
+                                                        //         e.target.value
+                                                        //     )
+                                                        // }
+                                                        className="border-top-left bg-transparent dark:bg-[rgba(255,255,255,0.08)] dark:text-[#fff]"
+                                                        variant="flat"
+                                                        radius="none"
+                                                    />
+                                                    <Input
+                                                        type="time"
+                                                        id="time"
+                                                        // value={startDate.time}
+                                                        // onChange={(e) =>
+                                                        //     updateStartDate(
+                                                        //         "time",
+                                                        //         e.target.value
+                                                        //     )
+                                                        // }
+                                                        className="border-top-right bg-transparent dark:bg-[rgba(255,255,255,0.08)] dark:text-[#fff]"
+                                                        variant="flat"
+                                                        radius="none"
+                                                    />
+                                                </div>
+
                                             </div>
                                             <div className="date-picker-container flex flex-col flex-grow-0">
                                                 <div className="label">Kết thúc</div>
-                                                <DatePicker
-                                                    fixedHeight
-                                                    selected={endDate}
-                                                    onChange={handleEndDateChange}
-                                                    selectsEnd
-                                                    endDate={endDate}
-                                                    minDate={startDate}
-                                                    timeInputLabel="Time:"
-                                                    dateFormat="dd/MM/yyyy h:mm aa"
-                                                    className="border-2 border-solid border-[#babac1] focus:border-[rgb(19,21,23)] rounded-lg pl-16 pr-8 mt-2"
-                                                    placeholderText="Ngày Kết thúc sự kiện"
-                                                />
+                                                <div className="flex mt-3">
+                                                    <Input
+                                                        type="date"
+                                                        id="date"
+                                                        // value={endDate.date}
+                                                        // onChange={(e) =>
+                                                        //     updateEndDate(
+                                                        //         "date",
+                                                        //         e.target.value
+                                                        //     )
+                                                        // }
+                                                        className="border-top-left bg-transparent dark:bg-[rgba(255,255,255,0.08)] dark:text-[#fff]"
+                                                        variant="flat"
+                                                        radius="none"
+                                                    />
+                                                    <Input
+                                                        type="time"
+                                                        id="time"
+                                                        // value={endDate.time}
+                                                        // onChange={(e) =>
+                                                        //     updateEndDate(
+                                                        //         "time",
+                                                        //         e.target.value
+                                                        //     )
+                                                        // }
+                                                        className="border-top-right bg-transparent dark:bg-[rgba(255,255,255,0.08)] dark:text-[#fff]"
+                                                        variant="flat"
+                                                        radius="none"
+                                                    />
+                                                </div>
+
                                             </div>
                                         </div>
                                         <hr className="mt-6 border-solid border-[rgba(19,21,23,0.08)] border-b"></hr>
@@ -706,7 +675,7 @@ export default function EventManage(props: any) {
                                     <div className="location w-full mt-2">
                                         <div className="time-title font-semibold text-lg">Chọn địa điểm</div>
                                         <div className="gap-4 flex items-center " onClick={modalEditMap.onOpen}>
-                                            <Input
+                                            {/* <Input
                                                 className="hidden"
                                                 value={eventReq.lat}
                                                 onChange={(e) =>
@@ -725,7 +694,7 @@ export default function EventManage(props: any) {
                                                         long: e.target.value,
                                                     })
                                                 }
-                                            />
+                                            /> */}
                                             <div
 
                                                 className="w-full p-[0.25rem_1rem_0.25rem] cursor-pointer transition-all duration-300 ease-in-out block relative rounded-xl bg-[#f3f4f5] dark:bg-[rgba(255,255,255,0.04)] border border-solid border-[#fff] dark:border-[rgba(255,255,255,0.04)] overflow-hidden"
@@ -762,7 +731,7 @@ export default function EventManage(props: any) {
                                 </ModalBody>
                                 <ModalFooter>
                                     <Button
-                                        onClick={handleClick}
+                                        onClick={(e) => handleSubmit(e)}
                                         color="success"
                                         type="submit"
                                         className="text-[#ffff] font-medium text-xs border-transparent border border-solid cursor-pointer transition-all duration-300 ease-in-out donace-button-w-fit flex items-center m-0"
