@@ -1,7 +1,7 @@
 'use client';
 import "./global.css";
 import React, { useEffect, useRef, useState } from "react";
-import { Link, Divider, ModalFooter } from "@nextui-org/react";
+import { Link, Divider, ModalFooter, Spinner } from "@nextui-org/react";
 import { ArrowUpRight, ChevronDownIcon, MapPin, ScanLine, Video } from "lucide-react";
 import { EventDetailModels, GetCalendarById } from "@/types/DonaceType";
 import { fetchWrapper } from "@/helpers/fetch-wrapper";
@@ -126,7 +126,7 @@ export default function EventManage(props: any) {
         date: "2023-09-22",
         time: "12:00",
     })
-
+    const [isUploadingBackground, setIsUploadingBackground] = useState(false);
     const [showOfflineContent, setShowOfflineContent] = React.useState(true);
     const [selectedOption, setSelectedOption] = React.useState(
         new Set(["offline"])
@@ -156,7 +156,7 @@ export default function EventManage(props: any) {
         setEndDate(date);
     };
 
-    const handleFileUpload = async (
+    const handleFileUploadAndSaveEvent = async (
         event: React.ChangeEvent<HTMLInputElement>
     ) => {
         if (!event.target.files) return;
@@ -164,12 +164,14 @@ export default function EventManage(props: any) {
         const selectedFile = event.target.files[0];
         const formData = new FormData();
         formData.append("file", selectedFile);
+        setIsUploadingBackground(true)
         const url = await fetchWrapper.postFile("api/Common/upload-file", formData);
         if (Refbackground.current && url) {
             Refbackground.current.style.backgroundImage = `url(${url})`;
-
-            setEventReq({
-                ...eventReq,
+            setIsUploadingBackground(false);
+            // debugger;
+            await fetchWrapper.post("/api/Event/Update-cover", {
+                ...eventDetail,
                 cover: url,
             });
         }
@@ -530,9 +532,10 @@ export default function EventManage(props: any) {
                                                     type="file"
                                                     id="coverImage"
                                                     className="hidden"
-                                                    onChange={handleFileUpload}
+                                                    onChange={handleFileUploadAndSaveEvent}
                                                 />
                                                 <Button
+                                                    disabled={isUploadingBackground}
                                                     onClick={() => {
                                                         const fileInput = document.getElementById("coverImage");
                                                         if (fileInput) {
@@ -542,13 +545,25 @@ export default function EventManage(props: any) {
                                                     type="button"
                                                     className="text-black-more-blur-light-theme bg-[rgba(19,21,23,0.04)] border-transparent border border-solid cursor-pointer transition-all duration-300 ease-in-out donace-button flex items-center m-0"
                                                 >
-                                                    <div className="label">Đổi Hình ảnh</div>
+                                                    {isUploadingBackground ? (
+                                                        <>
+                                                            <div className="flex w-full">
+                                                                <Spinner
+                                                                    size="sm"
+                                                                    color="success"
+                                                                    className="ml-4 mr-2 stroke-2 h-[65%] block align-middle spinner-uploading"
+                                                                />
+                                                                <div className="label">Đang tải...</div>
+                                                            </div>
+                                                        </>
+                                                    ) : (
+                                                        <div className="label">Đổi Hình ảnh</div>
+                                                    )}
+
                                                 </Button>
                                             </div>
                                         </div>
                                     )}
-
-
                                 </div>
                             ) : (
                                 <div className="hidden"></div>
