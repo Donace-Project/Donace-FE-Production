@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState } from "react";
-import { EventDetailModels, EventDetailSorted, UserProfile } from "@/types/DonaceType";
+import { Calendar, EventDetailModels, EventDetailSorted, GetCalendarById, ResultUserProfile, UserJoinEvent, UserProfile } from "@/types/DonaceType";
 import { Avatar } from "@nextui-org/avatar";
 import { Button } from "@nextui-org/button";
 import { Image } from "@nextui-org/image";
@@ -56,7 +56,8 @@ export default function JoinEvent(props: { id: string }) {
     const [eventDetail, setEventDetail] = useState<EventDetailModels | null>(null);
     const [eventDetailSort, setEventDetailSort] = useState<EventDetailSorted | null>(null);
     const [sortedValue, setSortedValue] = useState<number | null>(null);
-    const [calendarIdValue, setCalendarIdValue] = useState<string | null>(null);
+    const [calendar, setCalendar] = useState<GetCalendarById | null>(null);
+    const [userJoin, setUserJoin] = useState<UserJoinEvent | null>(null);
 
     var [getProfile, setProfile] = useState<null | UserProfile>(null);
     const [thoiGian, setThoiGian] = useState(new Date());
@@ -108,6 +109,18 @@ export default function JoinEvent(props: { id: string }) {
             window.open(mapsURL, '_blank');
         }
     };
+
+    const handleJoinEvent = () => {
+        fetchWrapper.post(`api/Event/user-join`, {
+            userId: getProfile?.result.id,
+            calendarId: eventDetail?.calendarId,
+            eventId: eventDetail?.id
+        }).then(data => setUserJoin(data));
+    }
+
+    console.log(getProfile?.result.id);
+    console.log(eventDetail?.calendarId);
+    console.log(eventDetail?.id);
 
 
     //* Scan QR

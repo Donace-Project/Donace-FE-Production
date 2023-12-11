@@ -71,13 +71,11 @@ export default function CalendarManage(props: any) {
     const dateTimeSubFalse = false;
     const dateTimeEvent = dateTimeTrue ? 'true' : 'false';
 
-    var [futureEvents, setFutureEvents] = useState<ItemsCalendarManage[]>();
-    var [pastEvents, setPastEvents] = useState<ItemsCalendarManage[]>();
     const [getCalendars, setCalendars] = useState<GetCalendarById | null>(null);
     var [calendars, setCalendar] = useState<Calendar | null>(null);
 
     const [getEvent, setEvents] = useState<GetListEventByCalendarId[]>([]);
-    const [getPastEventId, setPastEventsId] = useState<GetListEventByCalendarId[]>([]);
+    const [getPastEvent, setPastEvents] = useState<GetListEventByCalendarId[]>([]);
     const [getEventSub, setEventSub] = useState<GetListEventByCalendarId[]>([]);
     const [getPastEventSub, setPastEventSub] = useState<GetListEventByCalendarId[]>([]);
 
@@ -88,14 +86,19 @@ export default function CalendarManage(props: any) {
         const fetchData = async () => {
             try {
                 const calendarsData = await fetchWrapper.post(`api/Calendar/get-by-id?Id=${id}`, null);
-                //console.log(calendarsData)
                 setCalendars(calendarsData);
 
                 const eventsData = await fetchWrapper.get(`api/Event/list-event-by-calendar-${id}-${dateTimeTrue}-${dateTimeSubTrue}`);
                 setEvents(eventsData);
 
                 const pastEventsIdData = await fetchWrapper.get(`api/Event/list-event-by-calendar-${id}-${dateTimeFalse}-${dateTimeSubFalse}`);
-                setPastEventsId(pastEventsIdData);
+                setPastEvents(pastEventsIdData);
+
+                const TrueFalse = await fetchWrapper.get(`api/Event/list-event-by-calendar-${id}-${dateTimeTrue}-${dateTimeSubFalse}`);
+                setPastEvents(TrueFalse);
+
+                const FalseTrue = await fetchWrapper.get(`api/Event/list-event-by-calendar-${id}-${dateTimeFalse}-${dateTimeSubTrue}`);
+                setPastEvents(FalseTrue);
 
                 setLoading(false);
             } catch (error) {
@@ -382,9 +385,9 @@ console.log(getCalendars)
                                         )}
                                     </Tab>
                                     <Tab key="past" title="Đã qua" className="text-sm font-semibold">
-                                        {getPastEventId && getPastEventId.length > 0 ? (
+                                        {getPastEvent && getPastEvent.length > 0 ? (
                                             <div className="timeline">
-                                                {getPastEventId.map((event, index) => (
+                                                {getPastEvent.map((event, index) => (
                                                     <div key={index} className="timeline-section relative flex w-full gap-16 pb-12">
                                                         <div className="line left-[calc(7rem+4rem/2)] dark:border-[rgba(255,255,255,0.08)]"></div>
                                                         <div className="title always relative w-28">
