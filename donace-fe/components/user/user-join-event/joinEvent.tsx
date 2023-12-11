@@ -482,6 +482,9 @@ export default function JoinEvent(props: { id: string }) {
                                                     <div className="cta-wrapper">
                                                         <div className="cta gap-2 mb-1 flex items-center">
                                                             <Button
+                                                                onClick={() => {
+
+                                                                }}
                                                                 className="text-[#fff] dark:text-[rgb(19,21,23)] bg-[#333537] dark:bg-[#fff] border-[#333537] dark:border-[#fff] border border-solid donace-button transition-all duration-300 ease-in-out flex items-center m-0"
                                                             >
                                                                 <div className="label">Tham gia sự kiện</div>
