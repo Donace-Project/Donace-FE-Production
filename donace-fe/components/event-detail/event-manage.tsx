@@ -67,7 +67,7 @@ const DayOfWeek = (date: string) => {
 }
 export default function EventManage(props: any) {
     var { id } = props
-
+    
     const modalEditEvent = useDisclosure();
     const modalEditMap = useDisclosure();
 
@@ -278,10 +278,10 @@ export default function EventManage(props: any) {
         fetchWrapper.get(`api/Event/detail-by-id?id=${id}`)
             .then(data => setEventDetail(data));
 
+        
         ImportMap();
     }, []);
-
-
+        
     // QR Code
     const qrcodeList = useState<any>([]);
     const handleChildDataChange = (dataFromChild: any) => {
@@ -319,7 +319,7 @@ export default function EventManage(props: any) {
                             </div>
                         </h1>
                         <Link
-                            href={`/events/detail/${eventDetail.id}`}
+                            href={`/events/detail/${eventDetail.sorted}/${eventDetail.calendarId}`}
                             target="_blank"
                             className="text-black-more-blur-light-theme dark:text-[rgba(255,255,255,0.64)] bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)] border-transparent border border-solid transition-all duration-300 ease-in-out donace-button-w-fit flex items-center cursor-pointer"
                             underline="none"
@@ -401,11 +401,6 @@ export default function EventManage(props: any) {
                         <div className="inner grid grid-cols-2 gap-5">
                             <div className="preview relative">
                                 <div className="relative">
-                                    {/* <Image
-                                        className="w-full h-auto bg-cover object-cover border border-solid border-[rgba(19,21,23,0.08)]"
-                                        alt="you are invited"
-                                        src={eventDetail?.cover ? 'https://cdn.lu.ma/cdn-cgi/image/format=auto,fit=cover,dpr=2,quality=75,width=400,height=400/event-defaults/1-1/standard4.png' : 'https://cdn.lu.ma/cdn-cgi/image/format=auto,fit=cover,dpr=2,quality=75,width=400,height=400/event-defaults/1-1/standard4.png'}
-                                    /> */}
                                     <div
                                         ref={backgroundRef}
                                         role="button"
@@ -414,13 +409,13 @@ export default function EventManage(props: any) {
                                     <div className="url-wrapper absolute p-[0.375rem_0.75rem] rounded-lg bg-[rgba(19,21,23,0.32)] z-50 bottom-2 left-2 right-2 backdrop-blur-lg shadow-md text-sm">
                                         <div className="url amimated transition-all duration-300 ease-in-out gap-2 flex justify-between items-center">
                                             <Link
-                                                href=""
+                                                href={`/user/join-event/${eventDetail?.id}`}
                                                 target="_blank"
                                                 className="text-[rgba(255,255,255,0.8)] gap-1 min-w-0 flex items-center transition-all duration-300 ease-in-out cursor-pointer"
                                                 underline="none"
                                             >
                                                 <div className="whitespace-nowrap overflow-hidden text-ellipsis min-w-0" id="myClipboard">
-                                                    {`events/manage/${eventDetail?.id}`}
+                                                    {`user/join-event/${eventDetail?.id}`}
                                                 </div>
                                                 <div className="flex items-center">
                                                     <ArrowUpRight className="block w-4 h-4 align-middle" />
@@ -460,7 +455,6 @@ export default function EventManage(props: any) {
                                                 </div>
                                                 <div>
                                                     <div className="font-medium">{eventDetail.addressName}</div>
-                                                    <div className="text-sm text-[#737577] dark:text-[#d2d4d7]">Vietnam TODO</div>
                                                 </div>
                                             </div>
                                             <div className="text-sm text-[#737577] dark:text-[#d2d4d7] mt-4">Địa chỉ này sẽ được công khai trong trang Sự kiện.</div>

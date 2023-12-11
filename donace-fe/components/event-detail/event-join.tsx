@@ -1,8 +1,8 @@
 'use client';
 import { fetchWrapper } from "@/helpers/fetch-wrapper";
-import { EventDetailModels, ListUserJoinEvent, UserJoinEvent } from "@/types/DonaceType";
+import { EventDetailModels, ListUserJoinEvent } from "@/types/DonaceType";
 import { Link } from "@nextui-org/link";
-import { ArrowUpRight, ArrowUpToLine, MailOpen, PencilLine, SearchIcon, Send, Sparkles, Upload, Users, XCircle } from "lucide-react";
+import { ArrowUpRight, ArrowUpToLine, CheckCircle2, Info, MailOpen, PencilLine, SearchIcon, Send, Sparkles, Upload, Users, XCircle } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Avatar, Divider, Progress } from "@nextui-org/react";
 import React from "react";
@@ -45,6 +45,9 @@ export default function EventUserJoin(props: any) {
     const [showNoContent, setShowNoContent] = useState(false);
     const [showSuggestedContent, setShowSuggestedContent] = useState(false);
 
+    const statusAppro = 2;
+    const statusDeclin = 1;
+
     const handleEmailButtonClick = () => {
         setShowEmailContent(true);
         setShowSuggestedContent(false);
@@ -76,8 +79,7 @@ export default function EventUserJoin(props: any) {
     var { id } = props
 
     var [eventDetail, setEventDetail] = useState<EventDetailModels | null>(null);
-    const [userJoin, setUserJoin] = useState<ListUserJoinEvent | null>(null);
-    const setCancelEvent = useState(null);
+    const [userJoin, setUserJoin] = useState<ListUserJoinEvent[]>([]);
 
     const [value, setValue] = React.useState(0);
     React.useEffect(() => {
@@ -127,24 +129,56 @@ export default function EventUserJoin(props: any) {
                 console.error(`Lỗi khi cập nhật số lượng: ${response.error}`);
                 return;
             }
-            console.log(<b>Đã cập nhậtt số lượng thành công!</b>);
+            console.log(<b>Đã cập nhật số lượng thành công!</b>);
         } catch (error) {
             console.error(`Lỗi: ${String(Error)}`);
         }
     }
 
+
+
     useEffect(() => {
         fetchWrapper.get(`api/Event/detail-by-id?id=${id}`)
             .then(data => setEventDetail(data));
 
-        fetchWrapper.get(`api/Event/user-join-${id}`)
+        fetchWrapper.get(`api/Event/user-join/${id}`)
             .then(data => setUserJoin(data));
 
-        // fetchWrapper.post('api/Event/user-join',)
-
-        // fetchWrapper.post(`api/Event/cancel?id=${id}`, null)
-        //     .then(data => setCancelEvent);
     }, []);
+
+    // useEffect(() => {
+    //     setIdPart(userJoin);
+    // }, [userJoin]);
+
+    const [showAcceptDiv, setShowAcceptDiv] = useState(false);
+
+    // const handleRenderPage = () => {
+    //     handleApprovalClick();
+    //     setStatus(2)
+    //     setShowAcceptDiv(true);
+    // }
+
+    function handleApprovalClick(idPart: string) {
+        fetchWrapper.post(`api/Event/approval`, { idPart, status: statusAppro, qr: "VaiLAnhTiepOI" })
+            .then(data => {
+
+                fetchWrapper.get(`api/Event/user-join/${id}`)
+                    .then(data => setUserJoin(data));
+            })
+            .catch(error => console.error("Error:", error));
+    };
+
+    const handleApprovalDeclineClick = (idPart: string) => {
+        // Gọi API khi người dùng click vào nút
+        fetchWrapper.post(`api/Event/approval`, { idPart, status: statusDeclin, qr: "VaiLAnhTiepOI" })
+            .then(data => {
+
+                fetchWrapper.get(`api/Event/user-join/${id}`)
+                    .then(data => setUserJoin(data));
+            })
+            .catch(error => console.error("Error:", error));
+    };
+
 
     return (
         <div className="page-content">
@@ -234,7 +268,7 @@ export default function EventUserJoin(props: any) {
                             <div className="bar-wrapper pb-0 pt-4">
                                 <div className="bar">
                                     <Progress
-                                        aria-label="Downloading..."
+                                        aria-label="Joining..."
                                         size="md"
                                         label="Tiến độ tham dự"
                                         value={value}
@@ -431,6 +465,7 @@ export default function EventUserJoin(props: any) {
                         <div className="filter gap-2 mb-2 mt-2 flex justify-between items-center">
                             <div className="lux-menu-trigger-wrapper cursor-pointer inline-flex min-w-0 w-2/4">
                                 <Select
+                                    aria-label="select key"
                                     items={usersAll}
                                     placeholder="Hiển thị danh sách người tham dự"
                                     className="max-w-xs"
@@ -442,29 +477,75 @@ export default function EventUserJoin(props: any) {
                                 <div className="label">5 tháng 9</div>
                             </div>
                         </div>
-                        {userJoin?.eventId ? (
-                            <div className="simple-table-wrapper bg-[#f2f3f4] mt-2 border border-solid border-[rgba(19,21,23,0.08)] dark:border-[rgba(255,255,255,0.08)] dark:bg-[rgba(255,255,255,0.04)]">
-                                <div className="base-row border-b-0 border-t-0 p-[0.75rem_1rem] cursor-pointer transition-all duration-300 ease-in-out">
-                                    <div className="gap-3 flex justify-between items-center">
-                                        <div className="avatar-wrapper small">
-                                            <Avatar
-                                                radius="full"
-                                                src={userJoin.avatar ? userJoin.avatar : "https://cdn.lu.ma/cdn-cgi/image/format=auto,fit=cover,dpr=2,background=white,quality=75,width=32,height=32/avatars-default/avatar_8.png"}
-                                                // src="https://cdn.lu.ma/cdn-cgi/image/format=auto,fit=cover,dpr=2,background=white,quality=75,width=32,height=32/avatars-default/avatar_8.png"
-                                                name="Donace"
-                                                className="w-6 h-6 bg-center bg-cover bg-[#fff] relative"
-                                            />
-                                        </div>
-                                        <div className="info overflow-hidden text-ellipsis whitespace-nowrap text-[#b3b5b7] min-w-0 flex-1">
-                                            <div className="name inline">
-                                                <div className="inline font-medium overflow-hidden text-ellipsis whitespace-nowrap text-black-light-theme dark:text-[#fff] mr-2 min-w-0">{userJoin.name}</div>
+                        {userJoin ? (
+                            userJoin.length > 0 ? (
+                                userJoin.map((user) => (
+                                    <div key={user.id} className="simple-table-wrapper bg-[#f2f3f4] mt-2 border border-solid border-[rgba(19,21,23,0.08)] dark:border-[rgba(255,255,255,0.08)] dark:bg-[rgba(255,255,255,0.04)]">
+                                        <div className="base-row border-b-0 border-t-0 p-[0.75rem_1rem] cursor-pointer transition-all duration-300 ease-in-out">
+                                            <div className="gap-3 flex justify-between items-center">
+                                                <div className="avatar-wrapper small">
+                                                    <Avatar
+                                                        radius="full"
+                                                        src={user.avatar ? user.avatar : "https://cdn.lu.ma/cdn-cgi/image/format=auto,fit=cover,dpr=2,background=white,quality=75,width=32,height=32/avatars-default/avatar_8.png"}
+                                                        name="Donace"
+                                                        className="w-6 h-6 bg-center bg-cover bg-[#fff] relative"
+                                                    />
+                                                </div>
+                                                <div className="info overflow-hidden text-ellipsis whitespace-nowrap text-[#b3b5b7] min-w-0 flex-1">
+                                                    <div className="name inline">
+                                                        <div className="inline font-medium overflow-hidden text-ellipsis whitespace-nowrap text-black-light-theme dark:text-[#fff] mr-2 min-w-0">{user.name}</div>
+                                                    </div>
+                                                    <div className="email inline overflow-hidden text-ellipsis whitespace-nowrap text-[#b3b5b7] dark:text-[#939597] min-w-0">{user.email}</div>
+                                                </div>
+                                                {user.status == 0 && (
+                                                    <div className="flex space-x-4">
+                                                        <Button
+                                                            color="success"
+                                                            onClick={() => handleApprovalClick(user.id)}
+                                                            className="text-[#fff] text-base font-medium"
+                                                        >
+                                                            <div className="icon">
+                                                                <CheckCircle2 className="align-middle block w-4 h-4" />
+                                                            </div>
+                                                            <div className="label">Chấp nhận</div>
+                                                        </Button>
+                                                        <Button
+                                                            color="danger"
+                                                            onClick={() => handleApprovalDeclineClick(user.id)}
+                                                            className="text-base font-medium"
+                                                        >
+                                                            <div className="icon">
+                                                                <XCircle className="align-middle block w-4 h-4" />
+                                                            </div>
+                                                            <div className="label">Từ chối</div>
+                                                        </Button>
+                                                    </div>
+                                                )}
+                                                {user.status === 2 && (
+                                                    <div className="flex items-center justify-between text-sm">
+                                                        <div className="icon mr-2">
+                                                            <Info className="block align-middle items-center w-4 h-4" />
+                                                        </div>
+                                                        <div className="label">
+                                                            Người dùng này đã tham gia sự kiện
+                                                        </div>
+                                                    </div>
+                                                )}
                                             </div>
-                                            {/* TODO: Thêm field Email */}
-                                            <div className="email inline overflow-hidden text-ellipsis whitespace-nowrap text-[#b3b5b7] dark:text-[#939597] min-w-0">{userJoin.name}</div>
                                         </div>
                                     </div>
+                                ))
+                            ) : (
+                                <div className="lux-empty-state text-center mt-16 flex flex-col items-center">
+                                    <div className="icon justify-center flex items-center">
+                                        <Users className="w-16 h-16 text-black-blur-light-theme block align-middle" />
+                                    </div>
+                                    <h3 className="text-black-more-blur-light-theme p-0 mt-4 mb-0 text-lg font-semibold">Không có khách nào tham dự</h3>
+                                    <div className="pl-12 pr-12 text-black-blur-light-theme mt-2">
+                                        Chia sẻ hoặc Mời bạn bè tham gia sự kiện!
+                                    </div>
                                 </div>
-                            </div>
+                            )
                         ) : (
                             <div className="lux-empty-state text-center mt-16 flex flex-col items-center">
                                 <div className="icon justify-center flex items-center">
