@@ -172,13 +172,11 @@ export default function EventUserJoin(props: any) {
         // Gọi API khi người dùng click vào nút
         fetchWrapper.post(`api/Event/approval`, { idPart, status: statusDeclin, qr: "VaiLAnhTiepOI" })
             .then(data => {
-
                 fetchWrapper.get(`api/Event/user-join/${id}`)
                     .then(data => setUserJoin(data));
             })
             .catch(error => console.error("Error:", error));
     };
-
 
     return (
         <div className="page-content">
