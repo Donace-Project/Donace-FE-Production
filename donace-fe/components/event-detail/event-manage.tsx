@@ -74,10 +74,8 @@ export default function EventManage(props: any) {
     };
     let map: any;
     // Lấy hostname và port
-    const hostname = window.location.hostname;
-    const port = window.location.port;
-    const finalPort = port === '80' || port === '' ? '3000' : port;
-    const currentURL = `http://${hostname}:${finalPort}`;
+    const [currentURL, setCurrentURL] = useState('');
+    let endedEvent: boolean;
     // -----------------End: Local Variable-----------------
 
     // -----------------Start: useDisclosure-----------------
@@ -314,7 +312,11 @@ export default function EventManage(props: any) {
     }, [modalEditEvent.isOpen, modalEditMap.isOpen, showOfflineContent]);
 
     useEffect(() => {
-
+        const hostname = window.location.hostname;
+        const port = window.location.port;
+        const finalPort = port === '80' || port === '' ? '3000' : port;
+        setCurrentURL(`http://${hostname}:${finalPort}`);
+        console.log(currentURL)
         fetchWrapper.get(`api/Event/detail-by-id?id=${id}`)
             .then(data => {
                 setEventDetail(data)
