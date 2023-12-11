@@ -29,26 +29,13 @@ import { Textarea } from "@nextui-org/input";
 import { FaTiktok } from "react-icons/fa";
 import { fetchWrapper } from "../../helpers/fetch-wrapper";
 import { ItemEventsProfile, UserProfile } from "@/types/DonaceType";
-
+import { Spinner } from "@nextui-org/react";
 
 interface DateInfo {
   year: string;
   month: string;
   day: string;
 }
-
-interface FormDataProfile {
-  userName: string;
-  avatar: string;
-  bio: string;
-  instagram: string;
-  twitter: string;
-  youtube: string;
-  tiktok: string;
-  linkedIn: string;
-  website: string;
-}
-
 
 const ConvertDate = (date: string): DateInfo => {
   const dateArray = date.split("-");
@@ -69,33 +56,22 @@ const pastDateFormatted = currentDate
   .replace(/\//g, "-");
 
 export default function ProfilePage() {
+  const [isLoading, setIsLoading] = useState(false);
   const dateTimeTrue = true;
   const [loading, setLoading] = useState(false);
-  let [userProfile, setUserProfile] = useState<null | UserProfile>(null);
+  let [userProfile, setUserProfile] = useState<any>(null);
   var [futureEvents, setFutureEvents] = useState<ItemEventsProfile[]>();
-
-  const [formData, setFormData] = useState<FormDataProfile>({
-    userName: "",
-    avatar: "",
-    bio: "",
-    instagram: "",
-    twitter: "",
-    youtube: "",
-    tiktok: "",
-    linkedIn: "",
-    website: "",
-  });
-
-
+  const refAvatar = useRef();
   useEffect(() => {
     // Gọi API profile và gán dữ liệu cho biến profile
     fetchWrapper
       .get("/api/User/profile")
       .then((data: UserProfile) => {
-        console.log(data); // Xem dữ liệu được trả về từ API
-        setUserProfile(data);
+        setUserProfile(data.result);
       })
-      .catch((error) => console.error("Lỗi khi gọi API:", error));
+      .catch((error) => {
+        console.error("Lỗi khi gọi API:", error);
+      });
   }, []);
 
   useEffect(() => {
@@ -104,7 +80,7 @@ export default function ProfilePage() {
       .then((data) => setFutureEvents(data.items));
   }, []);
 
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
   const [scrollBehavior, setScrollBehavior] =
     React.useState<ModalProps["scrollBehavior"]>("inside");
   const placements = ["outside"];
@@ -115,9 +91,8 @@ export default function ProfilePage() {
 
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
-  const handleImageChange = async (
-    e: any
-  ) => {
+  const handleImageChange = async (e: any) => {
+    debugger;
     const selectedFile = e.target.files[0];
     if (!selectedFile) return;
 
@@ -127,37 +102,26 @@ export default function ProfilePage() {
     setLoading(true);
 
     const url = await fetchWrapper.postFile("api/Common/upload-file", FileData);
-    // setBackgrounUrl(text);
     if (url != null) {
-      console.log(url)
+      console.log(url);
       setLoading(false);
     }
-    
-    formData.avatar = url;
 
-    console.log("🚀 ~ file: profile.tsx:36 ~ updateProfileHandle ~ res:", url);
+    setUserProfile({
+      ...userProfile,
+      avatar: url,
+    });
   };
+
   const updateProfileHandle = async () => {
-
+    setIsLoading(true);
     const res = await fetchWrapper
-      .put("/api/User/update-profile", {
-        userName: formData.userName || userProfile?.result.userName,
-        avatar: formData.avatar || userProfile?.result.avatar,
-        bio: formData.bio || userProfile?.result.bio,
-        instagram: formData.instagram || userProfile?.result.instagram,
-        twitter: formData.twitter || userProfile?.result.twitter,
-        youtube: formData.youtube || userProfile?.result.youtube,
-        tiktok: formData.tiktok || userProfile?.result.tiktok,
-        linkedIn: formData.linkedIn || userProfile?.result.linkedIn,
-        website: formData.website || userProfile?.result.website,
-      })
+      .post("/api/User/update-profile", userProfile)
       .then(() => {
-        location.reload(); // Làm mới trang khi nút được nhấn
+        setIsLoading(false);
+        onClose();
+        // location.reload(); // Làm mới trang khi nút được nhấn
       });
-
-    setSelectedImage(formData.avatar);
-
-    console.log("🚀 ~ file: profile.tsx:36 ~ updateProfileHandle ~ res:", res);
   };
 
   // call api hinh
@@ -186,11 +150,7 @@ export default function ProfilePage() {
                       >
                         <div className="avatar-wrapper">
                           <Avatar
-                            src={
-                              selectedImage ||
-                              userProfile?.result.avatar ||
-                              "https://cdn.lu.ma/cdn-cgi/image/format=auto,fit=cover,dpr=2,quality=75,width=100,height=100/avatars-default/avatar_8.png"
-                            }
+                            src={userProfile?.avatar}
                             radius="full"
                             name="Donace"
                             className="w-32 h-32 bg-[#fff] relative"
@@ -200,18 +160,18 @@ export default function ProfilePage() {
                     </div>
                     <div className="bio-container">
                       <div className="user-header-text">
-                        {userProfile && userProfile.result ? (
+                        {userProfile ? (
                           <div>
                             <Link
                               className="text-inherit transition-all duration-300 ease-in-out cursor-pointer"
                               underline="none"
                             >
                               <h1 className="font-semibold text-3xl mt-4 mb-4">
-                                {userProfile.result.userName}
+                                {userProfile.userName}
                               </h1>
                             </Link>
                             <div className="bio whitespace-pre-line break-words text-sm text-[#849ba4] mb-2">
-                              {userProfile.result.bio}
+                              {userProfile.bio}
                             </div>
                           </div>
                         ) : (
@@ -219,7 +179,7 @@ export default function ProfilePage() {
                         )}
                       </div>
                       <div className="justify-center flex items-center">
-                        {userProfile && userProfile.result ? (
+                        {userProfile ? (
                           <div>
                             <div className="social-link large"></div>
                           </div>
@@ -228,7 +188,7 @@ export default function ProfilePage() {
                             <div className="social-links -ml-2 -mr-2 flex items-center">
                               <div className="social-link large">
                                 <Link
-                                  defaultValue={userProfile?.result.instagram}
+                                  defaultValue={userProfile?.instagram}
                                   href=""
                                   target="_blank"
                                   rel="nofollow noopener"
@@ -336,9 +296,7 @@ export default function ProfilePage() {
                                                 className="w-24 h-24 bg-center bg-cover flex justify-center items-center bg-[#ebeced]"
                                                 radius="full"
                                                 src={
-                                                  formData.avatar ||
-                                                  selectedImage ||
-                                                  userProfile?.result.avatar ||
+                                                  userProfile?.avatar ||
                                                   "https://cdn.lu.ma/cdn-cgi/image/format=auto,fit=cover,dpr=2,quality=75,width=100,height=100/avatars-default/avatar_8.png"
                                                 }
                                               />
@@ -360,15 +318,13 @@ export default function ProfilePage() {
                                             autoFocus
                                             autoComplete="disable"
                                             variant="bordered"
-                                            placeholder={
-                                              userProfile?.result.userName
-                                            }
-                                            onChange={(e) =>
-                                              setFormData({
-                                                ...formData,
+                                            value={userProfile?.userName}
+                                            onChange={(e) => {
+                                              setUserProfile({
+                                                ...userProfile,
                                                 userName: e.target.value,
-                                              })
-                                            }
+                                              });
+                                            }}
                                           />
                                         ))}
                                       </div>
@@ -379,15 +335,13 @@ export default function ProfilePage() {
                                             variant={"bordered"}
                                             label="Tiểu sử"
                                             labelPlacement={"outside"}
-                                            placeholder={
-                                              userProfile?.result.bio
-                                            }
+                                            value={userProfile?.bio}
                                             maxLength={140}
                                             autoCapitalize="on"
                                             className="bg-transparent font-semibold mt-2 mb-2 pl-3 text-lg h-auto p-[0.375rem_0.75rem] transition-all duration-300 ease-in-out text-[#002f45] dark:text-white leading-6 rounded-lg w-full"
                                             onChange={(e) =>
-                                              setFormData({
-                                                ...formData,
+                                              setUserProfile({
+                                                ...userProfile,
                                                 bio: e.target.value,
                                               })
                                             }
@@ -410,9 +364,8 @@ export default function ProfilePage() {
                                                   </div>
                                                   <div className="input-innter-wrapper relative flex-1">
                                                     <Input
-                                                      placeholder={
-                                                        userProfile?.result
-                                                          .instagram
+                                                      value={
+                                                        userProfile?.instagram
                                                       }
                                                       type="text"
                                                       autoCorrect="off"
@@ -421,8 +374,8 @@ export default function ProfilePage() {
                                                       radius="sm"
                                                       variant="bordered"
                                                       onChange={(e) =>
-                                                        setFormData({
-                                                          ...formData,
+                                                        setUserProfile({
+                                                          ...userProfile,
                                                           instagram:
                                                             e.target.value,
                                                         })
@@ -448,9 +401,8 @@ export default function ProfilePage() {
                                                   </div>
                                                   <div className="input-innter-wrapper relative flex-1">
                                                     <Input
-                                                      placeholder={
-                                                        userProfile?.result
-                                                          .twitter
+                                                      value={
+                                                        userProfile?.twitter
                                                       }
                                                       type="text"
                                                       autoCorrect="off"
@@ -459,8 +411,8 @@ export default function ProfilePage() {
                                                       radius="sm"
                                                       variant="bordered"
                                                       onChange={(e) =>
-                                                        setFormData({
-                                                          ...formData,
+                                                        setUserProfile({
+                                                          ...userProfile,
                                                           twitter:
                                                             e.target.value,
                                                         })
@@ -486,9 +438,8 @@ export default function ProfilePage() {
                                                   </div>
                                                   <div className="input-innter-wrapper relative flex-1">
                                                     <Input
-                                                      placeholder={
-                                                        userProfile?.result
-                                                          .youtube
+                                                      value={
+                                                        userProfile?.youtube
                                                       }
                                                       type="text"
                                                       autoCorrect="off"
@@ -497,8 +448,8 @@ export default function ProfilePage() {
                                                       radius="sm"
                                                       variant="bordered"
                                                       onChange={(e) =>
-                                                        setFormData({
-                                                          ...formData,
+                                                        setUserProfile({
+                                                          ...userProfile,
                                                           youtube:
                                                             e.target.value,
                                                         })
@@ -524,9 +475,8 @@ export default function ProfilePage() {
                                                   </div>
                                                   <div className="input-innter-wrapper relative flex-1">
                                                     <Input
-                                                      placeholder={
-                                                        userProfile?.result
-                                                          .tiktok
+                                                      value={
+                                                        userProfile?.tiktok
                                                       }
                                                       type="text"
                                                       autoCorrect="off"
@@ -535,8 +485,8 @@ export default function ProfilePage() {
                                                       radius="sm"
                                                       variant="bordered"
                                                       onChange={(e) =>
-                                                        setFormData({
-                                                          ...formData,
+                                                        setUserProfile({
+                                                          ...userProfile,
                                                           tiktok:
                                                             e.target.value,
                                                         })
@@ -562,9 +512,8 @@ export default function ProfilePage() {
                                                   </div>
                                                   <div className="input-innter-wrapper relative flex-1">
                                                     <Input
-                                                      placeholder={
-                                                        userProfile?.result
-                                                          .linkedIn
+                                                      value={
+                                                        userProfile?.linkedIn
                                                       }
                                                       type="text"
                                                       autoCorrect="off"
@@ -573,8 +522,8 @@ export default function ProfilePage() {
                                                       radius="sm"
                                                       variant="bordered"
                                                       onChange={(e) =>
-                                                        setFormData({
-                                                          ...formData,
+                                                        setUserProfile({
+                                                          ...userProfile,
                                                           linkedIn:
                                                             e.target.value,
                                                         })
@@ -595,9 +544,7 @@ export default function ProfilePage() {
                                               <div>&nbsp;</div>
                                               <div className="input-inner-wrapper relative flex-1">
                                                 <Input
-                                                  placeholder={
-                                                    userProfile?.result.website
-                                                  }
+                                                  value={userProfile?.website}
                                                   type="url"
                                                   autoCapitalize="off"
                                                   autoCorrect="off"
@@ -605,8 +552,8 @@ export default function ProfilePage() {
                                                   className="text-base h-14 p-[0.5rem_0.75rem] donace-input m-0 pl-0.5 bg-transparent dark:text-white"
                                                   variant="bordered"
                                                   onChange={(e) =>
-                                                    setFormData({
-                                                      ...formData,
+                                                    setUserProfile({
+                                                      ...userProfile,
                                                       website: e.target.value,
                                                     })
                                                   }
@@ -618,23 +565,41 @@ export default function ProfilePage() {
                                       </div>
                                     </form>
                                   </div>
-                                  {
-                                    loading ?
-                                      <div className="absolute top-0 bottom-0 w-full backdrop-blur-lg z-auto" >
-                                        <div className="flex flex-row gap-2 h-full justify-center items-center">
-                                          <div className="w-4 h-4 rounded-full bg-blue-700 animate-bounce [animation-delay:.7s]"></div>
-                                          <div className="w-4 h-4 rounded-full bg-blue-700 animate-bounce [animation-delay:.3s]"></div>
-                                          <div className="w-4 h-4 rounded-full bg-blue-700 animate-bounce [animation-delay:.7s]"></div>
-                                        </div>
-                                      </div> : <div></div>
-                                  }
+                                  {loading ? (
+                                    <div className="absolute top-0 bottom-0 w-full backdrop-blur-lg z-auto">
+                                      <div className="flex flex-row gap-2 h-full justify-center items-center">
+                                        <div className="w-4 h-4 rounded-full bg-blue-700 animate-bounce [animation-delay:.7s]"></div>
+                                        <div className="w-4 h-4 rounded-full bg-blue-700 animate-bounce [animation-delay:.3s]"></div>
+                                        <div className="w-4 h-4 rounded-full bg-blue-700 animate-bounce [animation-delay:.7s]"></div>
+                                      </div>
+                                    </div>
+                                  ) : (
+                                    <div></div>
+                                  )}
                                 </ModalBody>
                                 <ModalFooter className="border-t border-solid border-t-[#eff3f5]">
                                   <Button
                                     onClick={updateProfileHandle}
                                     className="text-[#fff] bg-[#0099dd] border-[#0099dd] border border-solid w-full cursor-pointer transition-all duration-300 ease-in-out donace-button mt-6 flex items-center m-0 leading-6"
                                   >
-                                    <div className="label">Lưu thay đổi</div>
+                                    <div className="label">
+                                      {isLoading ? (
+                                        <>
+                                          <Spinner
+                                            size="sm"
+                                            color="success"
+                                            className="translate-y-0.5 mr-2"
+                                          />
+                                          <span className="label">
+                                            Đang tạo sự kiện...
+                                          </span>
+                                        </>
+                                      ) : (
+                                        <>
+                                          <div className="label">Cập nhật</div>
+                                        </>
+                                      )}
+                                    </div>
                                   </Button>
                                 </ModalFooter>
                               </>
@@ -696,7 +661,10 @@ export default function ProfilePage() {
                                         >
                                           <div className="event-time-left w-14 text-center mr-6 border border-solid border-[#f0f8fd] rounded-lg bg-white overflow-hidden transition-all duration-300 ease-in-out">
                                             <div className="event-month uppercase text-xs font-semibold text-[#82aad8] bg-[#f0f8fd] p-[0.125rem_0px] transition-all duration-300 ease-in-out">
-                                              {ConvertDate(event.startDate).month}
+                                              {
+                                                ConvertDate(event.startDate)
+                                                  .month
+                                              }
                                             </div>
                                             <div className="event-date text-2xl font-light m-[0.375rem_0px] text-[#002f45]">
                                               {ConvertDate(event.startDate).day}
@@ -719,10 +687,11 @@ export default function ProfilePage() {
                                             </div>
                                             <div className="text-sm flex-wrap mt-1 flex items-center">
                                               <div
-                                                className={`event-time ${event.isLive
-                                                  ? "starting-soon text-[#ec660d]"
-                                                  : "not-starting text-[#82aad8]"
-                                                  }`}
+                                                className={`event-time ${
+                                                  event.isLive
+                                                    ? "starting-soon text-[#ec660d]"
+                                                    : "not-starting text-[#82aad8]"
+                                                }`}
                                               >
                                                 {event.isLive
                                                   ? "Đang diễn ra"
@@ -772,8 +741,6 @@ export default function ProfilePage() {
           </div>
         </div>
       </div>
-
-
     </div>
   );
 }
