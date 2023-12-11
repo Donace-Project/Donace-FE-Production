@@ -523,7 +523,7 @@ export default function EventUserJoin(props: any) {
                                                         </Button>
                                                     </div>
                                                 )}
-                                                {user.status === 2 && showAcceptDiv && (
+                                                {user.status === 2 && (
                                                     <div className="flex items-center justify-between text-sm">
                                                         <div className="icon mr-2">
                                                             <Info className="block align-middle items-center w-4 h-4" />
