@@ -281,8 +281,7 @@ export default function EventManage(props: any) {
         
         ImportMap();
     }, []);
-
-
+        
     // QR Code
     const qrcodeList = useState<any>([]);
     const handleChildDataChange = (dataFromChild: any) => {

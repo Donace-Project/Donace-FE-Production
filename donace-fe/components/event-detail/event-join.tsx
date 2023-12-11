@@ -48,8 +48,6 @@ export default function EventUserJoin(props: any) {
     const statusAppro = 2;
     const statusDeclin = 1;
 
-    const [qr, setQR] = useState('');
-
     const handleEmailButtonClick = () => {
         setShowEmailContent(true);
         setShowSuggestedContent(false);
@@ -161,7 +159,7 @@ export default function EventUserJoin(props: any) {
     // }
 
     function handleApprovalClick(idPart: string) {
-        fetchWrapper.post(`api/Event/approval`, { idPart, status: statusAppro, qr: "" })
+        fetchWrapper.post(`api/Event/approval`, { idPart, status: statusAppro, qr: "VaiLAnhTiepOI" })
             .then(data => {
 
                 fetchWrapper.get(`api/Event/user-join/${id}`)
@@ -172,7 +170,7 @@ export default function EventUserJoin(props: any) {
 
     const handleApprovalDeclineClick = (idPart: string) => {
         // Gọi API khi người dùng click vào nút
-        fetchWrapper.post(`api/Event/approval`, { idPart, status: statusDeclin, qr: "" })
+        fetchWrapper.post(`api/Event/approval`, { idPart, status: statusDeclin, qr: "VaiLAnhTiepOI" })
             .then(data => {
 
                 fetchWrapper.get(`api/Event/user-join/${id}`)
