@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState } from "react";
-import { EventDetailModels, UserProfile } from "@/types/DonaceType";
+import { EventDetailModels, EventDetailSorted, UserProfile } from "@/types/DonaceType";
 import { Avatar } from "@nextui-org/avatar";
 import { Button } from "@nextui-org/button";
 import { Image } from "@nextui-org/image";
@@ -10,6 +10,8 @@ import { fetchWrapper } from "@/helpers/fetch-wrapper";
 import { Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure } from "@nextui-org/modal";
 import { Divider } from "@nextui-org/divider";
 import { Textarea } from "@nextui-org/react";
+import QRScanner from "@/components/QR/QRScanner";
+
 
 interface DateTimeInfo {
     year: string;
@@ -42,15 +44,20 @@ const DayOfWeek = (date: string) => {
     return daysOfWeek[currentDate]
 }
 
-export default function JoinEvent(props: any) {
+export default function JoinEvent(props: { id: string }) {
 
     const modalContact = useDisclosure();
     const modalUnSub = useDisclosure();
     const modalResign = useDisclosure();
     const modalViewTicket = useDisclosure();
 
-    var { id } = props
+    var { id } = props;
+
     const [eventDetail, setEventDetail] = useState<EventDetailModels | null>(null);
+    const [eventDetailSort, setEventDetailSort] = useState<EventDetailSorted | null>(null);
+    const [sortedValue, setSortedValue] = useState<number | null>(null);
+    const [calendarIdValue, setCalendarIdValue] = useState<string | null>(null);
+
     var [getProfile, setProfile] = useState<null | UserProfile>(null);
     const [thoiGian, setThoiGian] = useState(new Date());
 
@@ -58,17 +65,76 @@ export default function JoinEvent(props: any) {
     const gio = thoiGian.getHours();
     const buoi = gio >= 12 ? "PM" : "AM";
 
+    const [addressName, setAddressName] = useState('');
+    const [nameAddress, setNameAddress] = useState('');
+    const [district, setDistrict] = useState('');
+    const [city, setCity] = useState('');
+
     useEffect(() => {
         fetchWrapper.get(`api/Event/detail-by-id?id=${id}`)
-            .then(data => setEventDetail(data));
+            .then(data => {
+                setEventDetail(data);
+                const addressParts = data.addressName.split(/, /);
+                const addressName = addressParts[0]
+                const nameAddress = addressParts[1];
+                const district = addressParts[2];
+                const city = addressParts[4];
+                console.log('Tên địa chỉ:', addressName);
+                console.log('Tên đường:', nameAddress);
+                console.log('Quận huyện:', district);
+                console.log('Thành phố:', city);
+                setAddressName(addressName);
+                setNameAddress(nameAddress);
+                setDistrict(district);
+                setCity(city);
+            })
+            .catch(error => {
+                console.error('Lỗi khi lấy chi tiết sự kiện từ API:', error);
+            });
 
         fetchWrapper.get('/api/User/profile')
             .then((data: UserProfile) => {
-                console.log(data); // Xem dữ liệu được trả về từ API
+                console.log(data);
                 setProfile(data);
             })
             .catch(error => console.error('Lỗi khi gọi API:', error));
     }, []);
+
+    // * Click vào sẽ mở tab trong google map
+    const handleMapLinkClick = () => {
+        if (eventDetail && eventDetail.addressName) {
+            const address = encodeURIComponent(eventDetail.addressName);
+            const mapsURL = `https://www.google.com/maps/search/?api=1&query=${address}`;
+            window.open(mapsURL, '_blank');
+        }
+    };
+
+
+    //* Scan QR
+    const qrcodeList = useState<any>([]);
+    const handleChildDataChange = (dataFromChild: any) => {
+        // Xử lý dữ liệu từ component con ở đây
+        if (dataFromChild == "error") {
+            console.log("error")
+            return;
+        } else {
+            if (qrcodeList.includes(dataFromChild)) {
+                console.log("already in list")
+            } else {
+                qrcodeList.push(dataFromChild)
+                try {
+                    fetchWrapper.post("/api/UserTickets/Check-in", {
+                        dataFromChild,
+                        id
+                    }).then(data => console.log(data))
+                }
+                catch (error) {
+                    console.log(error)
+                }
+            }
+        }
+    };
+
     return (
         <div className="page-content">
             <div className="page-container min-h-[100dvh] relative bg-transparent">
@@ -156,11 +222,11 @@ export default function JoinEvent(props: any) {
                                             </div>
                                         </div>
                                         <Link
-                                            href="https://maps.app.goo.gl/PcmdqBSLh3SwXnZN7"
                                             target="_blank"
                                             rel="nofollow noopener"
                                             className="transition-all duration-300 ease-in-out cursor-pointer"
                                             underline="none"
+                                            onClick={handleMapLinkClick}
                                         >
                                             <div className="icon-row gap-4 flex items-center">
                                                 <div className="icon-container w-10 h-10 border border-solid border-[rgba(19,21,23,0.08)] dark:border-[rgba(255,255,255,0.08)] text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)] m-0.5 flex-shrink-0 justify-center flex items-center overflow-hidden rounded-lg">
@@ -175,7 +241,7 @@ export default function JoinEvent(props: any) {
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div className="desc text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)] text-sm mt-px overflow-hidden text-ellipsis whitespace-nowrap">{eventDetail.lat}, {eventDetail.long}</div>
+                                                    {/* <div className="desc text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)] text-sm mt-px overflow-hidden text-ellipsis whitespace-nowrap">{district}, {city}</div> */}
                                                 </div>
                                             </div>
                                         </Link>
@@ -277,149 +343,164 @@ export default function JoinEvent(props: any) {
                                         </div>
                                     </div> */}
                                     <div className="content gap-3 flex flex-col">
-                                        {/* <div>
-                                            Chào {getProfile?.result.userName}! Để tham gia sự kiện, vui lòng đăng ký phía bên dưới.
-                                        </div>
-                                        <div className="content gap-3 mt-2 flex flex-col">
-                                            <div className="user-row gap-2 flex items-center">
-                                                <div className="avatar-wrapper small">
-                                                    <Avatar
-                                                        src={getProfile?.result.avatar ? "https://avatars.githubusercontent.com/u/143386751?s=200&v=4" : "https://avatars.githubusercontent.com/u/143386751?s=200&v=4"}
-                                                        className="w-5 h-5 relative"
-                                                        radius="full"
-                                                    />
+                                        {eventDetail?.isSub === true && eventDetail.isAppro === true ? (
+                                            <div>
+                                                <div className="waiting-request">
+                                                    <div className="text-black-light-theme text-lg font-medium">Bạn đang tham gia</div>
+                                                    <div className="text-black-more-blur-light-theme text-sm mt-1">
+                                                        Email xác nhận đã được gửi tới: <span className="text-black-light-theme font-medium">{getProfile?.result.email}</span>.
+                                                    </div>
                                                 </div>
-                                                <div className="min-w-0 flex flex-wrap items-baseline">
-                                                    <b className="overflow-hidden text-ellipsis whitespace-nowrap mr-1 font-semibold">{eventDetail?.name}</b>
-                                                    <span className="email text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)] overflow-hidden text-ellipsis whitespace-nowrap">{getProfile?.result.email}</span>
-                                                </div>
-                                            </div>
-                                            <div className="cta-wrapper">
-                                                <div className="cta gap-2 mb-1 flex items-center">
-                                                    <Button
-                                                        className="text-[#fff] dark:text-[rgb(19,21,23)] bg-[#333537] dark:bg-[#fff] border-[#333537] dark:border-[#fff] border border-solid donace-button transition-all duration-300 ease-in-out flex items-center m-0"
-                                                    >
-                                                        <div className="label">Tham gia sự kiện</div>
-                                                    </Button>
-                                                    <Button
-                                                        className="text-[#fff] dark:text-[rgb(19,21,23)] bg-[#333537] dark:bg-[#fff] border-[#333537] dark:border-[#fff] border border-solid donace-button transition-all duration-300 ease-in-out flex items-center m-0"
-                                                    >
-                                                        <div className="label">Yêu cầu tham gia sự kiện</div>
-                                                    </Button>
-                                                    <Button
-                                                        className="text-[#fff] dark:text-[rgb(19,21,23)] bg-[#333537] dark:bg-[#fff] border-[#333537] dark:border-[#fff] border border-solid donace-button transition-all duration-300 ease-in-out flex items-center m-0"
-                                                    >
-                                                        <div className="label">Thanh toán</div>
-                                                    </Button>
-                                                </div>
-                                            </div>
-                                        </div> */}
-                                        <div>
-                                            {/* <div
-                                                className="live-badge text-[#ff9641] flex items-center font-medium justify-end"
-                                                style={{
-                                                    animationName: 'breath',
-                                                    animationDuration: '2s',
-                                                    animationTimingFunction: 'ease',
-                                                    animationDelay: '0s',
-                                                    animationIterationCount: 'infinite',
-                                                    animationDirection: 'normal',
-                                                    animationFillMode: 'none',
-                                                    animationPlayState: 'running',
-                                                }}
-                                            >
-                                                <Radio className="translate-y-px mr-2 w-4 h-4 block align-middle" />
-                                                Live
-                                            </div> */}
-                                            <div className="user-row gap-2 flex items-center">
-                                                <div className="avatar-wrapper small">
-                                                    <Avatar
-                                                        src={getProfile?.result.avatar ? "https://avatars.githubusercontent.com/u/143386751?s=200&v=4" : "https://avatars.githubusercontent.com/u/143386751?s=200&v=4"}
-                                                        className="w-5 h-5 relative"
-                                                        radius="full"
-                                                    />
-                                                </div>
-                                                <div className="min-w-0 flex flex-wrap items-baseline justify-between w-full text-ellipsis overflow-auto whitespace-nowrap">
-                                                    <div>
-                                                        <b className="overflow-hidden text-ellipsis whitespace-nowrap mr-1 font-semibold">{getProfile?.result.userName}</b>
-                                                        <span className="email text-sm text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)] overflow-hidden text-ellipsis whitespace-nowrap">{getProfile?.result.email}</span>
+                                                <div className="join-event-online text-black-more-blur-light-theme text-xs mt-4">
+                                                    <div className="cta-wrapper join-event">
+                                                        <div className="cta gap-2 mb-1 flex items-center">
+                                                            {eventDetail.isOnline === true ? (
+                                                                <Button
+                                                                    className="text-[#fff] dark:text-[rgb(19,21,23)] bg-[#333537] dark:bg-[#fff] border-[#333537] dark:border-[#fff] border border-solid donace-button-w-fit transition-all duration-300 ease-in-out flex items-center m-0"
+                                                                >
+                                                                    <Video className="mr-2 w-5 h-5 align-middle block translate-y-px" />
+                                                                    <div className="label">Tham gia</div>
+                                                                </Button>
+                                                            ) : (
+                                                                <Button
+                                                                    onPress={modalViewTicket.onOpen}
+                                                                    className="text-[#fff] dark:text-[rgb(19,21,23)] bg-[#333537] dark:bg-[#fff] border-[#333537] dark:border-[#fff] border border-solid donace-button-w-fit transition-all duration-300 ease-in-out flex items-center m-0"
+                                                                >
+                                                                    <QrCode className="mr-2 w-5 h-5 align-middle block translate-y-px" />
+                                                                    <div className="label">Xem vé</div>
+                                                                </Button>
+                                                            )}
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div className="content gap-3 mt-1 flex flex-col">
-                                            <div className="waiting-request">
-                                                <div className="text-black-light-theme text-lg font-medium">Đợi chấp nhận</div>
-                                                <div className="text-black-more-blur-light-theme text-sm mt-1">
-                                                    Email xác nhận đã được gửi tới: <span className="text-black-light-theme font-medium">tungnhps17361@fpt.edu.vn</span>.
-                                                </div>
-                                                <div className="text-black-more-blur-light-theme text-sm">
-                                                    Chúng tôi sẽ thông báo cho bạn khi đăng ký của bạn được phê duyệt.
-                                                </div>
-                                            </div>
-                                            <div className="left count-times gap-3 flex items-baseline bg-[#f7fafe] p-[0.25rem_1rem] border border-solid rounded-lg">
-                                                <div className="icon">
-                                                    <AlarmClock className="block w-5 h-5 align-middle translate-y-1" />
-                                                </div>
-                                                <div className="content flex items-baseline justify-between w-full">
-                                                    <div className="font-medium">Sự kiện bắt đầu sau</div>
-                                                    <div className="text-[#ff9641] font-medium">21m 38s</div>
-                                                </div>
-                                            </div>
-                                            <div className="unsubs text-black-more-blur-light-theme text-xs">
-                                                <span>Không tiếp tục tham gia Sự kiện? Bạn có thể hủy đăng ký </span>
-                                                <Link
-                                                    as={"span"}
-                                                    className="text-[#ff9641] text-xs cursor-pointer"
-                                                    underline="always"
-                                                    onPress={modalUnSub.onOpen}
-                                                >
-                                                    tại đây
-                                                </Link>
-                                            </div>
-                                            {/* <div className="waiting-request">
-                                                <div className="text-black-light-theme text-lg font-medium">Bạn đã hủy đăng ký sự kiện</div>
-                                                <div className="text-black-more-blur-light-theme text-sm mt-1">
-                                                    Hi vọng sẽ gặp lại bạn ở lần sự kiện tiếp theo.
-                                                </div>
-                                            </div>
-                                            <div className="resign text-black-more-blur-light-theme text-xs">
-                                                <span>Bạn muốn tham gia lại Sự kiện? Bạn có thể đăng ký lại </span>
-                                                <Link
-                                                    as={"span"}
-                                                    className="text-[#ff9641] text-xs cursor-pointer"
-                                                    underline="always"
-                                                    onPress={modalResign.onOpen}
-                                                >
-                                                    tại đây
-                                                </Link>
-                                            </div> */}
-                                            {/* <div className="waiting-request">
-                                                <div className="text-black-light-theme text-lg font-medium">Bạn đang tham gia</div>
-                                                <div className="text-black-more-blur-light-theme text-sm mt-1">
-                                                    Email xác nhận đã được gửi tới: <span className="text-black-light-theme font-medium">tungnhps17361@fpt.edu.vn</span>.
-                                                </div>
-                                            </div> */}
-                                            <div className="join-event-online text-black-more-blur-light-theme text-xs">
-                                                <div className="cta-wrapper join-event">
-                                                    <div className="cta gap-2 mb-1 flex items-center">
-                                                        {/* <Button
-                                                            className="text-[#fff] dark:text-[rgb(19,21,23)] bg-[#333537] dark:bg-[#fff] border-[#333537] dark:border-[#fff] border border-solid donace-button-w-fit transition-all duration-300 ease-in-out flex items-center m-0"
+                                        ) : eventDetail?.isSub === true && eventDetail.isAppro === false ? (
+                                            <div>
+                                                <div>
+                                                    {eventDetail.isLive === true ? (
+                                                        <div
+                                                            className="live-badge text-[#ff9641] flex items-center font-medium justify-end"
+                                                            style={{
+                                                                animationName: 'breath',
+                                                                animationDuration: '2s',
+                                                                animationTimingFunction: 'ease',
+                                                                animationDelay: '0s',
+                                                                animationIterationCount: 'infinite',
+                                                                animationDirection: 'normal',
+                                                                animationFillMode: 'none',
+                                                                animationPlayState: 'running',
+                                                            }}
                                                         >
-                                                            <Video className="mr-2 w-5 h-5 align-middle block translate-y-px"/>
-                                                            <div className="label">Tham gia</div>
-                                                        </Button> */}
-                                                        {/* <Button
-                                                            onPress={modalViewTicket.onOpen}
-                                                            className="text-[#fff] dark:text-[rgb(19,21,23)] bg-[#333537] dark:bg-[#fff] border-[#333537] dark:border-[#fff] border border-solid donace-button-w-fit transition-all duration-300 ease-in-out flex items-center m-0"
+                                                            <Radio className="translate-y-px mr-2 w-4 h-4 block align-middle" />
+                                                            Live
+                                                        </div>
+                                                    ) : null}
+                                                    <div className="user-row gap-2 flex items-center">
+                                                        <div className="avatar-wrapper small">
+                                                            <Avatar
+                                                                src={getProfile?.result.avatar ? "https://avatars.githubusercontent.com/u/143386751?s=200&v=4" : "https://avatars.githubusercontent.com/u/143386751?s=200&v=4"}
+                                                                className="w-5 h-5 relative"
+                                                                radius="full"
+                                                            />
+                                                        </div>
+                                                        <div className="min-w-0 flex flex-wrap items-baseline justify-between w-full text-ellipsis overflow-auto whitespace-nowrap">
+                                                            <div>
+                                                                <b className="overflow-hidden text-ellipsis whitespace-nowrap mr-1 font-semibold">{getProfile?.result.userName}</b>
+                                                                <span className="email text-sm text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)] overflow-hidden text-ellipsis whitespace-nowrap">{getProfile?.result.email}</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div className="content gap-3 mt-1 flex flex-col">
+                                                    <div className="waiting-request">
+                                                        <div className="text-black-light-theme text-lg font-medium">Đợi chấp nhận</div>
+                                                        <div className="text-black-more-blur-light-theme text-sm mt-1">
+                                                            Email xác nhận đã được gửi tới: <span className="text-black-light-theme font-medium">tungnhps17361@fpt.edu.vn</span>.
+                                                        </div>
+                                                        <div className="text-black-more-blur-light-theme text-sm">
+                                                            Chúng tôi sẽ thông báo cho bạn khi đăng ký của bạn được phê duyệt.
+                                                        </div>
+                                                    </div>
+                                                    <div className="left count-times gap-3 flex items-baseline bg-[#f7fafe] p-[0.25rem_1rem] border border-solid rounded-lg">
+                                                        <div className="icon">
+                                                            <AlarmClock className="block w-5 h-5 align-middle translate-y-1" />
+                                                        </div>
+                                                        <div className="content flex items-baseline justify-between w-full">
+                                                            <div className="font-medium">Sự kiện bắt đầu sau</div>
+                                                            <div className="text-[#ff9641] font-medium">21m 38s</div>
+                                                        </div>
+                                                    </div>
+                                                    <div className="unsubs text-black-more-blur-light-theme text-xs">
+                                                        <span>Không tiếp tục tham gia Sự kiện? Bạn có thể hủy đăng ký </span>
+                                                        <Link
+                                                            as={"span"}
+                                                            className="text-[#ff9641] text-xs cursor-pointer"
+                                                            underline="always"
+                                                            onPress={modalUnSub.onOpen}
                                                         >
-                                                            <QrCode className="mr-2 w-5 h-5 align-middle block translate-y-px" />
-                                                            <div className="label">Xem vé</div>
-                                                        </Button> */}
+                                                            tại đây
+                                                        </Link>
+                                                    </div>
+                                                    {/* <div className="waiting-request">
+                                                        <div className="text-black-light-theme text-lg font-medium">Bạn đã hủy đăng ký sự kiện</div>
+                                                        <div className="text-black-more-blur-light-theme text-sm mt-1">
+                                                            Hi vọng sẽ gặp lại bạn ở lần sự kiện tiếp theo.
+                                                        </div>
+                                                    </div>
+                                                    <div className="resign text-black-more-blur-light-theme text-xs">
+                                                        <span>Bạn muốn tham gia lại Sự kiện? Bạn có thể đăng ký lại </span>
+                                                        <Link
+                                                            as={"span"}
+                                                            className="text-[#ff9641] text-xs cursor-pointer"
+                                                            underline="always"
+                                                            onPress={modalResign.onOpen}
+                                                        >
+                                                            tại đây
+                                                        </Link>
+                                                    </div> */}
+                                                </div>
+                                            </div>
+                                        ) : (
+                                            <div>
+                                                <div>
+                                                    Chào {getProfile?.result.userName}! Để tham gia sự kiện, vui lòng đăng ký phía bên dưới.
+                                                </div>
+                                                <div className="content gap-3 mt-2 flex flex-col">
+                                                    <div className="user-row gap-2 flex items-center">
+                                                        <div className="avatar-wrapper small">
+                                                            <Avatar
+                                                                src={getProfile?.result.avatar ? "https://avatars.githubusercontent.com/u/143386751?s=200&v=4" : "https://avatars.githubusercontent.com/u/143386751?s=200&v=4"}
+                                                                className="w-5 h-5 relative"
+                                                                radius="full"
+                                                            />
+                                                        </div>
+                                                        <div className="min-w-0 flex flex-wrap items-baseline">
+                                                            <b className="overflow-hidden text-ellipsis whitespace-nowrap mr-1 font-semibold">{eventDetail?.name}</b>
+                                                            <span className="email text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)] overflow-hidden text-ellipsis whitespace-nowrap">{getProfile?.result.email}</span>
+                                                        </div>
+                                                    </div>
+                                                    <div className="cta-wrapper">
+                                                        <div className="cta gap-2 mb-1 flex items-center">
+                                                            <Button
+                                                                className="text-[#fff] dark:text-[rgb(19,21,23)] bg-[#333537] dark:bg-[#fff] border-[#333537] dark:border-[#fff] border border-solid donace-button transition-all duration-300 ease-in-out flex items-center m-0"
+                                                            >
+                                                                <div className="label">Tham gia sự kiện</div>
+                                                            </Button>
+                                                            {/* <Button
+                                                                className="text-[#fff] dark:text-[rgb(19,21,23)] bg-[#333537] dark:bg-[#fff] border-[#333537] dark:border-[#fff] border border-solid donace-button transition-all duration-300 ease-in-out flex items-center m-0"
+                                                            >
+                                                                <div className="label">Yêu cầu tham gia sự kiện</div>
+                                                            </Button>
+                                                            <Button
+                                                                className="text-[#fff] dark:text-[rgb(19,21,23)] bg-[#333537] dark:bg-[#fff] border-[#333537] dark:border-[#fff] border border-solid donace-button transition-all duration-300 ease-in-out flex items-center m-0"
+                                                            >
+                                                                <div className="label">Thanh toán</div>
+                                                            </Button> */}
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        )}
                                     </div>
                                 </div>
                             </div>
@@ -444,8 +525,9 @@ export default function JoinEvent(props: any) {
                                 {eventDetail ? (
                                     <div>
                                         <div className="cursor-copy">
-                                            <div className="font-medium">{eventDetail?.lat}</div>
-                                            <div className="text-tined text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)] text-sm mt-1">{eventDetail?.long}</div>
+                                            <div className="font-medium">{eventDetail.addressName}</div>
+                                            <div className="text-tined text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)] text-sm mt-1">
+                                            </div>
                                         </div>
                                     </div>
                                 ) : (
@@ -484,7 +566,7 @@ export default function JoinEvent(props: any) {
                     {(onClose) => (
                         <>
                             <ModalBody className="mt-2">
-                                <div className="border-4 border-dashed border-[rgba(19,21,23,0.2)] rounded-xl p-[0.5rem_1rem]">
+                                {/* <div className="border-4 border-dashed border-[rgba(19,21,23,0.2)] rounded-xl p-[0.5rem_1rem]">
                                     <Image
                                         className="bg-center bg-cover mb-2"
                                         width={500}
@@ -492,7 +574,8 @@ export default function JoinEvent(props: any) {
                                         alt="NextUI hero Image with delay"
                                         src="https://app.requestly.io/delay/2000/https://nextui-docs-v2.vercel.app/images/hero-card-complete.jpeg"
                                     />
-                                </div>
+                                </div> */}
+                                <QRScanner onChildDataChange={handleChildDataChange} />
                                 <div className="name-event text-lg font-medium text-black-light-theme">Tên sự kiện</div>
                                 <div className="can-divide with-divider medium border-t-2 border-dashed border-[rgba(19,21,23,0.2)] m-0"></div>
                                 <div>
@@ -608,7 +691,7 @@ export default function JoinEvent(props: any) {
                                 />
                                 <div>
                                     <div className="title text-black-more-blur-light-theme dark:text-[#fff] font-medium">
-                                        Người tổ chức sự kiện sẽ trả lời bạn qua gmail <span className="text-black-light-theme">nguyenhiengiabao12@gmail.com</span>
+                                        Người tổ chức sự kiện sẽ trả lời bạn qua gmail: <span className="text-black-light-theme">{getProfile?.result.email}</span>
                                     </div>
                                 </div>
                             </ModalBody>

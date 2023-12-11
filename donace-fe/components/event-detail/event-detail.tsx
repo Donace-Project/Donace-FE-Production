@@ -42,24 +42,26 @@ const DayOfWeek = (date: string) => {
     return daysOfWeek[currentDate]
 }
 
-export default function EventDetails(props: any) {
+export default function EventDetails(props: { sorted: number, calendarId: string }) {
 
-    var { id } = props
+    var { sorted, calendarId } = props
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
     var [eventDetail, setEventDetail] = useState<EventDetailModels | null>(null);
     let [userProfile, setUserProfile] = useState<null | UserProfile>(null);
 
     useEffect(() => {
-        fetchWrapper.get(`api/Event/detail-by-id?id=${id}`)
-            .then(data => setEventDetail(data));
+        // fetchWrapper.get(`api/Event/detail-by-id?id=${id}`)
+        //     .then(data => setEventDetail(data));
 
         fetchWrapper.get('/api/User/profile')
             .then((data: UserProfile) => {
-
                 console.log(data); //? Xem dữ liệu được trả về từ API từ màn console
                 setUserProfile(data);
             })
             .catch(error => console.error('Lỗi khi gọi API:', error));
+
+        fetchWrapper.get(`api/Event/${sorted}/${calendarId}`)
+            .then(data => setEventDetail(data));
     }, []);
 
     return (
@@ -67,7 +69,7 @@ export default function EventDetails(props: any) {
             {eventDetail ? (
                 <div>
                     <div>
-                        <div className="flex flex-col" key={eventDetail.sort}>
+                        <div className="flex flex-col" key={eventDetail.sorted}>
                             <div className="main min-h-[80vh] w-full p-[0_0.25rem] relative max-width-global margin-global">
                                 <div className="top-card overflow-hidden bg-[rgba(19,21,23,0.48)] rounded-2xl shadow-md p-2">
                                     <div className="cover-image rounded-lg bg-[rgba(255,255,255,0.08)] w-full overflow-hidden relative">
@@ -85,8 +87,8 @@ export default function EventDetails(props: any) {
                                                                 name="Donace"
                                                                 className="relative w-5 h-5" />
                                                         </div>
-                                                        // TODO: fetch lại api tên
-                                                        <div className="overflow-hidden text-ellipsis whitespace-nowrap">Điều phối bởi TODO</div>
+                                                        {/* // TODO: fetch lại api tên */}
+                                                        <div className="overflow-hidden text-ellipsis whitespace-nowrap">{eventDetail.sorted}</div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -178,7 +180,7 @@ export default function EventDetails(props: any) {
                                                                         "text-[#fff]"
                                                                     ],
                                                                     input: [
-                                                                        
+
                                                                         "text-[hsla(0,0%,100%,.79)]"
                                                                     ],
                                                                     base: [
