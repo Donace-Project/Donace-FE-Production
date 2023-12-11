@@ -424,7 +424,7 @@ export default function EventManage(props: any) {
                                             <button
                                                 aria-label="copy link"
                                                 type="button"
-                                                className="text-[rgba(255,255,255,0.48)] border-[#939597] bg-transparent p-0 h-auto border-none rounded-none outline-offset-[.375rem] cursor-pointer transition-all duration-300 ease-in-out font-medium relative whitespace-nowrap justify-center outline-none max-w-full w-fit flex items-center m-0 leading-6"
+                                                className="text-[rgba(255,255,255,0.48)] border-[#939597] hover:text-[#fff] bg-transparent p-0 h-auto border-none rounded-none outline-offset-[.375rem] cursor-pointer transition-all duration-300 ease-in-out font-medium relative whitespace-nowrap justify-center outline-none max-w-full w-fit flex items-center m-0 leading-6"
                                             >
                                                 <div className="label">SAO CHÉP</div>
                                             </button>

@@ -181,7 +181,7 @@ export default function JoinEvent(props: { id: string }) {
                                                     <Avatar
                                                         className="w-6 h-6 relative"
                                                         radius="full"
-                                                        src={getProfile?.result.avatar ? "https://avatars.githubusercontent.com/u/143386751?s=200&v=4" : "https://avatars.githubusercontent.com/u/143386751?s=200&v=4"}
+                                                        src={getProfile?.result.avatar ? getProfile.result.avatar : "https://avatars.githubusercontent.com/u/143386751?s=200&v=4"}
                                                     />
                                                 </div>
                                                 <div className="min-w-0">
@@ -482,7 +482,7 @@ export default function JoinEvent(props: { id: string }) {
                                                     <div className="user-row gap-2 flex items-center">
                                                         <div className="avatar-wrapper small">
                                                             <Avatar
-                                                                src={getProfile?.result.avatar ? "https://avatars.githubusercontent.com/u/143386751?s=200&v=4" : "https://avatars.githubusercontent.com/u/143386751?s=200&v=4"}
+                                                                src={eventDetail?.cover ? eventDetail?.cover : "https://avatars.githubusercontent.com/u/143386751?s=200&v=4"}
                                                                 className="w-5 h-5 relative"
                                                                 radius="full"
                                                             />
@@ -496,7 +496,7 @@ export default function JoinEvent(props: { id: string }) {
                                                         <div className="cta gap-2 mb-1 flex items-center">
                                                             <Button
                                                                 onClick={() => {
-
+                                                                    handleJoinEvent
                                                                 }}
                                                                 className="text-[#fff] dark:text-[rgb(19,21,23)] bg-[#333537] dark:bg-[#fff] border-[#333537] dark:border-[#fff] border border-solid donace-button transition-all duration-300 ease-in-out flex items-center m-0"
                                                             >
