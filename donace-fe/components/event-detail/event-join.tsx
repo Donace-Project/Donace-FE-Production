@@ -158,8 +158,8 @@ export default function EventUserJoin(props: any) {
     //     setShowAcceptDiv(true);
     // }
 
-    function handleApprovalClick(idPart: string) {
-        fetchWrapper.post(`api/Event/approval`, { idPart, status: statusAppro, qr: "VaiLAnhTiepOI" })
+    function handleApprovalClick(idPart: string, idUser: string) {
+        fetchWrapper.post(`api/Event/approval`, { idPart: idPart, status: statusAppro, qr: "VaiLAnhTiepOI", userId: idUser })
             .then(data => {
 
                 fetchWrapper.get(`api/Event/user-join/${id}`)
@@ -168,9 +168,9 @@ export default function EventUserJoin(props: any) {
             .catch(error => console.error("Error:", error));
     };
 
-    const handleApprovalDeclineClick = (idPart: string) => {
+    const handleApprovalDeclineClick = (idPart: string, idUser: string) => {
         // Gọi API khi người dùng click vào nút
-        fetchWrapper.post(`api/Event/approval`, { idPart, status: statusDeclin, qr: "VaiLAnhTiepOI" })
+        fetchWrapper.post(`api/Event/approval`, { idPart: idPart, status: statusDeclin, qr: "VaiLAnhTiepOI", userId: idUser })
             .then(data => {
                 fetchWrapper.get(`api/Event/user-join/${id}`)
                     .then(data => setUserJoin(data));
@@ -499,7 +499,7 @@ export default function EventUserJoin(props: any) {
                                                     <div className="flex space-x-4">
                                                         <Button
                                                             color="success"
-                                                            onClick={() => handleApprovalClick(user.id)}
+                                                            onClick={() => handleApprovalClick(user.id, user.userId)}
                                                             className="text-[#fff] text-base font-medium"
                                                         >
                                                             <div className="icon">
@@ -509,7 +509,7 @@ export default function EventUserJoin(props: any) {
                                                         </Button>
                                                         <Button
                                                             color="danger"
-                                                            onClick={() => handleApprovalDeclineClick(user.id)}
+                                                            onClick={() => handleApprovalDeclineClick(user.id, user.userId)}
                                                             className="text-base font-medium"
                                                         >
                                                             <div className="icon">

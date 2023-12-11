@@ -294,11 +294,12 @@ export default function EventManage(props: any) {
             if (qrcodeList.includes(dataFromChild)) {
                 console.log("already in list")
             } else {
+                console.log(dataFromChild + " added")
                 qrcodeList.push(dataFromChild)
                 try {
                     fetchWrapper.post("/api/UserTickets/Check-in", {
-                        dataFromChild,
-                        id
+                        id: dataFromChild,
+                        eventId: eventDetail?.id
                     }).then(data => console.log(data))
                 }
                 catch (error) {
@@ -873,7 +874,7 @@ export default function EventManage(props: any) {
                     )}
                 </ModalContent>
             </Modal>
-            <Modal isOpen={isOpen} onOpenChange={onOpenChange} backdrop="blur" size="4xl">
+            <Modal isOpen={isOpen} onOpenChange={onOpenChange} backdrop="transparent" size="3xl">
                 <ModalContent>
                     {(onClose) => (
                         <>

@@ -11,6 +11,9 @@ import { Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure
 import { Divider } from "@nextui-org/divider";
 import { Textarea } from "@nextui-org/react";
 import QRScanner from "@/components/QR/QRScanner";
+import { set } from "date-fns";
+import { data } from "autoprefixer";
+import QRCodeGenerator from "@/components/QR/QRGenerator";
 
 
 interface DateTimeInfo {
@@ -134,6 +137,42 @@ export default function JoinEvent(props: { id: string }) {
             }
         }
     };
+
+    const [ticketIdForQr, setTicketIdForQr] = useState<string>("");
+
+    const handleQrGenerator = async () => {
+        let ticketId = await fetchWrapper.get("/api/UserTickets/get-ticket")
+
+        if (ticketId != null) {
+            console.log(ticketId)
+            setTicketIdForQr(ticketId)
+        }
+        else {
+            console.log("some bug")
+        }
+
+    }
+
+    const [joiningLoading, setJoiningLoading] = useState(false);
+
+    const handleJoinEvent = async () => {
+        setJoiningLoading(true);
+        let data = await fetchWrapper.post("/api/Event/user-join", {
+            userId: getProfile?.result.id,
+            calendarId: calendarIdValue,
+            eventId: id,
+        }).then(data => console.log(data))
+
+        if (data != null) {
+            setJoiningLoading(false);
+            console.log(data)
+        }
+    }
+
+    const openModalGenQr = async () => {
+        await handleQrGenerator();
+        modalViewTicket.onOpen;
+    }
 
     return (
         <div className="page-content">
@@ -363,10 +402,9 @@ export default function JoinEvent(props: { id: string }) {
                                                                 </Button>
                                                             ) : (
                                                                 <Button
-                                                                    onPress={modalViewTicket.onOpen}
+                                                                    onPress={() => {modalViewTicket.onOpen; }}
                                                                     className="text-[#fff] dark:text-[rgb(19,21,23)] bg-[#333537] dark:bg-[#fff] border-[#333537] dark:border-[#fff] border border-solid donace-button-w-fit transition-all duration-300 ease-in-out flex items-center m-0"
                                                                 >
-                                                                    <QrCode className="mr-2 w-5 h-5 align-middle block translate-y-px" />
                                                                     <div className="label">Xem vé</div>
                                                                 </Button>
                                                             )}
@@ -481,14 +519,24 @@ export default function JoinEvent(props: { id: string }) {
                                                     </div>
                                                     <div className="cta-wrapper">
                                                         <div className="cta gap-2 mb-1 flex items-center">
-                                                            <Button
-                                                                onClick={() => {
+                                                            {
+                                                                joiningLoading ?
+                                                                    <Button
+                                                                        isLoading
+                                                                        className="text-[#fff] dark:text-[rgb(19,21,23)] bg-[#333537] dark:bg-[#fff] border-[#333537] dark:border-[#fff] border border-solid donace-button transition-all duration-300 ease-in-out flex items-center m-0"
+                                                                    >
+                                                                        <div className="label">Tham gia sự kiện</div>
+                                                                    </Button>
+                                                                    : <Button
+                                                                        onClick={() => {
+                                                                            handleJoinEvent()
+                                                                        }}
+                                                                        className="text-[#fff] dark:text-[rgb(19,21,23)] bg-[#333537] dark:bg-[#fff] border-[#333537] dark:border-[#fff] border border-solid donace-button transition-all duration-300 ease-in-out flex items-center m-0"
+                                                                    >
+                                                                        <div className="label">Tham gia sự kiện</div>
+                                                                    </Button>
+                                                            }
 
-                                                                }}
-                                                                className="text-[#fff] dark:text-[rgb(19,21,23)] bg-[#333537] dark:bg-[#fff] border-[#333537] dark:border-[#fff] border border-solid donace-button transition-all duration-300 ease-in-out flex items-center m-0"
-                                                            >
-                                                                <div className="label">Tham gia sự kiện</div>
-                                                            </Button>
                                                             {/* <Button
                                                                 className="text-[#fff] dark:text-[rgb(19,21,23)] bg-[#333537] dark:bg-[#fff] border-[#333537] dark:border-[#fff] border border-solid donace-button transition-all duration-300 ease-in-out flex items-center m-0"
                                                             >
@@ -578,7 +626,8 @@ export default function JoinEvent(props: { id: string }) {
                                         src="https://app.requestly.io/delay/2000/https://nextui-docs-v2.vercel.app/images/hero-card-complete.jpeg"
                                     />
                                 </div> */}
-                                <QRScanner onChildDataChange={handleChildDataChange} />
+                                {/* <QRScanner onChildDataChange={handleChildDataChange} /> */}
+                                <QRCodeGenerator value={ticketIdForQr} />
                                 <div className="name-event text-lg font-medium text-black-light-theme">Tên sự kiện</div>
                                 <div className="can-divide with-divider medium border-t-2 border-dashed border-[rgba(19,21,23,0.2)] m-0"></div>
                                 <div>
