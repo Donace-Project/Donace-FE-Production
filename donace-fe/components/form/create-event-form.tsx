@@ -119,12 +119,13 @@ export default function CreateFormFinal() {
   });
   const [eventReq, SetEventReq] = useState<any>({
     name: "",
-    startDate: String,
+    startDate: `${formattedDate}T12:00`,
+    endDate: `${formattedDate}T12:00`,
     calendarId: String,
-    lat: String,
-    long: String,
+    lat: Number,
+    long: Number,
     addressName: String,
-    cover: String,
+    cover: 'https://cdn.lu.ma/cdn-cgi/image/format=auto,fit=cover,dpr=2,quality=75,width=400,height=400/event-defaults/1-1/standard1.png',
     isOnline: false,
     linkMeet: String,
     isUnlimited: true,
@@ -309,11 +310,6 @@ export default function CreateFormFinal() {
     } else {
       SetStartDate({ ...startDate, time: newValue });
     }
-
-    SetEventReq({
-      ...eventReq,
-      startDate: `${startDate.date}T${startDate.time}`,
-    });
   };
 
   const updateEndDate = (type: string, newValue: string) => {
@@ -322,14 +318,9 @@ export default function CreateFormFinal() {
     } else {
       SetEndDate({ ...endDate, time: newValue });
     }
-    SetEventReq({
-      ...eventReq,
-      endDate: `${endDate.date}T${endDate.time}`,
-    });
   };
 
   const handleSaveOnlineLink = () => {
-    debugger;
     if (!isURL(onlineLink)) {
       setIsCorrectFormatLink(false);
       return;
@@ -337,8 +328,8 @@ export default function CreateFormFinal() {
     SetEventReq({
       ...eventReq,
       isOnline: true,
-      lat: "",
-      long: "",
+      lat: 0,
+      long: 0,
       addressName: "",
       linkMeet: onlineLink,
     });
@@ -348,13 +339,9 @@ export default function CreateFormFinal() {
   };
 
   const handleCreateEvent = async () => {
-    console.log("create event");
-    debugger;
-    SetEventReq({
-      ...eventReq,
-      startDate: `${startDate.date}T${startDate.time}`,
-      endDate: `${endDate.date}T${endDate.time}`,
-    });
+    // debugger;
+    console.log(`${startDate.date}T${startDate.time}`)
+    console.log(`${endDate.date}T${endDate.time}`)
 
     let startDateTemp = new Date(`${startDate.date}T${startDate.time}`);
     let endDateTemp = new Date(`${endDate.date}T${endDate.time}`);
@@ -370,12 +357,15 @@ export default function CreateFormFinal() {
 
     setIsLoading(true);
     try {
-      const response = await fetchWrapper.post("/api/Event", eventReq);
+      const response = await fetchWrapper.post("/api/Event", {
+        ...eventReq,
+        startDate: `${startDate.date}T${startDate.time}`,
+        endDate: `${endDate.date}T${endDate.time}`,
+      });
 
       if (response.id) {
         // Redirect
         router.push(`/events/manage/${response.id}`);
-        console.log(response.id);
         return;
       }
       setCreatEventErrorMessage("không thể tạo sự kiện!");
@@ -438,7 +428,6 @@ export default function CreateFormFinal() {
         if (paymentData === "") {
           setVnpayConnected(false);
         } else {
-          console.log("204 No Content");
           setVnpayConnected(true);
         }
       } catch (error) {
@@ -457,7 +446,6 @@ export default function CreateFormFinal() {
   }, [selectedCalendar]);
 
   useEffect(() => {
-    console.log(lng, lat);
     if (modalMap.isOpen && showOfflineContent === true) {
       map = new goongjs.current.Map({
         container: "map", // ID của phần tử HTML để chứa bản đồ
@@ -865,11 +853,11 @@ export default function CreateFormFinal() {
 
                                         {showOfflineContent ? (
                                           compoundLatCommune &&
-                                          compoundLngCommune &&
-                                          compoundLatDistrict &&
-                                          compoundLngDistrict &&
-                                          compoundLatProvince &&
-                                          compoundLngProvince ? (
+                                            compoundLngCommune &&
+                                            compoundLatDistrict &&
+                                            compoundLngDistrict &&
+                                            compoundLatProvince &&
+                                            compoundLngProvince ? (
                                             <div className="overflow-hidden text-ellipsis whitespace-nowrap text-sm text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)] max-w-[19rem]">
                                               <p>
                                                 {compoundLatCommune},{" "}

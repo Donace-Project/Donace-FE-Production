@@ -67,7 +67,7 @@ const DayOfWeek = (date: string) => {
 }
 export default function EventManage(props: any) {
     var { id } = props
-    
+
     const modalEditEvent = useDisclosure();
     const modalEditMap = useDisclosure();
 
@@ -278,10 +278,10 @@ export default function EventManage(props: any) {
         fetchWrapper.get(`api/Event/detail-by-id?id=${id}`)
             .then(data => setEventDetail(data));
 
-        
+
         ImportMap();
     }, []);
-        
+
     // QR Code
     const qrcodeList = useState<any>([]);
     const handleChildDataChange = (dataFromChild: any) => {

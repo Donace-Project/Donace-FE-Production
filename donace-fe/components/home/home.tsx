@@ -77,7 +77,7 @@ export default function HomeEvents() {
 
   var [futureEvents, setFutureEvents] = useState<Item[]>();
   var [pastEvents, setPastEvents] = useState<Item[]>();
-  
+
   const [isOnline, setIsOnline] = useState(true);
   const [thoiGian, setThoiGian] = useState(new Date());
   const [loading, setLoading] = useState(true);
