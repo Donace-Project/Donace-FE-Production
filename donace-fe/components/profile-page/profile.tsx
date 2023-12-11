@@ -150,7 +150,7 @@ export default function ProfilePage() {
                       >
                         <div className="avatar-wrapper">
                           <Avatar
-                            src={userProfile?.avatar}
+                            src={userProfile?.avatar ? userProfile?.avatar : "https://cdn.lu.ma/cdn-cgi/image/format=auto,fit=cover,dpr=2,quality=75,width=100,height=100/avatars-default/avatar_8.png"}
                             radius="full"
                             name="Donace"
                             className="w-32 h-32 bg-[#fff] relative"
@@ -295,10 +295,7 @@ export default function ProfilePage() {
                                               <Avatar
                                                 className="w-24 h-24 bg-center bg-cover flex justify-center items-center bg-[#ebeced]"
                                                 radius="full"
-                                                src={
-                                                  userProfile?.avatar ||
-                                                  "https://cdn.lu.ma/cdn-cgi/image/format=auto,fit=cover,dpr=2,quality=75,width=100,height=100/avatars-default/avatar_8.png"
-                                                }
+                                                src={userProfile?.avatar ? userProfile?.avatar : "https://cdn.lu.ma/cdn-cgi/image/format=auto,fit=cover,dpr=2,quality=75,width=100,height=100/avatars-default/avatar_8.png"}
                                               />
                                             </div>
                                           </div>
@@ -319,6 +316,7 @@ export default function ProfilePage() {
                                             autoComplete="disable"
                                             variant="bordered"
                                             value={userProfile?.userName}
+                                            placeholder="Tên của bạn là gì?"
                                             onChange={(e) => {
                                               setUserProfile({
                                                 ...userProfile,
@@ -336,6 +334,7 @@ export default function ProfilePage() {
                                             label="Tiểu sử"
                                             labelPlacement={"outside"}
                                             value={userProfile?.bio}
+                                            placeholder="Hãy cho chúng tôi biết một số thông tin thú vị về bạn."
                                             maxLength={140}
                                             autoCapitalize="on"
                                             className="bg-transparent font-semibold mt-2 mb-2 pl-3 text-lg h-auto p-[0.375rem_0.75rem] transition-all duration-300 ease-in-out text-[#002f45] dark:text-white leading-6 rounded-lg w-full"
@@ -373,6 +372,7 @@ export default function ProfilePage() {
                                                       className="text-base h-14 p-[0.5rem_0.75rem] donace-input m-0 pl-0.5 dark:text-white"
                                                       radius="sm"
                                                       variant="bordered"
+                                                      placeholder="username"
                                                       onChange={(e) =>
                                                         setUserProfile({
                                                           ...userProfile,
@@ -410,6 +410,7 @@ export default function ProfilePage() {
                                                       className="text-base h-14 p-[0.5rem_0.75rem] donace-input m-0 pl-0.5 dark:text-white"
                                                       radius="sm"
                                                       variant="bordered"
+                                                      placeholder="username"
                                                       onChange={(e) =>
                                                         setUserProfile({
                                                           ...userProfile,
@@ -447,6 +448,7 @@ export default function ProfilePage() {
                                                       className="text-base h-14 p-[0.5rem_0.75rem] donace-input m-0 pl-0.5 dark:text-white"
                                                       radius="sm"
                                                       variant="bordered"
+                                                      placeholder="username"
                                                       onChange={(e) =>
                                                         setUserProfile({
                                                           ...userProfile,
@@ -484,6 +486,7 @@ export default function ProfilePage() {
                                                       className="text-base h-14 p-[0.5rem_0.75rem] donace-input m-0 pl-0.5 dark:text-white"
                                                       radius="sm"
                                                       variant="bordered"
+                                                      placeholder="username"
                                                       onChange={(e) =>
                                                         setUserProfile({
                                                           ...userProfile,
@@ -521,6 +524,7 @@ export default function ProfilePage() {
                                                       className="text-base h-14 p-[0.5rem_0.75rem] donace-input m-0 pl-0.5 dark:text-white"
                                                       radius="sm"
                                                       variant="bordered"
+                                                      placeholder="username"
                                                       onChange={(e) =>
                                                         setUserProfile({
                                                           ...userProfile,
@@ -551,6 +555,7 @@ export default function ProfilePage() {
                                                   spellCheck="false"
                                                   className="text-base h-14 p-[0.5rem_0.75rem] donace-input m-0 pl-0.5 bg-transparent dark:text-white"
                                                   variant="bordered"
+                                                  placeholder="Website của bạn"
                                                   onChange={(e) =>
                                                     setUserProfile({
                                                       ...userProfile,
@@ -687,11 +692,10 @@ export default function ProfilePage() {
                                             </div>
                                             <div className="text-sm flex-wrap mt-1 flex items-center">
                                               <div
-                                                className={`event-time ${
-                                                  event.isLive
-                                                    ? "starting-soon text-[#ec660d]"
-                                                    : "not-starting text-[#82aad8]"
-                                                }`}
+                                                className={`event-time ${event.isLive
+                                                  ? "starting-soon text-[#ec660d]"
+                                                  : "not-starting text-[#82aad8]"
+                                                  }`}
                                               >
                                                 {event.isLive
                                                   ? "Đang diễn ra"

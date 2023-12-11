@@ -10,7 +10,7 @@ type QRCodeGeneratorProps = {
 
 const QRCodeGenerator = ({ value }: QRCodeGeneratorProps) => {
     return (
-        <QRCode value={value} size={200} level='H' className='m-auto' />
+        <QRCode value={value} size={300} level='H' className='m-auto' />
     );
 };
 

@@ -218,11 +218,12 @@ export default function EventManage(props: any) {
             if (qrcodeList.includes(dataFromChild)) {
                 console.log("already in list")
             } else {
+                console.log(dataFromChild + " added")
                 qrcodeList.push(dataFromChild)
                 try {
                     fetchWrapper.post("/api/UserTickets/Check-in", {
-                        dataFromChild,
-                        id
+                        id: dataFromChild,
+                        eventId: eventDetail?.id
                     }).then(data => console.log(data))
                 }
                 catch (error) {
@@ -445,7 +446,7 @@ export default function EventManage(props: any) {
                                             <button
                                                 aria-label="copy link"
                                                 type="button"
-                                                className="text-[rgba(255,255,255,0.48)]  border-[#939597] bg-transparent p-0 h-auto border-none rounded-none outline-offset-[.375rem] cursor-pointer transition-all duration-300 ease-in-out font-medium relative whitespace-nowrap justify-center outline-none max-w-full w-fit flex items-center m-0 leading-6"
+                                                className="text-[rgba(255,255,255,0.48)] border-[#939597] hover:text-[#fff] bg-transparent p-0 h-auto border-none rounded-none outline-offset-[.375rem] cursor-pointer transition-all duration-300 ease-in-out font-medium relative whitespace-nowrap justify-center outline-none max-w-full w-fit flex items-center m-0 leading-6"
                                             >
                                                 {/* // TODO: CSS hover cho nó nháy đén */}
                                                 <div className="label" onClick={(e) => navigator.clipboard.writeText(`${currentURL}/user/join-event/${eventDetail?.id}`)}>SAO CHÉP</div>
@@ -919,7 +920,7 @@ export default function EventManage(props: any) {
                     )}
                 </ModalContent>
             </Modal>
-            <Modal isOpen={isOpen} onOpenChange={onOpenChange} backdrop="blur" size="4xl">
+            <Modal isOpen={isOpen} onOpenChange={onOpenChange} backdrop="transparent" size="3xl">
                 <ModalContent>
                     {(onClose) => (
                         <>
