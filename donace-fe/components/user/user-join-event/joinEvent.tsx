@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState } from "react";
-import { Calendar, EventDetailModels, EventDetailSorted, GetCalendarById, ResultUserProfile, UserJoinEvent, UserProfile } from "@/types/DonaceType";
+import { EventDetailModels, EventDetailSorted, UserProfile } from "@/types/DonaceType";
 import { Avatar } from "@nextui-org/avatar";
 import { Button } from "@nextui-org/button";
 import { Image } from "@nextui-org/image";
@@ -59,8 +59,7 @@ export default function JoinEvent(props: { id: string }) {
     const [eventDetail, setEventDetail] = useState<EventDetailModels | null>(null);
     const [eventDetailSort, setEventDetailSort] = useState<EventDetailSorted | null>(null);
     const [sortedValue, setSortedValue] = useState<number | null>(null);
-    const [calendar, setCalendar] = useState<GetCalendarById | null>(null);
-    const [userJoin, setUserJoin] = useState<UserJoinEvent | null>(null);
+    const [calendarIdValue, setCalendarIdValue] = useState<string | null>(null);
 
     var [getProfile, setProfile] = useState<null | UserProfile>(null);
     const [thoiGian, setThoiGian] = useState(new Date());
@@ -114,35 +113,30 @@ export default function JoinEvent(props: { id: string }) {
     };
 
 
-    console.log(getProfile?.result.id);
-    console.log(eventDetail?.calendarId);
-    console.log(eventDetail?.id);
-
-
     //* Scan QR
-    const qrcodeList = useState<any>([]);
-    const handleChildDataChange = (dataFromChild: any) => {
-        // Xử lý dữ liệu từ component con ở đây
-        if (dataFromChild == "error") {
-            console.log("error")
-            return;
-        } else {
-            if (qrcodeList.includes(dataFromChild)) {
-                console.log("already in list")
-            } else {
-                qrcodeList.push(dataFromChild)
-                try {
-                    fetchWrapper.post("/api/UserTickets/Check-in", {
-                        dataFromChild,
-                        id
-                    }).then(data => console.log(data))
-                }
-                catch (error) {
-                    console.log(error)
-                }
-            }
-        }
-    };
+    // const qrcodeList = useState<any>([]);
+    // const handleChildDataChange = (dataFromChild: any) => {
+    //     // Xử lý dữ liệu từ component con ở đây
+    //     if (dataFromChild == "error") {
+    //         console.log("error")
+    //         return;
+    //     } else {
+    //         if (qrcodeList.includes(dataFromChild)) {
+    //             console.log("already in list")
+    //         } else {
+    //             qrcodeList.push(dataFromChild)
+    //             try {
+    //                 fetchWrapper.post("/api/UserTickets/Check-in", {
+    //                     dataFromChild,
+    //                     id
+    //                 }).then(data => console.log(data))
+    //             }
+    //             catch (error) {
+    //                 console.log(error)
+    //             }
+    //         }
+    //     }
+    // };
 
     const [ticketIdForQr, setTicketIdForQr] = useState<string>("");
 
@@ -150,7 +144,6 @@ export default function JoinEvent(props: { id: string }) {
         let ticketId = await fetchWrapper.get("/api/UserTickets/get-ticket")
 
         if (ticketId != null) {
-            console.log(ticketId)
             setTicketIdForQr(ticketId)
         }
         else {
@@ -165,7 +158,7 @@ export default function JoinEvent(props: { id: string }) {
         setJoiningLoading(true);
         let data = await fetchWrapper.post("/api/Event/user-join", {
             userId: getProfile?.result.id,
-            calendarId: eventDetail?.calendarId,
+            calendarId: calendarIdValue,
             eventId: id,
         }).then(data => console.log(data))
 
@@ -175,9 +168,9 @@ export default function JoinEvent(props: { id: string }) {
         }
     }
 
-    const openModalGenQr = async () => {
-        await handleQrGenerator();
-        modalViewTicket.onOpen;
+    const openModalGenQr = () => {
+        handleQrGenerator();
+        modalViewTicket.onOpen();
     }
 
     return (
@@ -213,7 +206,7 @@ export default function JoinEvent(props: { id: string }) {
                                                     <Avatar
                                                         className="w-6 h-6 relative"
                                                         radius="full"
-                                                        src={getProfile?.result.avatar ? getProfile.result.avatar : "https://avatars.githubusercontent.com/u/143386751?s=200&v=4"}
+                                                        src={getProfile?.result.avatar ? "https://avatars.githubusercontent.com/u/143386751?s=200&v=4" : "https://avatars.githubusercontent.com/u/143386751?s=200&v=4"}
                                                     />
                                                 </div>
                                                 <div className="min-w-0">
@@ -408,7 +401,7 @@ export default function JoinEvent(props: { id: string }) {
                                                                 </Button>
                                                             ) : (
                                                                 <Button
-                                                                    onPress={() => {modalViewTicket.onOpen; }}
+                                                                    onPress={() => { openModalGenQr() }}
                                                                     className="text-[#fff] dark:text-[rgb(19,21,23)] bg-[#333537] dark:bg-[#fff] border-[#333537] dark:border-[#fff] border border-solid donace-button-w-fit transition-all duration-300 ease-in-out flex items-center m-0"
                                                                 >
                                                                     <div className="label">Xem vé</div>
@@ -513,7 +506,7 @@ export default function JoinEvent(props: { id: string }) {
                                                     <div className="user-row gap-2 flex items-center">
                                                         <div className="avatar-wrapper small">
                                                             <Avatar
-                                                                src={eventDetail?.cover ? eventDetail?.cover : "https://avatars.githubusercontent.com/u/143386751?s=200&v=4"}
+                                                                src={getProfile?.result.avatar ? "https://avatars.githubusercontent.com/u/143386751?s=200&v=4" : "https://avatars.githubusercontent.com/u/143386751?s=200&v=4"}
                                                                 className="w-5 h-5 relative"
                                                                 radius="full"
                                                             />
@@ -525,14 +518,24 @@ export default function JoinEvent(props: { id: string }) {
                                                     </div>
                                                     <div className="cta-wrapper">
                                                         <div className="cta gap-2 mb-1 flex items-center">
-                                                            <Button
-                                                                onClick={() => {
+                                                            {
+                                                                joiningLoading ?
+                                                                    <Button
+                                                                        isLoading
+                                                                        className="text-[#fff] dark:text-[rgb(19,21,23)] bg-[#333537] dark:bg-[#fff] border-[#333537] dark:border-[#fff] border border-solid donace-button transition-all duration-300 ease-in-out flex items-center m-0"
+                                                                    >
+                                                                        <div className="label">Tham gia sự kiện</div>
+                                                                    </Button>
+                                                                    : <Button
+                                                                        onClick={() => {
+                                                                            handleJoinEvent()
+                                                                        }}
+                                                                        className="text-[#fff] dark:text-[rgb(19,21,23)] bg-[#333537] dark:bg-[#fff] border-[#333537] dark:border-[#fff] border border-solid donace-button transition-all duration-300 ease-in-out flex items-center m-0"
+                                                                    >
+                                                                        <div className="label">Tham gia sự kiện</div>
+                                                                    </Button>
+                                                            }
 
-                                                                }}
-                                                                className="text-[#fff] dark:text-[rgb(19,21,23)] bg-[#333537] dark:bg-[#fff] border-[#333537] dark:border-[#fff] border border-solid donace-button transition-all duration-300 ease-in-out flex items-center m-0"
-                                                            >
-                                                                <div className="label">Tham gia sự kiện</div>
-                                                            </Button>
                                                             {/* <Button
                                                                 className="text-[#fff] dark:text-[rgb(19,21,23)] bg-[#333537] dark:bg-[#fff] border-[#333537] dark:border-[#fff] border border-solid donace-button transition-all duration-300 ease-in-out flex items-center m-0"
                                                             >

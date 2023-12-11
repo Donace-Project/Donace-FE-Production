@@ -10,7 +10,6 @@ const QRScanner = ({onChildDataChange }) => {
 
   const handleScan = (data) => {
     if (data) {
-      console.log(data)
       onChildDataChange(data.data);
     }
   };
