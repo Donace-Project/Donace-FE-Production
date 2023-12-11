@@ -413,7 +413,7 @@ export default function NavbarComponents() {
                   index === 2 ? "primary" : index === items.length - 1 ? "danger" : "foreground"
                 }
                 className="w-full"
-                href="#"
+                href={item.path}
                 size="lg"
               >
                 {item.name}
