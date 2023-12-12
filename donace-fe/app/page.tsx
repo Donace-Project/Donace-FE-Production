@@ -11,13 +11,13 @@ export default function Home() {
 		<div className="page-wrapper pb-0 gradient-background">
 			<NavbarLanding />
 			<div className="page-content max-w-[100dvw] overflow-x-hidden">
-				<div className="zm-container min-h-[80vh] flex items-center relative gap-4 p-4 pt-12 justify-between max-width-global margin-global">
+				<div className="zm-container min-h-[80vh] flex flex-col md:flex-row items-center gap-4 p-4 pt-12 justify-between max-width-global margin-global">
 					<div className="content flex-shrink">
 						<div className="logo text-[hsla(0,0%,100%,.5)] mb-6 ml-1.5">
 							<p className="label">DONACE</p>
 						</div>
-						<h1 className="text-7xl font-medium -space-x-px mt-0 mb-4">
-							<div>
+						<div className="font-medium -space-x-px mt-0 mb-4 flex flex-col gap-4" >
+							<div className="md:text-7xl text-2xl">
 								<TypeAnimation
 									cursor={false}
 									sequence={[
@@ -32,8 +32,7 @@ export default function Home() {
 									repeat={Infinity}
 								/>
 							</div>
-							<div>
-
+							<div className="md:text-base text-xs">
 								<TypeAnimation
 									cursor={false}
 									sequence={[
@@ -46,11 +45,11 @@ export default function Home() {
 									]}
 									wrapper="span"
 									speed={40}
-									style={{ display: 'inline-block', color: '#f2f3f4', fontSize: '40px' }}
+									
 									repeat={Infinity}
 								/>
 							</div>
-							<div>
+							<div className="text-xs md:text-base">
 								<TypeAnimation
 									cursor={false}
 									sequence={[
@@ -61,13 +60,13 @@ export default function Home() {
 									]}
 									wrapper="span"
 									speed={40}
-									style={{ display: 'inline-block', color: '#f2f3f4', fontSize: '40px', whiteSpace: 'pre-line', paddingBottom: '16px' }}
+									style={{ display: 'inline-block', color: '#f2f3f4', whiteSpace: 'pre-line', paddingBottom: '16px' }}
 									repeat={Infinity}
 								/>
 							</div>
-							<div className=" start-here font-sans mt-2 ml-2 pb-4">Bắt đầu ngay.</div>
+							{/* <div className="start-here font-sans mt-2 ml-2 pb-4 hidden md:block">Bắt đầu ngay.</div> */}
 
-						</h1>
+						</div>
 						<div className="desc mt-2 text-xl max-w-sm text-[hsla(0,0%,100%,.79)]">
 							Tạo một sự kiện, mời bạn bè và cùng nhau tham dự. Hãy cùng nhau tạo kỷ niệm ngay hôm nay.
 						</div>
@@ -80,7 +79,7 @@ export default function Home() {
 							<div className="label">Tạo một event mới</div>
 						</Link>
 					</div>
-					<div className="phone flex-shrink-0 relative -mr-36">
+					<div className="">
 						<Player
 							autoplay
 							loop
