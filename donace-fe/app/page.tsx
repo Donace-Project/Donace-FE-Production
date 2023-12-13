@@ -13,15 +13,15 @@ export default function Home() {
 			<div className="page-content max-w-[100dvw] overflow-x-hidden">
 				<div className="zm-container min-h-[80vh] flex flex-col md:flex-row items-center gap-4 p-4 pt-12 justify-between max-width-global margin-global">
 					<div className="content flex-shrink">
-						<div className="logo text-[hsla(0,0%,100%,.5)] mb-6 ml-1.5">
-							<p className="label">DONACE</p>
+						<div className="logo text-[hsla(0,0%,100%,.5)] mb-1 md:mb-6 ml-1.5">
+							<p className="md:text-left text-center label md:text-2xl text-1xl">DONACE</p>
 						</div>
 						<div className="font-medium -space-x-px mt-0 mb-4 flex flex-col gap-4" >
-							<div className="md:text-7xl text-2xl">
+							<div className="md:text-7xl text-3xl md:text-left text-center">
 								<TypeAnimation
 									cursor={false}
 									sequence={[
-										'Tạo Sự kiện',
+										'Tạo Sự Kiện',
 										5000,
 										'Tạo Lịch',
 										6000,
@@ -32,7 +32,7 @@ export default function Home() {
 									repeat={Infinity}
 								/>
 							</div>
-							<div className="md:text-base text-xs">
+							<div className="md:text-left text-center text-2xl">
 								<TypeAnimation
 									cursor={false}
 									sequence={[
@@ -45,11 +45,11 @@ export default function Home() {
 									]}
 									wrapper="span"
 									speed={40}
-									
+									style={{ display: 'inline-block', color: '#f2f3f4' }}
 									repeat={Infinity}
 								/>
 							</div>
-							<div className="text-xs md:text-base">
+							<div className="md:text-base md:text-left text-center text-xl">
 								<TypeAnimation
 									cursor={false}
 									sequence={[
