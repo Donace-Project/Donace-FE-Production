@@ -37,7 +37,7 @@ import { AppUser } from "../types/DonaceType";
 
 
 interface MenuItems {
-
+  icon?: string;
   name: string;
   path: string;
 
@@ -58,11 +58,11 @@ export default function NavbarComponents() {
   }, [status]);
 
   const items: MenuItems[] = [
-    { name: "Trang chủ", path: "home" },
-    { name: "Sự kiện", path: "home" },
-    { name: "Khám phá", path: "explore" },
-    { name: "Lịch", path: "calendars" },
-    { name: "Tạo sự kiện", path: "create" }];
+    { icon: "home", name: "Trang chủ", path: "home" },
+    { icon: "calendar-check", name: "Sự kiện", path: "home" },
+    { icon: "tv-2", name: "Khám phá", path: "explore" },
+    { icon: "calendar-days", name: "Lịch", path: "calendars" },
+    { icon: "calendar-plus", name: "Tạo sự kiện", path: "create" }];
 
   const handleLogout = () => {
     localStorage.clear();
@@ -79,7 +79,7 @@ export default function NavbarComponents() {
       <Navbar
         position="sticky"
         maxWidth="full"
-        className="backdrop-blur-lg p-[0.75rem_1rem] hidden justify-between items-center h-20 bg-transparent md:flex"
+        className="backdrop-blur-lg  dark:shadow-gray-900 shadow-lg p-[0.75rem_1rem] hidden justify-between h-20 bg-transparent md:flex items-center"
       >
         <NavbarBrand as={"div"}>
           <Link
@@ -90,9 +90,9 @@ export default function NavbarComponents() {
           >
             <NavbarContent className="logo-light transition-all duration-300 ease-in-out flex items-center">
               <GraduationCap className="dark:text-[hsla(0,0%,100%,.5)] w-5 h-5 block align-middle text-black-blur-light-theme" />
-              <span className="dark:text-[hsla(0,0%,100%,.5)] font-medium text-base text-black-blur-light-theme">
+              <p className="dark:text-[#ffffff] font-semibold text-3xl text-black-blur-light-theme">
                 Donace
-              </span>
+              </p>
             </NavbarContent>
           </Link>
           <NavbarContent
@@ -282,7 +282,7 @@ export default function NavbarComponents() {
           </NavbarContent>
         </NavbarBrand>
       </Navbar>
-      <Navbar onMenuOpenChange={setIsMenuOpen} className="md:hidden flex">
+      <Navbar onMenuOpenChange={setIsMenuOpen} className="md:hidden flex items-center backdrop-blur-lg dark:shadow-gray-900 shadow-lg">
         <NavbarContent>
           <NavbarMenuToggle
             aria-label={isMenuOpen ? "Close menu" : "Open menu"}
@@ -297,9 +297,9 @@ export default function NavbarComponents() {
             >
               <NavbarContent className="logo-light transition-all duration-300 ease-in-out flex items-center">
                 <GraduationCap className="dark:text-[hsla(0,0%,100%,.5)] w-5 h-5 block align-middle text-black-blur-light-theme" />
-                <span className="dark:text-[hsla(0,0%,100%,.5)] font-medium text-base text-black-blur-light-theme">
+                <p className="dark:text-[#ffffff] font-semibold text-3xl text-black-blur-light-theme">
                   Donace
-                </span>
+                </p>
               </NavbarContent>
             </Link>
           </NavbarBrand>
@@ -416,7 +416,10 @@ export default function NavbarComponents() {
                 href={item.path}
                 size="lg"
               >
-                {item.name}
+                <div className="flex flex-row justify-start gap-2">
+
+                  {item.name}
+                </div>
               </Link>
             </NavbarMenuItem>
           ))}

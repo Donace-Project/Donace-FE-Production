@@ -117,6 +117,8 @@ export default function CreateFormFinal() {
     avatar: "",
     description: "",
   });
+  const [image, setImage] = useState<string>("https://cdn.lu.ma/cdn-cgi/image/format=auto,fit=cover,dpr=2,quality=75,width=400,height=400/event-defaults/1-1/standard1.png");
+
   const [eventReq, SetEventReq] = useState<any>({
     name: "",
     startDate: `${formattedDate}T12:00`,
@@ -139,9 +141,9 @@ export default function CreateFormFinal() {
   // ---------------End: UseState---------------
 
   // ---------------Begin: UseRef---------------
-  let refCoverUrl = useRef(
-    "https://cdn.lu.ma/cdn-cgi/image/format=auto,fit=cover,dpr=2,quality=75,width=400,height=400/event-defaults/1-1/standard1.png"
-  );
+  // let refCoverUrl = useRef(
+  //   "https://cdn.lu.ma/cdn-cgi/image/format=auto,fit=cover,dpr=2,quality=75,width=400,height=400/event-defaults/1-1/standard1.png"
+  // );
   let refAvatarUrl = useRef(
     "https://cdn.lu.ma/cdn-cgi/image/format=auto,fit=cover,dpr=2,background=white,quality=75,width=64,height=64/avatars-default/community_avatar_13.png"
   );
@@ -175,6 +177,7 @@ export default function CreateFormFinal() {
     setIsFree(true);
   };
 
+
   const handleUploadEventBackground = async (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -191,13 +194,8 @@ export default function CreateFormFinal() {
         formData
       );
 
-      if (refDivBackground.current && url) {
-        refDivBackground.current.style.backgroundImage = `url(${url})`;
-        refCoverUrl.current = url;
-        SetEventReq({
-          ...eventReq,
-          cover: url,
-        });
+      if (url != image && url) {
+        setImage(url);
       }
     } catch (error) {
       console.error("Lỗi khi upload ảnh:", error);
@@ -486,32 +484,34 @@ export default function CreateFormFinal() {
   return (
     <>
       <div className="page-content">
-        <div className="page-container relative bg-transparent">
-          <div className="zm-container p-[1.5rem_1rem] max-width-global margin-global">
-            <div className="outer-wrapper -m-5">
-              <div className="content-card p-[1rem_1.25rem] relative rounded-xl bg-[#f2f3f4] dark:bg-[#212325] border border-solid border-[#f2f3f4] dark:border-[rgba(255,255,255,0.04)] backdrop-blur-none shadow-none overflow-hidden">
-                <div className="content-container grid grid-cols-2 gap-10">
+        <div className="page-container relative">
+          <div className="zm-container w-full lg:w-[900px] md:w-[700px] m-auto">
+            <div className="outer-wrapper md:my-10 my-2 ">
+              <div className="content-card p-[1rem_1.25rem] relative rounded-xl bg-[#f2f3f4] dark:bg-[#212325] border border-solid border-[#f2f3f4] dark:border-[rgba(255,255,255,0.04)] backdrop-blur-lg shadow-none">
+                <div className="content-container flex flex-col-reverse md:flex-row gap-5 justify-between">
                   <div className="left min-w-0">
-                    <form action={"#"}>
+                    <form action={"#"} className="flex flex-col gap-5">
                       <div>
                         <Dropdown>
                           <DropdownTrigger>
-                            <div className="lux-menu-trigger-wrapper m-[-0.375rem_-0.625rem] p-[0.375rem_0.625rem] cursor-pointer rounded-lg gap-3 w-64 transition-all duration-300 ease-in-out inline-flex min-w-0 items-center">
-                              <div className="avatar-wrapper small">
-                                <Avatar
-                                  radius="full"
-                                  src={selectedCalendar?.avatar}
-                                  name="Donace"
-                                  className="w-6 h-6 relative"
-                                />
-                              </div>
-                              <div className="min-w-0 flex-1">
-                                <div className="text-xs text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)]">
-                                  Tạo dưới
+                            <div className="lux-menu-trigger-wrapper p-2 cursor-pointer rounded-lg gap-3 md:w-64 transition-all duration-300 ease-in-out inline-flex min-w-0 w-full items-center bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)] justify-between">
+                              <div className="inline-flex justify-start items-center gap-4">
+                                <div className="avatar-wrapper small">
+                                  <Avatar
+                                    radius="full"
+                                    src={selectedCalendar?.avatar}
+                                    name="Donace"
+                                    className="w-6 h-6 relative"
+                                  />
                                 </div>
-                                <div className="gap-1 flex items-center">
-                                  <div className="font-medium overflow-hidden text-ellipsis whitespace-nowrap text-sm">
-                                    {selectedCalendar?.name}
+                                <div className="min-w-0">
+                                  <div className="text-xs text-black-blur-light-theme dark:text-[rgba(255,255,255,0.5)]">
+                                    Tạo dưới
+                                  </div>
+                                  <div className="gap-1 flex items-center">
+                                    <div className="font-medium overflow-hidden text-ellipsis whitespace-nowrap text-sm">
+                                      {selectedCalendar?.name}
+                                    </div>
                                   </div>
                                 </div>
                               </div>
@@ -563,10 +563,10 @@ export default function CreateFormFinal() {
                               <DropdownItem
                                 onPress={modalCreateCalendar.onOpen}
                                 startContent={
-                                  <Plus className="block w-4 h-4 align-middle translate-y-px text-black-more-blur-light-theme" />
+                                  <Plus className="block w-4 h-4 align-middle translate-y-px" />
                                 }
                               >
-                                <div className="cursor-pointer gap-3 transition-all duration-300 ease-in-out text-black-more-blur-light-theme flex items-center">
+                                <div className="cursor-pointer gap-3 transition-all duration-300 ease-in-out  flex items-center">
                                   <div>Tạo Lịch</div>
                                 </div>
                               </DropdownItem>
@@ -574,10 +574,12 @@ export default function CreateFormFinal() {
                           </DropdownMenu>
                         </Dropdown>
                         <Modal
+
                           isOpen={modalCreateCalendar.isOpen}
                           onOpenChange={modalCreateCalendar.onOpenChange}
                           size="md"
                           radius="lg"
+                          backdrop="blur"
                           classNames={{
                             base: "flex flex-col relative",
                             closeButton: "hidden",
@@ -691,7 +693,7 @@ export default function CreateFormFinal() {
                           </ModalContent>
                         </Modal>
                       </div>
-                      <div className="name-input-wrapper -ml-2 m-6 flex">
+                      <div className="name-input-wrapper">
                         <Textarea
                           value={eventReq.name}
                           onChange={(e) =>
@@ -700,15 +702,17 @@ export default function CreateFormFinal() {
                               name: e.target.value,
                             })
                           }
-                          className="transition-all duration-300 ease-in-out text-black-light-theme dark:text-[#fff] overflow-hidden bg-transparent p-0 font-semibold w-full resize-none m-0"
+                          className="transition-all duration-300 ease-in-out bg-transparent font-semibold w-full resize-none border-none"
                           placeholder="Tên Sự kiện"
                           spellCheck="false"
                           autoCapitalize="words"
                           minRows={1}
-                          classNames={{
-                            input: ["font-semibold", "text-4xl"],
-                            inputWrapper: ["shadow-none"],
-                          }}
+                          maxRows={1}
+                          classNames={
+                            {
+                              input: ["font-semibold", "text-4xl"],
+                              inputWrapper: ["shadow-none"],
+                            }}
                         />
                       </div>
                       <div>
@@ -723,97 +727,72 @@ export default function CreateFormFinal() {
                               </div>
                             </div>
                           </div>
-                          <div className="time-picker bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)] rounded-lg overflow-hidden flex-1">
-                            <div className="start-row p-[0.25rem_0.25rem_0.25rem_0.75rem] flex justify-between items-baseline">
-                              <div className="label w-12">Bắt đầu</div>
-                              <div className="pr-12 p-0">
-                                <div className="datetime-timezone w-auto max-w-full">
-                                  <div className="datetime-input max-w-[13.5rem] flex items-stretch transition-all duration-300 ease-in-out">
-                                    <div className="date-input border-r-0 rounded-tl rounded-tr-none rounded-br-none rounded-lr border-transparent transition-all duration-300 ease-in-out flex-1 flex items-center">
-                                      <div className="wrapper border-top-left flex-1 relative flex items-center">
-                                        <Input
-                                          type="date"
-                                          id="date"
-                                          value={startDate.date}
-                                          onChange={(e) =>
-                                            updateStartDate(
-                                              "date",
-                                              e.target.value
-                                            )
-                                          }
-                                          className="bg-transparent dark:bg-[rgba(255,255,255,0.08)] dark:text-[#fff]"
-                                          variant="flat"
-                                          radius="none"
-                                        />
-                                      </div>
-                                    </div>
-                                    <div className="divider w-px bg-transparent transition-all duration-300 ease-in-out"></div>
-                                    <div className="time-input border-l-0 rounded-tl-none rounded-tr rounded-br rounded-bl-none border border-solid border-transparent bg-[rgba(19,21,23,0.04)] transition-all duration-300 ease-in-out flex items-center">
-                                      <div className="border-top-right lux-menu-trigger flex cursor-pointer min-w-0">
-                                        <Input
-                                          type="time"
-                                          id="time"
-                                          value={startDate.time}
-                                          onChange={(e) =>
-                                            updateStartDate(
-                                              "time",
-                                              e.target.value
-                                            )
-                                          }
-                                          className="bg-transparent dark:bg-[rgba(255,255,255,0.08)] dark:text-[#fff]"
-                                          variant="flat"
-                                          radius="none"
-                                        />
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
+                          <div className="time-picker bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)] py-2 rounded-lg overflow-hidden flex flex-col w-full">
+                            <div className="start-row px-2 flex pt-2 justify-between items-baseline flex-col md:flex-row gap-2">
+                              <div className="label whitespace-nowrap">Bắt đầu</div>
+                              <div className="grid grid-cols-2 w-full gap-2">
+                                <Input
+                                  type="date"
+                                  id="date"
+                                  value={startDate.date}
+                                  onChange={(e) =>
+                                    updateStartDate(
+                                      "date",
+                                      e.target.value
+                                    )
+                                  }
+                                  className="bg-transparent"
+                                  variant="flat"
+                                  radius="sm"
+                                />
+
+                                <Input
+                                  type="time"
+                                  id="time"
+                                  value={startDate.time}
+                                  onChange={(e) =>
+                                    updateStartDate(
+                                      "time",
+                                      e.target.value
+                                    )
+                                  }
+                                  className="bg-transparent"
+                                  variant="flat"
+                                  radius="sm"
+                                />
                               </div>
                             </div>
-                            <div className="end-row p-[0.25rem_0.25rem_0.25rem_0.75rem] flex justify-between items-baseline">
-                              <div className="label w-12">Kết thúc</div>
-                              <div className="pr-12 p-0">
-                                <div className="datetime-timezone w-auto max-w-full">
-                                  <div className="datetime-input max-w-[13.5rem] flex items-stretch transition-all duration-300 ease-in-out">
-                                    <div className="date-input border-r-0 rounded-tl rounded-tr-none rounded-br-none rounded-lr border-transparent transition-all duration-300 ease-in-out flex-1 flex items-center">
-                                      <div className="wrapper border-top-left flex-1 relative flex items-center">
-                                        <Input
-                                          type="date"
-                                          id="date"
-                                          value={endDate.date}
-                                          onChange={(e) =>
-                                            updateEndDate(
-                                              "date",
-                                              e.target.value
-                                            )
-                                          }
-                                          className="bg-transparent dark:bg-[rgba(255,255,255,0.08)] dark:text-[#fff]"
-                                          variant="flat"
-                                          radius="none"
-                                        />
-                                      </div>
-                                    </div>
-                                    <div className="divider w-px bg-transparent transition-all duration-300 ease-in-out"></div>
-                                    <div className="time-input border-l-0 rounded-tl-none rounded-tr rounded-br rounded-bl-none border border-solid border-transparent bg-[rgba(19,21,23,0.04)] transition-all duration-300 ease-in-out flex items-center">
-                                      <div className="lux-menu-trigger border-top-right flex cursor-pointer min-w-0">
-                                        <Input
-                                          type="time"
-                                          id="time"
-                                          value={endDate.time}
-                                          onChange={(e) =>
-                                            updateEndDate(
-                                              "time",
-                                              e.target.value
-                                            )
-                                          }
-                                          className="bg-transparent dark:bg-[rgba(255,255,255,0.08)] dark:text-[#fff]"
-                                          variant="flat"
-                                          radius="none"
-                                        />
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
+                            <div className="end-row p-2 flex justify-between items-baseline flex-col md:flex-row gap-2">
+                              <div className="label whitespace-nowrap">Kết thúc</div>
+                              <div className="grid grid-cols-2 w-full gap-2">
+                                <Input
+                                  type="date"
+                                  id="date"
+                                  value={endDate.date}
+                                  onChange={(e) =>
+                                    updateEndDate(
+                                      "date",
+                                      e.target.value
+                                    )
+                                  }
+                                  className="bg-transparent"
+                                  variant="flat"
+                                  radius="sm"
+                                />
+                                <Input
+                                  type="time"
+                                  id="time"
+                                  value={endDate.time}
+                                  onChange={(e) =>
+                                    updateEndDate(
+                                      "time",
+                                      e.target.value
+                                    )
+                                  }
+                                  className="bg-transparent"
+                                  variant="flat"
+                                  radius="sm"
+                                />
                               </div>
                             </div>
                           </div>
@@ -839,7 +818,7 @@ export default function CreateFormFinal() {
                                   <div>
                                     <div>
                                       <div className="min-w-0">
-                                        <div className="text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)] font-medium overflow-hidden text-ellipsis whitespace-nowrap max-w-[19rem]">
+                                        <div className="dark:text-[hsla(0,0%,100%,.79)] font-medium overflow-hidden text-ellipsis whitespace-nowrap max-w-[19rem]">
                                           {showOfflineContent ? (
                                             addressLat && addressLng ? (
                                               <div>{addressLat}</div>
@@ -858,7 +837,7 @@ export default function CreateFormFinal() {
                                             compoundLngDistrict &&
                                             compoundLatProvince &&
                                             compoundLngProvince ? (
-                                            <div className="overflow-hidden text-ellipsis whitespace-nowrap text-sm text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)] max-w-[19rem]">
+                                            <div className="overflow-hidden text-ellipsis whitespace-nowrap text-sm   dark:text-[hsla(0,0%,100%,.79)] max-w-[19rem]">
                                               <p>
                                                 {compoundLatCommune},{" "}
                                                 {compoundLatDistrict},{" "}
@@ -866,7 +845,7 @@ export default function CreateFormFinal() {
                                               </p>
                                             </div>
                                           ) : (
-                                            <div className="overflow-hidden text-ellipsis whitespace-nowrap text-sm text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)] max-w-[19rem]">
+                                            <div className="overflow-hidden text-ellipsis whitespace-nowrap text-sm   dark:text-[hsla(0,0%,100%,.79)] max-w-[19rem]">
                                               Tổ chức Online/Offline sự kiện của
                                               bạn
                                             </div>
@@ -884,93 +863,100 @@ export default function CreateFormFinal() {
                                 </div>
                               </Button>
                               <Modal
+                                backdrop="blur"
+                                closeButton={false}
+                                hideCloseButton={true}
                                 isOpen={modalMap.isOpen}
                                 onOpenChange={modalMap.onOpenChange}
-                                size="3xl"
                                 placement="center"
+                                size="3xl"
+                                isDismissable={false}
                                 scrollBehavior="outside"
+                                className="w-fit-content"
                               >
-                                <ModalContent>
+                                <ModalContent className="w-full">
                                   {(onClose) => (
                                     <>
-                                      <ModalHeader className="flex flex-col gap-1">
+                                      <ModalHeader className="">
                                         Thêm địa điểm diễn ra sự kiện
                                       </ModalHeader>
                                       <Divider />
                                       <ModalBody>
-                                        <div className="pt-2 m-2 grid grid-cols-1 md:grid-cols-2 gap-4">
-                                          <div className="font-medium text-base text-black-light-theme dark:text-[#fff] translate-y-2">
-                                            Chọn địa điểm:
-                                          </div>
-                                          <ButtonGroup
-                                            variant="flat"
-                                            className="ml-[14rem]"
-                                          >
-                                            <Button>
-                                              {
-                                                (
-                                                  labelsMap as {
-                                                    [key: string]: string;
-                                                  }
-                                                )[selectedOptionValue]
-                                              }
-                                            </Button>
-                                            <Dropdown
-                                              placement="bottom-end"
-                                              classNames={{
-                                                base: [
-                                                  "min-w-0",
-                                                  "right-[1.6rem]",
-                                                ],
-                                              }}
+                                        <div className="w-full flex flex-col gap-4 justify-between">
+                                          <div className="w-full inline-flex justify-between items-center">
+                                            <div className="font-medium text-base text-black-light-theme dark:text-[#fff] translate-y-2">
+                                              Chọn địa điểm:
+                                            </div>
+                                            <ButtonGroup
+                                              variant="flat"
+                                              className=""
                                             >
-                                              <DropdownTrigger>
-                                                <Button isIconOnly>
-                                                  <ChevronDownIcon />
-                                                </Button>
-                                              </DropdownTrigger>
-                                              <DropdownMenu
-                                                disallowEmptySelection
-                                                selectedKeys={selectedOption}
-                                                selectionMode="single"
-                                                onSelectionChange={(option) =>
-                                                  handleSelectedOption(option)
+                                              <Button>
+                                                {
+                                                  (
+                                                    labelsMap as {
+                                                      [key: string]: string;
+                                                    }
+                                                  )[selectedOptionValue]
                                                 }
-                                                className="max-w-[300px]"
+                                              </Button>
+                                              <Dropdown
+                                                placement="bottom-end"
+                                                classNames={{
+                                                  base: [
+                                                    "min-w-0",
+                                                    "w-[fit-content]",
+                                                  ],
+                                                }}
                                               >
-                                                <DropdownItem
-                                                  as={"button"}
-                                                  key="offline"
-                                                  onClick={() =>
-                                                    handleSelectedOption(
-                                                      "offline"
-                                                    )
+                                                <DropdownTrigger>
+                                                  <Button isIconOnly>
+                                                    <ChevronDownIcon />
+                                                  </Button>
+                                                </DropdownTrigger>
+                                                <DropdownMenu
+                                                  disallowEmptySelection
+                                                  selectedKeys={selectedOption}
+                                                  selectionMode="single"
+                                                  onSelectionChange={(option) =>
+                                                    handleSelectedOption(option)
                                                   }
-                                                  className="w-fit"
+                                                  className="max-w-[300px]"
                                                 >
-                                                  {labelsMap["offline"]}
-                                                </DropdownItem>
-                                                <DropdownItem
-                                                  as={"button"}
-                                                  key="online"
-                                                  onClick={() =>
-                                                    handleSelectedOption(
-                                                      "online"
-                                                    )
-                                                  }
-                                                  className="w-fit"
-                                                >
-                                                  {labelsMap["online"]}
-                                                </DropdownItem>
-                                              </DropdownMenu>
-                                            </Dropdown>
-                                          </ButtonGroup>
-                                          <div className="col-span-2 md:col-span-1">
+                                                  <DropdownItem
+                                                    as={"button"}
+                                                    key="offline"
+                                                    onClick={() =>
+                                                      handleSelectedOption(
+                                                        "offline"
+                                                      )
+                                                    }
+                                                    className="w-fit"
+                                                  >
+                                                    {labelsMap["offline"]}
+                                                  </DropdownItem>
+                                                  <DropdownItem
+                                                    as={"button"}
+                                                    key="online"
+                                                    onClick={() =>
+                                                      handleSelectedOption(
+                                                        "online"
+                                                      )
+                                                    }
+                                                    className="w-fit"
+                                                  >
+                                                    {labelsMap["online"]}
+                                                  </DropdownItem>
+                                                </DropdownMenu>
+                                              </Dropdown>
+                                            </ButtonGroup>
+                                          </div>
+                                          <div >
                                             {showOfflineContent ? (
                                               <div
                                                 id="map"
                                                 style={{
-                                                  width: "700px",
+                                                  width: "100%",
                                                   height: "400px",
                                                 }}
                                               ></div>
@@ -981,12 +967,8 @@ export default function CreateFormFinal() {
                                                   loop
                                                   src={Animation}
                                                   style={{
-                                                    height: "350px",
-                                                    width: "400px",
-                                                    marginLeft: "10rem",
-                                                    justifyContent: "center",
-                                                    display: "flex",
-                                                    alignItems: "center",
+                                                    height: "400px",
+                                                    width: "100%",
                                                   }}
                                                 ></Player>
                                                 {!isCorrectFormatLink && (
@@ -1000,9 +982,9 @@ export default function CreateFormFinal() {
                                               </div>
                                             )}
                                           </div>
-                                          <div className="col-span-2 flex">
+                                          <div className="">
                                             {showOfflineContent ? (
-                                              <div className="flex justify-end ml-[39rem]">
+                                              <div className="flex justify-end">
                                                 <Button
                                                   onPress={modalMap.onClose}
                                                   onClick={handleSaveLocation}
@@ -1015,20 +997,25 @@ export default function CreateFormFinal() {
                                                 </Button>
                                               </div>
                                             ) : (
-                                              <div className="flex">
-                                                <div className="flex-grow mr-2">
+                                              <div className="flex justify-between gap-4">
+                                                <div className="w-full">
                                                   <Input
                                                     variant="underlined"
                                                     placeholder="Nhập Link của bạn."
                                                     isClearable
+                                                    onClear={() => {
+                                                      setOnlineLink("")
+                                                    }}
                                                     value={onlineLink}
-                                                    onChange={(e) =>
+                                                    onChange={(e) => {
+
                                                       setOnlineLink(
                                                         e.target.value
-                                                      )
+                                                      );
+                                                    }
                                                     }
                                                     classNames={{
-                                                      base: ["w-[38.5rem]"],
+                                                      base: ["width:100%"],
                                                       input: [
                                                         "text-lg",
                                                         "font-normal",
@@ -1036,7 +1023,7 @@ export default function CreateFormFinal() {
                                                     }}
                                                   />
                                                 </div>
-                                                <div className="flex items-center">
+                                                <div className="flex justify-end items-center">
                                                   <Button
                                                     onClick={
                                                       handleSaveOnlineLink
@@ -1063,28 +1050,28 @@ export default function CreateFormFinal() {
                         </div>
                       </div>
                       <div className="advanced-optiions mt-6">
-                        <div className="lux-input-label medium text-sm block mb-1.5 font-medium text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)] transition-all duration-300 ease-in-out">
+                        <div className="lux-input-label medium text-sm block mb-1.5 font-medium   dark:text-white transition-all duration-300 ease-in-out">
                           <div>Cài đặt Sự kiện</div>
                         </div>
-                        <div className="options-card mt-2 rounded-lg overflow-hidden">
+                        <div className="options-card mt-2 rounded-lg overflow-hidden dark:text-white light:text-gray-600">
                           <div className="option-row w-full p-[0.5rem_0.75rem] transition-all duration-300 ease-in-out relative overflow-hidden bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)]">
                             <div className="gap-2 flex items-center">
-                              <div className="icon text-[rgba(19,21,23,0.2)] m-[0px_0.25rem]">
+                              <div className="icon light:text-[rgba(19,21,23,0.2)] m-[0px_0.25rem]">
                                 <Ticket className="block w-4 h-4 align-middle translate-y-px" />
                               </div>
-                              <div className="text-black-more-blur-light-theme select-none flex-1">
+                              <div className=" select-none flex-1">
                                 Loại vé
                               </div>
                               {isFree ? (
-                                <div className="gap-1 flex items-center">
-                                  <div className="value">Miễn phí</div>
+                                <div className="gap-1 flex items-center font-bold">
+                                  <div>Miễn phí</div>
                                   {isVnpayConnected ? (
                                     <>
                                       <button
                                         onClick={modalPriceEvent.onOpen}
                                         aria-label="Button to open modalPayment"
                                         type="button"
-                                        className="m-[-1px_-0.25rem_-1px_0px] text-black-blur-light-theme bg-transparent border-transparent border border-solid flex-shrink-0 cursor-pointer transition-all duration-300 ease-in-out donace-button-w-fit flex items-center"
+                                        className="m-[-1px_-0.25rem_-1px_0px] bg-transparent border-transparent border border-solid flex-shrink-0 cursor-pointer transition-all duration-300 ease-in-out donace-button-w-fit flex items-center"
                                       >
                                         <Pen className="stroke-2 w-3.5 h-3.5 flex-shrink-0 block align-middle translate-y-px" />
                                       </button>
@@ -1095,7 +1082,7 @@ export default function CreateFormFinal() {
                                         onClick={modalPayment.onOpen}
                                         aria-label="Button to open modalPayment"
                                         type="button"
-                                        className="m-[-1px_-0.25rem_-1px_0px] text-black-blur-light-theme bg-transparent border-transparent border border-solid flex-shrink-0 cursor-pointer transition-all duration-300 ease-in-out donace-button-w-fit flex items-center"
+                                        className="m-[-1px_-0.25rem_-1px_0px] bg-transparent border-transparent border border-solid flex-shrink-0 cursor-pointer transition-all duration-300 ease-in-out donace-button-w-fit flex items-center"
                                       >
                                         <Pen className="stroke-2 w-3.5 h-3.5 flex-shrink-0 block align-middle translate-y-px" />
                                       </button>
@@ -1114,7 +1101,7 @@ export default function CreateFormFinal() {
                                         onClick={modalPriceEvent.onOpen}
                                         aria-label="Button to open modalPayment"
                                         type="button"
-                                        className="m-[-1px_-0.25rem_-1px_0px] text-black-blur-light-theme bg-transparent border-transparent border border-solid flex-shrink-0 cursor-pointer transition-all duration-300 ease-in-out donace-button-w-fit flex items-center"
+                                        className="m-[-1px_-0.25rem_-1px_0px]  bg-transparent border-transparent border border-solid flex-shrink-0 cursor-pointer transition-all duration-300 ease-in-out donace-button-w-fit flex items-center"
                                       >
                                         <Pen className="stroke-2 w-3.5 h-3.5 flex-shrink-0 block align-middle translate-y-px" />
                                       </button>
@@ -1125,7 +1112,7 @@ export default function CreateFormFinal() {
                                         onClick={modalPayment.onOpen}
                                         aria-label="Button to open modalPayment"
                                         type="button"
-                                        className="m-[-1px_-0.25rem_-1px_0px] text-black-blur-light-theme bg-transparent border-transparent border border-solid flex-shrink-0 cursor-pointer transition-all duration-300 ease-in-out donace-button-w-fit flex items-center"
+                                        className="m-[-1px_-0.25rem_-1px_0px]  bg-transparent border-transparent border border-solid flex-shrink-0 cursor-pointer transition-all duration-300 ease-in-out donace-button-w-fit flex items-center"
                                       >
                                         <Pen className="stroke-2 w-3.5 h-3.5 flex-shrink-0 block align-middle translate-y-px" />
                                       </button>
@@ -1162,11 +1149,11 @@ export default function CreateFormFinal() {
                                                 PAY
                                               </span>
                                             </div>
-                                            <div className="desc text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)]">
+                                            <div className="desc   dark:text-[hsla(0,0%,100%,.79)]">
                                               Tài khoản của bạn chưa được thiết
                                               lập để chấp nhận thanh toán.
                                             </div>
-                                            <div className="desc text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)]">
+                                            <div className="desc   dark:text-[hsla(0,0%,100%,.79)]">
                                               Chúng tôi sử dụng VNPay làm bộ xử
                                               lý thanh toán. Kết nối tài khoản
                                               VNPay của bạn để bắt đầu thanh
@@ -1186,7 +1173,7 @@ export default function CreateFormFinal() {
                                           <div className="gap-4 mt-2 flex flex-col">
                                             <div className="lux-input-wrapper medium max-w-[auto]">
                                               <div className="inner-wrapper inline-block w-full">
-                                                <label className="text-sm block mb-1.5 font-medium text-black-more-blur-light-theme transition-all duration-300 ease-in-out">
+                                                <label className="text-sm block mb-1.5 font-medium   transition-all duration-300 ease-in-out">
                                                   <div>Key</div>
                                                 </label>
                                                 <div className="input-wrapper flex items-baseline">
@@ -1214,7 +1201,7 @@ export default function CreateFormFinal() {
                                             </div>
                                             <div className="lux-input-wrapper medium max-w-[auto]">
                                               <div className="inner-wrapper inline-block w-full">
-                                                <label className="text-sm block mb-1.5 font-medium text-black-more-blur-light-theme transition-all duration-300 ease-in-out">
+                                                <label className="text-sm block mb-1.5 font-medium   transition-all duration-300 ease-in-out">
                                                   <div>Secret key</div>
                                                 </label>
                                                 <div className="input-wrapper flex items-baseline">
@@ -1309,7 +1296,7 @@ export default function CreateFormFinal() {
                                             <div className="title font-semibold text-xl mb-2">
                                               Giá vé
                                             </div>
-                                            <div className="desc text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)]">
+                                            <div className="desc   dark:text-[hsla(0,0%,100%,.79)]">
                                               Hãy điều chỉnh giá vé dành riêng
                                               cho Sự kiện của bạn.
                                             </div>
@@ -1317,7 +1304,7 @@ export default function CreateFormFinal() {
                                           <div className="gap-4 pt-1 mt-2 flex flex-col">
                                             <div className="lux-input-wrapper medium max-w-[auto]">
                                               <div className="inner-wrapper inline-block w-full">
-                                                <label className="text-sm block mb-1.5 font-medium text-black-more-blur-light-theme transition-all duration-300 ease-in-out">
+                                                <label className="text-sm block mb-1.5 font-medium   transition-all duration-300 ease-in-out">
                                                   <div>Giá vé</div>
                                                 </label>
                                                 <div className="input-wrapper flex items-baseline">
@@ -1358,7 +1345,7 @@ export default function CreateFormFinal() {
                                                   handleConfirmFree()
                                                 }
                                                 type="button"
-                                                className="text-black-more-blur-light-theme bg-[rgba(19,21,23,0.04)] border-transparent border border-solid cursor-pointer transition-all duration-300 ease-in-out donace-button mt-4 flex items-center m-0"
+                                                className="  bg-[rgba(19,21,23,0.04)] border-transparent border border-solid cursor-pointer transition-all duration-300 ease-in-out donace-button mt-4 flex items-center m-0"
                                               >
                                                 <div className="label">
                                                   Sự kiện miễn phí
@@ -1377,10 +1364,10 @@ export default function CreateFormFinal() {
                           <div className="option-row w-full p-[0.5rem_0.75rem] transition-all duration-300 ease-in-out relative overflow-hidden bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)]">
                             <div className="divider absolute top-0 left-11 right-0 border-b border-solid border-[rgba(19,21,23,0.04)] z-10"></div>
                             <div className="gap-2 flex items-center">
-                              <div className="icon text-[rgba(19,21,23,0.2)] m-[0px_0.25rem]">
+                              <div className="icon light:text-[rgba(19,21,23,0.2)] m-[0px_0.25rem]">
                                 <UserCheck className="block w-4 h-4 align-middle translate-y-px" />
                               </div>
-                              <div className="text-black-more-blur-light-theme select-none flex-1">
+                              <div className="select-none flex-1">
                                 Phê duyệt
                               </div>
                               <div className="gap-1 flex items-center">
@@ -1398,14 +1385,14 @@ export default function CreateFormFinal() {
                           <div className="option-row w-full p-[0.5rem_0.75rem] transition-all duration-300 ease-in-out relative overflow-hidden bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)]">
                             <div className="divider absolute top-0 left-11 right-0 border-b border-solid border-[rgba(19,21,23,0.04)] z-10"></div>
                             <div className="gap-2 flex items-center">
-                              <div className="icon text-[rgba(19,21,23,0.2)] m-[0px_0.25rem]">
+                              <div className="icon light:text-[rgba(19,21,23,0.2)] m-[0px_0.25rem]">
                                 <ArrowUpToLine className="block w-4 h-4 align-middle translate-y-px" />
                               </div>
-                              <div className="text-black-more-blur-light-theme select-none flex-1">
+                              <div className="select-none flex-1">
                                 Số lượng
                               </div>
-                              <div className="gap-1 flex items-center">
-                                <div className="value">
+                              <div className="gap-1 flex items-center font-bold">
+                                <div >
                                   {isUnlimitedCapacity ? (
                                     "Không giới hạn"
                                   ) : (
@@ -1416,7 +1403,7 @@ export default function CreateFormFinal() {
                                   aria-label="Button to open modalCapacity"
                                   onClick={modalCapacity.onOpen}
                                   type="button"
-                                  className="m-[-1px_-0.25rem_-1px_0px] text-black-blur-light-theme bg-transparent border-transparent border border-solid flex-shrink-0 cursor-pointer transition-all duration-300 ease-in-out donace-button-w-fit flex items-center"
+                                  className="m-[-1px_-0.25rem_-1px_0px] bg-transparent border-transparent border border-solid flex-shrink-0 cursor-pointer transition-all duration-300 ease-in-out donace-button-w-fit flex items-center"
                                 >
                                   <Pen className="stroke-2 w-3.5 h-3.5 flex-shrink-0 block align-middle translate-y-px" />
                                 </button>
@@ -1444,7 +1431,7 @@ export default function CreateFormFinal() {
                                           <div className="title font-semibold text-xl mb-2">
                                             Số lượng tối đa
                                           </div>
-                                          <div className="desc text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)]">
+                                          <div className="desc   dark:text-[hsla(0,0%,100%,.79)]">
                                             Đóng đăng ký tự động khi đã đạt số
                                             lượng đăng ký. Chỉ những khách mời
                                             được phê duyệt mới được tính vào số
@@ -1454,7 +1441,7 @@ export default function CreateFormFinal() {
                                         <div className="gap-4 pt-1 mt-2 flex flex-col">
                                           <div className="lux-input-wrapper medium max-w-[auto]">
                                             <div className="inner-wrapper inline-block w-full">
-                                              <label className="text-sm cursor-pointer block mb-1.5 font-medium text-black-more-blur-light-theme transition-all duration-300 ease-in-out">
+                                              <label className="text-sm cursor-pointer block mb-1.5 font-medium   transition-all duration-300 ease-in-out">
                                                 <div>Số lượng</div>
                                               </label>
                                               <div className="input-wrapper flex items-baseline">
@@ -1513,7 +1500,7 @@ export default function CreateFormFinal() {
                                                 });
                                               }}
                                               type="button"
-                                              className="text-black-more-blur-light-theme bg-[rgba(19,21,23,0.04)] border-transparent border border-solid cursor-pointer transition-all duration-300 ease-in-out donace-button mt-4 flex items-center m-0"
+                                              className="  bg-[rgba(19,21,23,0.04)] border-transparent border border-solid cursor-pointer transition-all duration-300 ease-in-out donace-button mt-4 flex items-center m-0"
                                             >
                                               <div className="label">
                                                 Không giới hạn
@@ -1571,46 +1558,50 @@ export default function CreateFormFinal() {
                     </form>
                   </div>
                   <div className="right min-w-0">
-                    <div>
-                      <div>
+                    <div
+                      role="button"
+                      onClick={() => {
+                        const fileInput =
+                          document.getElementById("avatarImage");
+                        if (fileInput) {
+                          fileInput.click();
+                        }
+                      }}
+                      className="photo-container bg-[rgba(19,21,23,0.04)] rounded-lg overflow-hidden outline-offset-2 outline-none transition-all duration-300 ease-in-out relative cursor-pointer"
+                    >
+                      <div className="image has-image transition-all duration-300 ease-in-out">
+                        <div className="img-aspect-ratio w-full bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)] overflow-hidden relative rounded-lg">
+                          {/* <div
+                            ref={refDivBackground}
+                            className="bg-[url('https://cdn.lu.ma/cdn-cgi/image/format=auto,fit=cover,dpr=2,quality=75,width=400,height=400/event-defaults/1-1/standard1.png')] cursor-pointer top-0 left-0  object-cover align-middle w-[auto] h-[380px] rounded-[0.5rem] bg-center bg-cover flex justify-center items-center bg-[#ebeced] dark:bg-[#333537]"
+                          ></div> */}
+                          <img className="h-[400px]  max-w-[400px] w-full object-cover" src={image} alt="img" />
+                        </div>
+                      </div>
+                      <div className="z-20 absolute bottom-[-2px] right-[-2px] w-[calc(2rem+2px)] text-[#fff] dark:text-[rgb(19,21,23)] bg-[rgb(19,21,23)] dark:bg-[#fff] border-2 border-solid dark:border-[rgb(19,21,23)] rounded-lg transition-all duration-300 ease-in-out justify-center flex items-center border-[#bcc0ec]">
+                        <input
+                          aria-label="avatarImage"
+                          type="file"
+                          id="avatarImage"
+                          className="hidden"
+                          onChange={handleUploadEventBackground}
+                        />
                         <div
-                          role="button"
-                          className="photo-container bg-[rgba(19,21,23,0.04)] rounded-lg overflow-hidden outline-offset-2 outline-none transition-all duration-300 ease-in-out relative cursor-pointer"
+                          onClick={() => {
+                            const fileInput =
+                              document.getElementById("avatarImage");
+                            if (fileInput) {
+                              fileInput.click();
+                            }
+                          }}
+                          id="upload-icon"
+                          className="rounded-[0.5rem] bg-center bg-cover flex justify-center items-center text-[#fff] dark:text-[#212325] bg-[rgb(19,21,23)] dark:bg-[#fff] hover:bg-[#de3163] w-[35%] h-[35%] min-w-[30px] min-h-[30px] border-2 border-solid border-[#fff] dark:border-[#212325] absolute right-[-1px] bottom-[-1px] origin-center transition-all duration-300 ease-in-out"
                         >
-                          <div className="image has-image transition-all duration-300 ease-in-out">
-                            <div className="img-aspect-ratio w-full bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)] overflow-hidden relative rounded-lg">
-                              <div
-                                ref={refDivBackground}
-                                className="bg-[url('https://cdn.lu.ma/cdn-cgi/image/format=auto,fit=cover,dpr=2,quality=75,width=400,height=400/event-defaults/1-1/standard1.png')] cursor-pointer top-0 left-0  object-cover align-middle w-[auto] h-[380px] rounded-[0.5rem] bg-center bg-cover flex justify-center items-center bg-[#ebeced] dark:bg-[#333537]"
-                              ></div>
-                            </div>
-                          </div>
-                          <div className="z-20 absolute bottom-[-2px] right-[-2px] w-[calc(2rem+2px)] text-[#fff] dark:text-[rgb(19,21,23)] bg-[rgb(19,21,23)] dark:bg-[#fff] border-2 border-solid dark:border-[rgb(19,21,23)] rounded-lg transition-all duration-300 ease-in-out justify-center flex items-center border-[#bcc0ec]">
-                            <input
-                              aria-label="avatarImage"
-                              type="file"
-                              id="avatarImage"
-                              className="hidden"
-                              onChange={handleUploadEventBackground}
-                            />
-                            <div
-                              onClick={() => {
-                                const fileInput =
-                                  document.getElementById("avatarImage");
-                                if (fileInput) {
-                                  fileInput.click();
-                                }
-                              }}
-                              id="upload-icon"
-                              className="rounded-[0.5rem] bg-center bg-cover flex justify-center items-center text-[#fff] dark:text-[#212325] bg-[rgb(19,21,23)] dark:bg-[#fff] hover:bg-[#de3163] w-[35%] h-[35%] min-w-[30px] min-h-[30px] border-2 border-solid border-[#fff] dark:border-[#212325] absolute right-[-1px] bottom-[-1px] origin-center transition-all duration-300 ease-in-out"
-                            >
-                              {isUploading ? (
-                                <Spinner size="sm" color="default" />
-                              ) : (
-                                <ArrowUp className="stroke-[2.5] w-[65%] h-[65%] block align-middle" />
-                              )}{" "}
-                            </div>
-                          </div>
+                          {isUploading ? (
+                            <Spinner size="sm" color="default" />
+                          ) : (
+                            <ArrowUp className="stroke-[2.5] w-[65%] h-[65%] block align-middle" />
+                          )}{" "}
                         </div>
                       </div>
                     </div>
