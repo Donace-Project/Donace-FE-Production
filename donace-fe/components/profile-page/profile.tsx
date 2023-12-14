@@ -540,13 +540,13 @@ export default function ProfilePage() {
                                           </div>
                                         </div>
                                       </div>
-                                      <div className="w-96 gap-4 flex items-baseline mt-2">
+                                      <div className="w-86 gap-4 flex items-baseline mt-2">
                                         <Globe className="dark:text-[hsla(0,0%,100%,.5)] translate-y-0.5 flex-shrink-0 text-black-blur-light-theme block w-4 h-4 align-middle" />
                                         <div className="flex-1">
                                           <div className="input-wrapper flex items-baseline">
                                             <div className="flex-1 flex items-center">
                                               <div>&nbsp;</div>
-                                              <div className="input-inner-wrapper relative flex-1">
+                                              <div className="flex-1">
                                                 <Input
                                                   value={userProfile?.website}
                                                   type="url"
@@ -634,7 +634,7 @@ export default function ProfilePage() {
                     <div className="profile-block-content">
                       <div className="view-block block">
                         <div>
-                          <div className="profile-events-wrapper">
+                          <div className="profile-events-wrapper mx-3 md:mx-0">
                             <div className="mb-4 overflow-hidden flex justify-between align-baseline">
                               <h2 className="font-semibold text-xl mb-0 overflow-hidden text-ellipsis mt-0">
                                 Sự kiện

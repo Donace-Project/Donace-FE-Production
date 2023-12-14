@@ -24,7 +24,6 @@ export default function Explore() {
             Khám phá
           </h1>
         </div>
-        <div></div>
       </div>
       <div
         id="zm-container"
@@ -34,9 +33,9 @@ export default function Explore() {
           Những sự kiện xung quanh thành phố của bạn
         </h1>
 
-        <div className="grid grid-cols-2 justify-center items-center gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
           <div className="w-full h-full">
-            <Link href="/explore/cities/hochiminh">
+            <Link href="/explore/cities/hochiminh" className="flex justify-center sm:justify-start">
               <Card
                 isFooterBlurred
                 radius="lg"
@@ -67,7 +66,7 @@ export default function Explore() {
             </Link>
           </div>
           <div className="w-full h-full">
-            <Link href="/explore/cities/hue">
+            <Link href="/explore/cities/hue" className="flex justify-center sm:justify-start">
               <Card
                 isFooterBlurred
                 radius="lg"
@@ -98,7 +97,7 @@ export default function Explore() {
             </Link>
           </div>
           <div className="w-full h-full">
-            <Link href="/explore/cities/cantho">
+            <Link href="/explore/cities/cantho" className="flex justify-center sm:justify-start">
               <Card
                 isFooterBlurred
                 radius="lg"
