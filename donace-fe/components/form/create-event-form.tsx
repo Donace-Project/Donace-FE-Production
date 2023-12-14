@@ -212,7 +212,7 @@ export default function CreateFormFinal() {
     const selectedFile = event.target.files[0];
     const formData = new FormData();
     formData.append("file", selectedFile);
-    debugger;
+    // debugger;
     try {
       setIsAvatarUploading(true);
       const url = await fetchWrapper.postFile(
@@ -243,7 +243,7 @@ export default function CreateFormFinal() {
 
   const handleCalendarSubmit = async (e: any) => {
     e.preventDefault();
-    debugger;
+    // debugger;
     if (calendarReq.name == "") {
       return;
     }
@@ -259,7 +259,7 @@ export default function CreateFormFinal() {
         console.error(`Lỗi khi tạo lịch: ${response.error}`);
         return;
       }
-      debugger;
+      // debugger;
       let lstCalendarTemp = await GetCalendars(setLstCalendar);
       SetCurrentCalendar(
         lstCalendarTemp,
@@ -380,7 +380,7 @@ export default function CreateFormFinal() {
       return;
     }
     setloadingConnectVnPay(true);
-    debugger;
+    // debugger;
     const res = await fetchWrapper.post("/api/Payment/connect", {
       tmnCode,
       hashSecret,
@@ -390,7 +390,7 @@ export default function CreateFormFinal() {
       setconnectVnPayErrorMessage(res.message);
       return;
     }
-    debugger;
+    // debugger;
     setVnpayConnected(true);
     setloadingConnectVnPay(false);
     modalPayment.onClose();
@@ -488,13 +488,13 @@ export default function CreateFormFinal() {
           <div className="zm-container w-full lg:w-[900px] md:w-[700px] m-auto">
             <div className="outer-wrapper md:my-10 my-2 ">
               <div className="content-card p-[1rem_1.25rem] relative rounded-xl bg-[#f2f3f4] dark:bg-[#212325] border border-solid border-[#f2f3f4] dark:border-[rgba(255,255,255,0.04)] backdrop-blur-lg shadow-none">
-                <div className="content-container flex flex-col-reverse md:flex-row gap-5 justify-between">
-                  <div className="left min-w-0">
-                    <form action={"#"} className="flex flex-col gap-5">
+                <div className="content-container flex flex-col-reverse md:flex-row gap-4 justify-between">
+                  <div className="left ">
+                    <form action={"#"} className="flex flex-col gap-4">
                       <div>
                         <Dropdown>
                           <DropdownTrigger>
-                            <div className="lux-menu-trigger-wrapper p-2 cursor-pointer rounded-lg gap-3 md:w-64 transition-all duration-300 ease-in-out inline-flex min-w-0 w-full items-center bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)] justify-between">
+                            <div className="lux-menu-trigger-wrapper p-2 cursor-pointer rounded-lg gap-3 md:w-64 transition-all duration-300 ease-in-out inline-flex  w-full items-center bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)] justify-between">
                               <div className="inline-flex justify-start items-center gap-4">
                                 <div className="avatar-wrapper small">
                                   <Avatar
@@ -504,7 +504,7 @@ export default function CreateFormFinal() {
                                     className="w-6 h-6 relative"
                                   />
                                 </div>
-                                <div className="min-w-0">
+                                <div className="">
                                   <div className="text-xs text-black-blur-light-theme dark:text-[rgba(255,255,255,0.5)]">
                                     Tạo dưới
                                   </div>
@@ -574,12 +574,11 @@ export default function CreateFormFinal() {
                           </DropdownMenu>
                         </Dropdown>
                         <Modal
-
                           isOpen={modalCreateCalendar.isOpen}
                           onOpenChange={modalCreateCalendar.onOpenChange}
                           size="md"
-                          radius="lg"
-                          backdrop="blur"
+                          radius="lg" placement="center" backdrop="blur"
+
                           classNames={{
                             base: "flex flex-col relative",
                             closeButton: "hidden",
@@ -728,8 +727,8 @@ export default function CreateFormFinal() {
                             </div>
                           </div>
                           <div className="time-picker bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)] py-2 rounded-lg overflow-hidden flex flex-col w-full">
-                            <div className="start-row px-2 flex pt-2 justify-between items-baseline flex-col md:flex-row gap-2">
-                              <div className="label whitespace-nowrap">Bắt đầu</div>
+                            <div className="px-2 flex p-1 justify-between items-baseline flex-col md:flex-row gap-2">
+                              <div className="label whitespace-nowrap lg:w-20">Bắt đầu:</div>
                               <div className="grid grid-cols-2 w-full gap-2">
                                 <Input
                                   type="date"
@@ -762,8 +761,8 @@ export default function CreateFormFinal() {
                                 />
                               </div>
                             </div>
-                            <div className="end-row p-2 flex justify-between items-baseline flex-col md:flex-row gap-2">
-                              <div className="label whitespace-nowrap">Kết thúc</div>
+                            <div className="px-2 p-1 flex justify-between items-baseline flex-col md:flex-row gap-2">
+                              <div className="label whitespace-nowrap  lg:w-20">Kết thúc:</div>
                               <div className="grid grid-cols-2 w-full gap-2">
                                 <Input
                                   type="date"
@@ -805,11 +804,11 @@ export default function CreateFormFinal() {
                               <Video className="w-5 h-5 block align-middle" />
                             )}
                           </div>
-                          <div className="location-picker-wrapper min-w-0 flex-1">
-                            <div className="lux-menu-trigger-wrapper cursor-pointer inline-flex min-w-0 w-full">
+                          <div className="location-picker-wrapper  flex-1">
+                            <div className="lux-menu-trigger-wrapper cursor-pointer inline-flex  w-full">
                               <Button
                                 as={"div"}
-                                className="mt-2 bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)] min-w-0 h-full transition-all duration-300 ease-in-out w-full flex justify-start items-center p-0"
+                                className="mt-2 bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)]  h-full transition-all duration-300 ease-in-out w-full flex justify-start items-center p-0"
                                 radius="sm"
                                 type="button"
                                 onPress={modalMap.onOpen}
@@ -817,7 +816,7 @@ export default function CreateFormFinal() {
                                 <div className="inner min-h-unit-3.5 p-[0.375rem_0.75rem]">
                                   <div>
                                     <div>
-                                      <div className="min-w-0">
+                                      <div className="">
                                         <div className="dark:text-[hsla(0,0%,100%,.79)] font-medium overflow-hidden text-ellipsis whitespace-nowrap max-w-[19rem]">
                                           {showOfflineContent ? (
                                             addressLat && addressLng ? (
@@ -872,7 +871,7 @@ export default function CreateFormFinal() {
                                 size="3xl"
                                 isDismissable={false}
                                 scrollBehavior="outside"
-                                className="w-fit-content"
+                                className="w-fit-content px-0 py-4 backdrop-opacity-70 bg-transparent"
                               >
                                 <ModalContent className="w-full">
                                   {(onClose) => (
@@ -884,7 +883,7 @@ export default function CreateFormFinal() {
                                       <ModalBody>
                                         <div className="w-full flex flex-col gap-4 justify-between">
                                           <div className="w-full inline-flex justify-between items-center">
-                                            <div className="font-medium text-base text-black-light-theme dark:text-[#fff] translate-y-2">
+                                            <div className="font-medium text-base ">
                                               Chọn địa điểm:
                                             </div>
                                             <ButtonGroup
@@ -904,8 +903,8 @@ export default function CreateFormFinal() {
                                                 placement="bottom-end"
                                                 classNames={{
                                                   base: [
-                                                    "min-w-0",
-                                                    "w-[fit-content]",
+                                                    "max-w-[300px]",
+                                                    "max-w-full",
                                                   ],
                                                 }}
                                               >
@@ -921,7 +920,7 @@ export default function CreateFormFinal() {
                                                   onSelectionChange={(option) =>
                                                     handleSelectedOption(option)
                                                   }
-                                                  className="max-w-[300px]"
+                                                  className="w-full"
                                                 >
                                                   <DropdownItem
                                                     as={"button"}
@@ -931,7 +930,7 @@ export default function CreateFormFinal() {
                                                         "offline"
                                                       )
                                                     }
-                                                    className="w-fit"
+                                                    className="w-full text-left"
                                                   >
                                                     {labelsMap["offline"]}
                                                   </DropdownItem>
@@ -943,7 +942,7 @@ export default function CreateFormFinal() {
                                                         "online"
                                                       )
                                                     }
-                                                    className="w-fit"
+                                                    className="w-full text-left"
                                                   >
                                                     {labelsMap["online"]}
                                                   </DropdownItem>
@@ -1049,7 +1048,7 @@ export default function CreateFormFinal() {
                           </div>
                         </div>
                       </div>
-                      <div className="advanced-optiions mt-6">
+                      <div className="advanced-optiions ">
                         <div className="lux-input-label medium text-sm block mb-1.5 font-medium   dark:text-white transition-all duration-300 ease-in-out">
                           <div>Cài đặt Sự kiện</div>
                         </div>
@@ -1125,6 +1124,7 @@ export default function CreateFormFinal() {
                                 isOpen={modalPayment.isOpen}
                                 onOpenChange={modalPayment.onOpenChange}
                                 size="xl"
+                                placement="center" backdrop="blur"
                                 radius="lg"
                                 classNames={{
                                   base: "flex flex-col relative",
@@ -1278,7 +1278,7 @@ export default function CreateFormFinal() {
                                 isOpen={modalPriceEvent.isOpen}
                                 onOpenChange={modalPriceEvent.onOpenChange}
                                 size="sm"
-                                radius="lg"
+                                radius="lg" placement="center" backdrop="blur"
                                 classNames={{
                                   base: "flex flex-col relative",
                                   closeButton: "hidden",
@@ -1412,7 +1412,7 @@ export default function CreateFormFinal() {
                             <Modal
                               isOpen={modalCapacity.isOpen}
                               onOpenChange={modalCapacity.onOpenChange}
-                              size="sm"
+                              size="sm" placement="center" backdrop="blur"
                               radius="lg"
                               classNames={{
                                 base: "flex flex-col relative",
@@ -1557,7 +1557,7 @@ export default function CreateFormFinal() {
                       </div>
                     </form>
                   </div>
-                  <div className="right min-w-0">
+                  <div className="right ">
                     <div
                       role="button"
                       onClick={() => {
@@ -1575,10 +1575,10 @@ export default function CreateFormFinal() {
                             ref={refDivBackground}
                             className="bg-[url('https://cdn.lu.ma/cdn-cgi/image/format=auto,fit=cover,dpr=2,quality=75,width=400,height=400/event-defaults/1-1/standard1.png')] cursor-pointer top-0 left-0  object-cover align-middle w-[auto] h-[380px] rounded-[0.5rem] bg-center bg-cover flex justify-center items-center bg-[#ebeced] dark:bg-[#333537]"
                           ></div> */}
-                          <img className="h-[400px]  max-w-[400px] w-full object-cover" src={image} alt="img" />
+                          <img className="h-[350px]  max-w-[350px] w-full object-cover" src={image} alt="img" />
                         </div>
                       </div>
-                      <div className="z-20 absolute bottom-[-2px] right-[-2px] w-[calc(2rem+2px)] text-[#fff] dark:text-[rgb(19,21,23)] bg-[rgb(19,21,23)] dark:bg-[#fff] border-2 border-solid dark:border-[rgb(19,21,23)] rounded-lg transition-all duration-300 ease-in-out justify-center flex items-center border-[#bcc0ec]">
+                      <div className="z-20 absolute bottom-0 right-0 w-0 rounded-lg transition-all duration-300 ease-in-out justify-center flex items-center border-[#bcc0ec]">
                         <input
                           aria-label="avatarImage"
                           type="file"
