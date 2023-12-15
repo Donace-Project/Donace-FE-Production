@@ -12,8 +12,30 @@ import { useEffect, useState } from "react";
 import { GetCalendarById, ListEventByUser, UserProfile } from "@/types/DonaceType";
 import { fetchWrapper } from "@/helpers/fetch-wrapper";
 import React from "react";
+import { data } from "autoprefixer";
+import { format, set } from 'date-fns';
 
+export type User = {
+    code: string
+    success: boolean
+    result: Users[]
+    pageInfo: any
+}
 
+export type Users = {
+    id: string
+    userName: string
+    avatar: string
+    email: string
+    creationTime: string
+}
+
+export type detailUserJoin = {
+    id: string,
+    userName: string,
+    email: string,
+    avatar: string
+}
 export type Calendar = {
     code: string
     success: boolean
@@ -67,6 +89,9 @@ interface DateTimeInfo {
     minute: string;
 }
 
+
+
+
 const ConvertDateTime = (dateTime: string): DateTimeInfo => {
     const date = new Date(dateTime);
     const year = date.getFullYear().toString();
@@ -77,6 +102,8 @@ const ConvertDateTime = (dateTime: string): DateTimeInfo => {
 
     return { year, month, day, hour, minute };
 };
+
+
 
 
 
@@ -103,10 +130,38 @@ export default function CalendarPeople(props: any) {
     const [userProfile, setUserProfile] = useState<null | UserProfile>(null);
     var [futureEvents, setFutureEvents] = useState<Item[]>();
     const [thoiGian, setThoiGian] = useState(new Date());
+    const [getUsers, setUsers] = useState<User | null>(null);
+    const [getdataModal, setDataModal] = useState<detailUserJoin | null>(null);
+    const [getDataSendMail, setDataSendMail] = useState<any | null>(null);
+    const [getStatusSendMail, setStatusSendMail] = useState(false);
 
+    const handleOpenModal = (value: detailUserJoin) => {
+        setDataModal(value);
+        modalUserDetails.onOpen();
+    };
+    
 
+    // if (typeof window !== 'undefined') {
+    //     setUrl(window.location.href);
+    // }
+
+    //const router = useRouter();
+    const currentUrl = typeof window !== 'undefined' ? window.location.href : '';
+    const sendMailInviteJoin = (e : any) => {
+        e.preventDefault();
+        try{
+            fetchWrapper.post(`/api/Calendar/invite-mail`, {
+                email: value, urlInfo: currentUrl, calendarName: getCalendars?.name
+            })
+            modalInvite.onClose()
+        }
+        catch(error){
+            console.error("Lỗi khi mời:", error);
+        }
+    }
+    
     useEffect(() => {
-        fetchWrapper.post(`api/Calendar/get-by-id?Id=${id}`, null)
+        fetchWrapper.post(`/api/Calendar/get-by-id?Id=${id}`, null)
             .then(data => setCalendars(data));
 
         fetchWrapper.post('/api/Calendar/get-list', { pageNumber: 1, pageSize: 9999 })
@@ -120,7 +175,15 @@ export default function CalendarPeople(props: any) {
             .catch(error => console.error('Lỗi khi gọi API:', error));
 
         fetchWrapper.get(`api/Event?IsNew=${dateTimeTrue}`)
-            .then(data => setFutureEvents(data.items))
+            .then(data => setFutureEvents(data.items));
+
+        fetchWrapper.post('/api/Calendar/get-list-user', { pageNumber: 1, pageSize: 1000, id: id, keyword: "", isSubcribed: true})
+            .then((data: User) => {
+                setUsers(data);
+            });
+        
+        
+        
     }, []);
 
     const gio = thoiGian.getHours();
@@ -231,7 +294,7 @@ export default function CalendarPeople(props: any) {
                     <div className="section-title-wrapper medium">
                         <div className="section-title-row mb-5 flex justify-between items-center">
                             <h2 className="text-xl font-semibold text-black-light-theme dark:text-[#fff] mb-0">
-                                Người tham gia (2)
+                                Người tham gia ({getUsers?.result ? getUsers.result.length + 1 : 1})
                             </h2>
                         </div>
                         <div className="section-subtitle -mt-3.5 mb-5 text-[#737577] dark:text-[#d2d4d7] text-base">Quản lý người đăng ký của bạn.</div>
@@ -327,15 +390,22 @@ export default function CalendarPeople(props: any) {
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div className='gap-2 flex justify-end items-center'>
-                                                            <Button
-                                                                type='submit'
-                                                                className='text-[#fff] bg-[#333537] border-[#333537] border border-solid cursor-pointer transition-all duration-300 ease-in-out donace-button-w-fit mt-4 flex items-center m-0'
-                                                            >
-                                                                <Send className="w-5 h-5 block align-middle translate-y-px" />
-                                                                <div className='label'>Gửi</div>
-                                                            </Button>
-                                                        </div>
+                                                        <form
+                                                            action={"#"}
+                                                            onSubmit={sendMailInviteJoin}
+                                                            className="gap-6 flex flex-col">
+                                                                <div className='gap-2 flex justify-end items-center'>
+                                                                    <Button
+                                                                        onClick={sendMailInviteJoin}
+                                                                        type="button"
+                                                                        className='text-[#fff] bg-[#333537] border-[#333537] border border-solid cursor-pointer transition-all duration-300 ease-in-out donace-button-w-fit mt-4 flex items-center m-0'
+                                                                    >
+                                                                        <Send className="w-5 h-5 block align-middle translate-y-px" />
+                                                                        <div className='label'>Gửi</div>
+                                                                    </Button>
+                                                                </div>
+                                                        </form>
+                                                        
                                                     </div>
                                                 </div>
                                             </ModalBody>
@@ -345,7 +415,14 @@ export default function CalendarPeople(props: any) {
                             </Modal>
                         </div>
                     </div>
-                    <div onClick={modalUserDetails.onOpen} className="simple-table-wrapper bg-[#f2f3f4] mt-2 border border-solid border-[rgba(19,21,23,0.08)] dark:border-[rgba(255,255,255,0.08)] dark:bg-[rgba(255,255,255,0.04)]">
+
+                    <div onClick={() => handleOpenModal(
+                        {
+                            id: userProfile?.result.id ? userProfile.result.id : "0", 
+                            userName: userProfile?.result.userName ? userProfile.result.userName : "", 
+                            email: userProfile?.result.email ? userProfile.result.email : "", 
+                            avatar: userProfile?.result.avatar ? userProfile.result.avatar : "https://cdn.lu.ma/cdn-cgi/image/format=auto,fit=cover,dpr=2,background=white,quality=75,width=32,height=32/avatars-default/avatar_8.png"
+                        })} className="simple-table-wrapper bg-[#f2f3f4] mt-2 border border-solid border-[rgba(19,21,23,0.08)] dark:border-[rgba(255,255,255,0.08)] dark:bg-[rgba(255,255,255,0.04)]">
                         <div className="base-row border-b-0 border-t-0 p-[0.75rem_1rem] cursor-pointer transition-all duration-300 ease-in-out">
                             <div className="gap-3 flex justify-between items-center">
                                 <div className="avatar-wrapper small">
@@ -358,7 +435,7 @@ export default function CalendarPeople(props: any) {
                                 </div>
                                 <div className="info overflow-hidden text-ellipsis whitespace-nowrap text-[#b3b5b7] min-w-0 flex-1">
                                     <div className="name inline">
-                                        <div className="inline font-medium overflow-hidden text-ellipsis whitespace-nowrap text-black-light-theme dark:text-[#fff] mr-2 min-w-0">{getCalendars?.name}</div>
+                                        <div className="inline font-medium overflow-hidden text-ellipsis whitespace-nowrap text-black-light-theme dark:text-[#fff] mr-2 min-w-0">{userProfile?.result.userName}</div>
                                     </div>
                                     <div className="email inline overflow-hidden text-ellipsis whitespace-nowrap text-[#b3b5b7] dark:text-[#939597] min-w-0">{userProfile?.result.email}</div>
                                 </div>
@@ -366,7 +443,41 @@ export default function CalendarPeople(props: any) {
                                 <span className="whitespace-nowrap text-sm text-[#b3b5b7] dark:text-[#939597]" title="dat">5 Tháng 9</span>
                             </div>
                         </div>
-                    </div>
+                    </div>     
+
+                    {getUsers?.result ? getUsers.result.map((item) => (
+                        <div onClick={() => handleOpenModal(
+                            {
+                                id: item.id, 
+                                userName: item.userName, 
+                                email: item.email, 
+                                avatar: item.avatar,
+                            })} className="simple-table-wrapper bg-[#f2f3f4] mt-2 border border-solid border-[rgba(19,21,23,0.08)] dark:border-[rgba(255,255,255,0.08)] dark:bg-[rgba(255,255,255,0.04)]">
+                            <div className="base-row border-b-0 border-t-0 p-[0.75rem_1rem] cursor-pointer transition-all duration-300 ease-in-out">
+                                <div className="gap-3 flex justify-between items-center">
+                                    <div className="avatar-wrapper small">
+                                        <Avatar
+                                            radius="full"
+                                            src={userProfile?.result.avatar ? userProfile.result.avatar : "https://cdn.lu.ma/cdn-cgi/image/format=auto,fit=cover,dpr=2,background=white,quality=75,width=32,height=32/avatars-default/avatar_8.png"}
+                                            name="Donace"
+                                            className="w-6 h-6 bg-center bg-cover bg-[#fff] relative"
+                                        />
+                                    </div>
+                                    <div className="info overflow-hidden text-ellipsis whitespace-nowrap text-[#b3b5b7] min-w-0 flex-1">
+                                        <div className="name inline">
+                                            <div className="inline font-medium overflow-hidden text-ellipsis whitespace-nowrap text-black-light-theme dark:text-[#fff] mr-2 min-w-0">{item.userName}</div>
+                                        </div>
+                                        <div className="email inline overflow-hidden text-ellipsis whitespace-nowrap text-[#b3b5b7] dark:text-[#939597] min-w-0">{item.email}</div>
+                                    </div>
+                                    {/* //TODO: Chỗ này đổi thành ngày người tham gia lịch */}
+                                    <span className="whitespace-nowrap text-sm text-[#b3b5b7] dark:text-[#939597]" title="dat">{format(new Date(item.creationTime), 'dd/MM/yyyy')}</span>
+                                </div>
+                            </div>
+                        </div>
+                    )) : (
+                        <></>
+                    )}               
+
                     <Modal
                         classNames={{
                             base: [
@@ -406,20 +517,27 @@ export default function CalendarPeople(props: any) {
                                                     <div className="gap-3 flex items-center">
                                                         <div className="avatar-wrapper">
                                                             <Avatar
-                                                                src={userProfile?.result.avatar ? userProfile.result.avatar : "https://cdn.lu.ma/cdn-cgi/image/format=auto,fit=cover,dpr=2,background=white,quality=75,width=32,height=32/avatars-default/avatar_8.png"}
+                                                                src={getdataModal?.avatar ? getdataModal.avatar : "https://cdn.lu.ma/cdn-cgi/image/format=auto,fit=cover,dpr=2,background=white,quality=75,width=32,height=32/avatars-default/avatar_8.png"}
                                                                 radius="full"
                                                                 name="Donace"
                                                                 className="w-10 h-10 bg-center bg-cover bg-white relative"
                                                             />
                                                         </div>
                                                         <div>
-                                                            <div className="font-semibold">{getCalendars?.name}</div>
-                                                            <div className="cursor-copy text-sm text-[#737577] dark:text-[#d2d4d7]">{userProfile?.result.email}</div>
+                                                            <div className="font-semibold">{getdataModal?.userName}</div>
+                                                            <div className="cursor-copy text-sm text-[#737577] dark:text-[#d2d4d7]">{getdataModal?.email}</div>
                                                         </div>
                                                     </div>
-                                                    <button type="button" className="text-black-more-blur-light-theme dark:text-[rgba(255,255,255,0.64)] border-transparent bg-transparent p-0 h-auto border-none rounded-none outline-offset-[.375rem] cursor-pointer transition-all duration-300 ease-in-out donace-button-w-fit flex items-center m-0">
-                                                        <div className="label">Xóa</div>
-                                                    </button>
+                                                    {
+                                                        getCalendars?.isHost ? (
+                                                            <></>
+                                                        ) : (
+                                                            <button type="button" className="text-black-more-blur-light-theme dark:text-[rgba(255,255,255,0.64)] border-transparent bg-transparent p-0 h-auto border-none rounded-none outline-offset-[.375rem] cursor-pointer transition-all duration-300 ease-in-out donace-button-w-fit flex items-center m-0">
+                                                                <div className="label">Xóa</div>
+                                                            </button>
+                                                        )
+                                                    }
+                                                    
                                                 </div>
                                             </div>
                                             <div className="can-divide with-divider small mt-5 pt-5 border-t border-solid border-[rgba(19,21,23,0.08)] dark:border-[rgba(255,255,255,0.08)]">
@@ -451,7 +569,7 @@ export default function CalendarPeople(props: any) {
                                                                                 color="danger"
                                                                                 className="p-[0.25rem_0.4375rem] text-xs whitespace-nowrap inline-flex items-center font-medium"
                                                                             >
-                                                                                <div>Chưa tham gia</div>
+                                                                                <div>Quản lý</div>
                                                                             </Chip>
                                                                         )}
                                                                     </div>

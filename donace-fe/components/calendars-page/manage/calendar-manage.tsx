@@ -71,13 +71,11 @@ export default function CalendarManage(props: any) {
     const dateTimeSubFalse = false;
     const dateTimeEvent = dateTimeTrue ? 'true' : 'false';
 
-    var [futureEvents, setFutureEvents] = useState<ItemsCalendarManage[]>();
-    var [pastEvents, setPastEvents] = useState<ItemsCalendarManage[]>();
     const [getCalendars, setCalendars] = useState<GetCalendarById | null>(null);
     var [calendars, setCalendar] = useState<Calendar | null>(null);
 
     const [getEvent, setEvents] = useState<GetListEventByCalendarId[]>([]);
-    const [getPastEventId, setPastEventsId] = useState<GetListEventByCalendarId[]>([]);
+    const [getPastEvent, setPastEvents] = useState<GetListEventByCalendarId[]>([]);
     const [getEventSub, setEventSub] = useState<GetListEventByCalendarId[]>([]);
     const [getPastEventSub, setPastEventSub] = useState<GetListEventByCalendarId[]>([]);
 
@@ -87,34 +85,30 @@ export default function CalendarManage(props: any) {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const futureEventsData = await fetchWrapper.get(`api/Event?IsNew=${dateTimeTrue}-${dateTimeSubTrue}`);
-                setFutureEvents(futureEventsData.items);
-
-                const pastEventsData = await fetchWrapper.get(`api/Event?IsNew=${dateTimeFalse}-${dateTimeSubFalse}`);
-                setPastEvents(pastEventsData.items);
-
                 const calendarsData = await fetchWrapper.post(`api/Calendar/get-by-id?Id=${id}`, null);
                 setCalendars(calendarsData);
-
-                const calendarData = await fetchWrapper.post('/api/Calendar/get-list', { pageNumber: 1, pageSize: 9999 });
-                setCalendar(calendarData);
 
                 const eventsData = await fetchWrapper.get(`api/Event/list-event-by-calendar-${id}-${dateTimeTrue}-${dateTimeSubTrue}`);
                 setEvents(eventsData);
 
                 const pastEventsIdData = await fetchWrapper.get(`api/Event/list-event-by-calendar-${id}-${dateTimeFalse}-${dateTimeSubFalse}`);
-                setPastEventsId(pastEventsIdData);
+                setPastEvents(pastEventsIdData);
 
-                setLoading(false); // Set loading to false once all data is fetched
+                const TrueFalse = await fetchWrapper.get(`api/Event/list-event-by-calendar-${id}-${dateTimeTrue}-${dateTimeSubFalse}`);
+                setPastEvents(TrueFalse);
+
+                const FalseTrue = await fetchWrapper.get(`api/Event/list-event-by-calendar-${id}-${dateTimeFalse}-${dateTimeSubTrue}`);
+                setPastEvents(FalseTrue);
+
+                setLoading(false);
             } catch (error) {
                 console.error('Error fetching data:', error);
                 setLoading(false);
             }
         };
-
         fetchData();
     }, []);
-
+console.log(getCalendars)
     return (
         <div className="page-content">
             <div className="page-header opacity-[2] pl-4 pr-4 pt-12 max-width-global margin-global">
@@ -159,14 +153,31 @@ export default function CalendarManage(props: any) {
                                 </div>
                             )}
                         </h1>
-                        <Link
+                        
+                        {getCalendars?.isHost ? (
+                            <></>
+                        ) : (
+                            getCalendars?.isSub ? (
+                                <></>
+                            ) : (
+                                <Link
+                            className="text-black-more-blur-light-theme dark:text-[rgba(255,255,255,0.64)] bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)] border-transparent border border-solid transition-all duration-300 ease-in-out donace-button-w-fit flex items-center cursor-pointer"
+                            underline="none"
+                            >
+                                <div className="label">Tham gia</div>
+                            </Link>
+                            )
+                        )}
+                        
+                            <Link
                             href="/calendars"
                             className="text-black-more-blur-light-theme dark:text-[rgba(255,255,255,0.64)] bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)] border-transparent border border-solid transition-all duration-300 ease-in-out donace-button-w-fit flex items-center cursor-pointer"
                             underline="none"
-                        >
-                            <div className="label">Lịch</div>
-                            <ArrowUpRight className="ml-1.5 stroke-2 w-3.5 h-3.5 flex-shrink-0 block align-middle" />
-                        </Link>
+                            >
+                                <div className="label">Lịch</div>
+                                <ArrowUpRight className="ml-1.5 stroke-2 w-3.5 h-3.5 flex-shrink-0 block align-middle" />
+                            </Link>                        
+                        
                     </div>
                 )}
             </div>
@@ -361,7 +372,7 @@ export default function CalendarManage(props: any) {
                                                     <div className="mt-6 justify-center flex items-center">
                                                         <Button
                                                             as={Link}
-                                                            href="/create"
+                                                            href={`/create/?calendarId=${id}`}
                                                             type="button"
                                                             className="text-black-more-blur-light-theme dark:text-[rgba(255,255,255,0.64)] bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)] border-transparent border border-solid cursor-pointer transition-all duration-300 ease-in-out donace-button-w-fit flex items-center m-0"
                                                         >
@@ -374,9 +385,9 @@ export default function CalendarManage(props: any) {
                                         )}
                                     </Tab>
                                     <Tab key="past" title="Đã qua" className="text-sm font-semibold">
-                                        {getPastEventId && getPastEventId.length > 0 ? (
+                                        {getPastEvent && getPastEvent.length > 0 ? (
                                             <div className="timeline">
-                                                {getPastEventId.map((event, index) => (
+                                                {getPastEvent.map((event, index) => (
                                                     <div key={index} className="timeline-section relative flex w-full gap-16 pb-12">
                                                         <div className="line left-[calc(7rem+4rem/2)] dark:border-[rgba(255,255,255,0.08)]"></div>
                                                         <div className="title always relative w-28">
@@ -468,7 +479,7 @@ export default function CalendarManage(props: any) {
                                                     <div className="mt-6 justify-center flex items-center">
                                                         <Button
                                                             as={Link}
-                                                            href="/create"
+                                                            href={`/create/?calendarId=${id}`}
                                                             type="button"
                                                             className="text-black-more-blur-light-theme dark:text-[rgba(255,255,255,0.64)] bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)] border-transparent border border-solid cursor-pointer transition-all duration-300 ease-in-out donace-button-w-fit flex items-center m-0"
                                                         >

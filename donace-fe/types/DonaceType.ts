@@ -1,3 +1,20 @@
+export type CommonResponse<T> = {
+    code: string;
+    success: boolean;
+    result: T[];
+    pageInfo: any;
+}
+
+export type Calendar = {
+    sorted: number;
+    id: string;
+    name: string;
+    totalSubcriber: number;
+    avatar: string;
+    userId: string;
+    isSubcribed: boolean;
+};
+
 export type AppUser = {
     id: string;
     userName: string;
@@ -63,14 +80,14 @@ export type ItemEventsProfile = {
 }
 
 
-export type UpdateProfile ={
-    code : string;
-    success : true;
-    result : ResultUpdateProfile;
+export type UpdateProfile = {
+    code: string;
+    success: true;
+    result: ResultUpdateProfile;
     pageInfor: any;
 }
 
-export type ResultUpdateProfile ={
+export type ResultUpdateProfile = {
     userName: string;
     avatar: string;
     bio: string;
@@ -134,6 +151,8 @@ export type GetCalendarById = {
     long: string;
     addressName: string;
     totalSubcribed: number
+    isSub: boolean
+    isHost: boolean
 }
 // **************
 
@@ -173,8 +192,9 @@ export type SectionByEvent = {
 // GET EVENT DETAILS    
 
 export type EventDetailModels = {
-    sort: number
+    sorted: number
     id: string
+    isFree: boolean
     startDate: string
     endDate: string
     addressName: string
@@ -192,6 +212,12 @@ export type EventDetailModels = {
     duration: number
     totalGuest: number
     calendarId: string
+    isHost: string
+    status: string
+    isOnline: boolean
+    linkMeet: string
+    isSub: boolean
+    isAppro: boolean
     isLive: boolean
 }
 
@@ -205,14 +231,16 @@ export type CreateEventModel = {
     capacity: number
     isOverCapacity: boolean
     cover: string
-    name: string
+    name: ''
     theme: string
     color: string
     fontSize: number
     instructions: string
     isMultiSection: boolean
     duration: number
-    calendarId: string
+    calendarId: string,
+    isOnline: false,
+    onlineLink: string
 }
 // ****************
 
@@ -239,4 +267,84 @@ export type ListEventByUser = {
     isHost: boolean
     status: string
     sorted: number
+}
+
+// PAYMENT MODEL
+export type PaymentModel = {
+    id: string
+    tmnCode: string
+    hashSecret: string
+}
+
+// UPDATE EVENT
+export type UpdateEventModel = {
+    startDate: string
+    endDte: string
+    addressName: string
+    lat: string
+    long: string
+    capacity: number
+    isOverCapacity: boolean
+    cover: string
+    name: string
+    theme: string
+    color: string
+    fontSize: number
+    instructions: string
+    isMultiSection: boolean
+    duration: number
+    calendarId: string
+    id: string
+}
+// ***********
+
+// USER JOIN EVENT
+export type ListUserJoinEvent = {
+    eventId: string
+    userId: string
+    status: number
+    id: string
+    name: string
+    avatar: string
+    email: string
+}
+
+// *************
+
+// USER JOIN EVENT
+export type UserJoinEvent = {
+    userId: string
+    calendarId: string
+    eventId: string
+}
+// ****************
+
+// GET EVENT BY SORTED
+export type EventDetailSorted = {
+    sorted: number
+    id: string
+    startDate: string
+    endDate: string
+    addressName: string
+    lat: string
+    long: string
+    capacity: number
+    isOverCapacity: boolean
+    cover: string
+    name: string
+    theme: string
+    color: string
+    fontSize: number
+    instructions: string
+    isMultiSection: true
+    duration: number
+    totalGuest: number
+    calendarId: string
+    isHost: string
+    status: string
+    isOnline: string
+    linkMeet: string
+    isSub: string
+    isAppro: string
+    isLive: boolean
 }

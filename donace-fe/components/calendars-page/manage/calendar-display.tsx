@@ -4,7 +4,7 @@ import { GetCalendarById } from "@/types/DonaceType";
 import { Avatar } from "@nextui-org/avatar";
 import { Button } from "@nextui-org/button";
 import { Link } from "@nextui-org/link";
-import { ArrowUp, ArrowUpRight, CheckCircle, Monitor, Settings2, Trash2, Wand2 } from "lucide-react";
+import { ArrowUp, ArrowUpRight, CheckCircle, Settings2, Wand2 } from "lucide-react";
 import { useEffect, useState } from "react";
 
 export type Calendar = {
@@ -27,14 +27,14 @@ export default function CalendarDisplay(props: any) {
     var { id } = props
 
     const [getCalendars, setCalendars] = useState<GetCalendarById | null>(null);
-    var [calendars, setCalendar] = useState<Calendar | null>(null);
+    //var [calendars, setCalendar] = useState<Calendar | null>(null);
 
     useEffect(() => {
         fetchWrapper.post(`api/Calendar/get-by-id?Id=${id}`, null)
             .then(data => setCalendars(data));
 
-        fetchWrapper.post('/api/Calendar/get-list', { pageNumber: 1, pageSize: 9999 })
-            .then(data => setCalendar(data))
+        // fetchWrapper.post('/api/Calendar/get-list', { pageNumber: 1, pageSize: 9999 })
+        //     .then(data => setCalendar(data))
     }, []);
     return (
         <div className="page-content">
@@ -141,6 +141,7 @@ export default function CalendarDisplay(props: any) {
                     <div className="sidebar">
                         <div className="tabs flex-col gap-3 sticky top-[6.5rem] flex">
                             <Link
+                                href={`/calendars/manage/${id}/settings`}
                                 className="transition-all duration-300 ease-in-out cursor-pointer"
                                 underline="none"
                             >
@@ -149,6 +150,18 @@ export default function CalendarDisplay(props: any) {
                                         <Wand2 className="block w-4 h-4 align-middle" />
                                     </div>
                                     <div className="whitespace-nowrap">Hiển thị</div>
+                                </div>
+                            </Link>
+                            <Link
+                                href={`/calendars/manage/${id}/settings/options`}
+                                className="transition-all duration-300 ease-in-out cursor-pointer"
+                                underline="none"
+                            >
+                                <div className="tab gap-3 text-black-blur-light-theme hover:text-black rounded-lg font-medium transition-all duration-300 ease-in-out flex items-center">
+                                    <div className="icon">
+                                        <Settings2 className="block w-4 h-4 align-middle" />
+                                    </div>
+                                    <div className="whitespace-nowrap">Tùy chọn</div>
                                 </div>
                             </Link>
                         </div>
