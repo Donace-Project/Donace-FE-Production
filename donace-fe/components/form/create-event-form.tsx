@@ -46,6 +46,28 @@ import { Calendar } from "../../types/DonaceType";
 import { useRouter, useSearchParams } from "next/navigation";
 const goongGeocoder = require("@goongmaps/goong-geocoder");
 
+
+interface createEventReponseType {
+
+  name: string;
+  startDate: string;
+  endDate: string;
+  calendarId: string | undefined;
+  lat: number;
+  long: number;
+  addressName: string;
+  cover: string;
+  isOnline: boolean;
+  linkMeet: string;
+  isUnlimited: boolean;
+  ticket: {
+    isRequireApprove: boolean;
+    isFree: boolean;
+    price: number;
+  };
+  capacity: number;
+}
+
 export default function CreateFormFinal() {
   // ---------------Start: Local variable---------------
   const searchParams = useSearchParams();
@@ -103,12 +125,12 @@ export default function CreateFormFinal() {
   });
   const [lstCalendar, setLstCalendar] = useState<Calendar[]>([]);
   const [selectedCalendar, SetSelectedCalendar] = useState<Calendar>();
-  const refDivBackground = useRef<HTMLDivElement | null>(null);
+  // const refDivBackground = useRef<HTMLDivElement | null>(null);
   const refDivAvatarCalendar = useRef<HTMLDivElement | null>(null);
   const [onlineLink, setOnlineLink] = useState("");
   const [isUploading, setIsUploading] = useState(false);
   const [isAvatarUploading, setIsAvatarUploading] = useState(false);
-  const [price, setPrice] = useState<number | undefined>(0);
+  const [price, setPrice] = useState<number>(0);
   const [isFree, setIsFree] = useState(true);
   const [isCorrectFormatLink, setIsCorrectFormatLink] = useState(true);
   const [isUnlimitedCapacity, setIsUnlimitedCapacity] = useState(true);
@@ -119,17 +141,17 @@ export default function CreateFormFinal() {
   });
   const [image, setImage] = useState<string>("https://cdn.lu.ma/cdn-cgi/image/format=auto,fit=cover,dpr=2,quality=75,width=400,height=400/event-defaults/1-1/standard1.png");
 
-  const [eventReq, SetEventReq] = useState<any>({
+  const [eventReq, SetEventReq] = useState<createEventReponseType>({
     name: "",
     startDate: `${formattedDate}T12:00`,
     endDate: `${formattedDate}T12:00`,
-    calendarId: String,
-    lat: Number,
-    long: Number,
-    addressName: String,
-    cover: 'https://cdn.lu.ma/cdn-cgi/image/format=auto,fit=cover,dpr=2,quality=75,width=400,height=400/event-defaults/1-1/standard1.png',
+    calendarId: "",
+    lat: 0,
+    long: 0,
+    addressName: "",
+    cover: "https://cdn.lu.ma/cdn-cgi/image/format=auto,fit=cover,dpr=2,quality=75,width=400,height=400/event-defaults/1-1/standard1.png",
     isOnline: false,
-    linkMeet: String,
+    linkMeet: "",
     isUnlimited: true,
     ticket: {
       isRequireApprove: false,
@@ -138,6 +160,7 @@ export default function CreateFormFinal() {
     },
     capacity: 0,
   });
+
   // ---------------End: UseState---------------
 
   // ---------------Begin: UseRef---------------
@@ -151,7 +174,6 @@ export default function CreateFormFinal() {
 
   // ---------------Start: Handle event---------------
   const handleConfirmPrice = () => {
-    modalPriceEvent.onClose();
     SetEventReq({
       ...eventReq,
       ticket: {
@@ -160,12 +182,13 @@ export default function CreateFormFinal() {
         price: price,
       },
     });
+    console.log("Help")
+    modalPriceEvent.onClose();
 
     setIsFree(false);
   };
 
   const handleConfirmFree = () => {
-    modalPriceEvent.onClose();
     SetEventReq({
       ...eventReq,
       ticket: {
@@ -174,6 +197,7 @@ export default function CreateFormFinal() {
         price: 0,
       },
     });
+    modalPriceEvent.onClose();
     setIsFree(true);
   };
 
@@ -359,8 +383,12 @@ export default function CreateFormFinal() {
         ...eventReq,
         startDate: `${startDate.date}T${startDate.time}`,
         endDate: `${endDate.date}T${endDate.time}`,
+        cover: `${image}`,
+        ticket: {
+          ...eventReq.ticket,
+        }
       });
-
+      console.log(response)
       if (response.id) {
         // Redirect
         router.push(`/events/manage/${response.id}`);
@@ -1290,13 +1318,13 @@ export default function CreateFormFinal() {
                                       <ModalBody className="w-full p-[1rem_1.25rem]">
                                         <div className="flex flex-col">
                                           <div className="lux-alert-top pt-1">
-                                            <div className="icon-wrapper m-[0.25rem_0px_0.75rem] w-14 h-14 rounded-full text-[#737577] dark:text-[#d2d4d7] bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)] justify-center flex items-center">
+                                            <div className="icon-wrapper m-[0.25rem_0px_0.75rem] w-14 h-14 rounded-full justify-center flex items-center">
                                               <Coins className="w-8 h-8 block align-middle" />
                                             </div>
                                             <div className="title font-semibold text-xl mb-2">
                                               Giá vé
                                             </div>
-                                            <div className="desc   dark:text-[hsla(0,0%,100%,.79)]">
+                                            <div className="desc">
                                               Hãy điều chỉnh giá vé dành riêng
                                               cho Sự kiện của bạn.
                                             </div>
@@ -1312,7 +1340,7 @@ export default function CreateFormFinal() {
                                                     <div>&nbsp;</div>
                                                     {/* // TODO: khi nào có api check, check thành công thì đổi lại vị trí click */}
                                                     <NumericFormat
-                                                      className="text-base h-auto donace-button bg-[#fff] border border-solid border-[#ebeced] transition-all duration-300 ease-in-out m-0 focus:outline-none focus:border-[rgb(19,21,23)]"
+                                                      className="text-base h-auto donace-button  border border-solid light:border-[#ebeced] transition-all duration-300 ease-in-out m-0 focus:outline-none focus:border-[rgb(19,21,23)]"
                                                       thousandSeparator={true}
                                                       allowNegative={false}
                                                       prefix={"₫ "} // Dấu tiền tệ Việt Nam đồng
@@ -1321,7 +1349,7 @@ export default function CreateFormFinal() {
                                                         "Nhập số tiền"
                                                       }
                                                       onValueChange={(e) =>
-                                                        setPrice(e.floatValue)
+                                                        setPrice(e.floatValue ? e.floatValue : 0)
                                                       }
                                                     />
                                                   </div>
@@ -1331,25 +1359,25 @@ export default function CreateFormFinal() {
                                             <div className="gap-2 flex justify-between items-center">
                                               <Button
                                                 type="button"
-                                                onClick={(e) =>
+                                                onClick={() =>
                                                   handleConfirmPrice()
                                                 }
                                                 className="text-[#fff] bg-[#333537] border-[#333537] border border-solid cursor-pointer transition-all duration-300 ease-in-out donace-button mt-4 flex items-center m-0"
                                               >
-                                                <div className="label">
+                                                <p className="label">
                                                   Xác nhận
-                                                </div>
+                                                </p>
                                               </Button>
                                               <Button
-                                                onClick={(e) =>
+                                                onClick={() =>
                                                   handleConfirmFree()
                                                 }
                                                 type="button"
                                                 className="  bg-[rgba(19,21,23,0.04)] border-transparent border border-solid cursor-pointer transition-all duration-300 ease-in-out donace-button mt-4 flex items-center m-0"
                                               >
-                                                <div className="label">
+                                                <p className="label">
                                                   Sự kiện miễn phí
-                                                </div>
+                                                </p>
                                               </Button>
                                             </div>
                                           </div>
@@ -1480,7 +1508,7 @@ export default function CreateFormFinal() {
                                                 SetEventReq({
                                                   ...eventReq,
                                                   isUnlimited: false,
-                                                  capacity: capacity,
+                                                  capacity: parseInt(capacity),
                                                 });
                                               }}
                                               className="text-[#fff] bg-[#333537] border-[#333537] border border-solid cursor-pointer transition-all duration-300 ease-in-out donace-button mt-4 flex items-center m-0"

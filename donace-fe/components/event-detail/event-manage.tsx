@@ -63,7 +63,7 @@ export default function EventManage(props: any) {
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
     // -----------------End: useDisclosure-----------------
 
-    const Refbackground = useRef<any>(null);
+    // const Refbackground = useRef<any>(null);
 
     const [startDate, setStartDate] = useState(new Date());
     const [endDate, setEndDate] = useState(new Date());
@@ -115,6 +115,8 @@ export default function EventManage(props: any) {
         setEndDate(date);
     };
 
+    const [eventImage, setEventImage] = useState<any>('https://cdn.lu.ma/cdn-cgi/image/format=auto,fit=cover,dpr=2,quality=75,width=400,height=400/event-defaults/1-1/standard1.png');
+
     const handleFileUploadAndSaveEvent = async (
         event: React.ChangeEvent<HTMLInputElement>
     ) => {
@@ -125,8 +127,8 @@ export default function EventManage(props: any) {
         formData.append("file", selectedFile);
         setIsUploadingBackground(true)
         const url = await fetchWrapper.postFile("api/Common/upload-file", formData);
-        if (Refbackground.current && url) {
-            Refbackground.current.style.backgroundImage = `url(${url})`;
+        if (eventImage != url && url) {
+            setEventImage(url);
             setIsUploadingBackground(false);
             await fetchWrapper.post("/api/Event/Update-cover", {
                 ...eventDetail,
@@ -258,7 +260,7 @@ export default function EventManage(props: any) {
                 if (currentDate > endedDate) {
                     setIsEndedEvent(true);
                 }
-                Refbackground.current.style.backgroundImage = `url(${data.cover})`;
+                setEventImage(data.cover);
             });
         ImportMap();
     }, []);
@@ -275,7 +277,7 @@ export default function EventManage(props: any) {
                             </div>
                         </h1>
                         <Link
-                            href={`/user/join-event/${eventDetail.id}`}
+                            href={`/user/join-event/${id}`}
                             target="_blank"
                             className="text-black-more-blur-light-theme dark:text-[rgba(255,255,255,0.64)] bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)] border-transparent border border-solid transition-all duration-300 ease-in-out donace-button-w-fit flex items-center cursor-pointer"
                             underline="none"
@@ -294,35 +296,35 @@ export default function EventManage(props: any) {
                         <div className="tabs flex max-w-full overflow-auto min-w-0 gap-4 flex-1">
                             <div className="side-padding"></div>
                             <Link
-                                href={`/events/manage/${eventDetail?.id}`}
+                                href={`/events/manage/${id}`}
                                 className="text-black-light-theme dark:text-[#fff] border-b-2 border-solid border-[rgb(19,21,23)] dark:border-[#fff] whitespace-nowrap inline-block pb-2 transition-all duration-300 ease-in-out cursor-pointer"
                                 underline="none"
                             >
                                 Sự kiện
                             </Link>
                             <Link
-                                href={`/events/manage/${eventDetail?.id}/guests`}
+                                href={`/events/manage/${id}/guests`}
                                 className="text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)] border-b-2 border-solid border-transparent whitespace-nowrap inline-block pb-2 transition-all duration-300 ease-in-out cursor-pointer"
                                 underline="none"
                             >
                                 Khách
                             </Link>
                             <Link
-                                href={`/events/manage/${eventDetail?.id}/payment`}
+                                href={`/events/manage/${id}/payment`}
                                 className="text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)] border-b-2 border-solid border-transparent whitespace-nowrap inline-block pb-2 transition-all duration-300 ease-in-out cursor-pointer"
                                 underline="none"
                             >
                                 Thanh toán
                             </Link>
                             <Link
-                                href={`/events/manage/${eventDetail?.id}/insights`}
+                                href={`/events/manage/${id}/insights`}
                                 className="text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)] border-b-2 border-solid border-transparent whitespace-nowrap inline-block pb-2 transition-all duration-300 ease-in-out cursor-pointer"
                                 underline="none"
                             >
                                 Doanh thu
                             </Link>
                             <Link
-                                href={`/events/manage/${eventDetail?.id}/more`}
+                                href={`/events/manage/${id}/more`}
                                 className="text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)] border-b-2 border-solid border-transparent whitespace-nowrap inline-block pb-2 transition-all duration-300 ease-in-out cursor-pointer"
                                 underline="none"
                             >
@@ -356,30 +358,25 @@ export default function EventManage(props: any) {
                         <div className="inner grid grid-cols-2 gap-5">
                             <div className="preview relative">
                                 <div className="relative">
-                                    <div
-                                        ref={Refbackground}
-                                        role="button"
-                                        className={`bg-[url('https://cdn.lu.ma/cdn-cgi/image/format=auto,fit=cover,dpr=2,quality=75,width=400,height=400/event-defaults/1-1/standard4.png')] aspect-square rounded-lg bg-[#ebeced] dark:bg-[#333537] block ml-auto mr-auto bg-center bg-cover overflow-hidden transition-all duration-300 ease-in-out relative cursor-pointer h-full`}
-                                    ></div>
+
+                                    <img src={eventImage} className="aspect-square object-cover transition-all duration-300 ease-in-out rounded-lg w-[400px] h-[400px]" alt="background" />
                                     <div className="url-wrapper absolute p-[0.375rem_0.75rem] rounded-lg bg-[rgba(19,21,23,0.32)] z-50 bottom-2 left-2 right-2 backdrop-blur-lg shadow-md text-sm">
-                                        <div className="url amimated transition-all duration-300 ease-in-out gap-2 flex justify-between items-center">
+                                        <div className="url amimated transition-all duration-300 ease-in-out gap-2 flex justify-between items-center w-full">
                                             <Link
                                                 href={`/ user / join - event / ${eventDetail?.id}`}
                                                 target="_blank"
-                                                className="text-[rgba(255,255,255,0.8)] gap-1 min-w-0 flex items-center transition-all duration-300 ease-in-out cursor-pointer"
+                                                className="text-[rgba(255,255,255,0.8)] gap-1 flex justify-between items-center transition-all duration-300 ease-in-out cursor-pointer  w-3/4 "
                                                 underline="none"
                                             >
-                                                <div className="short-description whitespace-nowrap overflow-hidden text-ellipsis min-w-0 text-sm" id="myClipboard">
-                                                    {`user/join-event/${eventDetail?.id}`}
+                                                <div className="text-sm w-full truncate" id="myClipboard">
+                                                     {`user/join-event/${eventDetail?.id}`} 
                                                 </div>
-                                                <div className="flex items-center">
-                                                    <ArrowUpRight className="block w-4 h-4 align-middle" />
-                                                </div>
+                                                <ArrowUpRight className="w-4 h-4" />
                                             </Link>
                                             <button
                                                 aria-label="copy link"
                                                 type="button"
-                                                className="text-[rgba(255,255,255,0.48)] border-[#939597] hover:text-[#fff] bg-transparent p-0 h-auto border-none rounded-none outline-offset-[.375rem] cursor-pointer transition-all duration-300 ease-in-out font-medium relative whitespace-nowrap justify-center outline-none max-w-full w-fit flex items-center m-0 leading-6"
+                                                className="text-[rgba(255,255,255,0.48)] border-[#939597] hover:text-[#fff] bg-transparent p-0 h-auto border-none rounded-none outline-offset-[.375rem] cursor-pointer transition-all duration-300 ease-in-out font-medium relative whitespace-nowrap justify-center outline-none w-full flex items-center m-0 leading-6"
                                             >
                                                 {/* // TODO: CSS hover cho nó nháy đén */}
                                                 <div className="label" onClick={(e) => navigator.clipboard.writeText(`${currentURL}/user/join-event/${eventDetail?.id}`)}>SAO CHÉP</div>
