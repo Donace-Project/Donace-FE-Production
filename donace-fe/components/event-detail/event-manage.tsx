@@ -271,7 +271,7 @@ export default function EventManage(props: any) {
             <div className="page-header opacity-[2] pl-4 pr-4 pt-12 max-width-global margin-global">
                 {eventDetail ? (
                     <div className="spread gap-2 mb-2 flex justify-between items-center">
-                        <h1 className="tab-title text-4xl font-semibold text-black-light-theme dark:text-[#fff] mb-0">
+                        <h1 className="tab-title text-4xl font-semibold  dark:text-[#fff] mb-0">
                             <div>
                                 <div className="inline">{eventDetail.name}</div>
                             </div>
@@ -279,7 +279,7 @@ export default function EventManage(props: any) {
                         <Link
                             href={`/user/join-event/${id}`}
                             target="_blank"
-                            className="text-black-more-blur-light-theme dark:text-[rgba(255,255,255,0.64)] bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)] border-transparent border border-solid transition-all duration-300 ease-in-out donace-button-w-fit flex items-center cursor-pointer"
+                            className=" dark:text-[rgba(255,255,255,0.64)]  dark:bg-[rgba(255,255,255,0.08)] border-transparent border border-solid transition-all duration-300 ease-in-out donace-button-w-fit flex items-center cursor-pointer"
                             underline="none"
                         >
                             <div className="label">Trang sự kiện</div>
@@ -297,7 +297,7 @@ export default function EventManage(props: any) {
                             <div className="side-padding"></div>
                             <Link
                                 href={`/events/manage/${id}`}
-                                className="text-black-light-theme dark:text-[#fff] border-b-2 border-solid border-[rgb(19,21,23)] dark:border-[#fff] whitespace-nowrap inline-block pb-2 transition-all duration-300 ease-in-out cursor-pointer"
+                                className=" dark:text-[#fff] border-b-2 border-solid border-[rgb(19,21,23)] dark:border-[#fff] whitespace-nowrap inline-block pb-2 transition-all duration-300 ease-in-out cursor-pointer"
                                 underline="none"
                             >
                                 Sự kiện
@@ -335,7 +335,7 @@ export default function EventManage(props: any) {
                 </div>
                 <div className="tab-title-divider border border-solid border-[rgba(19,21,23,0.08)] dark:border-[rgba(255,255,255,0.08)] mb-7"></div>
             </div>
-            <div className="zm-container pl-4 pr-4 max-width-global margin-global">
+            <div className="zm-container bg-transparent backdrop-blur-lg max-width-global margin-global">
                 <div className="mb-4">
                     {eventDetail?.isLive ? (
                         <div className="banner text-[#d19d20] dark:text-[#facc28] bg-[#d19d2022] border-[#d19d20] dark:border-[#facc28] border border-solid p-[0.5rem_0.75rem_0.5rem_1rem] font-medium text-sm gap-2 flex justify-between items-center rounded-lg">
@@ -354,13 +354,13 @@ export default function EventManage(props: any) {
                     )}
                 </div>
                 <div className="outer mb-8">
-                    <div className="content-card p-3 relative rounded-xl bg-[#fafafc] dark:bg-[rgba(255,255,255,0.04)] border border-solid border-[#fff] dark:border-[rgba(255,255,255,0.04)] overflow-hidden">
-                        <div className="inner grid grid-cols-2 gap-5">
+                    <div className="content-card p-4 relative rounded-xl bg-[#f2f3f4] dark:bg-[#212325] shadow-lg">
+                        <div className="inner flex flex-col md:flex-row justify-between gap-4">
                             <div className="preview relative">
                                 <div className="relative">
 
-                                    <img src={eventImage} className="aspect-square object-cover transition-all duration-300 ease-in-out rounded-lg w-[400px] h-[400px]" alt="background" />
-                                    <div className="url-wrapper absolute p-[0.375rem_0.75rem] rounded-lg bg-[rgba(19,21,23,0.32)] z-50 bottom-2 left-2 right-2 backdrop-blur-lg shadow-md text-sm">
+                                    <img src={eventImage} className="aspect-square object-cover transition-all duration-300 ease-in-out rounded-lg w-full h-[400px]" alt="background" />
+                                    <div className="url-wrapper absolute p-2 rounded-lg bg-[rgba(19,21,23,0.32)] z-50 bottom-2 left-2 right-2 backdrop-blur-lg shadow-md text-sm">
                                         <div className="url amimated transition-all duration-300 ease-in-out gap-2 flex justify-between items-center w-full">
                                             <Link
                                                 href={`/ user / join - event / ${eventDetail?.id}`}
@@ -386,11 +386,11 @@ export default function EventManage(props: any) {
                                 </div>
                             </div>
                             {eventDetail ? (
-                                <div className="when-where h-full gap-1 flex flex-col justify-between">
+                                <div className="when-where h-full gap-4 flex flex-col justify-between">
                                     <div>
                                         <h3 className="mt-2 text-lg font-semibold mb-4">Thời gian & Địa điểm</h3>
                                         <div className="gap-4 flex flex-col">
-                                            <div className="gap-4 flex items-start">
+                                            <div className="gap-4 flex items-start w-full">
                                                 <div className="calendar-card-wrapper flex">
                                                     <div className="calendar-card border border-solid border-[rgba(19,21,23,0.08)] dark:border-[rgba(255,255,255,0.08)] rounded-lg overflow-hidden bg-[#fff] dark:bg-[#212325] w-11 h-11">
                                                         <div className="month bg-[rgba(19,21,23,0.08)] dark:bg-[rgba(255,255,255,0.08)] text-[0.625rem] font-semibold uppercase text-center text-[#b3b5b7] dark:text-[#939597]">{ConvertDateTime(eventDetail.startDate).month}</div>
@@ -399,7 +399,7 @@ export default function EventManage(props: any) {
                                                 </div>
                                                 <div>
                                                     <div className="font-medium">{DayOfWeek(CovertDate(eventDetail.startDate)[0])}</div>
-                                                    <div className="text-sm text-[#737577] dark:text-[#d2d4d7] text-ellipsis whitespace-nowrap overflow-hidden min-w-fit">{ConvertDateTime(eventDetail.startDate).day} tháng {ConvertDateTime(eventDetail.startDate).month}, {ConvertDateTime(eventDetail.startDate).hour}:{ConvertDateTime(eventDetail.startDate).minute} - {ConvertDateTime(eventDetail.endDate).day} tháng {ConvertDateTime(eventDetail.endDate).month}, {ConvertDateTime(eventDetail.endDate).hour}:{ConvertDateTime(eventDetail.endDate).minute} GMT+7</div>
+                                                    <div className="text-sm text-[#737577] dark:text-[#d2d4d7] text-ellipsis truncate">{ConvertDateTime(eventDetail.startDate).day} tháng {ConvertDateTime(eventDetail.startDate).month}, {ConvertDateTime(eventDetail.startDate).hour}:{ConvertDateTime(eventDetail.startDate).minute} - {ConvertDateTime(eventDetail.endDate).day} tháng {ConvertDateTime(eventDetail.endDate).month}, {ConvertDateTime(eventDetail.endDate).hour}:{ConvertDateTime(eventDetail.endDate).minute} GMT+7</div>
                                                 </div>
                                             </div>
                                             <div>
@@ -439,9 +439,9 @@ export default function EventManage(props: any) {
                                                 <p className="text-sm font-normal mb-10">Cảm ơn bạn đã tổ chức sự kiện. Hi vọng đây là một sự kiện thành công!</p>
                                             </div>
                                         </>) : (
-                                        <div className="flex flex-wrap gap-2">
+                                        <div className="flex flex-wrap gap-2 items-baseline">
                                             <Button onPress={onOpen}
-                                                className="text-black-more-blur-light-theme dark:text-[rgba(255,255,255,0.64)] bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)] border-transparent border border-solid transition-all duration-300 ease-in-out donace-button mt-4 flex items-center cursor-pointer"
+                                                className=" border-transparent border border-solid transition-all duration-300 ease-in-out donace-button mt-4 flex items-center cursor-pointer"
 
                                             >
                                                 <ScanLine className="mr-1.5 stroke-2 w-3.5 h-3.5 flex-shrink-0 block align-middle mt-0.5" />
@@ -451,7 +451,7 @@ export default function EventManage(props: any) {
                                                 <Button
                                                     onPress={modalEditEvent.onOpen}
                                                     type="button"
-                                                    className="text-black-more-blur-light-theme bg-[rgba(19,21,23,0.04)] border-transparent border border-solid cursor-pointer transition-all duration-300 ease-in-out donace-button flex items-center m-0"
+                                                    className=" border-transparent border border-solid cursor-pointer transition-all duration-300 ease-in-out donace-button flex items-center m-0 w-full"
                                                 >
                                                     <div className="label">Chỉnh sửa Sự kiện</div>
                                                 </Button>
@@ -471,7 +471,7 @@ export default function EventManage(props: any) {
                                                         }
                                                     }}
                                                     type="button"
-                                                    className="text-black-more-blur-light-theme bg-[rgba(19,21,23,0.04)] border-transparent border border-solid cursor-pointer transition-all duration-300 ease-in-out donace-button flex items-center m-0"
+                                                    className="  border-transparent border border-solid cursor-pointer transition-all duration-300 ease-in-out donace-button flex items-center m-0 w-full"
                                                 >
                                                     {isUploadingBackground ? (
                                                         <>
@@ -511,7 +511,7 @@ export default function EventManage(props: any) {
                         "transition-all",
                         "duration-300",
                         "ease-in-out",
-                        "hover:bg-[rgba(19,21,23,0.04)]",
+                        "hover:",
                         "rounded-full"
                     ]
                 }}
@@ -709,7 +709,7 @@ export default function EventManage(props: any) {
                                                     compoundLngDistrict &&
                                                     compoundLatProvince &&
                                                     compoundLngProvince ? (
-                                                    <div className="overflow-hidden text-ellipsis whitespace-nowrap text-sm text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)] max-w-[19rem]">
+                                                    <div className="overflow-hidden text-ellipsis whitespace-nowrap text-sm  dark:text-[hsla(0,0%,100%,.79)] max-w-[19rem]">
                                                         <p>
                                                             {compoundLatCommune},{" "}
                                                             {compoundLatDistrict},{" "}
@@ -717,7 +717,7 @@ export default function EventManage(props: any) {
                                                         </p>
                                                     </div>
                                                 ) : (
-                                                    <div className="overflow-hidden text-ellipsis whitespace-nowrap text-sm text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)] max-w-[19rem]">
+                                                    <div className="overflow-hidden text-ellipsis whitespace-nowrap text-sm  dark:text-[hsla(0,0%,100%,.79)] max-w-[19rem]">
                                                         Sự kiện tổ chức Online hoặc Offline
                                                     </div>
                                                 )}
@@ -757,7 +757,7 @@ export default function EventManage(props: any) {
                             <Divider />
                             <ModalBody>
                                 <div className="pt-2 m-2 grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div className="font-medium text-base text-black-light-theme dark:text-[#fff] translate-y-2">
+                                    <div className="font-medium text-base  dark:text-[#fff] translate-y-2">
                                         Chọn địa điểm:
                                     </div>
                                     <ButtonGroup

@@ -384,11 +384,8 @@ export default function CreateFormFinal() {
         startDate: `${startDate.date}T${startDate.time}`,
         endDate: `${endDate.date}T${endDate.time}`,
         cover: `${image}`,
-        ticket: {
-          ...eventReq.ticket,
-        }
       });
-      console.log(response)
+      
       if (response.id) {
         // Redirect
         router.push(`/events/manage/${response.id}`);

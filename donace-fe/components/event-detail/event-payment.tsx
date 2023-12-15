@@ -138,7 +138,7 @@ export default function EventPayment(props: any) {
                                         id="paidTicket"
                                         name="ticketType"
                                         value="paid"
-                                        // defaultChecked={!eventDetail?.isFree}
+                                        defaultChecked={!eventDetail?.isFree}
                                         onChange={handleTicketTypeChange}
                                         className="cursor-pointer mr-6"
                                     />
