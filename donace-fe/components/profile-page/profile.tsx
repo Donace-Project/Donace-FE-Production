@@ -630,7 +630,7 @@ export default function ProfilePage() {
                                   >
                                     <div className="profile-event-wrapper pb-0">
                                       <Link
-                                        href="/events/detail"
+                                        href={"/events/detail"+ event.id}
                                         className="profile-event relative flex items-center m-[-0.75rem_-1.5rem] p-[0.75rem_1.5rem] rounded-lg transition-all duration-300 ease-in-out text-[#0099dd] cursor-pointer hover:bg-[#f0f7fb] hover:opacity-[1]"
                                         underline="none"
                                       >
