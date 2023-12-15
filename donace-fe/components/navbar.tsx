@@ -35,7 +35,7 @@ import { useSession, signOut } from "next-auth/react";
 import { usePathname } from "next/navigation";
 import { AppUser } from "../types/DonaceType";
 
-
+import LogoDonace from "@/public/doanLogo.png";
 interface MenuItems {
   icon?: string;
   name: string;
@@ -89,8 +89,9 @@ export default function NavbarComponents() {
             className="relative z-[1] transition-global cursor-pointer"
           >
             <NavbarContent className="logo-light transition-all duration-300 ease-in-out flex items-center">
-              <GraduationCap className="dark:text-[hsla(0,0%,100%,.5)] w-5 h-5 block align-middle text-black-blur-light-theme" />
-              <p className="dark:text-[#ffffff] font-semibold text-3xl text-black-blur-light-theme">
+            <img src={LogoDonace.src} className="w-8 h-8 rounded-full" />
+
+              <p className="dark:text-[#ffffff] font-semibold text-2xl text-black-blur-light-theme">
                 Donace
               </p>
             </NavbarContent>
@@ -296,8 +297,10 @@ export default function NavbarComponents() {
               className="relative z-[1] transition-global cursor-pointer"
             >
               <NavbarContent className="logo-light transition-all duration-300 ease-in-out flex items-center">
-                <GraduationCap className="dark:text-[hsla(0,0%,100%,.5)] w-5 h-5 block align-middle text-black-blur-light-theme" />
-                <p className="dark:text-[#ffffff] font-semibold text-3xl text-black-blur-light-theme">
+                {/* <GraduationCap className="dark:text-[hsla(0,0%,100%,.5)] w-5 h-5 block align-middle text-black-blur-light-theme" /> */}
+
+                <img src={LogoDonace.src} className="w-8 h-8 rounded-full" />
+                <p className="dark:text-[#ffffff] font-semibold text-2xl text-black-blur-light-theme">
                   Donace
                 </p>
               </NavbarContent>
