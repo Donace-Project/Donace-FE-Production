@@ -131,7 +131,7 @@ export default function SignIn() {
           <CardFooter className="-mb-2 flex justify-center items-center">
             <div className="">Bạn không có tài khoản?</div>
             <div>&nbsp;</div>
-            <Link href="/auth/register" underline="hover">
+            <Link href="/auth/register" underline="hover" color="primary">
               Đăng ký ngay
             </Link>
           </CardFooter>

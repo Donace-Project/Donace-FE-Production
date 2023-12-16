@@ -11,7 +11,7 @@ import LogoDonace from "@/public/doanLogo.png";
 export default function Home() {
 	return (
 		// <div className="page-wrapper pb-0 gradient-background">
-		<div className="page-wrapper pb-0 bg-gradient-to-tr from-orange-600 via-white to-pink-500 dark:from-indigo-600 dark:via-purple-500 dark:to-pink-500">
+		<div className="page-wrapper pb-0 bg-gradient-to-tr from-[#feb2b2] via-[#fbd38d] to-[#90cdf4] dark:from-[#2d3748] dark:via-[#2c7a7b] dark:to-[#ff9233]">
 			<NavbarLanding />
 			<div className="page-content">
 				<div className="zm-container m-auto md:min-h-[80vh] flex flex-col md:flex-row items-center gap-4 p-4 justify-center">
@@ -73,10 +73,10 @@ export default function Home() {
 							{/* <div className="start-here font-sans mt-2 ml-2 pb-4 hidden md:block">Bắt đầu ngay.</div> */}
 
 						</div>
-						<div className="mt-2 mx-auto  md:text-xl max-w-sm">
+						<div className="mt-2 mx-auto md:mx-0 md:text-xl max-w-sm">
 							Tạo một sự kiện, mời bạn bè và cùng nhau tham dự. Hãy cùng nhau tạo kỷ niệm ngay hôm nay.
 						</div>
-						<Link className="mt-8 mx-auto"
+						<Link className="mt-8 mx-auto md:mx-0"
 							href="/create"
 							target="_self"
 							color="foreground"
