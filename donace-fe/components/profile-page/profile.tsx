@@ -135,13 +135,13 @@ export default function ProfilePage() {
       fileInputRef.current.click();
     }
   };
-
+  // bg-[url('https://th.bing.com/th/id/OIP.tfwNSpjXuFMQtsujE89LVwHaEK?rs=1&pid=ImgDetMain')]
   return (
     <div className="page-content relative">
       <div className="profile-page-theme font-sans font-normal">
         <div className="profile-page-wrapper">
           <div className="profile-content-container">
-            <div className="profile-bio is-me pt-4 bg-[url('https://th.bing.com/th/id/OIP.tfwNSpjXuFMQtsujE89LVwHaEK?rs=1&pid=ImgDetMain')] bg-no-repeat bg-cover">
+            <div className="profile-bio is-me pt-4 bg-transparent backdrop-blur-lg bg-no-repeat bg-cover">
               <div className="user-header-wrapper w-full m-auto">
                 <div className="user-header py-8 block text-center">
                   <div className="image-container w-32 m-auto">

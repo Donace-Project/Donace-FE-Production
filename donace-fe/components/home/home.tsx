@@ -186,11 +186,11 @@ export default function HomeEvents() {
                                     <div className="text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)]">{DayOfWeek(CovertDate(event.startDate)[0])}</div>
                                   </div>
                                 </div>
-                                <div className="dot-outer-wrapper absolute top-1.5 right-[calc(-2rem-0.4375rem)] justify-center flex items-center">
+                                {/* <div className="dot-outer-wrapper absolute top-1.5 right-[calc(-2rem-0.4375rem)] justify-center flex items-center">
                                   <div className="dot-wrapper justify-center flex items-center">
                                     <div className="dot w-3 h-3 bg-[#f3f4f5] dark:bg-[rgb(19,21,23)] border-2 border-solid border-[rgba(19,21,23,0.2)] dark:border-[hsla(0,0%,100%,.32)] rounded-full"></div>
                                   </div>
-                                </div>
+                                </div> */}
                               </div>
                             </div>
                             <div className="block md:hidden container">
@@ -249,7 +249,7 @@ export default function HomeEvents() {
                                           <h3 className="font-medium break-words mt-0 mb-4">{event.name}</h3>
                                         </div>
                                         <div className="gap-1 flex flex-col">
-                                          <div className="attribute text-base text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)] gap-3 flex items-start whitespace-nowrap">
+                                          <div className="attribute text-base text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)] gap-3 flex items-start whitespace-nowrap w-[350px]">
                                             <div className="icon text-base flex items-center">
                                               &nbsp;
                                               <MapPin className="w-4 h-4 block align-middle" />
@@ -350,11 +350,11 @@ export default function HomeEvents() {
                                     <div className="text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)]">{DayOfWeek(CovertDate(event.startDate)[0])}</div>
                                   </div>
                                 </div>
-                                <div className="dot-outer-wrapper absolute top-1.5 right-[calc(-2rem-0.4375rem)] justify-center flex items-center">
+                                {/* <div className="dot-outer-wrapper absolute top-1.5 right-[calc(-2rem-0.4375rem)] justify-center flex items-center">
                                   <div className="dot-wrapper justify-center flex items-center">
                                     <div className="dot w-3 h-3 bg-[#f3f4f5] dark:bg-[rgb(19,21,23)] border-2 border-solid border-[rgba(19,21,23,0.2)] dark:border-[hsla(0,0%,100%,.32)] rounded-full"></div>
                                   </div>
-                                </div>
+                                </div> */}
                               </div>
                             </div>
                             <div className="min-w-0 flex-1">
@@ -387,7 +387,7 @@ export default function HomeEvents() {
                                               &nbsp;
                                               <MapPin className="w-4 h-4 block align-middle mt-0.5" />
                                             </div>
-                                            <div className="text-base min-w-0">{event.addressName}</div>
+                                            <div className="text-base">{event.addressName}</div>
                                           </div>
                                           <div className="attribute text-base text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)] gap-3 flex items-start">
                                             <div className="icon text-base flex items-center">

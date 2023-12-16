@@ -50,26 +50,27 @@ export default function SignIn() {
   };
 
   return (
-    <div className="onboarding-page">
-      <Card className="onboarding-card opacity-[1] relative flex-1 p-6 bg-[rgba(255,255,255,0.8)] backdrop-blur-lg rounded-3xl overflow-visible max-w-sm w-full">
+    <div className="onboarding-page ">
+      <Card className="onboarding-card opacity-[1] relative flex p-6 bg-transparent shadow-lg dark:shadow-slate-900 border border-black dark:border-white backdrop-blur-lg rounded-3xl max-w-sm w-full">
         <div className="relative">
           <CardHeader className="opacity-[1] transform-none">
             <div className="icon relative w-16 h-16 flex items-center justify-center bg-[rgba(19,21,23,0.04)] rounded-full">
-              <DoorOpen className="w-8 h-8 text-[#939597] block align-middle" />
-              <ArrowLeft className="top-6 right-2.5 absolute text-[#939597] block w-4 h-4 align-middle" />
+              <DoorOpen className="w-8 h-8 block align-middle" />
+              <ArrowLeft className="top-6 right-2.5 absolute block w-4 h-4 align-middle" />
             </div>
           </CardHeader>
           <CardBody>
             <h1 className="font-semibold text-2xl mb-0 mt-0 leading-5">
               Chào mừng đến Donace
             </h1>
-            <div className="text-secondary pt-4 pb-5 text-sm text-black-more-blur-light-theme">
+            <div className="pt-4 pb-5 text-sm ">
               Vui lòng đăng ký hoặc đăng nhập bên dưới.
             </div>
             <Input
               value={email}
               type="email"
               label="Email"
+              variant="bordered"
               isInvalid={isInvalidEmail}
               color={isInvalidEmail ? "danger" : "success"}
               errorMessage={isInvalidEmail && "Vui lòng điền đúng email."}
@@ -83,6 +84,7 @@ export default function SignIn() {
             />
             <Input
               label="Mật khẩu"
+              variant="bordered"
               value={password}
               onValueChange={setPassword}
               labelPlacement={"inside"}
@@ -99,9 +101,11 @@ export default function SignIn() {
             </div>
             <Button
               isDisabled={isLoading}
+              
+              color="default"
               onClick={onSubmit}
               type="button"
-              className="mb-12 text-[#fff] bg-[#333537] border-[#333537] border border-solid w-full cursor-pointer transition-all duration-300 ease-in-out font-medium rounded-lg relative whitespace-nowrap justify-center outline-none max-w-full text-base p-[0.625rem_0.875rem] h-[calc(2.25rem+2*1px)] flex items-center m-0 leading-6"
+              className="mb-12 border-[#333537] border border-solid w-full cursor-pointer transition-all duration-300 ease-in-out font-medium rounded-lg relative whitespace-nowrap justify-center outline-none max-w-full text-base p-[0.625rem_0.875rem] h-[calc(2.25rem+2*1px)] flex items-center m-0 leading-6"
             >
               <div className="label">
                 {isLoading ? (
@@ -127,7 +131,7 @@ export default function SignIn() {
           <CardFooter className="-mb-2 flex justify-center items-center">
             <div className="">Bạn không có tài khoản?</div>
             <div>&nbsp;</div>
-            <Link href="/auth/register" underline="hover">
+            <Link href="/auth/register" underline="hover" color="primary">
               Đăng ký ngay
             </Link>
           </CardFooter>

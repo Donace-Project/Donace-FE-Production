@@ -165,9 +165,10 @@
 }
 
 .gradient-background {
-    background: linear-gradient(to right bottom, #2a0944, #651652, #992f57, #c55357, #e67f56, #ec8656, #f28e57, #f79657, #eb7658, #d9575d, #c03b63, #a12568);
     background-size: 360% 360%;
-    animation: gradient-animation 18s ease infinite;
+    animation: gradient-animation 5s ease infinite;
+    background: linear-gradient(to left top, #ffd84f, #ffa85c, #ff7a8d, #ff67cb, #b378ff);
+
 }
 
 @keyframes gradient-animation {
@@ -225,7 +226,7 @@
 .top-card-content {
     padding: 1.375rem 1.125rem 0.75rem 1.125rem;
 }
-
+/* 
 .start-here {
     display: inline-block;
     background-image: linear-gradient(to right bottom, #36ae7c, #00a58c, #009b98, #00909e, #00849e, #0680a9, #2e7ab1, #5072b3, #8769b6, #ba5ba4, #dd4e81, #eb5353);
@@ -234,7 +235,7 @@
     background-size: 360% 360%;
     animation: gradient-animation 10s ease infinite;
     -webkit-text-fill-color: transparent;
-}
+} */
 
 
 /*  */
@@ -313,7 +314,7 @@ input:-webkit-autofill:active {
     }
 }
 
-.value { 
-    color: rgba( 19,21,23 ,0.36);
+.value {
+    color: rgba(19, 21, 23, 0.36);
     font-weight: 500;
 }
