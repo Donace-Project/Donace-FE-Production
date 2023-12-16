@@ -4,9 +4,8 @@ import "@/styles/globals.css";
 import { fontSans } from "@/config/fonts";
 import { Providers } from "./providers";
 import clsx from "clsx";
-import { Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
-
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 export default function RootLayout({
   children,
@@ -35,10 +34,11 @@ export default function RootLayout({
           fontSans.variable
         )}
       >
+
         <SessionProvider>
           <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
             <div className="relative flex flex-col">
-              <main className="container max-w-full mx-auto">{children}</main>
+              <main className="container max-w-full mx-auto"><SpeedInsights />{children}</main>
             </div>
           </Providers>
         </SessionProvider>
