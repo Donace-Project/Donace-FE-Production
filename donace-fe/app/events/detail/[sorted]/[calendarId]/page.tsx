@@ -1,4 +1,4 @@
-import Authorization from "@/components/author/authorization";
+import Authorization from "@/components/authen/authentication";
 import EventDetails from "@/components/event-detail/event-detail";
 import FooterPage from "@/components/footerInPage";
 import NavbarComponents from "@/components/navbar";

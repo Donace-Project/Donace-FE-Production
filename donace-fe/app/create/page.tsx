@@ -2,7 +2,7 @@
 import FooterPage from "@/components/footerInPage";
 import CreateFormFinal from "@/components/form/create-event-form";
 import NavbarComponents from "@/components/navbar";
-import Authorization from "@/components/author/authorization";
+import Authorization from "@/components/authen/authentication";
 
 
 function CreatePage() {

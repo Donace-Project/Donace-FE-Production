@@ -1,7 +1,7 @@
 import NavbarComponents from "@/components/navbar";
 import SettingLandingPage from "@/components/settings-page/settings-ladingpage";
 
-import Authorization from "@/components/author/authorization";
+import Authorization from "@/components/authen/authentication";
 
 export default function Page() {
 
