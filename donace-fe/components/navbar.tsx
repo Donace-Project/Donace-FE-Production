@@ -73,8 +73,8 @@ export default function NavbarComponents({
     { icon: "calendar-plus", name: "Tạo sự kiện", path: "create" }];
 
   const handleLogout = () => {
-    localStorage.clear();
-
+    localStorage.removeItem("token");
+    localStorage.removeItem("nextauth.message");
     signOut({
       redirect: true,
       callbackUrl: "/auth/login",
@@ -344,7 +344,7 @@ export default function NavbarComponents({
                   <DropdownItem as={"div"}>
                     <Link
                       href="/profile"
-                      className="transition-all duration-300 ease-in-out cursor-pointer"
+                      className="transition-all duration-300 ease-in-out cursor-pointer w-full border-none flex items-center justify-start"
                       underline="none"
                     >
                       <div className="switcher-row cursor-pointer transition-all duration-300 ease-in-out flex items-center">
@@ -378,7 +378,7 @@ export default function NavbarComponents({
                   </DropdownItem>
                 </DropdownSection>
                 <DropdownItem as={"div"}>
-                  <div className="transition-all duration-300 ease-in-out cursor-pointer">
+                  <div className="transition-all duration-300 ease-in-out cursor-pointer w-full border-none flex items-center justify-start">
                     <div className="menu-row transition-all duration-300 ease-in-out text-sm gap-4 flex items-center ">
                       <ThemeSwitch variant="withText" />
                     </div>
@@ -387,7 +387,7 @@ export default function NavbarComponents({
                 <DropdownItem>
                   <Link
                     href="/profile"
-                    className="transition-all duration-300 ease-in-out cursor-pointer"
+                    className="transition-all duration-300 ease-in-out cursor-pointer w-full border-none flex items-center justify-start"
                     underline="none"
                   >
                     <div className="dark:text-[hsla(0,0%,100%,.79)] menu-row transition-all duration-300 ease-in-out text-sm gap-4 flex items-center ">
@@ -399,7 +399,7 @@ export default function NavbarComponents({
                 <DropdownItem>
                   <Link
                     href="/settings"
-                    className="transition-all duration-300 ease-in-out cursor-pointer"
+                    className="transition-all duration-300 ease-in-out cursor-pointer w-full border-none flex items-center justify-start"
                     underline="none"
                   >
                     <div className="dark:text-[hsla(0,0%,100%,.79)] menu-row transition-all duration-300 ease-in-out text-sm gap-4 flex items-center ">
@@ -410,12 +410,13 @@ export default function NavbarComponents({
                 </DropdownItem>
                 <DropdownItem>
                   <Button
+                    variant="ghost"
                     onClick={handleLogout}
-                    className="transition-all duration-300 ease-in-out"
+                    className="transition-all bg-transparent duration-300 ease-in-out w-full border-none flex items-center justify-start px-3"
                   >
-                    <div className="menu-row transition-all duration-300 ease-in-out text-sm gap-4 flex items-center ">
+                    <div className="transition-all duration-300 ease-in-out text-sm gap-4 flex items-center ">
                       <LogOut className="w-4 h-4 align-middle block mt-0.5" />
-                      <span className=" flex-1 font-medium">Đăng xuất</span>
+                      <span className="font-medium">Đăng xuất</span>
                     </div>
                   </Button>
                 </DropdownItem>

@@ -94,9 +94,10 @@ async function handleResponse(response: Response) {
   const data = text && JSON.parse(text);
   if (!response.ok) {
     if ([401, 403].includes(response.status)) {
-      window.location.replace('/auth/login');
       throw new Error("Đăng nhập hết hạn, Vui lòng đăng nhập lại")
+      
     }
+    
 
     return Promise.reject(data);
   }
