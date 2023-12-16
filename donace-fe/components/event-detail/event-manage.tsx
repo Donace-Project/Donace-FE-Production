@@ -276,16 +276,16 @@ export default function EventManage(props: any) {
                                 <div className="inline">{eventDetail.name}</div>
                             </div>
                         </h1>
-                            <Link
-                                href={`/user/join-event/${id}`}
-                                target="_blank"
-                                color="foreground"
-                                className="bg-[rgba(255,255,255,0.08)] transition-all duration-300 ease-in-out donace-button-w-fit flex items-center cursor-pointer"
-                                underline="none"
-                            >
-                                <div className="label">Trang sự kiện</div>
-                                <ArrowUpRight className="ml-1.5 stroke-2 w-3.5 h-3.5 flex-shrink-0 block align-middle" />
-                            </Link>
+                        <Link
+                            href={`/user/join-event/${id}`}
+                            target="_blank"
+                            color="foreground"
+                            className="bg-[rgba(255,255,255,0.08)] transition-all duration-300 ease-in-out donace-button-w-fit flex items-center cursor-pointer"
+                            underline="none"
+                        >
+                            <div className="label">Trang sự kiện</div>
+                            <ArrowUpRight className="ml-1.5 stroke-2 w-3.5 h-3.5 flex-shrink-0 block align-middle" />
+                        </Link>
                     </div>
                 ) : (
                     <div className="hidden"></div>
@@ -363,7 +363,7 @@ export default function EventManage(props: any) {
                                     <div className="url-wrapper absolute p-2 rounded-lg bg-[rgba(19,21,23,0.32)] z-50 bottom-2 left-2 right-2 backdrop-blur-lg shadow-md text-sm">
                                         <div className="url amimated transition-all duration-300 ease-in-out gap-2 flex justify-between items-center w-full">
                                             <Link
-                                                href={`/ user / join - event / ${eventDetail?.id}`}
+                                                href={`/user/join-event/${eventDetail?.id}`}
                                                 target="_blank"
                                                 className="text-[rgba(255,255,255,0.8)] gap-1 flex justify-between items-center transition-all duration-300 ease-in-out cursor-pointer  w-3/4 "
                                                 underline="none"

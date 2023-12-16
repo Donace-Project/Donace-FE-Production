@@ -14,6 +14,7 @@ export interface ThemeSwitchProps {
 	variant?: 'default' | 'withText'; // Add a variant prop
 }
 
+
 export const ThemeSwitch: FC<ThemeSwitchProps> = ({
 	className,
 	classNames,
@@ -53,7 +54,7 @@ export const ThemeSwitch: FC<ThemeSwitchProps> = ({
 				<input {...getInputProps()} />
 			</VisuallyHidden>
 
-			<div className={`inline-flex items-center ${variant=="withText"?"justify-between gap-2":"justify-center"}`}>
+			<div className={`inline-flex items-center ${variant == "withText" ? "justify-between gap-3" : "justify-center"}`}>
 				<div
 					{...getWrapperProps()}
 					className={slots.wrapper({
@@ -73,7 +74,7 @@ export const ThemeSwitch: FC<ThemeSwitchProps> = ({
 						),
 					})}
 				>
-					{!isSelected || isSSR ? <SunFilledIcon size={22} color="#FFFB73" /> : <MoonFilledIcon size={22} color="#FFFB73" />}
+					{!isSelected || isSSR ? <SunFilledIcon size={22} color="#FFFB73" /> : <MoonFilledIcon size={22}  />}
 				</div>
 
 				{variant === 'withText' && (

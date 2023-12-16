@@ -154,10 +154,8 @@ export default function CalendarPage() {
                                                         href={`/calendars/manage/${calendar.id}`}
                                                     >
                                                         <div className="spread min-h-full flex justify-between flex-col">
-                                                            <Image
-                                                                width={48}
-                                                                height={48}
-                                                                radius="full"
+                                                            <img className="rounded-full w-12 h-12 block object-cover align-middle"
+                                                               
                                                                 alt="Donace"
                                                                 src={calendar.avatar}
                                                             />

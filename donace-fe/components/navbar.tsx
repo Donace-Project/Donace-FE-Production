@@ -36,15 +36,23 @@ import { usePathname } from "next/navigation";
 import { AppUser } from "../types/DonaceType";
 
 import LogoDonace from "@/public/doanLogo.png";
+import { Button } from "@nextui-org/button";
 interface MenuItems {
   icon?: string;
   name: string;
   path: string;
 
 }
+// export interface NavbarProps {
+// 	className?: string;
+// 	classNames?: SwitchProps["classNames"];
+// 	variant?: 'default' | 'withText'; // Add a variant prop
+// }
 
-export default function NavbarComponents() {
 
+export default function NavbarComponents({
+
+}) {
   const page = usePathname()?.split("/")[1];
 
   let { data: session, status: status } = useSession();
@@ -74,9 +82,8 @@ export default function NavbarComponents() {
   };
 
   return (
-    <div>
+    <div className="sticky top-0 z-50 ">
       <Navbar
-        position="sticky"
         maxWidth="full"
         className="p-2 hidden justify-between h-20 md:flex items-center bg-transparent backdrop-blur-lg shadow-medium"
       >
@@ -174,7 +181,7 @@ export default function NavbarComponents() {
             <Link
               href="/create"
               color="foreground"
-              
+
               className="hover:text-[rgb(19,21,23)] dark:hover:text-[#fff] relative transition-all duration-300 ease-in-out font-medium rounded-lg justify-center flex items-center cursor-pointer"
               underline="none"
             >
@@ -204,7 +211,7 @@ export default function NavbarComponents() {
                   <DropdownSection as={"div"} showDivider>
                     <DropdownItem as={"div"}>
                       <Link
-                      color="foreground"
+                        color="foreground"
                         href="/profile"
                         className="transition-all duration-300 ease-in-out cursor-pointer"
                         underline="none"
@@ -248,6 +255,7 @@ export default function NavbarComponents() {
                   </DropdownItem>
                   <DropdownItem>
                     <Link
+
                       href="/profile"
                       color="foreground"
                       className="transition-all duration-300 ease-in-out cursor-pointer"
@@ -401,17 +409,15 @@ export default function NavbarComponents() {
                   </Link>
                 </DropdownItem>
                 <DropdownItem>
-                  <Link
+                  <Button
                     onClick={handleLogout}
-                    href="/auth/login"
-                    className="transition-all duration-300 ease-in-out cursor-pointer"
-                    underline="none"
+                    className="transition-all duration-300 ease-in-out"
                   >
-                    <div className="dark:text-[hsla(0,0%,100%,.79)] menu-row transition-all duration-300 ease-in-out text-sm gap-4 flex items-center ">
+                    <div className="menu-row transition-all duration-300 ease-in-out text-sm gap-4 flex items-center ">
                       <LogOut className="w-4 h-4 align-middle block mt-0.5" />
                       <span className=" flex-1 font-medium">Đăng xuất</span>
                     </div>
-                  </Link>
+                  </Button>
                 </DropdownItem>
               </DropdownMenu>
             </Dropdown>

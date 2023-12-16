@@ -31,12 +31,12 @@ export default function RootLayout({
       <body
 
         className={clsx(
-          "min-h-screen bg-gradient-to-tr from-[#feb2b2] via-[#fbd38d] to-[#90cdf4] dark:from-[#2d3748] dark:via-[#2c7a7b] dark:to-[#ff9233] font-sans antialiased",
+          "min-h-screen  bg-gradient-to-tr from-[rgba(254,178,178,0.8)] via-[rgba(251,211,141,0.8)] to-[rgba(246,173,199,0.8)] dark:from-[#2d3748] dark:via-[#2c7a7b] dark:to-[#ff9233] font-sans antialiased transition-colors duration-300 ease-in-out",
           fontSans.variable
         )}
       >
         <SessionProvider>
-          <Providers themeProps={{ attribute: "class", defaultTheme: "light" }}>
+          <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
             <div className="relative flex flex-col">
               <main className="container max-w-full mx-auto">{children}</main>
             </div>

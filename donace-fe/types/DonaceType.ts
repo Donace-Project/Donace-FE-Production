@@ -192,33 +192,36 @@ export type SectionByEvent = {
 // GET EVENT DETAILS    
 
 export type EventDetailModels = {
-    sorted: number
-    id: string
-    isFree: boolean
-    startDate: string
-    endDate: string
-    addressName: string
-    lat: string
-    long: string
-    capacity: number
-    isOverCapacity: boolean
-    cover: string
-    name: string
-    theme: string
-    color: string
-    fontSize: number
-    instructions: string
-    isMultiSection: true
-    duration: number
-    totalGuest: number
-    calendarId: string
-    isHost: string
-    status: string
-    isOnline: boolean
-    linkMeet: string
-    isSub: boolean
-    isAppro: boolean
-    isLive: boolean
+    isSub:          boolean;
+    isAppro:        boolean;
+    isLive:         boolean;
+    isFree:         boolean;
+    isCheckAppro:   boolean;
+    id:             string;
+    startDate:      string;
+    endDate:        string;
+    addressName:    string;
+    lat:            number;
+    long:           number;
+    isUnlimited:    boolean;
+    capacity:       number;
+    isOverCapacity: boolean;
+    cover:          string;
+    name:           string;
+    theme:          string;
+    color:          string;
+    fontSize:       number;
+    instructions:   string;
+    isMultiSection: boolean;
+    duration:       number;
+    totalGuest:     number;
+    sections:       any[];
+    calendarId:     string;
+    isHost:         boolean;
+    status:         string;
+    isOnline:       boolean;
+    linkMeet:       string;
+    sorted:         number;
 }
 
 // CREATE EVENT MODEL
