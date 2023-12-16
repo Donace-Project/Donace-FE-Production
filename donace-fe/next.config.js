@@ -6,6 +6,9 @@ const nextConfig = {
     domains: ["/**"],
   },
 
+  env: {
+    BE_URL: "https://localhost:8000/"
+  }
 };
 
 module.exports = nextConfig;

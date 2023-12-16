@@ -1,7 +1,7 @@
 import { authHelper } from "./authHelper";
 
 // TODO: Move config này ra setting
-const baseUrl = "http://171.245.205.120:8082/";
+const baseUrl = process.env.BE_URL;
 
 export const fetchWrapper = {
   get,

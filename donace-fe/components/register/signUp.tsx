@@ -77,6 +77,7 @@ export default function SignUp() {
       console.log(ex);
     }
 
+    debugger;
     // Dùng tài khoản đã đăng ký để login
     const resultLogin = await signIn("credentials", {
       email: email,
