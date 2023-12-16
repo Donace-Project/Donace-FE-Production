@@ -16,10 +16,9 @@ export default function Home() {
 			<div className="page-content">
 				<div className="zm-container m-auto md:min-h-[80vh] flex flex-col md:flex-row items-center gap-4 p-4 justify-center">
 					<div className="flex flex-col md:items-baseline justify-center mt-10 lg:mt-0">
-						<div className=" mb-1 md:mb-3 inline-flex gap-2 items-center md:justify-start m-auto">
+						<div className=" mb-1 md:mb-3 inline-flex gap-2 items-center md:justify-start justify-between m-auto md:mx-0">
 							<img src={LogoDonace.src} className="w-8 h-8 rounded-full" />
 							<p className="md:text-left text-center label md:text-2xl text-1xl">Donace</p>
-
 						</div>
 						<div className="font-medium mb-4 flex flex-col gap-4 " >
 							<div className="lg:text-4xl text-3xl md:text-left text-center w-[450px] h-[30px]">

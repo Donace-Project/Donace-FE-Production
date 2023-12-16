@@ -1,7 +1,7 @@
 "use client"
+import { set } from 'date-fns';
 import { useEffect, useRef, useState } from 'react';
 
-import { pl } from 'date-fns/locale';
 //@ts-ignore
 const goongGeocoder = require("@goongmaps/goong-geocoder");
 interface MapComponentProps {
@@ -18,47 +18,65 @@ interface MapComponentProps {
   // setLatFc: (newValue: number) => void;
 }
 //, setLatFc, setLngFc 
-let map: any;
 
 const MapComponent = ({ lngv, latv, hSize = "400px", zoom = 9, makers }: MapComponentProps) => {
 
+  let map: any;
   const [geocoder, setGeocoder] = useState<any>(null);
   let goongjs = useRef<any>(null);
 
-  useEffect(() => {
-    goongjs.current = require("@goongmaps/goong-js");
+  async function ImportMap() {
+    goongjs.current = await require("@goongmaps/goong-js");
     goongjs.current.accessToken = "wnicbAmnNkoMHNYUKWnlFHezV189FjmMwkNJ7hKW";
-
     setGeocoder(
       new goongGeocoder({
         accessToken: "sbRzCkkevuDa7mTtXzH1mE1i3CZGdFjGAcG01XqF",
         goongjs: goongjs.current,
       })
     );
-    // Khởi tạo bản đồ khi component được mount
-    map = new goongjs.current.Map({
-      container: "map", // ID của phần tử HTML để chứa bản đồ
-      style: "https://tiles.goong.io/assets/goong_map_web.json",
-      center: [lngv, latv], // Tọa độ trung tâm
-      zoom: zoom, // Mức độ zoom mặc định
-      // placeholder: 'Tìm kiếm địa điểm', // Placeholder của ô tìm kiếm
-      hash: true,
-    });
- 
-    makers?.map((maker) => {
-      new goongjs.current.Marker(
-        {
-          color: maker.color,
-          draggable: false,
-        }
-      )
-        .setLngLat([maker.lng, maker.lat])
-        .addTo(map);
-    });
+  }
 
-    return () => {
-      map.remove();
-    };
+  useEffect(() => {
+    ImportMap();
+    // Khởi tạo bản đồ khi component được mount
+
+    setTimeout(() => {
+      if (!goongjs.current) {
+
+      } else {
+        map = new goongjs.current.Map({
+          container: "map", // ID của phần tử HTML để chứa bản đồ
+          style: "https://tiles.goong.io/assets/goong_map_web.json",
+          center: [lngv, latv], // Tọa độ trung tâm
+          zoom: zoom, // Mức độ zoom mặc định
+          // placeholder: 'Tìm kiếm địa điểm', // Placeholder của ô tìm kiếm
+
+          // hash: true,
+        });
+        // map.addControl(
+        //   geocoder
+        // );
+        // geocoder.on("result", function (e: any) {
+
+        // });
+
+        makers?.map((maker) => {
+          new goongjs.current.Marker(
+            {
+              color: maker.color,
+              draggable: false,
+            }
+          )
+            .setLngLat([maker.lng, maker.lat])
+            .addTo(map);
+        });
+
+        return () => {
+          map.remove();
+        };
+
+      };
+    }, 2000);
   }, []);
 
   return (

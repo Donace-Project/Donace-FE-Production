@@ -607,9 +607,22 @@ export default function JoinEvent(props: { id: string }) {
                                     ) :
                                         (
                                             eventDetail?.addressName ? (
-                                                <p className="truncate">
-                                                    {eventDetail.addressName}
-                                                </p>
+                                                <div className="gap-4 flex items-center">
+                                                <div className="icon-container w-10 h-10 border border-solid border-[rgba(19,21,23,0.08)] dark:border-[rgba(255,255,255,0.08)]  dark:text-[hsla(0,0%,100%,.79)] justify-center flex items-center rounded-lg">
+                                                    <MapPin className="w-5 h-5 block align-middle" />
+                                                </div>
+                                                <div className="">
+                                                    <div className="title dark:text-[#fff] font-medium">
+                                                        <div className="gap-1 flex items-center max-w-[300px]">
+                                                            <div className="truncate">{eventDetail.addressName}</div>
+                                                            <div className="icon opacity-50 transition-all duration-300 ease-in-out">
+                                                                <ArrowUpRight className="block w-4 h-4 align-middle" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    {/* <div className="desc  dark:text-[hsla(0,0%,100%,.79)] text-sm mt-px  text-ellipsis whitespace-nowrap">{district}, {city}</div> */}
+                                                </div>
+                                            </div>
                                             ) : (
                                                 <>  <div className="font-medium">Cập nhật sau...</div>
                                                 </>
@@ -635,7 +648,7 @@ export default function JoinEvent(props: { id: string }) {
 
                                                     </div>
                                                 </Link> */}
-                                                <MapComponent lngv={eventDetail?.long} latv={eventDetail?.lat} hSize="200px" zoom={20} makers={[
+                                                <MapComponent lngv={eventDetail?.long} latv={eventDetail?.lat} hSize="200px" zoom={13} makers={[
                                                     {
                                                         lat: eventDetail?.lat,
                                                         lng: eventDetail?.long,
