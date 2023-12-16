@@ -896,7 +896,7 @@ export default function CreateFormFinal() {
                                 size="3xl"
                                 isDismissable={false}
                                 scrollBehavior="outside"
-                                className="w-fit-content px-0 py-4 backdrop-opacity-70 bg-transparent"
+                                className="w-fit-content px-0 py-4 backdrop-opacity-70 bg-[rgba(255,255,255,0.8)] dark:bg-[rgba(33,35,37,0.8)]"
                               >
                                 <ModalContent className="w-full">
                                   {(onClose) => (

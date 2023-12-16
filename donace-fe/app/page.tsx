@@ -5,78 +5,86 @@ import NavbarLanding from "@/components/navbarLandingPage";
 import { TypeAnimation } from "react-type-animation";
 import { Player } from '@lottiefiles/react-lottie-player';
 import Animation from '../components/animation_loil366f.json'
+import { Button } from "@nextui-org/button";
+import LogoDonace from "@/public/doanLogo.png";
 
 export default function Home() {
 	return (
-		<div className="page-wrapper pb-0 gradient-background">
+		// <div className="page-wrapper pb-0 gradient-background">
+		<div className="page-wrapper pb-0 bg-gradient-to-tr from-orange-600 via-white to-pink-500 dark:from-indigo-600 dark:via-purple-500 dark:to-pink-500">
 			<NavbarLanding />
-			<div className="page-content max-w-[100dvw] overflow-x-hidden">
-				<div className="zm-container min-h-[80vh] flex flex-col md:flex-row items-center gap-4 p-4 pt-12 justify-between max-width-global margin-global">
-					<div className="content flex-shrink">
-						<div className="logo text-[hsla(0,0%,100%,.5)] mb-1 md:mb-6 ml-1.5">
-							<p className="md:text-left text-center label md:text-2xl text-1xl">DONACE</p>
+			<div className="page-content">
+				<div className="zm-container m-auto md:min-h-[80vh] flex flex-col md:flex-row items-center gap-4 p-4 justify-center">
+					<div className="flex flex-col md:items-baseline justify-center mt-10 lg:mt-0">
+						<div className=" mb-1 md:mb-3 inline-flex gap-2 items-center justify-start">
+							<img src={LogoDonace.src} className="w-8 h-8 rounded-full" />
+							<p className="md:text-left text-center label md:text-2xl text-1xl">Donace</p>
+
 						</div>
-						<div className="font-medium -space-x-px mt-0 mb-4 flex flex-col gap-4" >
-							<div className="md:text-7xl text-3xl md:text-left text-center">
+						<div className="font-medium mb-4 flex flex-col gap-4 " >
+							<div className="lg:text-4xl text-3xl md:text-left text-center w-[450px] h-[30px]">
 								<TypeAnimation
 									cursor={false}
 									sequence={[
-										'Tạo Sự Kiện',
+										'TỔ CHỨC SỰ KIỆN',
 										5000,
-										'Tạo Lịch',
+										'THAM GIA HOẠT ĐỘNG',
 										6000,
+
 									]}
 									wrapper="span"
 									speed={40}
-									style={{ display: 'inline-block', color: '#f2f3f4', fontWeight: 'bold' }}
+									style={{ display: 'inline-block', fontWeight: 'bold', color: "orange" }}
 									repeat={Infinity}
 								/>
 							</div>
-							<div className="md:text-left text-center text-2xl">
+							<div className="md:text-left text-center text-2xl h-[30px]">
 								<TypeAnimation
 									cursor={false}
 									sequence={[
-										'đặc sắc',
+										'ĐẶC SẮC',
 										10000,
-										'thú vị',
+										'THÚ VỊ',
 										5000,
-										'hấp dẫn',
+										'HẤP DẪN',
 										5000
 									]}
 									wrapper="span"
 									speed={40}
-									style={{ display: 'inline-block', color: '#f2f3f4' }}
+									style={{ display: 'inline-block' }}
 									repeat={Infinity}
 								/>
 							</div>
-							<div className="md:text-base md:text-left text-center text-xl">
+							<div className="md:text-base md:text-left text-center text-xl h-[30px]">
 								<TypeAnimation
 									cursor={false}
 									sequence={[
-										'dành riêng cho bạn',
+										'DÀNH RIÊNG CHO BẠN',
 										5000,
-										'dành cho cả cộng đồng',
+										'CÙNG CẢ CỘNG ĐỒNG',
 										5000,
 									]}
 									wrapper="span"
 									speed={40}
-									style={{ display: 'inline-block', color: '#f2f3f4', whiteSpace: 'pre-line', paddingBottom: '16px' }}
+									style={{ display: 'inline-block', whiteSpace: 'pre-line', paddingBottom: '16px' }}
 									repeat={Infinity}
 								/>
 							</div>
 							{/* <div className="start-here font-sans mt-2 ml-2 pb-4 hidden md:block">Bắt đầu ngay.</div> */}
 
 						</div>
-						<div className="desc mt-2 text-xl max-w-sm text-[hsla(0,0%,100%,.79)]">
+						<div className="mt-2 mx-auto  md:text-xl max-w-sm">
 							Tạo một sự kiện, mời bạn bè và cùng nhau tham dự. Hãy cùng nhau tạo kỷ niệm ngay hôm nay.
 						</div>
-						<Link
+						<Link className="mt-8 mx-auto"
 							href="/create"
 							target="_self"
-							className="text-[rgb(19,21,23)] bg-[#fff] border-[#fff] border border-solid mt-8 transition-all duration-300 ease-in-out donace-button flex items-center cursor-pointer"
+							color="foreground"
 							underline="none"
 						>
-							<div className="label">Tạo một event mới</div>
+							<Button variant="shadow" color="warning">
+								<div className="label font-bold">Tạo một event mới</div>
+							</Button>
 						</Link>
 					</div>
 					<div className="">
