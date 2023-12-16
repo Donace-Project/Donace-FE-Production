@@ -95,7 +95,9 @@ async function handleResponse(response: Response) {
   if (!response.ok) {
     if ([401, 403].includes(response.status)) {
       throw new Error("Đăng nhập hết hạn, Vui lòng đăng nhập lại")
+      
     }
+    
 
     return Promise.reject(data);
   }

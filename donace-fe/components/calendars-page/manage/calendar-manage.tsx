@@ -129,7 +129,7 @@ console.log(getCalendars)
                         <h1 className="tab-title text-4xl font-semibold text-black-light-theme dark:text-[#fff] mb-0">
                             {getCalendars ? (
                                 <div className="gap-3 flex items-center">
-                                    <div className="avatar-square">
+                                    <div className="w-8 h-8">
                                         <Avatar
                                             radius="sm"
                                             src={getCalendars.avatar ? getCalendars.avatar : "https://cdn.lu.ma/cdn-cgi/image/format=auto,fit=cover,dpr=2,background=white,quality=75,width=64,height=64/avatars-default/community_avatar_13.png"}
@@ -141,7 +141,7 @@ console.log(getCalendars)
                                 </div>
                             ) : (
                                 <div className="gap-3 flex items-center">
-                                    <div className="avatar-square">
+                                    <div className="w-8 h-8">
                                         <Avatar
                                             radius="sm"
                                             src="https://avatars.githubusercontent.com/u/143386751?s=200&v=4"

@@ -114,13 +114,17 @@ export default function CreateFormFinal() {
   const [capacity, setCapacity] = useState("0");
   const [geocoder, setGeocoder] = useState<any>(null);
   const today = new Date();
+  const nextDay = new Date();
+  nextDay.setDate(today.getDate() + 1)
+
   const formattedDate = formatDate(today, "yyyy-mm-dd");
+  const formattedNextDay = formatDate(nextDay, "yyyy-mm-dd");
   const [startDate, SetStartDate] = useState<any>({
     date: formattedDate,
     time: "12:00",
   });
   const [endDate, SetEndDate] = useState<any>({
-    date: formattedDate,
+    date: formattedNextDay,
     time: "12:00",
   });
   const [lstCalendar, setLstCalendar] = useState<Calendar[]>([]);
@@ -144,7 +148,7 @@ export default function CreateFormFinal() {
   const [eventReq, SetEventReq] = useState<createEventReponseType>({
     name: "",
     startDate: `${formattedDate}T12:00`,
-    endDate: `${formattedDate}T12:00`,
+    endDate: `${formattedNextDay}T12:00`,
     calendarId: "",
     lat: 0,
     long: 0,
@@ -385,7 +389,7 @@ export default function CreateFormFinal() {
         endDate: `${endDate.date}T${endDate.time}`,
         cover: `${image}`,
       });
-      
+
       if (response.id) {
         // Redirect
         router.push(`/events/manage/${response.id}`);
@@ -1095,7 +1099,7 @@ export default function CreateFormFinal() {
                                         onClick={modalPriceEvent.onOpen}
                                         aria-label="Button to open modalPayment"
                                         type="button"
-                                        className="m-[-1px_-0.25rem_-1px_0px] bg-transparent border-transparent border border-solid flex-shrink-0 cursor-pointer transition-all duration-300 ease-in-out donace-button-w-fit flex items-center"
+                                        className=" bg-transparent border-transparent border border-solid flex-shrink-0 cursor-pointer transition-all duration-300 ease-in-out donace-button-w-fit flex items-center"
                                       >
                                         <Pen className="stroke-2 w-3.5 h-3.5 flex-shrink-0 block align-middle translate-y-px" />
                                       </button>
@@ -1106,7 +1110,7 @@ export default function CreateFormFinal() {
                                         onClick={modalPayment.onOpen}
                                         aria-label="Button to open modalPayment"
                                         type="button"
-                                        className="m-[-1px_-0.25rem_-1px_0px] bg-transparent border-transparent border border-solid flex-shrink-0 cursor-pointer transition-all duration-300 ease-in-out donace-button-w-fit flex items-center"
+                                        className="bg-transparent border-transparent border border-solid cursor-pointer transition-all duration-300 ease-in-out donace-button-w-fit flex items-center"
                                       >
                                         <Pen className="stroke-2 w-3.5 h-3.5 flex-shrink-0 block align-middle translate-y-px" />
                                       </button>
@@ -1116,7 +1120,7 @@ export default function CreateFormFinal() {
                                 </div>
                               ) : (
                                 <div className="gap-1 flex items-center">
-                                  <div className="value">
+                                  <div className="">
                                     {formatCurrency(price)}
                                   </div>
                                   {isVnpayConnected ? (

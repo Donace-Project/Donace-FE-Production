@@ -1,18 +1,18 @@
 "use client";
 import "@/styles/globals.css";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@nextui-org/button";
 import { Card, CardHeader, CardBody, CardFooter } from "@nextui-org/card";
 import { Input } from "@nextui-org/input";
 import { ArrowLeft, CheckCircle, DoorOpen, UserCircle2 } from "lucide-react";
 import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
 import { Divider } from "@nextui-org/divider";
 import { Link } from "@nextui-org/link";
 import { Spinner } from "@nextui-org/react";
+import { usePathname } from "next/navigation";
+// import { time } from "console";
 
 export default function SignIn() {
-  const router = useRouter();
   const [isVisible, setIsVisible] = React.useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -29,6 +29,18 @@ export default function SignIn() {
   }, [email]);
 
   const [error, setError] = useState("");
+  const [path, setPath] = useState("/home");
+
+  useEffect(() => {
+    const baseUrl = window.location;
+    const callbackUrl = `${baseUrl}`;
+    let urlPath = callbackUrl.split('/auth/login?callbackUrl=')[1];
+
+    if (urlPath != undefined && urlPath != null) {
+      setPath(urlPath);
+    }
+    // Callback URL: http://localhost:3000/auth/login?callbackUrl=http://localhost:3000/create/path/to/callback
+  }, []);
 
   const onSubmit = async () => {
     setIsLoading(true);
@@ -40,7 +52,8 @@ export default function SignIn() {
 
     // debugger;
     if (result?.ok) {
-      router.push("/home");
+      // Nếu đăng nhập thành công thì router tới callbackUrl
+      window.location.replace(path);
     } else {
       // Xử lý hiển thị lỗi
       setError("Sai tài khoản hoặc mật khẩu.");
@@ -101,7 +114,7 @@ export default function SignIn() {
             </div>
             <Button
               isDisabled={isLoading}
-              
+
               color="default"
               onClick={onSubmit}
               type="button"
