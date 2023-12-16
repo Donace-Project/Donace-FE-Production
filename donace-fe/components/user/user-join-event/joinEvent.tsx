@@ -179,8 +179,8 @@ export default function JoinEvent(props: { id: string }) {
 
     return (
         <div className="page-content">
-            <div className="page-container min-h-[100dvh] relative bg-transparent">
-                <div className="content-wrapper flex items-start gap-8 p-4 max-width-global margin-global">
+            <div className="page-container relative bg-transparent mt-8 ">
+                <div className="content-wrapper flex items-start gap-8 p-4 max-width-global margin-global  bg-[rgba(255,255,255,0.8)] dark:bg-[rgba(35,35,35,0.8)] backdrop-blur-lg rounded-lg">
                     <div className="left flex flex-col gap-6 min-w-0 w-80">
                         <div className="cover-with-glow relative justify-center flex items-center">
                             <div className="img-aspect-ratio opacity-5 rounded-lg absolute top-4 blur-xl w-full bg-[rgba(19,21,23,0.04)] overflow-hidden">
@@ -225,7 +225,7 @@ export default function JoinEvent(props: { id: string }) {
                                     </div>
                                 </div>
                             </div>
-                            <div className="gap-3.5 flex flex-col">
+                            <div className="gap-3 flex flex-col">
                                 <Button
                                     onPress={modalContact.onOpen}
                                     className="text-[#fff] dark:text-[rgb(19,21,23)] border-[#939597] dark:border-[#fff] bg-[#333537] dark:bg-[#fff] p-0 h-auto border-none rounded-none outline-offset-[.375rem] cursor-pointer transition-all duration-300 ease-in-out donace-button flex items-center m-0"
@@ -268,17 +268,18 @@ export default function JoinEvent(props: { id: string }) {
                                             rel="nofollow noopener"
                                             className="transition-all duration-300 ease-in-out cursor-pointer"
                                             underline="none"
+                                            color="foreground"
                                             onClick={handleMapLinkClick}
                                         >
-                                            <div className="icon-row gap-4 flex items-center">
-                                                <div className="icon-container w-10 h-10 border border-solid border-[rgba(19,21,23,0.08)] dark:border-[rgba(255,255,255,0.08)]  dark:text-[hsla(0,0%,100%,.79)] m-0.5 flex-shrink-0 justify-center flex items-center overflow-hidden rounded-lg">
+                                            <div className="gap-4 flex items-center">
+                                                <div className="icon-container w-10 h-10 border border-solid border-[rgba(19,21,23,0.08)] dark:border-[rgba(255,255,255,0.08)]  dark:text-[hsla(0,0%,100%,.79)] justify-center flex items-center rounded-lg">
                                                     <MapPin className="w-5 h-5 block align-middle" />
                                                 </div>
-                                                <div className="min-w-0 flex-1">
-                                                    <div className="title  dark:text-[#fff] font-medium overflow-hidden whitespace-nowrap text-ellipsis">
-                                                        <div className="gap-1 flex items-center max-w-sm">
-                                                            <div className="overflow-hidden text-ellipsis whitespace-nowrap">{eventDetail.addressName}</div>
-                                                            <div className="icon opacity-50 translate-y-[0.5px]  transition-all duration-300 ease-in-out">
+                                                <div className="">
+                                                    <div className="title dark:text-[#fff] font-medium">
+                                                        <div className="gap-1 flex items-center max-w-[300px]">
+                                                            <div className="truncate">{eventDetail.addressName}</div>
+                                                            <div className="icon opacity-50 transition-all duration-300 ease-in-out">
                                                                 <ArrowUpRight className="block w-4 h-4 align-middle" />
                                                             </div>
                                                         </div>
@@ -576,30 +577,25 @@ export default function JoinEvent(props: { id: string }) {
                                 <div className="title-label font-medium  dark:text-[hsla(0,0%,100%,.79)] text-sm">Khu vực</div>
                             </div>
                             <div className="content">
-                                <div className="gap-4 flex items-center">
-                                    <div className="icon w-11 h-11 text-[#b3b5b7] dark:text-[#939597] rounded-lg border border-solid border-[rgba(19,21,23,0.08)] dark:border-[rgba(255,255,255,0.08)] flex items-center justify-center">
-                                        {eventDetail?.isOnline ? (
-                                            <Video className="w-5 h-5 block align-middle" />
-                                        ) : (
-                                            <MapPin className="w-5 h-5 block align-middle" />
-                                        )}
-                                    </div>
-                                    <div className="max-w-[300px]">
-                                        {
-                                            eventDetail?.isOnline ? (
-                                                <><Link href={eventDetail.linkMeet} className="">{eventDetail.linkMeet}</Link></>
+                                {
+                                    eventDetail?.isOnline ? (
+                                        <Link href={eventDetail.linkMeet} >
+                                            <p className="truncate">
+                                                {eventDetail.linkMeet}
+                                            </p>
+                                        </Link>
 
-                                            ) :
-                                                (
-                                                    eventDetail?.addressName ? (
-                                                        <>  <div className="font-medium truncate">{eventDetail.addressName}</div></>
-                                                    ) : (
-                                                        <>  <div className="font-medium">Cập nhật sau...</div>
-                                                        </>
-                                                    ))
-                                        }
-                                    </div>
-                                </div>
+                                    ) :
+                                        (
+                                            eventDetail?.addressName ? (
+                                                <p className="truncate">
+                                                    {eventDetail.addressName}
+                                                </p>
+                                            ) : (
+                                                <>  <div className="font-medium">Cập nhật sau...</div>
+                                                </>
+                                            ))
+                                }
                                 {
                                     eventDetail?.isOnline ? (
                                         <></>
@@ -613,12 +609,13 @@ export default function JoinEvent(props: { id: string }) {
                                                     target="_blank"
                                                     rel="nofollow noopener"
                                                 >
-                                                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3918.4441623916387!2d106.62348197465653!3d10.853782889299758!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752b6c59ba4c97%3A0x535e784068f1558b!2zVHLGsOG7nW5nIENhbyDEkeG6s25nIEZQVCBQb2x5dGVjaG5pYw!5e0!3m2!1svi!2s!4v1699268739213!5m2!1svi!2s" className="w-full border-none h-48 flex pointer-events-none" loading="lazy"></iframe>
+                                                    <div className="shadow-lg p-2 bg-[#333537] dark:bg-[#fff]">
+                                                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3918.4441623916387!2d106.62348197465653!3d10.853782889299758!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752b6c59ba4c97%3A0x535e784068f1558b!2zVHLGsOG7nW5nIENhbyDEkeG6s25nIEZQVCBQb2x5dGVjaG5pYw!5e0!3m2!1svi!2s!4v1699268739213!5m2!1svi!2s" className="w-full border-none h-48 flex pointer-events-none rounded-lg" loading="lazy"></iframe>
+                                                    </div>
                                                 </Link>
                                             </div>
                                         ) : <></>)
                                 }
-
                             </div>
                         </div>
                     </div>
