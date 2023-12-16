@@ -172,7 +172,7 @@ export default function HomeEvents() {
             ) : (
               <Tabs aria-label="Options" >
                 <Tab key="future" title="Sắp tới" className="font-semibold">
-                  <div className="zm-container p-[2rem_1rem_1rem] max-width-global margin-global">
+                  <div className="zm-container  max-width-global margin-global">
                     {futureEvents && futureEvents.length > 0 ? (
                       <div className="timeline">
                         {futureEvents?.map((event, index) => (
@@ -249,12 +249,12 @@ export default function HomeEvents() {
                                           <h3 className="font-medium break-words mt-0 mb-4">{event.name}</h3>
                                         </div>
                                         <div className="gap-1 flex flex-col">
-                                          <div className="attribute text-base text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)] gap-3 flex items-start whitespace-nowrap w-[350px]">
+                                          <div className="attribute text-base text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)] gap-3 flex items-start whitespace-nowrap md:w-[350px]">
                                             <div className="icon text-base flex items-center">
                                               &nbsp;
                                               <MapPin className="w-4 h-4 block align-middle" />
                                             </div>
-                                            <div className="text-base min-w-0 truncate">{event.addressName}</div>
+                                            <div className="text-base max-w-[350px] truncate">{event.addressName}</div>
                                           </div>
                                           <div className="attribute text-base text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)] gap-3 flex items-start whitespace-nowrap">
                                             <div className="icon text-base flex items-center">
@@ -336,7 +336,7 @@ export default function HomeEvents() {
                   </div>
                 </Tab>
                 <Tab key="past" title="Đã qua" className="font-semibold">
-                  <div className="zm-container p-[2rem_1rem_1rem] max-width-global margin-global">
+                  <div className="zm-container  max-width-global margin-global">
                     {pastEvents && pastEvents.length > 0 ? (
                       <div className="timeline">
                         {pastEvents?.map((event, index) => (
