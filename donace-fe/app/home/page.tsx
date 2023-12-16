@@ -1,7 +1,7 @@
 import FooterPage from "@/components/footerInPage";
 import HomeEvents from "@/components/home/home";
 import NavbarComponents from "@/components/navbar";
-import Authorization from "@/components/author/authorization";
+import Authorization from "@/components/authen/authentication";
 
 export default function HomePage() {
 

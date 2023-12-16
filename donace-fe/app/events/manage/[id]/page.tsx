@@ -1,6 +1,6 @@
 import EventManage from "@/components/event-detail/event-manage";
 import NavbarComponents from "@/components/navbar";
-import Authorization from "@/components/author/authorization";
+import Authorization from "@/components/authen/authentication";
 import { useSession } from "next-auth/react";
 
 export default function Page({ params }: { params: { id: string } }) {

@@ -1,7 +1,7 @@
 import FooterPage from "@/components/footerInPage";
 import NavbarComponents from "@/components/navbar";
 import ReturnPaymentURL from "@/components/returnPayment/payment-page";
-import Authorization from "@/components/author/authorization";
+import Authorization from "@/components/authen/authentication";
 
 export default function Page() {
 

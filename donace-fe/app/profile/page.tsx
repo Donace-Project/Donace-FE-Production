@@ -1,6 +1,6 @@
 import NavbarComponents from "@/components/navbar";
 import ProfilePage from "@/components/profile-page/profile";
-import Authorization from "@/components/author/authorization";
+import Authorization from "@/components/authen/authentication";
 
 export default function Page() {
     return (

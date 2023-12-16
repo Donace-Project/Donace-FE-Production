@@ -1,7 +1,7 @@
 import CalendarPage from "@/components/calendars-page/calendars-page";
 import FooterPage from "@/components/footerInPage";
 import NavbarComponents from "@/components/navbar";
-import Authorization from "@/components/author/authorization";
+import Authorization from "@/components/authen/authentication";
 
 export default function Page() {
     return (
