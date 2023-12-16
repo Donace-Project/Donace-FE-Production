@@ -69,7 +69,7 @@ export default function NavbarComponents() {
 
     signOut({
       redirect: true,
-      callbackUrl: "auth/login",
+      callbackUrl: "/auth/login",
     });
   };
 
