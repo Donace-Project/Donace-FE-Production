@@ -10,9 +10,8 @@ import { fetchWrapper } from "@/helpers/fetch-wrapper";
 import { Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure } from "@nextui-org/modal";
 import { Divider } from "@nextui-org/divider";
 import { Textarea } from "@nextui-org/react";
-import QRScanner from "@/components/QR/QRScanner";
 import { set } from "date-fns";
-import { data } from "autoprefixer";
+
 import QRCodeGenerator from "@/components/QR/QRGenerator";
 
 import MapComponent from "@/components/map/goong-map";
