@@ -276,15 +276,16 @@ export default function EventManage(props: any) {
                                 <div className="inline">{eventDetail.name}</div>
                             </div>
                         </h1>
-                        <Link
-                            href={`/user/join-event/${id}`}
-                            target="_blank"
-                            className=" dark:text-[rgba(255,255,255,0.64)]  dark:bg-[rgba(255,255,255,0.08)] border-transparent border border-solid transition-all duration-300 ease-in-out donace-button-w-fit flex items-center cursor-pointer"
-                            underline="none"
-                        >
-                            <div className="label">Trang sự kiện</div>
-                            <ArrowUpRight className="ml-1.5 stroke-2 w-3.5 h-3.5 flex-shrink-0 block align-middle" />
-                        </Link>
+                            <Link
+                                href={`/user/join-event/${id}`}
+                                target="_blank"
+                                color="foreground"
+                                className="bg-[rgba(255,255,255,0.08)] transition-all duration-300 ease-in-out donace-button-w-fit flex items-center cursor-pointer"
+                                underline="none"
+                            >
+                                <div className="label">Trang sự kiện</div>
+                                <ArrowUpRight className="ml-1.5 stroke-2 w-3.5 h-3.5 flex-shrink-0 block align-middle" />
+                            </Link>
                     </div>
                 ) : (
                     <div className="hidden"></div>
@@ -369,7 +370,7 @@ export default function EventManage(props: any) {
                                                 underline="none"
                                             >
                                                 <div className="text-sm w-full truncate" id="myClipboard">
-                                                     {`user/join-event/${eventDetail?.id}`} 
+                                                    {`user/join-event/${eventDetail?.id}`}
                                                 </div>
                                                 <ArrowUpRight className="w-4 h-4" />
                                             </Link>
@@ -404,14 +405,14 @@ export default function EventManage(props: any) {
                                             </div>
                                             <div>
                                                 <div className="gap-4 flex items-center">
-                                                    <div className="icon w-11 h-11 text-[#b3b5b7] dark:text-[#939597] rounded-lg border border-solid border-[rgba(19,21,23,0.08)] dark:border-[rgba(255,255,255,0.08)] flex items-center justify-center flex-shrink-0">
+                                                    <div className="icon w-11 h-11 text-[#b3b5b7] dark:text-[#939597] rounded-lg border border-solid border-[rgba(19,21,23,0.08)] dark:border-[rgba(255,255,255,0.08)] flex items-center justify-center">
                                                         {eventDetail.isOnline ? (
                                                             <Video className="w-5 h-5 block align-middle" />
                                                         ) : (
                                                             <MapPin className="w-5 h-5 block align-middle" />
                                                         )}
                                                     </div>
-                                                    <div>
+                                                    <div className="max-w-[300px]">
                                                         {
                                                             eventDetail.isOnline ? (
                                                                 <><Link href={eventDetail.linkMeet} className="">{truncatedLinkMeet}</Link></>
@@ -419,7 +420,7 @@ export default function EventManage(props: any) {
                                                             ) :
                                                                 (
                                                                     eventDetail.addressName ? (
-                                                                        <>  <div className="font-medium">{eventDetail.addressName}</div></>
+                                                                        <>  <div className="font-medium truncate">{eventDetail.addressName}</div></>
                                                                     ) : (
                                                                         <>  <div className="font-medium">Cập nhật sau...</div>
                                                                         </>
