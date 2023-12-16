@@ -31,13 +31,13 @@ export default function RootLayout({
       <body
 
         className={clsx(
-          "min-h-screen bg-background font-sans antialiased",
+          "min-h-screen bg-gradient-to-tr from-[#feb2b2] via-[#fbd38d] to-[#90cdf4] dark:from-[#2d3748] dark:via-[#2c7a7b] dark:to-[#ff9233] font-sans antialiased",
           fontSans.variable
         )}
       >
         <SessionProvider>
           <Providers themeProps={{ attribute: "class", defaultTheme: "light" }}>
-            <div className="relative flex flex-col h-screen">
+            <div className="relative flex flex-col">
               <main className="container max-w-full mx-auto">{children}</main>
             </div>
           </Providers>

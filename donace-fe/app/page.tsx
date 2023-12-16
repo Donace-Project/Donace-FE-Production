@@ -11,7 +11,7 @@ import LogoDonace from "@/public/doanLogo.png";
 export default function Home() {
 	return (
 		// <div className="page-wrapper pb-0 gradient-background">
-		<div className="page-wrapper pb-0 bg-gradient-to-tr from-[#feb2b2] via-[#fbd38d] to-[#90cdf4] dark:from-[#2d3748] dark:via-[#2c7a7b] dark:to-[#ff9233]">
+		<div className="page-wrapper pb-0 ">
 			<NavbarLanding />
 			<div className="page-content">
 				<div className="zm-container m-auto md:min-h-[80vh] flex flex-col md:flex-row items-center gap-4 p-4 justify-center">
