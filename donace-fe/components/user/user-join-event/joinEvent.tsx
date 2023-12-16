@@ -196,7 +196,7 @@ export default function JoinEvent(props: { id: string }) {
                         <div className="desktop-only flex flex-col gap-6 min-w-0">
                             <div className="content-card">
                                 <div className="card-title pb-2 mb-4 border-b border-solid border-[rgba(19,21,23,0.36)] dark:border-[rgba(255,255,255,0.2)]">
-                                    <div className="title-label font-medium text-black-more-blur-light-theme text-sm dark:text-[hsla(0,0%,100%,.79)]">Điều phối bởi</div>
+                                    <div className="title-label font-medium  text-sm dark:text-[hsla(0,0%,100%,.79)]">Điều phối bởi</div>
                                 </div>
                                 <div className="content">
                                     <div className="hosts gap-3 flex flex-col">
@@ -220,7 +220,7 @@ export default function JoinEvent(props: { id: string }) {
                                         </div>
                                         {/* //todo: fetch api hiển thị những ai đã có trạng thái chuyển sang going */}
                                         <div className="going">
-                                            <div className="going flex justify-between items-center">64 đang đi</div>
+                                            <div className="going flex justify-between items-center">{eventDetail?.totalGuest} đang tham dự</div>
                                         </div>
                                     </div>
                                 </div>
@@ -243,7 +243,7 @@ export default function JoinEvent(props: { id: string }) {
                                 <div className="top-card-content">
                                     <div className="title-wrapper mb-4 gap-2 flex justify-between items-start">
                                         <div className="min-w-0">
-                                            <h1 className="title text-5xl break-words text-black-light-theme dark:text-[#fff] mb-0 font-semibold mt-0">
+                                            <h1 className="title text-5xl break-words  dark:text-[#fff] mb-0 font-semibold mt-0">
                                                 {eventDetail.name}
                                             </h1>
                                         </div>
@@ -251,15 +251,15 @@ export default function JoinEvent(props: { id: string }) {
                                     <div className="meta mt-5 gap-3 flex flex-col">
                                         <div className="row-container rounded-lg -m-2 p-2">
                                             <div className="icon-row gap-4 flex items-center">
-                                                <div className="icon-container w-10 h-10 border border-solid border-[rgba(19,21,23,0.08)] dark:border-[rgba(255,255,255,0.08)] text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)] m-0.5 flex-shrink-0 justify-center flex items-center overflow-hidden rounded-lg">
+                                                <div className="icon-container w-10 h-10 border border-solid border-[rgba(19,21,23,0.08)] dark:border-[rgba(255,255,255,0.08)]  dark:text-[hsla(0,0%,100%,.79)] m-0.5 flex-shrink-0 justify-center flex items-center overflow-hidden rounded-lg">
                                                     <div className="calendar-card w-full text-center min-h-full">
                                                         <div className="month bg-[rgba(19,21,23,0.08)] dark:bg-[rgba(255,255,255,0.08)] text-[0.5rem] font-semibold uppercase p-px">{ConvertDateTime(eventDetail.startDate).month}</div>
                                                         <div className="day -translate-y-px font-medium">{ConvertDateTime(eventDetail.endDate).day}</div>
                                                     </div>
                                                 </div>
                                                 <div className="min-w-0 flex-1">
-                                                    <div className="title text-black-light-theme dark:text-[#fff] font-medium overflow-hidden text-ellipsis whitespace-nowrap">{DayOfWeek(CovertDate(eventDetail.startDate)[0])}, {ConvertDateTime(eventDetail.startDate).day} tháng {ConvertDateTime(eventDetail.startDate).month}</div>
-                                                    <div className="desc text-black-more-blur-light-theme dark:text-[#fff] text-sm mt-px overflow-hidden text-ellipsis whitespace-nowrap">{ConvertDateTime(eventDetail.startDate).hour}:{ConvertDateTime(eventDetail.startDate).minute} {buoi} đến {ConvertDateTime(eventDetail.endDate).hour}:{ConvertDateTime(eventDetail.endDate).minute} {buoi}</div>
+                                                    <div className="title  dark:text-[#fff] font-medium overflow-hidden text-ellipsis whitespace-nowrap">{DayOfWeek(CovertDate(eventDetail.startDate)[0])}, {ConvertDateTime(eventDetail.startDate).day} tháng {ConvertDateTime(eventDetail.startDate).month}</div>
+                                                    <div className="desc  dark:text-[#fff] text-sm mt-px overflow-hidden text-ellipsis whitespace-nowrap">{ConvertDateTime(eventDetail.startDate).hour}:{ConvertDateTime(eventDetail.startDate).minute} {buoi} đến {ConvertDateTime(eventDetail.endDate).hour}:{ConvertDateTime(eventDetail.endDate).minute} {buoi}</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -271,19 +271,19 @@ export default function JoinEvent(props: { id: string }) {
                                             onClick={handleMapLinkClick}
                                         >
                                             <div className="icon-row gap-4 flex items-center">
-                                                <div className="icon-container w-10 h-10 border border-solid border-[rgba(19,21,23,0.08)] dark:border-[rgba(255,255,255,0.08)] text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)] m-0.5 flex-shrink-0 justify-center flex items-center overflow-hidden rounded-lg">
+                                                <div className="icon-container w-10 h-10 border border-solid border-[rgba(19,21,23,0.08)] dark:border-[rgba(255,255,255,0.08)]  dark:text-[hsla(0,0%,100%,.79)] m-0.5 flex-shrink-0 justify-center flex items-center overflow-hidden rounded-lg">
                                                     <MapPin className="w-5 h-5 block align-middle" />
                                                 </div>
                                                 <div className="min-w-0 flex-1">
-                                                    <div className="title text-black-light-theme dark:text-[#fff] font-medium overflow-hidden whitespace-nowrap text-ellipsis">
+                                                    <div className="title  dark:text-[#fff] font-medium overflow-hidden whitespace-nowrap text-ellipsis">
                                                         <div className="gap-1 flex items-center max-w-sm">
                                                             <div className="overflow-hidden text-ellipsis whitespace-nowrap">{eventDetail.addressName}</div>
-                                                            <div className="icon opacity-50 translate-y-[0.5px] text-black-more-blur-light-theme transition-all duration-300 ease-in-out">
+                                                            <div className="icon opacity-50 translate-y-[0.5px]  transition-all duration-300 ease-in-out">
                                                                 <ArrowUpRight className="block w-4 h-4 align-middle" />
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    {/* <div className="desc text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)] text-sm mt-px overflow-hidden text-ellipsis whitespace-nowrap">{district}, {city}</div> */}
+                                                    {/* <div className="desc  dark:text-[hsla(0,0%,100%,.79)] text-sm mt-px overflow-hidden text-ellipsis whitespace-nowrap">{district}, {city}</div> */}
                                                 </div>
                                             </div>
                                         </Link>
@@ -295,7 +295,7 @@ export default function JoinEvent(props: { id: string }) {
                                 <div className="top-card-content">
                                     <div className="title-wrapper mb-4 gap-2 flex justify-between items-start">
                                         <div className="min-w-0">
-                                            <h1 className="title text-5xl break-words text-black-light-theme dark:text-[#fff] mb-0 font-semibold mt-0">
+                                            <h1 className="title text-5xl break-words  dark:text-[#fff] mb-0 font-semibold mt-0">
                                                 tên sự kiện
                                             </h1>
                                         </div>
@@ -303,15 +303,15 @@ export default function JoinEvent(props: { id: string }) {
                                     <div className="meta mt-5 gap-3 flex flex-col">
                                         <div className="row-container rounded-lg -m-2 p-2">
                                             <div className="icon-row gap-4 flex items-center">
-                                                <div className="icon-container w-10 h-10 border border-solid border-[rgba(19,21,23,0.08)] dark:border-[rgba(255,255,255,0.08)] text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)] m-0.5 flex-shrink-0 justify-center flex items-center overflow-hidden rounded-lg">
+                                                <div className="icon-container w-10 h-10 border border-solid border-[rgba(19,21,23,0.08)] dark:border-[rgba(255,255,255,0.08)]  dark:text-[hsla(0,0%,100%,.79)] m-0.5 flex-shrink-0 justify-center flex items-center overflow-hidden rounded-lg">
                                                     <div className="calendar-card w-full text-center min-h-full">
                                                         <div className="month bg-[rgba(19,21,23,0.08)] dark:bg-[rgba(255,255,255,0.08)] text-[0.5rem] font-semibold uppercase p-px">12</div>
                                                         <div className="day -translate-y-px font-medium">12</div>
                                                     </div>
                                                 </div>
                                                 <div className="min-w-0 flex-1">
-                                                    <div className="title text-black-light-theme dark:text-[#fff] font-medium overflow-hidden text-ellipsis whitespace-nowrap">Thứ, Ngày Tháng ??</div>
-                                                    <div className="desc text-black-more-blur-light-theme dark:text-[#fff] text-sm mt-px overflow-hidden text-ellipsis whitespace-nowrap">12:12 AM đến 12:12 PM</div>
+                                                    <div className="title  dark:text-[#fff] font-medium overflow-hidden text-ellipsis whitespace-nowrap">Thứ, Ngày Tháng ??</div>
+                                                    <div className="desc  dark:text-[#fff] text-sm mt-px overflow-hidden text-ellipsis whitespace-nowrap">12:12 AM đến 12:12 PM</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -323,22 +323,22 @@ export default function JoinEvent(props: { id: string }) {
                                             underline="none"
                                         >
                                             <div className="icon-row gap-4 flex items-center">
-                                                {/* <div className="icon-container w-10 h-10 border border-solid border-[rgba(19,21,23,0.08)] dark:border-[rgba(255,255,255,0.08)] text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)] m-0.5 flex-shrink-0 justify-center flex items-center overflow-hidden rounded-lg">
+                                                {/* <div className="icon-container w-10 h-10 border border-solid border-[rgba(19,21,23,0.08)] dark:border-[rgba(255,255,255,0.08)]  dark:text-[hsla(0,0%,100%,.79)] m-0.5 flex-shrink-0 justify-center flex items-center overflow-hidden rounded-lg">
                                                     <MapPin className="w-5 h-5 block align-middle" />
                                                 </div> */}
-                                                <div className="icon-container w-10 h-10 border border-solid border-[rgba(19,21,23,0.08)] dark:border-[rgba(255,255,255,0.08)] text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)] m-0.5 flex-shrink-0 justify-center flex items-center overflow-hidden rounded-lg">
+                                                <div className="icon-container w-10 h-10 border border-solid border-[rgba(19,21,23,0.08)] dark:border-[rgba(255,255,255,0.08)]  dark:text-[hsla(0,0%,100%,.79)] m-0.5 flex-shrink-0 justify-center flex items-center overflow-hidden rounded-lg">
                                                     <Video className="w-5 h-5 block align-middle" />
                                                 </div>
                                                 <div className="min-w-0 flex-1">
-                                                    <div className="title text-black-light-theme dark:text-[#fff] font-medium overflow-hidden whitespace-nowrap text-ellipsis">
+                                                    <div className="title  dark:text-[#fff] font-medium overflow-hidden whitespace-nowrap text-ellipsis">
                                                         <div className="gap-1 flex items-center max-w-sm">
                                                             <div className="overflow-hidden text-ellipsis whitespace-nowrap">tên địa điểm</div>
-                                                            <div className="icon opacity-50 translate-y-[0.5px] text-black-more-blur-light-theme transition-all duration-300 ease-in-out">
+                                                            <div className="icon opacity-50 translate-y-[0.5px]  transition-all duration-300 ease-in-out">
                                                                 <ArrowUpRight className="block w-4 h-4 align-middle" />
                                                             </div>
                                                         </div>
-                                                        <div className="desc text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)] text-sm mt-px overflow-hidden text-ellipsis whitespace-nowrap">Quận, huyện gì đó</div>
-                                                        {/* <div className="title text-black-light-theme dark:text-[#fff] font-medium overflow-hidden whitespace-nowrap text-ellipsis">Online</div> */}
+                                                        <div className="desc  dark:text-[hsla(0,0%,100%,.79)] text-sm mt-px overflow-hidden text-ellipsis whitespace-nowrap">Quận, huyện gì đó</div>
+                                                        {/* <div className="title  dark:text-[#fff] font-medium overflow-hidden whitespace-nowrap text-ellipsis">Online</div> */}
                                                     </div>
                                                 </div>
                                             </div>
@@ -357,7 +357,7 @@ export default function JoinEvent(props: { id: string }) {
                                         </div>
                                         <div className="content">
                                             <div className="font-medium">Yêu cầu Tham gia sự kiện</div>
-                                            <div className="desc mt-px text-sm text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)]">
+                                            <div className="desc mt-px text-sm  dark:text-[hsla(0,0%,100%,.79)]">
                                                 Đăng ký của bạn phải được sự chấp thuận của người tổ chức sự kiện.
                                             </div>
                                         </div>
@@ -368,7 +368,7 @@ export default function JoinEvent(props: { id: string }) {
                                         </div>
                                         <div className="content">
                                             <div className="font-medium">Còn 49 chỗ trống</div>
-                                            <div className="desc mt-px text-sm text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)]">
+                                            <div className="desc mt-px text-sm  dark:text-[hsla(0,0%,100%,.79)]">
                                                 Hãy nhanh đăng ký trước khi sự kiện kết thúc.
                                             </div>
                                         </div>
@@ -379,7 +379,7 @@ export default function JoinEvent(props: { id: string }) {
                                         </div>
                                         <div className="content">
                                             <div className="font-medium">49.000VND Vé</div>
-                                            <div className="desc mt-px text-sm text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)]">
+                                            <div className="desc mt-px text-sm  dark:text-[hsla(0,0%,100%,.79)]">
                                                 Sự kiện này yêu cầu thanh toán qua <span className="text-red-500">VN</span><span className="text-blue-500">Pay</span>.
                                             </div>
                                         </div>
@@ -388,12 +388,12 @@ export default function JoinEvent(props: { id: string }) {
                                         {eventDetail?.isSub === true && eventDetail.isAppro === true ? (
                                             <div>
                                                 <div className="waiting-request">
-                                                    <div className="text-black-light-theme text-lg font-medium">Bạn đang tham gia</div>
-                                                    <div className="text-black-more-blur-light-theme text-sm mt-1">
-                                                        Email xác nhận đã được gửi tới: <span className="text-black-light-theme font-medium">{getProfile?.result.email}</span>.
+                                                    <div className=" text-lg font-medium">Bạn đang tham gia</div>
+                                                    <div className=" text-sm mt-1">
+                                                        Email xác nhận đã được gửi tới: <span className=" font-medium">{getProfile?.result.email}</span>.
                                                     </div>
                                                 </div>
-                                                <div className="join-event-online text-black-more-blur-light-theme text-xs mt-4">
+                                                <div className="join-event-online  text-xs mt-4">
                                                     <div className="cta-wrapper join-event">
                                                         <div className="cta gap-2 mb-1 flex items-center">
                                                             {eventDetail.isOnline === true ? (
@@ -447,18 +447,18 @@ export default function JoinEvent(props: { id: string }) {
                                                         <div className="min-w-0 flex flex-wrap items-baseline justify-between w-full text-ellipsis overflow-auto whitespace-nowrap">
                                                             <div>
                                                                 <b className="overflow-hidden text-ellipsis whitespace-nowrap mr-1 font-semibold">{getProfile?.result.userName}</b>
-                                                                <span className="email text-sm text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)] overflow-hidden text-ellipsis whitespace-nowrap">{getProfile?.result.email}</span>
+                                                                <span className="email text-sm  dark:text-[hsla(0,0%,100%,.79)] overflow-hidden text-ellipsis whitespace-nowrap">{getProfile?.result.email}</span>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div className="content gap-3 mt-1 flex flex-col">
                                                     <div className="waiting-request">
-                                                        <div className="text-black-light-theme text-lg font-medium">Đợi chấp nhận</div>
-                                                        <div className="text-black-more-blur-light-theme text-sm mt-1">
-                                                            Email xác nhận đã được gửi tới: <span className="text-black-light-theme font-medium">tungnhps17361@fpt.edu.vn</span>.
+                                                        <div className=" text-lg font-medium">Đợi chấp nhận</div>
+                                                        <div className=" text-sm mt-1">
+                                                            Email xác nhận đã được gửi tới: <span className=" font-medium">tungnhps17361@fpt.edu.vn</span>.
                                                         </div>
-                                                        <div className="text-black-more-blur-light-theme text-sm">
+                                                        <div className=" text-sm">
                                                             Chúng tôi sẽ thông báo cho bạn khi đăng ký của bạn được phê duyệt.
                                                         </div>
                                                     </div>
@@ -471,7 +471,7 @@ export default function JoinEvent(props: { id: string }) {
                                                             <div className="text-[#ff9641] font-medium">21m 38s</div>
                                                         </div>
                                                     </div>
-                                                    <div className="unsubs text-black-more-blur-light-theme text-xs">
+                                                    <div className="unsubs  text-xs">
                                                         <span>Không tiếp tục tham gia Sự kiện? Bạn có thể hủy đăng ký </span>
                                                         <Link
                                                             as={"span"}
@@ -483,12 +483,12 @@ export default function JoinEvent(props: { id: string }) {
                                                         </Link>
                                                     </div>
                                                     {/* <div className="waiting-request">
-                                                        <div className="text-black-light-theme text-lg font-medium">Bạn đã hủy đăng ký sự kiện</div>
-                                                        <div className="text-black-more-blur-light-theme text-sm mt-1">
+                                                        <div className=" text-lg font-medium">Bạn đã hủy đăng ký sự kiện</div>
+                                                        <div className=" text-sm mt-1">
                                                             Hi vọng sẽ gặp lại bạn ở lần sự kiện tiếp theo.
                                                         </div>
                                                     </div>
-                                                    <div className="resign text-black-more-blur-light-theme text-xs">
+                                                    <div className="resign  text-xs">
                                                         <span>Bạn muốn tham gia lại Sự kiện? Bạn có thể đăng ký lại </span>
                                                         <Link
                                                             as={"span"}
@@ -517,7 +517,7 @@ export default function JoinEvent(props: { id: string }) {
                                                         </div>
                                                         <div className="min-w-0 flex flex-wrap items-baseline">
                                                             <b className="overflow-hidden text-ellipsis whitespace-nowrap mr-1 font-semibold">{eventDetail?.name}</b>
-                                                            <span className="email text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)] overflow-hidden text-ellipsis whitespace-nowrap">{getProfile?.result.email}</span>
+                                                            <span className="email  dark:text-[hsla(0,0%,100%,.79)] overflow-hidden text-ellipsis whitespace-nowrap">{getProfile?.result.email}</span>
                                                         </div>
                                                     </div>
                                                     <div className="cta-wrapper">
@@ -561,55 +561,75 @@ export default function JoinEvent(props: { id: string }) {
                         </div>
                         <div className="content-card desc">
                             <div className="card-title pb-2 mb-4 border-b border-solid border-[rgba(19,21,23,0.08)] dark:border-[rgba(255,255,255,0.2)] gap-2 flex justify-between items-center">
-                                <div className="title-label font-medium text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)] text-sm">Thông tin</div>
+                                <div className="title-label font-medium  dark:text-[hsla(0,0%,100%,.79)] text-sm">Thông tin</div>
                             </div>
                             <div className="content">
                                 <div className="mt-4">
                                     <div className="flex items-center">
-                                        <div className="label font-normal">Lorem ipsum dolor sit amet consectetur adipisicing elit. Dignissimos quidem quos, cum impedit laborum placeat expedita qui accusamus dolorem nisi molestias alias repudiandae dolorum est sunt eum commodi ipsa optio!</div>
+                                        <div className="label font-normal">Chưa cập nhật...</div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div className="content-card map">
                             <div className="card-title pb-2 mb-4 border-b border-solid border-[rgba(19,21,23,0.08)] dark:border-[rgba(255,255,255,0.2)] gap-2 flex justify-between items-center">
-                                <div className="title-label font-medium text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)] text-sm">Khu vực</div>
+                                <div className="title-label font-medium  dark:text-[hsla(0,0%,100%,.79)] text-sm">Khu vực</div>
                             </div>
                             <div className="content">
-                                {eventDetail ? (
-                                    <div>
-                                        <div className="cursor-copy">
-                                            <div className="font-medium">{eventDetail.addressName}</div>
-                                            <div className="text-tined text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)] text-sm mt-1">
-                                            </div>
-                                        </div>
+                                <div className="gap-4 flex items-center">
+                                    <div className="icon w-11 h-11 text-[#b3b5b7] dark:text-[#939597] rounded-lg border border-solid border-[rgba(19,21,23,0.08)] dark:border-[rgba(255,255,255,0.08)] flex items-center justify-center">
+                                        {eventDetail?.isOnline ? (
+                                            <Video className="w-5 h-5 block align-middle" />
+                                        ) : (
+                                            <MapPin className="w-5 h-5 block align-middle" />
+                                        )}
                                     </div>
-                                ) : (
-                                    <div className="cursor-copy">
-                                        <div className="font-medium">Thành phố Hồ Chí Minh</div>
-                                        <div className="text-tined text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.79)] text-sm mt-1">Việt Nam</div>
+                                    <div className="max-w-[300px]">
+                                        {
+                                            eventDetail?.isOnline ? (
+                                                <><Link href={eventDetail.linkMeet} className="">{eventDetail.linkMeet}</Link></>
+
+                                            ) :
+                                                (
+                                                    eventDetail?.addressName ? (
+                                                        <>  <div className="font-medium truncate">{eventDetail.addressName}</div></>
+                                                    ) : (
+                                                        <>  <div className="font-medium">Cập nhật sau...</div>
+                                                        </>
+                                                    ))
+                                        }
                                     </div>
-                                )}
-                                <div className="gmaps mt-4">
-                                    <Link
-                                        href="https://maps.app.goo.gl/22D1FfAT2NYKF4cv8"
-                                        className="block overflow-hidden rounded-lg transition-all duration-300 ease-in-out cursor-pointer"
-                                        underline="none"
-                                        target="_blank"
-                                        rel="nofollow noopener"
-                                    >
-                                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3918.4441623916387!2d106.62348197465653!3d10.853782889299758!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752b6c59ba4c97%3A0x535e784068f1558b!2zVHLGsOG7nW5nIENhbyDEkeG6s25nIEZQVCBQb2x5dGVjaG5pYw!5e0!3m2!1svi!2s!4v1699268739213!5m2!1svi!2s" className="w-full border-none h-48 flex pointer-events-none" loading="lazy"></iframe>
-                                    </Link>
                                 </div>
+                                {
+                                    eventDetail?.isOnline ? (
+                                        <></>
+                                    ) :
+                                        (eventDetail?.addressName ? (
+                                            <div className="gmaps mt-4">
+                                                <Link
+                                                    href="https://maps.app.goo.gl/22D1FfAT2NYKF4cv8"
+                                                    className="block overflow-hidden rounded-lg transition-all duration-300 ease-in-out cursor-pointer"
+                                                    underline="none"
+                                                    target="_blank"
+                                                    rel="nofollow noopener"
+                                                >
+                                                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3918.4441623916387!2d106.62348197465653!3d10.853782889299758!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752b6c59ba4c97%3A0x535e784068f1558b!2zVHLGsOG7nW5nIENhbyDEkeG6s25nIEZQVCBQb2x5dGVjaG5pYw!5e0!3m2!1svi!2s!4v1699268739213!5m2!1svi!2s" className="w-full border-none h-48 flex pointer-events-none" loading="lazy"></iframe>
+                                                </Link>
+                                            </div>
+                                        ) : <></>)
+                                }
+
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
             <Modal
+                className="dark:bg-[rgba(33,35,37,0.8)] bg-[rgb(255,255,255,0.8)] p-4 backdrop-blur-lg"
                 isOpen={modalViewTicket.isOpen}
                 onOpenChange={modalViewTicket.onOpenChange}
                 size="sm"
+                backdrop="blur"
                 classNames={{
                     closeButton: [
                         "hidden"
@@ -620,6 +640,7 @@ export default function JoinEvent(props: { id: string }) {
                     {(onClose) => (
                         <>
                             <ModalBody className="mt-2">
+                                <div className="text-center text-lg font-medium">Mã QR của bạn</div>
                                 {/* <div className="border-4 border-dashed border-[rgba(19,21,23,0.2)] rounded-xl p-[0.5rem_1rem]">
                                     <Image
                                         className="bg-center bg-cover mb-2"
@@ -631,20 +652,24 @@ export default function JoinEvent(props: { id: string }) {
                                 </div> */}
                                 {/* <QRScanner onChildDataChange={handleChildDataChange} /> */}
                                 <QRCodeGenerator value={ticketIdForQr} />
-                                <div className="name-event text-lg font-medium text-black-light-theme">Tên sự kiện</div>
-                                <div className="can-divide with-divider medium border-t-2 border-dashed border-[rgba(19,21,23,0.2)] m-0"></div>
-                                <div>
-                                    <div className="flex justify-between items-center">
-                                        <div className="email-user text-base font-medium text-black-light-theme">Email:</div>
-                                        <div className="ml-auto text-base font-normal text-black-more-blur-light-theme">nguyenhiengiabao12</div>
+                                <div className="flex justify-between items-center">
+                                    <div className="name-event text-lg font-medium ">Tên sự kiện</div>
+                                    <div className="can-divide with-divider medium border-t-2 border-dashed border-[rgba(19,21,23,0.2)] m-0">
+                                        {eventDetail?.name}
                                     </div>
                                 </div>
-                                <div>
-                                    <div className="flex justify-between items-center">
-                                        <div className="email-user text-base font-medium text-black-light-theme">Giá vé:</div>
-                                        <div className="ml-auto text-base font-normal text-black-more-blur-light-theme">49.000 VNĐ</div>
-                                    </div>
+
+                                <div className="flex justify-between items-center">
+
+                                    <div className="email-user text-base font-medium ">Người tham dự:</div>
+                                    <div className="ml-auto text-base font-normal ">{getProfile?.result.userName}</div>
                                 </div>
+                                {/* <div>
+                                    <div className="flex justify-between items-center">
+                                        <div className="email-user text-base font-medium ">Giá vé:</div>
+                                        <div className="ml-auto text-base font-normal ">49.000 VNĐ</div>
+                                    </div>
+                                </div> */}
                             </ModalBody>
                         </>
                     )}
@@ -670,7 +695,7 @@ export default function JoinEvent(props: { id: string }) {
                         <>
                             <ModalHeader>
                                 <div className="title">
-                                    <h1 className="font-semibold text-xl text-black-light-theme">Xác nhận hủy đăng ký</h1>
+                                    <h1 className="font-semibold text-xl ">Xác nhận hủy đăng ký</h1>
                                 </div>
                             </ModalHeader>
                             <Divider />
@@ -690,7 +715,7 @@ export default function JoinEvent(props: { id: string }) {
                                 <Button
                                     onPress={modalUnSub.onClose}
                                     type='button'
-                                    className='text-black-more-blur-light-theme bg-[rgba(19,21,23,0.04)] border-transparent border border-solid cursor-pointer transition-all duration-300 ease-in-out donace-button mt-4 flex items-center m-0'
+                                    className=' bg-[rgba(19,21,23,0.04)] border-transparent border border-solid cursor-pointer transition-all duration-300 ease-in-out donace-button mt-4 flex items-center m-0'
                                 >
                                     <div className='label'>Hủy</div>
                                 </Button>
@@ -745,8 +770,8 @@ export default function JoinEvent(props: { id: string }) {
 
                                 />
                                 <div>
-                                    <div className="title text-black-more-blur-light-theme dark:text-[#fff] font-medium">
-                                        Người tổ chức sự kiện sẽ trả lời bạn qua gmail: <span className="text-black-light-theme">{getProfile?.result.email}</span>
+                                    <div className="title  dark:text-[#fff] font-medium">
+                                        Người tổ chức sự kiện sẽ trả lời bạn qua gmail: <span className="">{getProfile?.result.email}</span>
                                     </div>
                                 </div>
                             </ModalBody>

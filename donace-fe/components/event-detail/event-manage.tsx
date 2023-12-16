@@ -359,7 +359,6 @@ export default function EventManage(props: any) {
                         <div className="inner flex flex-col md:flex-row justify-between gap-4">
                             <div className="preview relative">
                                 <div className="relative">
-
                                     <img src={eventImage} className="aspect-square object-cover transition-all duration-300 ease-in-out rounded-lg w-full h-[400px]" alt="background" />
                                     <div className="url-wrapper absolute p-2 rounded-lg bg-[rgba(19,21,23,0.32)] z-50 bottom-2 left-2 right-2 backdrop-blur-lg shadow-md text-sm">
                                         <div className="url amimated transition-all duration-300 ease-in-out gap-2 flex justify-between items-center w-full">
