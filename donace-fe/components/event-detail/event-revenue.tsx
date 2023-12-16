@@ -5,7 +5,6 @@ import { Button, Link, Select, SelectItem, Spinner } from "@nextui-org/react";
 import { ArrowUpRight, Sheet } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Table, TableHeader, TableBody, TableColumn, TableRow, TableCell } from "@nextui-org/react";
-import { RevenueIndex } from "../data";
 import React from "react";
 
 export default function EventRevenue(props: any) {

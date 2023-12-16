@@ -9,7 +9,8 @@ import { signIn } from "next-auth/react";
 import { Divider } from "@nextui-org/divider";
 import { Link } from "@nextui-org/link";
 import { Spinner } from "@nextui-org/react";
-import { usePathname } from "next/navigation";
+import { authHelper } from "@/helpers/authHelper";
+
 // import { time } from "console";
 
 export default function SignIn() {
@@ -32,6 +33,8 @@ export default function SignIn() {
   const [path, setPath] = useState("/home");
 
   useEffect(() => {
+    console.log(authHelper.getToken());
+
     const baseUrl = window.location;
     const callbackUrl = `${baseUrl}`;
     let urlPath = callbackUrl.split('/auth/login?callbackUrl=')[1];

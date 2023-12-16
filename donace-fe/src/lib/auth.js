@@ -13,7 +13,7 @@ export const authOptions = {
                 password: { label: "Password", type: "password" }
             },
             async authorize(credentials, req) {
-                const res = await fetch("http://171.245.205.120:8082/api/Authentication/login", {
+                const res = await fetch("http://34.97.29.83/api/Authentication/login", {
                     method: 'POST',
                     body: JSON.stringify(credentials),
                     headers: { "Content-Type": "application/json" }

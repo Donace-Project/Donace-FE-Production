@@ -300,8 +300,8 @@ export default function NavbarComponents({
           </NavbarContent>
         </NavbarBrand>
       </Navbar>
-      <Navbar onMenuOpenChange={setIsMenuOpen} className="md:hidden flex items-center backdrop-blur-lg ">
-        <NavbarContent>
+      <Navbar onMenuOpenChange={setIsMenuOpen} className="md:hidden flex items-center bg-transparent backdrop-blur-lg shadow-medium ">
+      <NavbarContent>
           <NavbarMenuToggle
             aria-label={isMenuOpen ? "Close menu" : "Open menu"}
             className="sm:hidden"

@@ -8,7 +8,6 @@ import { Avatar, Divider, Progress } from "@nextui-org/react";
 import React from "react";
 import { Button } from "@nextui-org/button";
 import { Select, SelectItem } from "@nextui-org/react";
-import { usersAll } from "../data"
 import { Input } from "@nextui-org/input";
 import { Modal, ModalContent, ModalHeader, ModalBody, useDisclosure, ModalFooter } from "@nextui-org/modal";
 import { User } from "@nextui-org/react";
@@ -464,11 +463,11 @@ export default function EventUserJoin(props: any) {
                             <div className="lux-menu-trigger-wrapper cursor-pointer inline-flex min-w-0 w-2/4">
                                 <Select
                                     aria-label="select key"
-                                    items={usersAll}
+                                    items={userJoin}
                                     placeholder="Hiển thị danh sách người tham dự"
                                     className="max-w-xs"
                                 >
-                                    {(user) => <SelectItem key={user.value}>{user.label}</SelectItem>}
+                                    {(user) => <SelectItem key={user.id}>{user.name}</SelectItem>}
                                 </Select>
                             </div>
                             <div className="time inline-flex min-w-0">
