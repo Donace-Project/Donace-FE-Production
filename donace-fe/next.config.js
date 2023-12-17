@@ -4,7 +4,20 @@ const nextConfig = {
 
   images: {
     domains: ["/**"],
-  }
+  },
+  async headers() {
+    return [
+      {
+        source: '/',
+        headers: [
+          {
+            key: 'Content-Security-Policy',
+            value: '' // Đặt giá trị CSP mong muốn hoặc để trống để tắt CSP
+          },
+        ],
+      },
+    ];
+  },
 
 };
 
