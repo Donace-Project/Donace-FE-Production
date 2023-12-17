@@ -9,12 +9,17 @@ import { signIn } from "next-auth/react";
 import { Divider } from "@nextui-org/divider";
 import { Link } from "@nextui-org/link";
 import { Spinner } from "@nextui-org/react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { on } from "events";
 // import { time } from "console";
 
+import { useSession } from "next-auth/react";
+
 
 export default function SignIn() {
+
+  const path = useSearchParams();
+  const { data: session } = useSession();
   const [isVisible, setIsVisible] = React.useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
@@ -47,34 +52,41 @@ export default function SignIn() {
 
   const handleSignIn = async (e: any) => {
     e.preventDefault();
-
-    setIsLoading(true);
-    try {
-      const result = await signIn("credentials", {
-        email: email,
-        password: password,
-        // redirect: false,
-        callbackUrl: '/'
-
-      });
-
-      // debugger;
-      if (!result?.error) {
-        // Redirect the user after successful sign-in
-        // You can use router.push or any other navigation method
-        if (result && result.url) {
-          router.push(result.url);
+    if (session) {
+      // If already logged in, redirect to the home page or any default page
+      router.push('/');
+    } else {
+      setIsLoading(true);
+      let callbackUrl = path?.get("callbackUrl");
+      try {
+        if (callbackUrl != undefined || callbackUrl == null || callbackUrl == "" || callbackUrl == " ") {
+          callbackUrl = "/"
         }
-      } else {
-        // Xử lý hiển thị lỗi
-        setError("Sai tài khoản hoặc mật khẩu.");
+        // debugger;
+        const result = await signIn("credentials", {
+          email: email,
+          password: password,
+          redirect: false,
+          callbackUrl: callbackUrl,
+        });
+        if (!result?.error) {
+          // Redirect the user after successful sign-in
+          // You can use router.push or any other navigation method
+          if (result && callbackUrl) {
+            router.push(callbackUrl);
+          }
+        } else {
+          // Xử lý hiển thị lỗi
+          setError("Sai tài khoản hoặc mật khẩu.");
+        }
+      } catch (error) {
+        // Handle other errors
+        console.error('Có lỗi trong quá trình đăng nhập:', error);
+        setError('Làm ơn hãy thử lại');
       }
-    } catch (error) {
-      // Handle other errors
-      console.error('Error during sign-in:', error);
-      setError('An unexpected error occurred. Please try again.');
+      setIsLoading(false);
     }
-    setIsLoading(false);
+
   };
 
   return (

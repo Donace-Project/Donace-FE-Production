@@ -8,55 +8,17 @@ import { fetchWrapper } from "@/helpers/fetch-wrapper";
 import { Image } from "@nextui-org/image";
 import { Tabs, Tab, Divider, useDisclosure } from "@nextui-org/react";
 import { Skeleton } from "@nextui-org/skeleton";
-interface DateTimeInfo {
-  year: string;
-  month: string;
-  day: string;
-  hour: string;
-  minute: string;
-}
+// import { EventCard } from "@/components/event-card-component/event-card";
+import { AMorPM, ConvertDateTime } from "../clock/cover-data-time";
+import { EventDetailSorted } from "@/types/DonaceType";
 
-const ConvertDateTime = (dateTime: string): DateTimeInfo => {
-  const date = new Date(dateTime);
-  const year = date.getFullYear().toString();
-  const month = (date.getMonth() + 1).toString().padStart(2, '0');
-  const day = date.getDate().toString().padStart(2, '0');
-  const hour = date.getHours().toString().padStart(2, '0');
-  const minute = date.getMinutes().toString().padStart(2, '0');
+import NextImage from "next/image";
+import donace from "@/public/doanLogo.png";
 
-  return { year, month, day, hour, minute };
-};
-
-export type Events = {
-  totalCount: number;
-  items: Item[];
-}
 
 const daysOfWeek = ["Chủ Nhật", "Thứ Hai", "Thứ Ba", "Thứ Tư", "Thứ Năm", "Thứ Sáu", "Thứ Bảy"];
 
-export type Item = {
-  id: string;
-  startDate: string;
-  endDate: string;
-  addressName: string;
-  lat: string;
-  long: string;
-  capacity: number;
-  isOverCapacity: boolean;
-  cover: string;
-  name: string;
-  theme: string;
-  color: string;
-  fontSize: number;
-  instructions: string;
-  isMultiSection: boolean;
-  duration: number;
-  totalGuest: number;
-  calendarId: string;
-  isLive: boolean;
-  isHost: boolean;
-  isOnline: boolean;
-}
+
 
 const CovertDate = (date: string) => {
   return date.split("T");
@@ -77,11 +39,10 @@ export default function HomeEvents() {
   const dateTimeTrue = true;
   const dateTimeFalse = false;
 
-  var [futureEvents, setFutureEvents] = useState<Item[]>();
-  var [pastEvents, setPastEvents] = useState<Item[]>();
+  var [futureEvents, setFutureEvents] = useState<EventDetailSorted[]>();
+  var [pastEvents, setPastEvents] = useState<EventDetailSorted[]>();
 
   const [isOnline, setIsOnline] = useState(true);
-  const [thoiGian, setThoiGian] = useState(new Date());
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -125,28 +86,26 @@ export default function HomeEvents() {
     fetchEvents();
   }, []);
 
-  const gio = thoiGian.getHours();
-  const buoi = gio >= 12 ? "PM" : "AM";
-
 
   //QR generator
   const modalViewTicket = useDisclosure();
   const [ticketIdForQr, setTicketIdForQr] = useState<string>("");
+
   const handleQrGenerator = async () => {
-    if (ticketIdForQr == "") {
-      let ticketId = await fetchWrapper.get("/api/UserTickets/get-ticket")
-      if (ticketId != null) {
-        setTicketIdForQr(ticketId)
+      if (ticketIdForQr == "") {
+          let ticketId = await fetchWrapper.get("/api/UserTickets/get-ticket")
+          if (ticketId != null) {
+              setTicketIdForQr(ticketId)
+          }
+          else {
+              console.log("some bug")
+          }
       }
-      else {
-        console.log("some bug")
-      }
-    }
   }
 
   const openModalGenQr = () => {
-    handleQrGenerator();
-    modalViewTicket.onOpen();
+      handleQrGenerator();
+      modalViewTicket.onOpen();
   }
 
   return (
@@ -198,7 +157,7 @@ export default function HomeEvents() {
                                 <div className="timeline-title">
                                   <div className="content animated transition-all duration-300 ease-in-out">
                                     <div className="date font-medium">{ConvertDateTime(event.startDate).day}/{ConvertDateTime(event.startDate).month}/{ConvertDateTime(event.startDate).year}</div>
-                                    <div className="text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)]">{DayOfWeek(CovertDate(event.startDate)[0])}</div>
+                                    <div className="text-foreground-900">{DayOfWeek(CovertDate(event.startDate)[0])}</div>
                                   </div>
                                 </div>
                               </div>
@@ -210,10 +169,8 @@ export default function HomeEvents() {
                                   <div className="event-content gap-3 flex flex-col">
                                     <div className="info-and-cover flex-col md:flex-row-reverse gap-4 flex">
                                       <Link href={`${event.isHost ? `/events/manage/${event.id}` : `/user/join-event/${event.id}`}`} className="block">
-                                        <div className="w-full h-full md:w-40 md:h-40">
-                                          <div className="img-aspect-ratio w-full h-full rounded-lg">
-                                            <Image className="w-full h-full" alt="you are invited" src={event.cover} />
-                                          </div>
+                                        <div className="aspect-square  md:w-40 md:h-40 rounded-lg">
+                                          <Image as={NextImage} className="block w-full h-full object-cover" alt="you are invited" width={400} height={400} src={event.cover ? event.cover : donace.src} />
                                         </div>
                                       </Link>
                                       <div className="info gap-2 min-w-0 flex-1 flex flex-col">
@@ -239,9 +196,9 @@ export default function HomeEvents() {
                                           ) : (
                                             <div className="hidden"></div>
                                           )}
-                                          <div className="overflow-hidden text-ellipsis whitespace-nowrap text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)] ">
+                                          <div className="truncate text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)] ">
                                             <span>
-                                              {ConvertDateTime(event.startDate).hour}:{ConvertDateTime(event.startDate).minute} {buoi}
+                                              {ConvertDateTime(event.startDate).hour}:{ConvertDateTime(event.startDate).minute} {AMorPM().buoi}
                                             </span>
                                           </div>
                                         </div>
@@ -374,7 +331,7 @@ export default function HomeEvents() {
                                         <div className="event-time gap-2 flex items-center">
                                           <div className="overflow-hidden text-ellipsis whitespace-nowrap text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)]">
                                             <span>
-                                              {ConvertDateTime(event.startDate).hour}:{ConvertDateTime(event.startDate).minute} {buoi}
+                                              {ConvertDateTime(event.startDate).hour}:{ConvertDateTime(event.startDate).minute} {AMorPM().buoi}
                                             </span>
                                           </div>
                                         </div>

@@ -42,7 +42,6 @@ const MapComponent = ({ lngv, latv, hSize = "400px", zoom = 9, makers }: MapComp
 
     setTimeout(() => {
       if (!goongjs.current) {
-
       } else {
         map = new goongjs.current.Map({
           container: "map", // ID của phần tử HTML để chứa bản đồ
@@ -76,7 +75,7 @@ const MapComponent = ({ lngv, latv, hSize = "400px", zoom = 9, makers }: MapComp
         };
 
       };
-    }, 2000);
+    }, 1000);
   }, []);
 
   return (

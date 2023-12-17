@@ -89,24 +89,17 @@ export default function NavbarComponents({
       {
         variant === "landing" ? (
           <Navbar
-            position="static"
             maxWidth="full"
-            title="Donace"
             className="p-4 flex flex-row justify-between items-center h-20 bg-transparent backdrop-blur-lg shadow-medium"
           >
             <NavbarBrand>
-              <Link
-                href="/"
-                aria-label="Donace Home"
-                underline="none"
-                className="relative z-[1] transition-global cursor-pointer sm:justify-start"
-                target="_self"
-              >
-                <NavbarContent className="logo-light transition-all duration-300 ease-in-out flex items-center">
-                  <img src={LogoDonace.src} className="w-8 h-8 rounded-full" />
 
-                </NavbarContent>
-              </Link>
+              <NavbarContent className="transition-all duration-300 ease-in-out flex items-center">
+                <Link href="/">
+                  <img src={LogoDonace.src} className="w-8 h-8 rounded-full" />
+                </Link>
+              </NavbarContent>
+
             </NavbarBrand>
             <NavbarContent justify="center" className="flex items-center">
               {/* @ts-ignore */}
@@ -253,7 +246,7 @@ export default function NavbarComponents({
                     underline="none"
                   >
                     <Button
-                    variant="ghost"
+                      variant="ghost"
                       color="warning"
                     >
                       <NavbarItem as={"div"} className="text-sm text-foreground-900 font-bold whitespace-nowrap">

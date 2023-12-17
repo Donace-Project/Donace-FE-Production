@@ -9,6 +9,8 @@ import { ArrowRight, ArrowUpRight, CalendarX2, MapPin, Plus, ScanLine, Users2 } 
 import { useEffect, useState } from "react";
 import { Image } from "@nextui-org/image";
 import { Skeleton } from "@nextui-org/skeleton";
+import { Spinner } from "@nextui-org/react";
+
 
 export type Calendar = {
     code: string
@@ -72,13 +74,37 @@ export default function CalendarManage(props: any) {
     const dateTimeEvent = dateTimeTrue ? 'true' : 'false';
 
     const [getCalendars, setCalendars] = useState<GetCalendarById | null>(null);
-    var [calendars, setCalendar] = useState<Calendar | null>(null);
+    const [calendars, setCalendar] = useState<Calendar | null>(null);
+
+    const [isJoin, setIsJoin] = useState<boolean>(false);
 
     const [getEvent, setEvents] = useState<GetListEventByCalendarId[]>([]);
     const [getPastEvent, setPastEvents] = useState<GetListEventByCalendarId[]>([]);
     const [getEventSub, setEventSub] = useState<GetListEventByCalendarId[]>([]);
     const [getPastEventSub, setPastEventSub] = useState<GetListEventByCalendarId[]>([]);
 
+    const handleJoinCalendar = async () => {
+        setLoadingJoin(true);
+        try {
+            await fetchWrapper.post(`api/Calendar/user-join`,
+                {
+                    creatorId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+                    sorted: 0,
+                    calendarId: id
+                }
+            );
+
+            setIsJoin(true);
+
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+
+        setLoadingJoin(false);
+
+    }
+
+    const [loadingJoin, setLoadingJoin] = useState(false);
 
     const [loading, setLoading] = useState(true);
 
@@ -100,15 +126,20 @@ export default function CalendarManage(props: any) {
                 const FalseTrue = await fetchWrapper.get(`api/Event/list-event-by-calendar-${id}-${dateTimeFalse}-${dateTimeSubTrue}`);
                 setPastEvents(FalseTrue);
 
-                setLoading(false);
+               
+
             } catch (error) {
                 console.error('Error fetching data:', error);
-                setLoading(false);
+            }
+            setLoading(false);
+
+            if (getCalendars?.isHost === true || getCalendars?.isSub === true) {
+                setIsJoin(true);
             }
         };
         fetchData();
     }, []);
-console.log(getCalendars)
+    console.log(getCalendars)
     return (
         <div className="page-content">
             <div className="page-header opacity-[2] pl-4 pr-4 pt-12 max-width-global margin-global">
@@ -153,31 +184,41 @@ console.log(getCalendars)
                                 </div>
                             )}
                         </h1>
-                        
-                        {getCalendars?.isHost ? (
-                            <></>
-                        ) : (
-                            getCalendars?.isSub ? (
-                                <></>
-                            ) : (
-                                <Link
-                            className="text-black-more-blur-light-theme dark:text-[rgba(255,255,255,0.64)] bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)] border-transparent border border-solid transition-all duration-300 ease-in-out donace-button-w-fit flex items-center cursor-pointer"
-                            underline="none"
-                            >
-                                <div className="label">Tham gia</div>
-                            </Link>
+                        {
+                            isJoin == true ? (<></>) : (
+                                <Button
+                                    onClick={handleJoinCalendar}
+                                    className="transition-all duration-300 ease-in-out flex items-center cursor-pointer"
+                                >
+                                    <div className="flex justify-between align-middle gap-2">
+                                        {
+                                            loadingJoin ? (
+                                                <div className="inline-flex justify-between gap-2 flex-row">
+                                                    <Spinner
+                                                        size="sm"
+                                                        color="success"
+                                                        className=""
+                                                    />
+                                                    <span className="label">Đang gửi yêu cầu..</span>
+                                                </div>
+                                            ) : (
+                                                <div className="label">Tham gia</div>
+                                            )
+                                        }
+                                    </div>
+                                </Button>
                             )
-                        )}
-                        
-                            <Link
+                        }
+
+                        <Link
                             href="/calendars"
                             className="text-black-more-blur-light-theme dark:text-[rgba(255,255,255,0.64)] bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)] border-transparent border border-solid transition-all duration-300 ease-in-out donace-button-w-fit flex items-center cursor-pointer"
                             underline="none"
-                            >
-                                <div className="label">Lịch</div>
-                                <ArrowUpRight className="ml-1.5 stroke-2 w-3.5 h-3.5 flex-shrink-0 block align-middle" />
-                            </Link>                        
-                        
+                        >
+                            <div className="label">Lịch</div>
+                            <ArrowUpRight className="ml-1.5 stroke-2 w-3.5 h-3.5 flex-shrink-0 block align-middle" />
+                        </Link>
+
                     </div>
                 )}
             </div>
@@ -282,8 +323,8 @@ console.log(getCalendars)
                                                                     <div className="event-content gap-3 flex flex-col">
                                                                         <div className="info-and-cover flex-row-reverse gap-4 flex">
                                                                             <div className="cover-image pointer-events-none">
-                                                                                <div className="w-40 h-20">
-                                                                                    <div className="img-aspect-ratio cover-event-image w-full h-full overflow-hidden relative rounded-lg">
+                                                                                <div className="w-40 h-40">
+                                                                                    <div className="object-cover img-aspect-ratio w-full h-full overflow-hidden relative rounded-lg">
                                                                                         <Image className="w-full h-full" alt="you are invited" src={event.cover} />
                                                                                     </div>
                                                                                 </div>
@@ -321,7 +362,7 @@ console.log(getCalendars)
                                                                                             &nbsp;
                                                                                             <MapPin className="w-4 h-4 block align-middle mt-0.5" />
                                                                                         </div>
-                                                                                        <div className="text-base min-w-0">{event.addressName}</div>
+                                                                                        <div className="text-base min-w-0 truncate">{event.addressName}</div>
                                                                                     </div>
                                                                                     <div className="attribute text-base text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)] gap-3 flex items-start">
                                                                                         <div className="icon text-base flex items-center">
