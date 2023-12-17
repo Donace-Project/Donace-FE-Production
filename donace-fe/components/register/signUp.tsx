@@ -31,7 +31,7 @@ export default function SignUp() {
     return validateEmail(email) ? false : true;
   }, [email]);
 
-  const submit = async () => {
+  const handleSignIn = async () => {
     if (email === "" || password === "") {
       setError("Vui lòng nhập đẩy đủ thông tin");
       return;
@@ -60,7 +60,6 @@ export default function SignUp() {
       }
 
       SetIsLoading(false);
-      return;
     }
 
     // Đăng lý lịch mặc định
@@ -73,48 +72,53 @@ export default function SignUp() {
         },
         resultRegister?.token
       );
+
+      // Dùng tài khoản đã đăng ký để login
+      const resultLogin = await signIn("credentials", {
+        email: email,
+        password: password,
+        callbackUrl: "/",
+      });
+
+      if (!resultLogin?.error) {
+        // Redirect the user after successful sign-in
+        // You can use router.push or any other navigation method
+        if (resultLogin && resultLogin.url) {
+          router.push(resultLogin.url);
+        }
+      } else {
+        setError("Đăng ký thành công, nhưng tạm thời không đăng nhập được");
+        SetIsLoading(false);
+      }
     } catch (ex) {
-      console.log(ex);
-    }
-
-    // Dùng tài khoản đã đăng ký để login
-    const resultLogin = await signIn("credentials", {
-      email: email,
-      password: password,
-      redirect: false,
-    });
-
-    if (resultLogin?.ok) {
-      router.push("/home");
-    } else {
-      setError("Đăng ký thành công, nhưng tạm thời không đăng nhập được");
-      SetIsLoading(false);
+      setError("Có lỗi xảy ra, vui lòng thử lại");
     }
   };
 
   return (
-    <div className="onboarding-page">
-      <Card className="onboarding-card opacity-[1] relative flex-1 p-6 bg-[rgba(255,255,255,0.8)] backdrop-blur-lg rounded-3xl overflow-visible max-w-sm w-full">
-        <div className="relative">
-          <CardHeader className="opacity-[1] transform-none">
-            <div className="icon relative w-16 h-16 flex items-center justify-center bg-[rgba(19,21,23,0.04)] rounded-full">
-              <UserPlus className="w-8 h-8 text-[#939597] block align-middle ml-1" />
+    <div className="onboarding-page px-2">
+      <form onSubmit={handleSignIn}>
+        <Card className="onboarding-card relative p-6 bg-background bg-opacity-70 backdrop-blur-lg rounded-3xl w-full">
+          <CardHeader className=" ">
+            <div className="icon relative w-16 h-16 flex items-center justify-center bg-background rounded-full">
+              <UserPlus className="w-8 h-8  block align-middle ml-1" />
             </div>
           </CardHeader>
-          <CardBody className="opacity-[1] transform-none">
+          <CardBody className=" ">
             <div className="gap-2 pt-1 mb-4 flex flex-col">
-              <h1 className="font-semibold text-2xl mb-0 mt-0 leading-5">
+              <h1 className="font-semibold text-2xl mb-0 mt-0 leading-5  whitespace-nowrap">
                 Đăng ký
               </h1>
-              <div className="text-secondary pt-0.5 pb-1 text-sm text-black-more-blur-light-theme">
+              <div className="text-secondary p-1 text-sm whitespace-nowrap w-[300px]">
                 Tạo tài khoản mới để sử dụng dịch vụ.
               </div>
             </div>
-            <div>
+            <div className="flex flex-col gap-4">
               <Input
                 value={email}
                 type="email"
                 label="Email"
+                variant="bordered"
                 isInvalid={isInvalidEmail}
                 color={isInvalidEmail ? "danger" : "success"}
                 errorMessage={isInvalidEmail && "Email không hợp lệ."}
@@ -122,22 +126,24 @@ export default function SignUp() {
                 isRequired
                 isClearable
                 placeholder="Email của bạn"
-                className="text-base h-auto transition-all duration-300 leading-4 rounded-lg w-full m-0"
+                className="text-base transition-all duration-300 leading-4 rounded-lg w-full"
                 classNames={{
                   errorMessage: ["text-base"],
                 }}
               />
               <Input
+                variant="bordered"
                 label="Mật khẩu"
                 value={password}
                 onValueChange={setPassword}
                 isRequired
+                minLength={6}
                 labelPlacement={"inside"}
                 placeholder="Mật khẩu của bạn"
-                className="pt-2 text-base h-auto transition-all duration-300 leading-4 rounded-lg w-full m-0 mb-4"
+                className="text-base  transition-all duration-300 leading-4 rounded-lg w-full"
                 type={isVisible ? "text" : "password"}
               />
-              <div className="mb-3 ml-1">
+              <div className="mb-3 ml-1 w-[300px]">
                 {error && (
                   <div className="text-[#f3236a]">
                     <div className="label break-words">{error}</div>
@@ -145,21 +151,21 @@ export default function SignUp() {
                 )}
               </div>
               <Button
+                variant="bordered"
                 isDisabled={isLoading}
-                type="button"
-                onClick={submit}
-                className="mb-12 text-[#fff] bg-[#333537] border-[#333537] border border-solid w-full cursor-pointer transition-all duration-300 ease-in-out font-medium rounded-lg relative whitespace-nowrap justify-center outline-none max-w-full text-base p-[0.625rem_0.875rem] h-[calc(2.25rem+2*1px)] flex items-center m-0 leading-6"
+                type="submit"
+                className="bg-background bg-opacity-70 w-full cursor-pointer transition-all duration-300 ease-in-out font-medium rounded-lg relative whitespace-nowrap justify-center text-base  flex items-center leading-6"
               >
-                <div className="label">
+                <div className="label ">
                   {isLoading ? (
-                    <>
+                    <div className="inline-flex flex-col gap-2 justify-between">
                       <Spinner
                         size="sm"
                         color="success"
-                        className="translate-y-0.5 mr-2"
+                        className=""
                       />
                       <span className="label">Đang đăng ký..</span>
-                    </>
+                    </div>
                   ) : (
                     <>
                       <div className="label">Đăng ký</div>
@@ -170,15 +176,16 @@ export default function SignUp() {
             </div>
           </CardBody>
           <Divider />
-          <CardFooter className="-mb-2 flex justify-center items-center">
+          <CardFooter className=" flex justify-between flex-col md:flex-row items-center">
             <div className="">Đã có tài khoản?</div>
             <div>&nbsp;</div>
             <Link href="/auth/login" underline="hover">
               Đăng nhập
             </Link>
           </CardFooter>
-        </div>
-      </Card>
+        </Card>
+
+      </form>
     </div>
   );
 }

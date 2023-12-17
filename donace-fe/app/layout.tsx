@@ -6,6 +6,8 @@ import { Providers } from "./providers";
 import clsx from "clsx";
 import { SessionProvider } from "next-auth/react";
 import { SpeedInsights } from "@vercel/speed-insights/next"
+import AuthenNavbar from "@/components/authen/authen-navbar";
+import FooterPage from "@/components/footerInPage";
 
 export default function RootLayout({
   children,
@@ -38,7 +40,14 @@ export default function RootLayout({
         <SessionProvider>
           <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
             <div className="relative flex flex-col">
-              <main className="container max-w-full mx-auto"><SpeedInsights />{children}</main>
+              <main className="container max-w-full mx-auto"><SpeedInsights />
+                <AuthenNavbar>
+                  {children}
+                </AuthenNavbar>
+              </main>
+              <div className="footer">
+                <FooterPage />
+              </div>
             </div>
           </Providers>
         </SessionProvider>
