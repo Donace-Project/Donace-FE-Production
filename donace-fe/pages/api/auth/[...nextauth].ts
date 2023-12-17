@@ -5,8 +5,12 @@ import { fetchWrapper } from '../../../helpers/fetch-wrapper';
 import axios from "axios";
 import { authHelper } from "@/helpers/authHelper";
 import { NextApiRequest, NextApiResponse } from "next";
+import { user } from "@nextui-org/theme";
 
 export const authOptions: NextAuthOptions = {
+
+    
+
     // Configure one or more authentication providers
     providers: [
         // ...add more providers here
@@ -56,7 +60,15 @@ export const authOptions: NextAuthOptions = {
             },
         }),
     ],
+
     callbacks: {
+
+        // async signIn(user) {
+        //     const { callbackUrl } = usePath();
+        //     if (callbackUrl) {
+        //         return Promise.resolve(callbackUrl);
+        //     }
+        // },
         async redirect({ url, baseUrl }: { url: string; baseUrl: string }) {
             return url.startsWith(baseUrl) ? url : baseUrl;
         },
@@ -72,7 +84,7 @@ export const authOptions: NextAuthOptions = {
 
             return session;
         },
-       
+
     },
 
     pages: {

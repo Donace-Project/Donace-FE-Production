@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState } from "react";
-import { EventDetailModels, EventDetailSorted, UserProfile } from "@/types/DonaceType";
+import { EventDetailModels, EventDetailSorted, PaymentMethod, UserProfile } from "@/types/DonaceType";
 import { Avatar } from "@nextui-org/avatar";
 import { Button } from "@nextui-org/button";
 import { Image } from "@nextui-org/image";
@@ -15,7 +15,14 @@ import { set } from "date-fns";
 import QRCodeGenerator from "@/components/QR/QRGenerator";
 
 import MapComponent from "@/components/map/goong-map";
+import EventDetails from "@/components/event-detail/event-detail";
 
+import donaceLogo from "@/public/doanLogo.png";
+import formatCurrency from "@/components/currency/currency";
+import { redirect, usePathname } from "next/navigation";
+import { useRouter } from "next/navigation"
+
+import { useSession } from "next-auth/react";
 interface DateTimeInfo {
     year: string;
     month: string;
@@ -48,6 +55,11 @@ const DayOfWeek = (date: string) => {
 
 export default function JoinEvent(props: { id: string }) {
 
+
+    const router = useRouter();
+
+    const { data: session } = useSession();
+
     const modalContact = useDisclosure();
     const modalUnSub = useDisclosure();
     const modalResign = useDisclosure();
@@ -71,18 +83,18 @@ export default function JoinEvent(props: { id: string }) {
     // const [district, setDistrict] = useState('');
     // const [city, setCity] = useState('');
 
-    const [isFree, setIsFree] = useState(false);
-    const [isApprove, setIsApprove] = useState(false);
-    const [isSub, setIsSub] = useState(false);
-    const [isLive, setisLive] = useState(false);
+    // const [isFree, setIsFree] = useState(false);
+    // const [isApprove, setIsApprove] = useState(false);
+    // const [isSub, setIsSub] = useState(false);
+    // const [isLive, setisLive] = useState(false);
 
     useEffect(() => {
-        fetchWrapper.get(`api/Event/detail-by-id?id=${id}`)
+        fetchWrapper.get(`api/EventPublic/detail-by-id?id=${id}`)
             .then(data => {
                 setEventDetail(data);
-                setIsFree(!data.isFree);
-                setIsApprove(!data.isAppro);
-                setIsSub(!data.isSub);
+                // setIsFree(!data.isFree);
+                // setIsApprove(!data.isAppro);
+                // setIsSub(!data.isSub);
                 // setisLive(!data.isLive);
                 // const addressParts = data.addressName.split(/, /);
                 // const addressName = addressParts[0]
@@ -110,6 +122,39 @@ export default function JoinEvent(props: { id: string }) {
             .catch(error => console.error('Lỗi khi gọi API:', error));
     }, []);
 
+    const handleConnectPayment = async () => {
+
+        if (session) {
+
+            await fetchWrapper.get(`api/Payment/get-connect/${eventDetail?.creatorId}`).then(data => {
+                if (data != null) {
+                    fetchWrapper.post("api/Order/create", {
+                        totalPrice: eventDetail?.price,
+                        status: 0,
+                        userId: getProfile?.result.id,
+                        ticketId: eventDetail?.ticketId,
+                        paymentMethodId: data.id
+                    }).then(data => router.replace(data.url)).catch(error => console.error('Lỗi khi gọi API:', error));
+                }
+            }).catch(error => console.error('Lỗi khi gọi API:', error));
+
+
+        } else {
+
+            router.push(`/auth/login?callbackUrl=${window.location.origin}/user/join-event/${id}`);
+        }
+    }
+
+    // callbackUrl=http%3A%2F%2Flocalhost%3A3000
+    // {
+    //     "totalPrice": 0,
+    //     "status": 0,
+    //     "paymentMethodId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    //     "userId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    //     "ticketId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+    //   }
+
+
     // * Click vào sẽ mở tab trong google map
     const handleMapLinkClick = () => {
         if (eventDetail && eventDetail.addressName) {
@@ -126,7 +171,7 @@ export default function JoinEvent(props: { id: string }) {
             console.log("some bug")
         }
         if (ticketIdForQr == "") {
-            let ticketId = await fetchWrapper.get("/api/UserTickets/get-ticket")
+            let ticketId = await fetchWrapper.get("api/UserTickets/get-ticket")
             if (ticketId != null) {
                 setTicketIdForQr(ticketId)
             }
@@ -145,7 +190,7 @@ export default function JoinEvent(props: { id: string }) {
 
     const handleJoinEvent = async () => {
         setJoiningLoading(true);
-        let data = await fetchWrapper.post("/api/Event/user-join", {
+        let data = await fetchWrapper.post("api/Event/user-join", {
             userId: getProfile?.result.id,
             calendarId: calendarIdValue,
             eventId: id,
@@ -157,20 +202,19 @@ export default function JoinEvent(props: { id: string }) {
         }
     }
 
-
     return (
         <div className="page-content">
             <div className="page-container relative bg-transparent mt-8 ">
                 <div className="content-wrapper flex items-start gap-8 p-4 max-width-global margin-global  bg-[rgba(255,255,255,0.8)] dark:bg-[rgba(35,35,35,0.8)] backdrop-blur-lg rounded-lg">
                     <div className="left flex flex-col gap-6 min-w-0 w-80">
                         <div className="cover-with-glow relative justify-center flex items-center">
-                            <div className="img-aspect-ratio opacity-5 rounded-lg absolute top-4 blur-xl w-full bg-[rgba(19,21,23,0.04)]">
+                            {/* <div className="img-aspect-ratio opacity-5 rounded-lg absolute top-4 blur-xl w-full bg-[rgba(19,21,23,0.04)]">
                                 <Image className="absolute top-0 left-0 w-full h-full object-cover align-middle" src="https://cdn.lu.ma/cdn-cgi/image/format=auto,fit=cover,dpr=2,quality=75,width=400,height=400/event-defaults/1-1/retro1.png" />
-                            </div>
-                            <div className="img-view rounded-2xl w-full bg-rgba(19,21,23,0.04)  relative">
+                            </div> */}
+                            <div className="img-view rounded-2xl w-full bg-rgba(19,21,23,0.04) relative">
                                 <Image
                                     className="top-0 left-0 w-full h-full object-cover align-middle"
-                                    src={eventDetail?.cover ? eventDetail.cover : "https://cdn.lu.ma/cdn-cgi/image/format=auto,fit=cover,dpr=2,quality=75,width=400,height=400/event-defaults/1-1/retro1.png"}
+                                    src={eventDetail?.cover ? eventDetail.cover : donaceLogo.src}
                                 />
                             </div>
                         </div>
@@ -196,8 +240,7 @@ export default function JoinEvent(props: { id: string }) {
                                                     />
                                                 </div>
                                                 <div className="min-w-0">
-                                                    //todo: fetch api hiển thị tên người tổ chức
-                                                    <div className="font-medium  text-ellipsis whitespace-nowrap">{getProfile?.result.userName}</div>
+                                                    <div className="font-medium  text-ellipsis whitespace-nowrap">{eventDetail?.email}</div>
                                                 </div>
                                             </Link>
                                         </div>
@@ -332,7 +375,7 @@ export default function JoinEvent(props: { id: string }) {
                                 </div>
                             </div>
                         )}
-                        <div className="p-[0.75rem_1rem] bg-[#f5f6f7] dark:bg-[rgba(255,255,255,0.1)] border border-solid border-[#f3f4f5] dark:border-[rgba(255,255,255,0.1)] rounded-xl backdrop-blur-none shadow-md">
+                        <div className="px-4 py-2 bg-[#f5f6f7] dark:bg-[rgba(255,255,255,0.1)] border border-solid border-[#f3f4f5] dark:border-[rgba(255,255,255,0.1)] rounded-xl backdrop-blur-none shadow-md">
                             <div className="inner">
                                 <div>
                                     {
@@ -340,11 +383,11 @@ export default function JoinEvent(props: { id: string }) {
                                             <>
                                                 Bạn là người tổ chức sự kiện này
                                             </>) : (
-                                            isFree == true ? (
+                                            eventDetail?.isFree == true ? (
                                                 <>
                                                     <div className="content gap-3 flex flex-col">
                                                         {/* eventDetail?.isSub == true && eventDetail.isAppro === true */}
-                                                        {isSub == true && isApprove == true ? (
+                                                        {eventDetail?.isSub == true && eventDetail?.isAppro == true ? (
                                                             <div>
                                                                 <div className="waiting-request">
                                                                     <div className=" text-lg font-medium">Bạn đang tham gia</div>
@@ -386,7 +429,7 @@ export default function JoinEvent(props: { id: string }) {
                                                                 </div>
                                                             </div>
                                                             // eventDetail?.isSub && eventDetail.isAppro === false
-                                                        ) : isSub == true && isApprove == false ? (
+                                                        ) : eventDetail?.isSub == true && eventDetail?.isAppro == false ? (
                                                             <div>
                                                                 {eventDetail?.isLive === true ? (
                                                                     <div
@@ -431,7 +474,7 @@ export default function JoinEvent(props: { id: string }) {
                                                                             Chúng tôi sẽ thông báo cho bạn khi đăng ký của bạn được phê duyệt.
                                                                         </div>
                                                                     </div>
-                                                                    <div className="left count-times gap-3 flex items-baseline bg-[#f7fafe] p-[0.25rem_1rem] border border-solid rounded-lg">
+                                                                    <div className="left count-times gap-3 flex items-baseline bg-background p-[0.25rem_1rem] border border-solid rounded-lg">
                                                                         <div className="icon">
                                                                             <AlarmClock className="block w-5 h-5 align-middle translate-y-1" />
                                                                         </div>
@@ -526,53 +569,62 @@ export default function JoinEvent(props: { id: string }) {
                                                         )}
                                                     </div>
                                                 </>
-                                            ) : (<>
-                                                <div className="left request-to-join gap-3 flex items-baseline mb-2 pb-2 bg-[#f7fafe] p-[0.75rem_1rem] border border-solid rounded-lg">
-                                                    <div className="icon">
-                                                        <ThumbsUp className="block w-5 h-5 align-middle translate-y-1" />
-                                                    </div>
-                                                    <div className="content">
-                                                        <div className="font-medium">Yêu cầu Tham gia sự kiện</div>
-                                                        <div className="desc mt-px text-sm  dark:text-[hsla(0,0%,100%,.79)]">
-                                                            Đăng ký của bạn phải được sự chấp thuận của người tổ chức sự kiện.
+                                            ) : (
+                                                <div className=" flex flex-col items-center gap-2 w-full">
+                                                    <div className="items-center w-full hover:bg-opacity-70 hover:border-foreground-900 cursor-pointer request-to-join gap-3 flex bg-background px-4 py-2 border border-solid rounded-lg"
+                                                        onClick={() => {
+                                                            handleConnectPayment()
+                                                        }}
+                                                    >
+                                                        <div className="icon">
+                                                            <ThumbsUp className="block w-5 h-5 align-middle translate-y-1" />
+                                                        </div>
+                                                        <div className="content">
+                                                            <div className="font-medium">Yêu cầu Tham gia sự kiện</div>
+                                                            <div className="desc mt-px text-sm  dark:text-[hsla(0,0%,100%,.79)]">
+                                                                Đăng ký của bạn phải được sự chấp thuận của người tổ chức sự kiện.
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                                <div className="left count-slots gap-3 flex items-baseline mb-2 pb-2 bg-[#f7fafe] p-[0.75rem_1rem] border border-solid rounded-lg">
-                                                    <div className="icon">
-                                                        <AlarmClock className="block w-5 h-5 align-middle translate-y-1" />
-                                                    </div>
-                                                    <div className="content">
-                                                        {
-                                                            eventDetail?.isUnlimited ? (
-                                                                <>
-                                                                    <div className="font-medium">Sự kiện không giới hạn số lượng tham gia</div>
-                                                                </>
-                                                            ) : (
-                                                                <>
-                                                                    <div className="font-medium">{eventDetail?.capacity}</div>
-                                                                </>
-                                                            )
-                                                        }
-                                                        <div className="desc mt-px text-sm  dark:text-[hsla(0,0%,100%,.79)]">
-                                                            Hãy nhanh đăng ký trước khi sự kiện kết thúc.
+
+
+
+                                                    <div className="items-center count-slots w-full gap-3 flex bg-background px-4 py-2 border border-solid rounded-lg">
+                                                        <div className="icon">
+                                                            <AlarmClock className="block w-5 h-5 align-middle translate-y-1" />
+                                                        </div>
+                                                        <div className="content">
+                                                            {
+                                                                eventDetail?.isUnlimited ? (
+                                                                    <>
+                                                                        <div className="font-medium">Sự kiện không giới hạn số lượng tham gia</div>
+                                                                    </>
+                                                                ) : (
+                                                                    <>
+                                                                        <div className="font-medium">{eventDetail?.capacity}</div>
+                                                                    </>
+                                                                )
+                                                            }
+                                                            <div className="desc mt-px text-sm  dark:text-[hsla(0,0%,100%,.79)]">
+                                                                Hãy nhanh đăng ký trước khi sự kiện kết thúc.
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                                <div className="left money-request gap-3 flex items-baseline mb-2 pb-2 bg-[#f7fafe] p-[0.75rem_1rem] border border-solid rounded-lg">
-                                                    <div className="icon">
-                                                        <Receipt className="block w-5 h-5 align-middle translate-y-1" />
-                                                    </div>
-                                                    <div className="content">
-                                                        <div className="font-medium">49.000VND Vé</div>
-                                                        <div className="desc mt-px text-sm  dark:text-[hsla(0,0%,100%,.79)]">
-                                                            Sự kiện này yêu cầu thanh toán qua <span className="text-red-500">VN</span><span className="text-blue-500">Pay</span>.
+                                                    <div className="items-center money-request w-full gap-3 flex bg-background px-4 py-2 border border-solid rounded-lg">
+                                                        <div className="icon">
+                                                            <Receipt className="block w-5 h-5 align-middle translate-y-1" />
+                                                        </div>
+                                                        <div className="content">
+                                                            <div className="font-medium">{formatCurrency(eventDetail?.price)}</div>
+                                                            <div className="desc mt-px text-sm  dark:text-[hsla(0,0%,100%,.79)]">
+                                                                Sự kiện này yêu cầu thanh toán qua <span className="text-red-500">VN</span><span className="text-blue-500">Pay</span>.
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                            </>))
+                                                </div>))
                                     }
                                     {/* //TODO: NÀO CÓ DỮ LIỆU THÌ ĐI LOGIC ĐOẠN NÀY */}
+
 
 
                                 </div>
@@ -607,21 +659,21 @@ export default function JoinEvent(props: { id: string }) {
                                         (
                                             eventDetail?.addressName ? (
                                                 <div className="gap-4 flex items-center">
-                                                <div className="icon-container w-10 h-10 border border-solid border-[rgba(19,21,23,0.08)] dark:border-[rgba(255,255,255,0.08)]  dark:text-[hsla(0,0%,100%,.79)] justify-center flex items-center rounded-lg">
-                                                    <MapPin className="w-5 h-5 block align-middle" />
-                                                </div>
-                                                <div className="">
-                                                    <div className="title dark:text-[#fff] font-medium">
-                                                        <div className="gap-1 flex items-center max-w-[300px]">
-                                                            <div className="truncate">{eventDetail.addressName}</div>
-                                                            <div className="icon opacity-50 transition-all duration-300 ease-in-out">
-                                                                <ArrowUpRight className="block w-4 h-4 align-middle" />
+                                                    <div className="icon-container w-10 h-10 border border-solid border-[rgba(19,21,23,0.08)] dark:border-[rgba(255,255,255,0.08)]  dark:text-[hsla(0,0%,100%,.79)] justify-center flex items-center rounded-lg">
+                                                        <MapPin className="w-5 h-5 block align-middle" />
+                                                    </div>
+                                                    <div className="">
+                                                        <div className="title dark:text-[#fff] font-medium">
+                                                            <div className="gap-1 flex items-center max-w-[300px]">
+                                                                <div className="truncate">{eventDetail.addressName}</div>
+                                                                <div className="icon opacity-50 transition-all duration-300 ease-in-out">
+                                                                    <ArrowUpRight className="block w-4 h-4 align-middle" />
+                                                                </div>
                                                             </div>
                                                         </div>
+                                                        {/* <div className="desc  dark:text-[hsla(0,0%,100%,.79)] text-sm mt-px  text-ellipsis whitespace-nowrap">{district}, {city}</div> */}
                                                     </div>
-                                                    {/* <div className="desc  dark:text-[hsla(0,0%,100%,.79)] text-sm mt-px  text-ellipsis whitespace-nowrap">{district}, {city}</div> */}
                                                 </div>
-                                            </div>
                                             ) : (
                                                 <>  <div className="font-medium">Cập nhật sau...</div>
                                                 </>

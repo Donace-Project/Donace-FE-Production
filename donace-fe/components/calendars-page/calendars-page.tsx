@@ -154,8 +154,8 @@ export default function CalendarPage() {
                                                         href={`/calendars/manage/${calendar.id}`}
                                                     >
                                                         <div className="spread min-h-full flex justify-between flex-col">
-                                                            <img className="rounded-full w-12 h-12 block object-cover align-middle"
-                                                               
+                                                            <Image className="rounded-full w-12 h-12 block object-cover align-middle"
+
                                                                 alt="Donace"
                                                                 src={calendar.avatar}
                                                             />
@@ -226,10 +226,8 @@ export default function CalendarPage() {
                                                     href={`/calendars/manage/${subscribed.id}`}
                                                 >
                                                     <div className="spread min-h-full flex justify-between flex-col">
-                                                        <Image
-                                                            width={48}
-                                                            height={48}
-                                                            radius="full"
+                                                        <Image className="rounded-full w-12 h-12 block object-cover align-middle"
+
                                                             alt="Donace"
                                                             src={subscribed.avatar}
                                                         />
@@ -240,7 +238,7 @@ export default function CalendarPage() {
                                                             {subscribed.totalSubcriber !== 0 ? (
                                                                 <p>{subscribed.totalSubcriber} đăng ký</p>
                                                             ) : (
-                                                                <p>Không người đăng ký</p>
+                                                                <p>Không có người đăng ký</p>
                                                             )}
                                                         </div>
                                                         <div className="spread gap-2 mt-4 flex justify-between flex-wrap items-center">

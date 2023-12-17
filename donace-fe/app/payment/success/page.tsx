@@ -1,14 +1,13 @@
 
-import ReturnPaymentURL from "@/components/returnPayment/payment-page";
-import Authorization from "@/components/authen/authentication";
+import ReturnPaymentURL from "@/components/payment/payment-page";
+
+import { useParams } from 'next/navigation';
+
 
 export default function Page() {
-
     return (
-        <Authorization>
-         
-                    <ReturnPaymentURL />
-                
-        </Authorization>
+
+        <ReturnPaymentURL />
+
     )
 }

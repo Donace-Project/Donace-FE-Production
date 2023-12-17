@@ -46,6 +46,8 @@ import { Calendar } from "../../types/DonaceType";
 import { useRouter, useSearchParams } from "next/navigation";
 const goongGeocoder = require("@goongmaps/goong-geocoder");
 
+import donaceLogo from "@/public/doanLogo.png";
+import formatCurrency from "../currency/currency";
 
 interface createEventReponseType {
 
@@ -134,7 +136,7 @@ export default function CreateFormFinal() {
   const [onlineLink, setOnlineLink] = useState("");
   const [isUploading, setIsUploading] = useState(false);
   const [isAvatarUploading, setIsAvatarUploading] = useState(false);
-  const [price, setPrice] = useState<number>(0);
+  const [price, setPrice] = useState<number>(10000);
   const [isFree, setIsFree] = useState(true);
   const [isCorrectFormatLink, setIsCorrectFormatLink] = useState(true);
   const [isUnlimitedCapacity, setIsUnlimitedCapacity] = useState(true);
@@ -143,7 +145,7 @@ export default function CreateFormFinal() {
     avatar: "",
     description: "",
   });
-  const [image, setImage] = useState<string>("https://cdn.lu.ma/cdn-cgi/image/format=auto,fit=cover,dpr=2,quality=75,width=400,height=400/event-defaults/1-1/standard1.png");
+  const [image, setImage] = useState<string>(donaceLogo.src);
 
   const [eventReq, SetEventReq] = useState<createEventReponseType>({
     name: "",
@@ -153,7 +155,7 @@ export default function CreateFormFinal() {
     lat: 0,
     long: 0,
     addressName: "",
-    cover: "https://cdn.lu.ma/cdn-cgi/image/format=auto,fit=cover,dpr=2,quality=75,width=400,height=400/event-defaults/1-1/standard1.png",
+    cover: donaceLogo.src,
     isOnline: false,
     linkMeet: "",
     isUnlimited: true,
@@ -172,7 +174,7 @@ export default function CreateFormFinal() {
   //   "https://cdn.lu.ma/cdn-cgi/image/format=auto,fit=cover,dpr=2,quality=75,width=400,height=400/event-defaults/1-1/standard1.png"
   // );
   let refAvatarUrl = useRef(
-    "https://cdn.lu.ma/cdn-cgi/image/format=auto,fit=cover,dpr=2,background=white,quality=75,width=64,height=64/avatars-default/community_avatar_13.png"
+    donaceLogo.src
   );
   // ---------------End: UseRef---------------
 
@@ -186,7 +188,7 @@ export default function CreateFormFinal() {
         price: price,
       },
     });
-    console.log("Help")
+
     modalPriceEvent.onClose();
 
     setIsFree(false);
@@ -380,10 +382,19 @@ export default function CreateFormFinal() {
       setCreatEventErrorMessage("Vui lòng nhập tên sự kiện!");
       return;
     }
+    if (price < 10000) {
+      setCreatEventErrorMessage("Vui lòng nhập số tiền lớn hơn 10.000 vnd!");
+      return;
+    }
 
     setIsLoading(true);
+
+    if (isFree != true) {
+      eventReq.ticket.isRequireApprove = false;
+    }
     try {
       const response = await fetchWrapper.post("/api/Event", {
+
         ...eventReq,
         startDate: `${startDate.date}T${startDate.time}`,
         endDate: `${endDate.date}T${endDate.time}`,
@@ -1390,27 +1401,33 @@ export default function CreateFormFinal() {
                               </Modal>
                             </div>
                           </div>
-                          <div className="option-row w-full p-[0.5rem_0.75rem] transition-all duration-300 ease-in-out relative overflow-hidden bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)]">
-                            <div className="divider absolute top-0 left-11 right-0 border-b border-solid border-[rgba(19,21,23,0.04)] z-10"></div>
-                            <div className="gap-2 flex items-center">
-                              <div className="icon light:text-[rgba(19,21,23,0.2)] m-[0px_0.25rem]">
-                                <UserCheck className="block w-4 h-4 align-middle translate-y-px" />
+                          {
+                            !isFree ? (<>
+                            </>) : (
+                              <div className="option-row w-full p-[0.5rem_0.75rem] transition-all duration-300 ease-in-out relative overflow-hidden bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)]">
+                                <div className="divider absolute top-0 left-11 right-0 border-b border-solid border-[rgba(19,21,23,0.04)] z-10"></div>
+                                <div className="gap-2 flex items-center">
+                                  <div className="icon light:text-[rgba(19,21,23,0.2)] m-[0px_0.25rem]">
+                                    <UserCheck className="block w-4 h-4 align-middle translate-y-px" />
+                                  </div>
+                                  <div className="select-none flex-1">
+                                    Phê duyệt
+                                  </div>
+                                  <div className="gap-1 flex items-center">
+                                    <Switch
+                                      onChange={(e) => handelRequiedApproved(e)}
+                                      color="success"
+                                      classNames={{
+                                        thumb: ["bg-[#fff]"],
+                                        wrapper: ["bg-[rgba(19,21,23,0.16)]"],
+                                      }}
+                                    />
+                                  </div>
+                                </div>
                               </div>
-                              <div className="select-none flex-1">
-                                Phê duyệt
-                              </div>
-                              <div className="gap-1 flex items-center">
-                                <Switch
-                                  onChange={(e) => handelRequiedApproved(e)}
-                                  color="success"
-                                  classNames={{
-                                    thumb: ["bg-[#fff]"],
-                                    wrapper: ["bg-[rgba(19,21,23,0.16)]"],
-                                  }}
-                                />
-                              </div>
-                            </div>
-                          </div>
+                            )
+                          }
+
                           <div className="option-row w-full p-[0.5rem_0.75rem] transition-all duration-300 ease-in-out relative overflow-hidden bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)]">
                             <div className="divider absolute top-0 left-11 right-0 border-b border-solid border-[rgba(19,21,23,0.04)] z-10"></div>
                             <div className="gap-2 flex items-center">
@@ -1677,13 +1694,4 @@ function isURL(input: string): boolean {
   return urlRegex.test(input);
 }
 
-function formatCurrency(value: number | undefined) {
-  if (value == undefined) return "0 đ";
-  const formattedValue = parseFloat(value.toString()).toLocaleString("vi-VN", {
-    style: "currency",
-    currency: "VND",
-  });
 
-  // Thêm ký tự 'đ' ở cuối số
-  return formattedValue.replace(/\₫/g, "") + " đ";
-}

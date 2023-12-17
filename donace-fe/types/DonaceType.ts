@@ -192,37 +192,48 @@ export type SectionByEvent = {
 // GET EVENT DETAILS    
 
 export type EventDetailModels = {
-    isSub:          boolean;
-    isAppro:        boolean;
-    isLive:         boolean;
-    isFree:         boolean;
-    isCheckAppro:   boolean;
-    id:             string;
-    startDate:      string;
-    endDate:        string;
-    addressName:    string;
-    lat:            number;
-    long:           number;
-    isUnlimited:    boolean;
-    capacity:       number;
+    isSub: boolean;
+    isAppro: boolean;
+    isLive: boolean;
+    isFree: boolean;
+    isCheckAppro: boolean;
+    email: string;
+    price: number;
+    id: string;
+    startDate: string;
+    endDate: string;
+    addressName: string;
+    lat: number;
+    long: number;
+    isUnlimited: boolean;
+    capacity: number;
     isOverCapacity: boolean;
-    cover:          string;
-    name:           string;
-    theme:          string;
-    color:          string;
-    fontSize:       number;
-    instructions:   string;
+    cover: string;
+    name: string;
+    theme: string;
+    color: string;
+    fontSize: number;
+    instructions: string;
     isMultiSection: boolean;
-    duration:       number;
-    totalGuest:     number;
-    sections:       any[];
-    calendarId:     string;
-    isHost:         boolean;
-    status:         string;
-    isOnline:       boolean;
-    linkMeet:       string;
-    sorted:         number;
+    duration: number;
+    totalGuest: number;
+    sections: any[];
+    calendarId: string;
+    isHost: boolean;
+    status: string;
+    isOnline: boolean;
+    linkMeet: string;
+    sorted: number;
+    creatorId: string;
+    ticketId: string;
 }
+
+export type PaymentMethod = {
+    id:         string;
+    tmnCode:    string;
+    hashSecret: string;
+}
+
 
 // CREATE EVENT MODEL
 export type CreateEventModel = {
@@ -350,4 +361,28 @@ export type EventDetailSorted = {
     isSub: string
     isAppro: string
     isLive: boolean
+}
+
+export type Item = {
+    id: string;
+    startDate: string;
+    endDate: string;
+    addressName: string;
+    lat: string;
+    long: string;
+    capacity: number;
+    isOverCapacity: boolean;
+    cover: string;
+    name: string;
+    theme: string;
+    color: string;
+    fontSize: number;
+    instructions: string;
+    isMultiSection: boolean;
+    duration: number;
+    totalGuest: number;
+    calendarId: string;
+    isLive: boolean;
+    isHost: boolean;
+    isOnline: boolean;
 }

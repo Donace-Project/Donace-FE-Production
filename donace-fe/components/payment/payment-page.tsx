@@ -4,7 +4,10 @@ import Animation from '../Animation-payment.json'
 import { Link } from '@nextui-org/link';
 import { Button } from '@nextui-org/react';
 
+
 export default function ReturnPaymentURL() {
+
+
     return (
         <div className="page-content max-w-[100dvw] overflow-x-hidden">
             <div className="zm-container flex items-center relative gap-4 p-4 pt-12 justify-between max-width-global margin-global">
@@ -15,7 +18,8 @@ export default function ReturnPaymentURL() {
                     <div className='desc max-w-sm mb-4'>
                         <div className='content'>
                             <span className='text-base'>Cảm ơn bạn đã hoàn thành thanh toán mua vé sự kiện!</span>
-                            <br></br>
+
+                            <hr />
                             <span className='text-base'>
                                 Nếu có bất kỳ câu hỏi hoặc yêu cầu nào thêm, đừng ngần ngại liên hệ với chúng tôi. Cảm ơn bạn một lần nữa và hẹn gặp lại!
                             </span>

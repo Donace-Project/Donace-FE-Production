@@ -156,9 +156,9 @@ export default function SignUp() {
                 type="submit"
                 className="bg-background bg-opacity-70 w-full cursor-pointer transition-all duration-300 ease-in-out font-medium rounded-lg relative whitespace-nowrap justify-center text-base  flex items-center leading-6"
               >
-                <div className="label ">
+                <div className="label  w-full">
                   {isLoading ? (
-                    <div className="inline-flex flex-col gap-2 justify-between">
+                    <div className="inline-flex flex-col gap-2 justify-between w-full">
                       <Spinner
                         size="sm"
                         color="success"
