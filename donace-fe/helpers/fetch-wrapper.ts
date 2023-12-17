@@ -26,7 +26,7 @@ async function get(url: string) {
   return handleResponse(response);
 }
 
-async function post(url: string, body: any) {
+async function post(url: string, body?: any) {
   const requestOptions = {
     method: "POST",
     headers: { "Content-Type": "application/json", ...authHeader() },

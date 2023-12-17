@@ -59,7 +59,7 @@ export default function SignIn() {
       setIsLoading(true);
       let callbackUrl = path?.get("callbackUrl");
       try {
-        if (callbackUrl != undefined || callbackUrl == null || callbackUrl == "" || callbackUrl == " ") {
+        if (callbackUrl == undefined || callbackUrl == null || callbackUrl == "" || callbackUrl == " ") {
           callbackUrl = "/"
         }
         // debugger;

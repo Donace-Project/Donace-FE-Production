@@ -12,7 +12,6 @@ import { Skeleton } from "@nextui-org/skeleton";
 import { AMorPM, ConvertDateTime } from "../clock/cover-data-time";
 import { EventDetailSorted } from "@/types/DonaceType";
 
-import NextImage from "next/image";
 import donace from "@/public/doanLogo.png";
 
 
@@ -170,7 +169,7 @@ export default function HomeEvents() {
                                     <div className="info-and-cover flex-col md:flex-row-reverse gap-4 flex">
                                       <Link href={`${event.isHost ? `/events/manage/${event.id}` : `/user/join-event/${event.id}`}`} className="block">
                                         <div className="aspect-square  md:w-40 md:h-40 rounded-lg">
-                                          <Image as={NextImage} className="block w-full h-full object-cover" alt="you are invited" width={400} height={400} src={event.cover ? event.cover : donace.src} />
+                                          <Image className="block w-full h-full object-cover" alt="you are invited" width={400} height={400} src={event.cover ? event.cover : donace.src} />
                                         </div>
                                       </Link>
                                       <div className="info gap-2 min-w-0 flex-1 flex flex-col">

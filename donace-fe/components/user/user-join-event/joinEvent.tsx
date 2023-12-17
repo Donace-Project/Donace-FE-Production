@@ -129,10 +129,10 @@ export default function JoinEvent(props: { id: string }) {
             await fetchWrapper.get(`api/Payment/get-connect/${eventDetail?.creatorId}`).then(data => {
                 if (data != null) {
                     fetchWrapper.post("api/Order/create", {
-                        totalPrice: eventDetail?.price,
                         status: 0,
                         userId: getProfile?.result.id,
                         ticketId: eventDetail?.ticketId,
+                        totalPrice: eventDetail?.price,
                         paymentMethodId: data.id
                     }).then(data => router.replace(data.url)).catch(error => console.error('Lỗi khi gọi API:', error));
                 }

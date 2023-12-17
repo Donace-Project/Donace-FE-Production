@@ -4,8 +4,7 @@ const nextConfig = {
 
   images: {
     domains: ["/**"],
-    formats: ['image/webp'],
-  },
+  }
 
 };
 

@@ -1,0 +1,12 @@
+{
+    "functions": {
+      "api/**/*.js": {
+        "runtime": "nodejs20.x",
+        "environment": {
+          "NODE_ENV": "production",
+          "HTTPS": "false"
+        }
+      }
+    }
+  }
+  
