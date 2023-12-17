@@ -1,6 +1,6 @@
 "use client";
 import "@/styles/globals.css";
-import React, { useEffect, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import { Button } from "@nextui-org/button";
 import { Card, CardHeader, CardBody, CardFooter } from "@nextui-org/card";
 import { Input } from "@nextui-org/input";
@@ -9,13 +9,15 @@ import { signIn } from "next-auth/react";
 import { Divider } from "@nextui-org/divider";
 import { Link } from "@nextui-org/link";
 import { Spinner } from "@nextui-org/react";
-import { authHelper } from "@/helpers/authHelper";
-
+import { useRouter } from "next/navigation";
+import { on } from "events";
 // import { time } from "console";
+
 
 export default function SignIn() {
   const [isVisible, setIsVisible] = React.useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
@@ -30,129 +32,146 @@ export default function SignIn() {
   }, [email]);
 
   const [error, setError] = useState("");
-  const [path, setPath] = useState("/home");
+  // const [path, setPath] = useState("/home");
 
-  useEffect(() => {
-    console.log(authHelper.getToken());
+  // useEffect(() => {
+  //   const baseUrl = window.location;
+  //   const callbackUrl = `${baseUrl}`;
+  //   let urlPath = callbackUrl.split('/auth/login?callbackUrl=')[1];
 
-    const baseUrl = window.location;
-    const callbackUrl = `${baseUrl}`;
-    let urlPath = callbackUrl.split('/auth/login?callbackUrl=')[1];
+  //   if (urlPath != undefined && urlPath != null) {
+  //     setPath(urlPath);
+  //   }
+  //   // Callback URL: http://localhost:3000/auth/login?callbackUrl=http://localhost:3000/create/path/to/callback
+  // }, []);
 
-    if (urlPath != undefined && urlPath != null) {
-      setPath(urlPath);
-    }
-    // Callback URL: http://localhost:3000/auth/login?callbackUrl=http://localhost:3000/create/path/to/callback
-  }, []);
+  const handleSignIn = async (e: any) => {
+    e.preventDefault();
 
-  const onSubmit = async () => {
     setIsLoading(true);
-    const result = await signIn("credentials", {
-      email: email,
-      password: password,
-      redirect: false,
-    });
+    try {
+      const result = await signIn("credentials", {
+        email: email,
+        password: password,
+        // redirect: false,
+        callbackUrl: '/'
 
-    // debugger;
-    if (result?.ok) {
-      // Nếu đăng nhập thành công thì router tới callbackUrl
-      window.location.replace(path);
-    } else {
-      // Xử lý hiển thị lỗi
-      setError("Sai tài khoản hoặc mật khẩu.");
-      setIsLoading(false);
-      return;
+      });
+
+      // debugger;
+      if (!result?.error) {
+        // Redirect the user after successful sign-in
+        // You can use router.push or any other navigation method
+        if (result && result.url) {
+          router.push(result.url);
+        }
+      } else {
+        // Xử lý hiển thị lỗi
+        setError("Sai tài khoản hoặc mật khẩu.");
+      }
+    } catch (error) {
+      // Handle other errors
+      console.error('Error during sign-in:', error);
+      setError('An unexpected error occurred. Please try again.');
     }
+    setIsLoading(false);
   };
 
   return (
-    <div className="onboarding-page ">
-      <Card className="onboarding-card opacity-[1] relative flex p-6 bg-transparent shadow-lg dark:shadow-slate-900 border border-black dark:border-white backdrop-blur-lg rounded-3xl max-w-sm w-full">
-        <div className="relative">
-          <CardHeader className="opacity-[1] transform-none">
-            <div className="icon relative w-16 h-16 flex items-center justify-center bg-[rgba(19,21,23,0.04)] rounded-full">
+    <div className="onboarding-page px-2">
+      <form onSubmit={
+        handleSignIn
+      }>
+        <Card className="onboarding-card  relative flex p-6 bg-background bg-opacity-70  shadow-lg dark:shadow-slate-900 border border-background backdrop-blur-lg rounded-3xl  w-full">
+          <CardHeader className="">
+            <div className="icon relative w-16 h-16 flex items-center justify-center bg-background rounded-full">
               <DoorOpen className="w-8 h-8 block align-middle" />
               <ArrowLeft className="top-6 right-2.5 absolute block w-4 h-4 align-middle" />
             </div>
           </CardHeader>
           <CardBody>
-            <h1 className="font-semibold text-2xl mb-0 mt-0 leading-5">
+            <h1 className="font-semibold text-2xl mb-0 mt-0 leading-5 whitespace-nowrap">
               Chào mừng đến Donace
             </h1>
-            <div className="pt-4 pb-5 text-sm ">
+            <div className="pt-4 pb-5 text-sm w-[300px]">
               Vui lòng đăng ký hoặc đăng nhập bên dưới.
             </div>
-            <Input
-              value={email}
-              type="email"
-              label="Email"
-              variant="bordered"
-              isInvalid={isInvalidEmail}
-              color={isInvalidEmail ? "danger" : "success"}
-              errorMessage={isInvalidEmail && "Vui lòng điền đúng email."}
-              onValueChange={setEmail}
-              isClearable
-              placeholder="Email của bạn"
-              className="text-base h-auto transition-all duration-300 leading-4 rounded-lg w-full m-0"
-              classNames={{
-                errorMessage: ["text-base"],
-              }}
-            />
-            <Input
-              label="Mật khẩu"
-              variant="bordered"
-              value={password}
-              onValueChange={setPassword}
-              labelPlacement={"inside"}
-              placeholder="Mật khẩu của bạn"
-              className="pt-2 text-base h-auto transition-all duration-300 leading-4 rounded-lg w-full m-0 mb-4 transparentInput"
-              type={isVisible ? "text" : "password"}
-            />
-            <div className="mb-3 ml-1">
-              {error && (
-                <div className="text-[#f3236a]">
-                  <div className="label break-words">{error}</div>
-                </div>
-              )}
-            </div>
-            <Button
-              isDisabled={isLoading}
+            <div className="flex flex-col gap-4">
 
-              color="default"
-              onClick={onSubmit}
-              type="button"
-              className="mb-12 border-[#333537] border border-solid w-full cursor-pointer transition-all duration-300 ease-in-out font-medium rounded-lg relative whitespace-nowrap justify-center outline-none max-w-full text-base p-[0.625rem_0.875rem] h-[calc(2.25rem+2*1px)] flex items-center m-0 leading-6"
-            >
-              <div className="label">
-                {isLoading ? (
-                  <>
-                    <Spinner
-                      size="sm"
-                      color="success"
-                      className="translate-y-0.5 mr-2"
-                    />
-                    <span className="label">Đang đăng nhập..</span>
-                  </>
-                ) : (
-                  <>
-                    <div id="label" className="...">
-                      Đăng nhập
-                    </div>
-                  </>
+              <Input
+                value={email}
+                type="email"
+                label="Email"
+                isRequired
+                variant="bordered"
+                isInvalid={isInvalidEmail}
+                color={isInvalidEmail ? "danger" : "success"}
+                errorMessage={isInvalidEmail && "Vui lòng điền đúng email."}
+                onValueChange={setEmail}
+                isClearable
+                placeholder="Email của bạn"
+                className="text-base h-auto transition-all duration-300 leading-4 rounded-lg w-full m-0"
+                classNames={{
+                  errorMessage: ["text-base"],
+                }}
+              />
+              <Input
+                label="Mật khẩu"
+                variant="bordered"
+                isRequired
+                value={password}
+                onValueChange={setPassword}
+                labelPlacement={"inside"}
+                placeholder="Mật khẩu của bạn"
+                className="pt-2 text-base h-auto transition-all duration-300 leading-4 rounded-lg w-full m-0 mb-4 transparentInput"
+                type={isVisible ? "text" : "password"}
+              />
+              <div className="mb-3 ml-1 w-[300px]">
+                {error && (
+                  <div className="text-[#f3236a]">
+                    <div className="label break-words">{error}</div>
+                  </div>
                 )}
               </div>
-            </Button>
+              <Button
+                isDisabled={isLoading}
+                variant="bordered"
+                type="submit"
+                className="bg-background bg-opacity-70 w-full cursor-pointer transition-all duration-300 ease-in-out font-medium relative whitespace-nowrap justify-center max-w-full text-base flex items-center leading-6"
+              >
+                <div className="label">
+                  {isLoading ? (
+                    <div className="inline-flex justify-between gap-2 flex-row">
+                      <Spinner
+                        size="sm"
+                        color="success"
+                        className=""
+                      />
+                      <span className="label">Đang đăng nhập..</span>
+                    </div>
+                  ) : (
+                    <>
+                      <div id="label" className="">
+                        Đăng nhập
+                      </div>
+                    </>
+                  )}
+                </div>
+              </Button>
+            </div>
+
           </CardBody>
           <Divider />
-          <CardFooter className="-mb-2 flex justify-center items-center">
+          <CardFooter className="flex justify-between items-center flex-col md:flex-row">
             <div className="">Bạn không có tài khoản?</div>
             <div>&nbsp;</div>
             <Link href="/auth/register" underline="hover" color="primary">
               Đăng ký ngay
             </Link>
           </CardFooter>
-        </div>
-      </Card>
+        </Card>
+      </form>
+
     </div>
   );
 }

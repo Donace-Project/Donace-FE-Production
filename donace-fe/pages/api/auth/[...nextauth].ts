@@ -4,6 +4,7 @@ import type { NextAuthOptions } from "next-auth";
 import { fetchWrapper } from '../../../helpers/fetch-wrapper';
 import axios from "axios";
 import { authHelper } from "@/helpers/authHelper";
+import { NextApiRequest, NextApiResponse } from "next";
 
 export const authOptions: NextAuthOptions = {
     // Configure one or more authentication providers
@@ -26,7 +27,7 @@ export const authOptions: NextAuthOptions = {
                     type: "password",
                 },
             },
-            async authorize(credentials, req) {
+            async authorize(credentials) {
                 const { email, password } = credentials as any;
                 const res = await axios({
                     method: 'POST',
@@ -41,13 +42,13 @@ export const authOptions: NextAuthOptions = {
                     },
 
                 });
-                
+
                 const user = res.data;
-                console.log(user);
+                // console.log(user);
                 if (user) {
-                    return user;
+                    return Promise.resolve(user);
                 }
-                return null;
+                throw new Error('Authentication failed');
                 // return fetchWrapper.post("api/Authentication/login", {
                 //     email,
                 //     password
@@ -56,24 +57,30 @@ export const authOptions: NextAuthOptions = {
         }),
     ],
     callbacks: {
+        async redirect({ url, baseUrl }: { url: string; baseUrl: string }) {
+            return url.startsWith(baseUrl) ? url : baseUrl;
+        },
         async jwt({ token, user }) {
             return { ...token, ...user };
         },
         async session({ session, token }) {
             // Send properties to the client, like an access_token from a provider.
-
             const userRes = token as any;
             session.user = { ...userRes.user }
             session.token = userRes?.token;
+            // console.log(token);
 
             return session;
         },
+       
     },
 
     pages: {
         signIn: "/auth/login",
+        signOut: "/auth/login",
+        error: "/auth/login", // Error code passed in query string as ?error=
     },
 };
 
-export default NextAuth(authOptions);
+export default (req: NextApiRequest, res: NextApiResponse) => NextAuth(req, res, authOptions);
 
