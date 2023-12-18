@@ -381,15 +381,15 @@ export default function Hue() {
                     </div>
                   </Tab>
                   <Tab key="past" title="Đã qua" className="font-semibold">
-                    <div className="zm-container p-[2rem_1rem_1rem] max-width-global margin-global">
-                      {pastEvents && pastEvents.length > 0 ? (
+                  <div className="zm-container p-[2rem_1rem_1rem] max-width-global margin-global">
+                      {futureEvents && futureEvents.length > 0 ? (
                         <div className="timeline">
-                          {pastEvents?.map((event, index) => (
+                          {futureEvents?.map((event, index) => (
                             <div
                               key={index}
-                              className="timeline-section relative flex w-full gap-16 pb-12"
+                              className="timeline-section relative flex flex-col md:flex-row w-full gap-5 md:gap-16 pb-12"
                             >
-                              <div className="line left-[calc(7rem+4rem/2)] dark:border-[rgba(255,255,255,0.08)]"></div>
+                              <div className="line left-[calc(7rem+4rem/2)] dark:border-[rgba(255,255,255,0.08)] hidden md:block"></div>
                               <div className="title always relative w-28">
                                 <div className="container sticky">
                                   <div className="timeline-title">
@@ -404,15 +404,15 @@ export default function Hue() {
                                       </div>
                                     </div>
                                   </div>
-                                  <div className="dot-outer-wrapper absolute top-1.5 right-[calc(-2rem-0.4375rem)] justify-center flex items-center">
+                                  <div className="dot-outer-wrapper absolute top-1.5 right-[calc(-2rem-0.4375rem)] justify-center hidden md:flex items-center">
                                     <div className="dot-wrapper justify-center flex items-center">
                                       <div className="dot w-3 h-3 bg-[#f3f4f5] dark:bg-[rgb(19,21,23)] border-2 border-solid border-[rgba(19,21,23,0.2)] dark:border-[hsla(0,0%,100%,.32)] rounded-full"></div>
                                     </div>
                                   </div>
                                 </div>
                               </div>
-                              <div className="min-w-0 flex-1">
-                                <div className="card-wrapper">
+                              <div className="min-w-min flex-1">
+                                <div className="card-wrapper !p-0 md:p-[0.75rem_0.75rem_0.75rem_1rem]">
                                   <div className="card-wrapper content-card cursor-pointer transition-all duration-300 ease-in-out relative rounded-xl bg-[#f3f4f5] dark:bg-[rgba(255,255,255,0.04)] border border-solid border-[#f3f4f5] dark:border-[rgba(255,255,255,0.04)]">
                                     <Link
                                       className="event-link absolute inset-0 transition-all duration-300 ease-in-out cursor-pointer"
@@ -435,6 +435,31 @@ export default function Hue() {
                                         </div>
                                         <div className="info gap-2 min-w-0 flex-1 flex flex-col">
                                           <div className="event-time gap-2 flex items-center">
+                                            {event.isLive ? (
+                                              <div>
+                                                <div
+                                                  className="live-badge text-[#ff9641] flex items-center font-medium"
+                                                  style={{
+                                                    animationName: "breath",
+                                                    animationDuration: "2s",
+                                                    animationTimingFunction:
+                                                      "ease",
+                                                    animationDelay: "0s",
+                                                    animationIterationCount:
+                                                      "infinite",
+                                                    animationDirection:
+                                                      "normal",
+                                                    animationFillMode: "none",
+                                                    animationPlayState:
+                                                      "running",
+                                                  }}
+                                                >
+                                                  LIVE
+                                                </div>
+                                              </div>
+                                            ) : (
+                                              <div className="hidden"></div>
+                                            )}
                                             <div className="overflow-hidden text-ellipsis whitespace-nowrap text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)]">
                                               <span>
                                                 {
@@ -481,6 +506,16 @@ export default function Hue() {
                                       </div>
                                       <div className="event-bottom-bar flex justify-between items-center">
                                         <div className="gap-2 flex items-center">
+                                          <Button
+                                            as={Link}
+                                            href={`/events/manage/${event.id}`}
+                                            className="text-black-more-blur-light-theme dark:text-[rgba(255,255,255,0.64)] bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)] border-transparent border border-solid transition-all duration-300 ease-in-out donace-button flex items-center cursor-pointer"
+                                          >
+                                            <ScanLine className="mr-1.5 stroke-2 w-3.5 h-3.5 flex-shrink-0 block align-middle mt-0.5" />
+                                            <div className="label">
+                                              Check In
+                                            </div>
+                                          </Button>
                                           <Button
                                             as={Link}
                                             href={`/events/manage/${event.id}`}
