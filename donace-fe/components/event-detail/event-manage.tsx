@@ -221,19 +221,12 @@ export default function EventManage(props: any) {
       geocoder.on("result", function (e: any) {
         setLat(e.result.result.geometry.location.lat);
         setLng(e.result.result.geometry.location.lng);
-        setAddressLat(e.result.result.name);
-        setAddressLng(e.result.result.name);
         setCompoundLatCommune(e.result.result.compound.commune);
         setCompoundLngCommune(e.result.result.compound.commune);
         setCompoundLatDistrict(e.result.result.compound.district);
         setCompoundLngDistrict(e.result.result.compound.district);
         setCompoundLatProvince(e.result.result.compound.province);
         setCompoundLngProvince(e.result.result.compound.province);
-
-        // setSelectedLocation({
-        //     lat: e.result.result.name,
-        //     lng: e.result.result.name,
-        // });
 
         setEventDetailForUpdate({
           ...eventDetailForUpdate,
@@ -642,7 +635,7 @@ export default function EventManage(props: any) {
                             id="time"
                             value={startDate.time}
                             onChange={(e) =>
-                              updateEndDate(
+                              updateStartDate(
                                 "time",
                                 e.target.value
                               )
