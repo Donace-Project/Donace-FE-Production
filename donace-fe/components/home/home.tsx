@@ -91,7 +91,7 @@ export default function HomeEvents() {
     <div className="page-content">
       {isOnline ? (
         <div className="page-header opacity-[1] pt-12 pl-4 pr-4 max-width-global margin-global">
-          <div className="spread gap-2 mb-2 flex justify-between items-center">
+          <div className="spread gap-2 mb-4 flex justify-between items-center">
             <h1 className="tab-title text-4xl font-semibold mb-0 mt-0">Sự kiện</h1>
           </div>
           <div className="flex-col flex gap-2">
@@ -389,16 +389,16 @@ export default function HomeEvents() {
                         ))}
                       </div>
                     ) : (
-                      <div className="large text-center my-12 flex flex-col items-center">
+                      <div className="large text-center mt-16 mb-[3rem!important] flex flex-col items-center">
                         <div className="icon justify-center flex items-center">
                           <div className="mb-[-40px]">
                             <CalendarClock className="w-64 h-auto align-middle text-foreground-700" />
                           </div>
                         </div>
-                        <h3 className="text-2xl font-medium text-foreground-700 p-[0!important] mt-20 mb-[0!important]">
+                        <h3 className="text-2xl font-medium text-foreground-700 mt-20">
                           Không có sự kiện gì sắp tới
                         </h3>
-                        <div className="desc p-12 text-foreground-700 mt-4 font-normal">
+                        <div className="desc pl-12 pr-12 text-foreground-700 mt-4 font-normal">
                           Bạn không có sự kiện gì sắp tới. Muốn thử không?
                         </div>
                         <div className="button-create mt-6 justify-center flex">

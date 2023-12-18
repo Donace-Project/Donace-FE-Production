@@ -1011,7 +1011,7 @@ export default function CreateFormFinal() {
                                                   }}
                                                 ></Player>
                                                 {!isCorrectFormatLink && (
-                                                  <div className="text-[#f3236a]">
+                                                  <div className="text-[#f3236a] mt-4">
                                                     <div className="label break-words ml-4">
                                                       Vui lòng nhập đúng định
                                                       dạng link online

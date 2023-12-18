@@ -292,9 +292,8 @@ export default function JoinEvent(props: { id: string }) {
                                         <Link
                                             target="_blank"
                                             rel="nofollow noopener"
-                                            className=""
+                                            className="text-foreground-900 cursor-pointer"
                                             underline="none"
-
                                             onClick={handleMapLinkClick}
                                         >
                                             <div className="gap-4 flex items-center">
