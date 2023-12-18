@@ -98,8 +98,28 @@ export default function EventManage(props: any) {
     }
   };
   const handleSaveLocation = () => {
+    setTruncatedLinkMeet('');
     setShowOfflineContent(true);
+    setEventDetailForUpdate({
+      ...eventDetailForUpdate,
+      isOnline: false,
+      linkMeet: ''
+    })
+    modalEditMap.onClose();
   };
+
+  const handleSaveOnline = () => {
+    setShowOfflineContent(false);
+    eventDetailForUpdate.linkMeet.length > 30 ? setTruncatedLinkMeet(eventDetailForUpdate.linkMeet.slice(0, 30) + '...') : eventDetailForUpdate.linkMeet;
+    setEventDetailForUpdate({
+      ...eventDetailForUpdate,
+      isOnline: true,
+      lat: 0,
+      long: 0,
+      addressName: "",
+    });
+    modalEditMap.onClose();
+  }
 
   const handleEndDateChange = (date: any) => {
     setEndDate(date);
@@ -128,7 +148,7 @@ export default function EventManage(props: any) {
   };
 
   const handleSubmit = async (e: any) => {
-    // console.log(eventDetailForUpdate);
+    console.log(eventDetailForUpdate);
     e.preventDefault();
     try {
       debugger;
@@ -695,7 +715,7 @@ export default function EventManage(props: any) {
                           {
                             eventDetailForUpdate.isOnline ? (
                               <>
-                                <div>{eventDetailForUpdate.linkMeet}</div>
+                                <div>{truncatedLinkMeet}</div>
                               </>
                             ) : (
                               eventDetailForUpdate.addressName ? (
@@ -877,6 +897,12 @@ export default function EventManage(props: any) {
                       <div className="flex">
                         <div className="flex-grow mr-2">
                           <Input
+                            value={eventDetailForUpdate.linkMeet}
+                            onChange={(e) => setEventDetailForUpdate({
+                              ...eventDetailForUpdate,
+                              isOnline: true,
+                              linkMeet: e.target.value,
+                            })}
                             variant="underlined"
                             placeholder="Nhập Link của bạn."
                             isClearable
@@ -891,6 +917,7 @@ export default function EventManage(props: any) {
                         </div>
                         <div className="flex items-center">
                           <Button
+                            onClick={handleSaveOnline}
                             type="submit"
                             className="text-[#fff] dark:text-[rgb(19,21,23)] bg-[#333537] dark:bg-[#fff] border-[#333537] dark:border-[#fff] border border-solid cursor-pointer transition-all duration-300 ease-in-out donace-button-w-fit flex items-center m-0"
                           >
