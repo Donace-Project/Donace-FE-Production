@@ -132,6 +132,7 @@ export default function SignIn() {
                 variant="bordered"
                 isRequired
                 value={password}
+                minLength={6}
                 onValueChange={setPassword}
                 labelPlacement={"inside"}
                 placeholder="Mật khẩu của bạn"
@@ -163,7 +164,7 @@ export default function SignIn() {
                     </div>
                   ) : (
                     <>
-                      <div id="label" className="">
+                      <div>
                         Đăng nhập
                       </div>
                     </>
