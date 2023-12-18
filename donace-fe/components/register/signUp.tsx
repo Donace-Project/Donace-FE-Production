@@ -9,10 +9,13 @@ import { UserPlus } from "lucide-react";
 import { Divider } from "@nextui-org/divider";
 import { fetchWrapper } from "../../helpers/fetch-wrapper";
 import { useRouter } from "next/navigation";
-import { signIn } from "next-auth/react";
 import { Spinner } from "@nextui-org/react";
+import { useSession } from "next-auth/react";
+
+import donaceLofo from "@/public/doanLogo.png";
 
 export default function SignUp() {
+  const { data: session } = useSession();
   const [isVisible, setIsVisible] = React.useState(false);
   const router = useRouter();
 
@@ -68,31 +71,43 @@ export default function SignUp() {
         "api/Calendar/create-calendar",
         {
           name: "Cá nhân",
-          avatar: 'https://cdn.lu.ma/cdn-cgi/image/format=auto,fit=cover,dpr=2,background=white,quality=75,width=64,height=64/avatars-default/community_avatar_13.png'
+          avatar: donaceLofo.src
         },
         resultRegister?.token
       );
 
-      // Dùng tài khoản đã đăng ký để login
-      const resultLogin = await signIn("credentials", {
-        email: email,
-        password: password,
-        callbackUrl: "/",
-      });
-
-      if (!resultLogin?.error) {
-        // Redirect the user after successful sign-in
-        // You can use router.push or any other navigation method
-        if (resultLogin && resultLogin.url) {
-          router.push(resultLogin.url);
-        }
+      if (session) {
+        // If already logged in, redirect to the home page or any default page
+        router.push('/');
       } else {
-        setError("Đăng ký thành công, nhưng tạm thời không đăng nhập được");
-        SetIsLoading(false);
+        // let callbackUrl = path?.get("callbackUrl");
+        // if (callbackUrl == undefined || callbackUrl == null || callbackUrl == "" || callbackUrl == " ") {
+        //   callbackUrl = "/"
+        // }
+        // // Dùng tài khoản đã đăng ký để login
+        // const resultLogin = await signIn("credentials", {
+        //   email: email,
+        //   password: password,
+        //   redirect: false,
+        //   callbackUrl: callbackUrl,
+        // });
+
+        // if (!resultLogin?.error) {
+        //   // Redirect the user after successful sign-in
+        //   // You can use router.push or any other navigation method
+        //   if (resultLogin && callbackUrl) {
+        //     router.push(callbackUrl);
+        //   }
+        // } else {
+        //   setError("Đăng ký thành công, nhưng tạm thời không đăng nhập được");
+        // }
+        router.push("/auth/login");
       }
     } catch (ex) {
       setError("Có lỗi xảy ra, vui lòng thử lại");
     }
+    SetIsLoading(false);
+
   };
 
   return (

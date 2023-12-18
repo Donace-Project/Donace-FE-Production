@@ -9,7 +9,7 @@ import { signIn } from "next-auth/react";
 import { Divider } from "@nextui-org/divider";
 import { Link } from "@nextui-org/link";
 import { Spinner } from "@nextui-org/react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import {  useRouter, useSearchParams } from "next/navigation";
 import { on } from "events";
 // import { time } from "console";
 
