@@ -194,6 +194,7 @@ export type SectionByEvent = {
 export type EventDetailModels = {
     sorted: number
     id: string
+    isFree: boolean
     startDate: string
     endDate: string
     addressName: string

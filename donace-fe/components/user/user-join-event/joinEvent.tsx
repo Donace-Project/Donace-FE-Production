@@ -141,15 +141,23 @@ export default function JoinEvent(props: { id: string }) {
     const [ticketIdForQr, setTicketIdForQr] = useState<string>("");
 
     const handleQrGenerator = async () => {
-        let ticketId = await fetchWrapper.get("/api/UserTickets/get-ticket")
-
-        if (ticketId != null) {
-            setTicketIdForQr(ticketId)
-        }
-        else {
+        if (getProfile == null) {
             console.log("some bug")
         }
+        if (ticketIdForQr == "") {
+            let ticketId = await fetchWrapper.get("/api/UserTickets/get-ticket")
+            if (ticketId != null) {
+                setTicketIdForQr(ticketId)
+            }
+            else {
+                console.log("some bug")
+            }
+        }
+    }
 
+    const openModalGenQr = () => {
+        handleQrGenerator();
+        modalViewTicket.onOpen();
     }
 
     const [joiningLoading, setJoiningLoading] = useState(false);
@@ -168,10 +176,6 @@ export default function JoinEvent(props: { id: string }) {
         }
     }
 
-    const openModalGenQr = () => {
-        handleQrGenerator();
-        modalViewTicket.onOpen();
-    }
 
     return (
         <div className="page-content">

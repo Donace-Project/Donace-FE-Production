@@ -6,7 +6,7 @@ import { ArrowRight, CalendarClock, Frown, MapPin, Plus, Radio, ScanLine, Users2
 import "@/styles/globals.css";
 import { fetchWrapper } from "@/helpers/fetch-wrapper";
 import { Image } from "@nextui-org/image";
-import { Tabs, Tab } from "@nextui-org/react";
+import { Tabs, Tab, Divider, useDisclosure } from "@nextui-org/react";
 import { Skeleton } from "@nextui-org/skeleton";
 interface DateTimeInfo {
   year: string;
@@ -54,6 +54,8 @@ export type Item = {
   totalGuest: number;
   calendarId: string;
   isLive: boolean;
+  isHost: boolean;
+  isOnline: boolean;
 }
 
 const CovertDate = (date: string) => {
@@ -108,6 +110,7 @@ export default function HomeEvents() {
       try {
         const futureEventsData = await fetchWrapper.get(`api/Event?IsNew=${dateTimeTrue}`);
         setFutureEvents(futureEventsData.items);
+        console.log(futureEventsData.items);
         setLoading(false);
 
         const pastEventsData = await fetchWrapper.get(`api/Event?IsNew=${dateTimeFalse}`);
@@ -124,6 +127,27 @@ export default function HomeEvents() {
 
   const gio = thoiGian.getHours();
   const buoi = gio >= 12 ? "PM" : "AM";
+
+
+  //QR generator
+  const modalViewTicket = useDisclosure();
+  const [ticketIdForQr, setTicketIdForQr] = useState<string>("");
+  const handleQrGenerator = async () => {
+    if (ticketIdForQr == "") {
+      let ticketId = await fetchWrapper.get("/api/UserTickets/get-ticket")
+      if (ticketId != null) {
+        setTicketIdForQr(ticketId)
+      }
+      else {
+        console.log("some bug")
+      }
+    }
+  }
+
+  const openModalGenQr = () => {
+    handleQrGenerator();
+    modalViewTicket.onOpen();
+  }
 
   return (
     <div className="page-content">
@@ -148,40 +172,50 @@ export default function HomeEvents() {
             ) : (
               <Tabs aria-label="Options" >
                 <Tab key="future" title="Sắp tới" className="font-semibold">
-                  <div className="zm-container p-[2rem_1rem_1rem] max-width-global margin-global">
+                  <div className="zm-container  max-width-global margin-global">
                     {futureEvents && futureEvents.length > 0 ? (
                       <div className="timeline">
                         {futureEvents?.map((event, index) => (
-                          <div key={index} className="timeline-section relative flex w-full gap-16 pb-12">
-                            <div className="line left-[calc(7rem+4rem/2)] dark:border-[rgba(255,255,255,0.08)]"></div>
-                            <div className="title always relative w-28">
-                              <div className="container sticky">
+                          <div key={index} className="flex flex-col md:flex-row w-full justify-between gap-3">
+                            {/* <div className="line dark:border-[rgba(255,255,255,0.08)]"></div> */}
+                            <div className="title border-r-4 pe-4 border-dashed hidden md:block">
+                              <div className="container">
                                 <div className="timeline-title">
                                   <div className="content animated transition-all duration-300 ease-in-out">
                                     <div className="date font-medium">{ConvertDateTime(event.startDate).day}/{ConvertDateTime(event.startDate).month}/{ConvertDateTime(event.startDate).year}</div>
                                     <div className="text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)]">{DayOfWeek(CovertDate(event.startDate)[0])}</div>
                                   </div>
                                 </div>
-                                <div className="dot-outer-wrapper absolute top-1.5 right-[calc(-2rem-0.4375rem)] justify-center flex items-center">
+                                {/* <div className="dot-outer-wrapper absolute top-1.5 right-[calc(-2rem-0.4375rem)] justify-center flex items-center">
                                   <div className="dot-wrapper justify-center flex items-center">
                                     <div className="dot w-3 h-3 bg-[#f3f4f5] dark:bg-[rgb(19,21,23)] border-2 border-solid border-[rgba(19,21,23,0.2)] dark:border-[hsla(0,0%,100%,.32)] rounded-full"></div>
                                   </div>
-                                </div>
+                                </div> */}
                               </div>
                             </div>
-                            <div className="min-w-0 flex-1">
+                            <div className="block md:hidden container">
+                              <div className="w-full">
+                                <div className="timeline-title">
+                                  <div className="content animated transition-all duration-300 ease-in-out">
+                                    <div className="date font-medium">{ConvertDateTime(event.startDate).day}/{ConvertDateTime(event.startDate).month}/{ConvertDateTime(event.startDate).year}</div>
+                                    <div className="text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)]">{DayOfWeek(CovertDate(event.startDate)[0])}</div>
+                                  </div>
+                                </div>
+                              </div>
+                              <Divider orientation="horizontal" />
+                            </div>
+                            <div className="w-full">
                               <div className="card-wrapper">
-                                <div className="card-wrapper content-card cursor-pointer transition-all duration-300 ease-in-out relative rounded-xl bg-[#f3f4f5] dark:bg-[rgba(255,255,255,0.04)] border border-solid border-[#f3f4f5] dark:border-[rgba(255,255,255,0.04)]">
-                                  <Link className="event-link absolute inset-0 transition-all duration-300 ease-in-out cursor-pointer" underline="none">&nbsp;</Link>
+                                <div className="card-wrapper content-card transition-all duration-300 ease-in-out rounded-xl bg-[#f3f4f5] dark:bg-[rgba(255,255,255,0.04)] border border-solid border-[#f3f4f5] dark:border-[rgba(255,255,255,0.04)]">
                                   <div className="event-content gap-3 flex flex-col">
-                                    <div className="info-and-cover flex-row-reverse gap-4 flex">
-                                      <div className="cover-image pointer-events-none">
-                                        <div className="w-40 h-20">
-                                          <div className="img-aspect-ratio cover-event-image w-full h-full overflow-hidden relative rounded-lg">
+                                    <div className="info-and-cover flex-col md:flex-row-reverse gap-4 flex">
+                                      <Link href={`${event.isHost ? `/events/manage/${event.id}` : `/user/join-event/${event.id}`}`} className="block">
+                                        <div className="w-full h-full md:w-40 md:h-40">
+                                          <div className="img-aspect-ratio w-full h-full rounded-lg">
                                             <Image className="w-full h-full" alt="you are invited" src={event.cover} />
                                           </div>
                                         </div>
-                                      </div>
+                                      </Link>
                                       <div className="info gap-2 min-w-0 flex-1 flex flex-col">
                                         <div className="event-time gap-2 flex items-center">
                                           {event.isLive ? (
@@ -205,48 +239,66 @@ export default function HomeEvents() {
                                           ) : (
                                             <div className="hidden"></div>
                                           )}
-                                          <div className="overflow-hidden text-ellipsis whitespace-nowrap text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)]">
+                                          <div className="overflow-hidden text-ellipsis whitespace-nowrap text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)] ">
                                             <span>
                                               {ConvertDateTime(event.startDate).hour}:{ConvertDateTime(event.startDate).minute} {buoi}
                                             </span>
                                           </div>
                                         </div>
-                                        <div className="text-xl">
-                                          <h3 className="inline text-xl font-medium break-words mt-0 mb-4">{event.name}</h3>
+                                        <div className="text-xl whitespace-nowrap">
+                                          <h3 className="font-medium break-words mt-0 mb-4">{event.name}</h3>
                                         </div>
                                         <div className="gap-1 flex flex-col">
-                                          <div className="attribute text-base text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)] gap-3 flex items-start">
+                                          <div className="attribute text-base text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)] gap-3 flex items-start whitespace-nowrap md:w-[350px]">
                                             <div className="icon text-base flex items-center">
                                               &nbsp;
-                                              <MapPin className="w-4 h-4 block align-middle mt-0.5" />
+                                              <MapPin className="w-4 h-4 block align-middle" />
                                             </div>
-                                            <div className="text-base min-w-0">{event.addressName}</div>
+                                            <div className="text-base max-w-[350px] truncate">{event.addressName}</div>
                                           </div>
-                                          <div className="attribute text-base text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)] gap-3 flex items-start">
+                                          <div className="attribute text-base text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)] gap-3 flex items-start whitespace-nowrap">
                                             <div className="icon text-base flex items-center">
                                               &nbsp;
                                               <Users2 className="w-4 h-4 block align-middle mt-0.5" />
                                             </div>
-                                            <div className="text-base min-w-0">{event.totalGuest} Khách</div>
+                                            <div className="text-base min-w-0 ">{event.totalGuest} Khách</div>
                                           </div>
                                         </div>
                                       </div>
                                     </div>
                                     <div className="event-bottom-bar flex justify-between items-center">
-                                      <div className="gap-2 flex items-center">
-                                        <Button
-                                          as={Link}
-                                          href={`/user/join-event/${event.id}`}
-                                          className="text-black-more-blur-light-theme dark:text-[rgba(255,255,255,0.64)] bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)] border-transparent border border-solid transition-all duration-300 ease-in-out donace-button flex items-center cursor-pointer"
-                                        >
-                                          <ScanLine className="mr-1.5 stroke-2 w-3.5 h-3.5 flex-shrink-0 block align-middle mt-0.5" />
-                                          <div className="label">Check In</div>
-                                        </Button>
-                                        <Button as={Link} href={`/events/manage/${event.id}`} className="text-black-more-blur-light-theme dark:text-[rgba(255,255,255,0.64)] bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)] border-transparent border border-solid transition-all duration-300 ease-in-out donace-button flex items-center cursor-pointer">
-                                          <div className="label">Quản lý sự kiện</div>
-                                          <ArrowRight className="mr-1.5 stroke-2 w-3.5 h-3.5 flex-shrink-0 block align-middle" />
-                                        </Button>
-                                      </div>
+                                      {
+                                        event.isHost ?
+                                          <div className="gap-2 flex flex-col md:flex-row items-center justify-between w-full">
+                                            <Button
+                                              as={Link}
+                                              href={`/user/join-event/${event.id}`}
+                                              className="text-black-more-blur-light-theme dark:text-[rgba(255,255,255,0.64)] bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)] border-transparent border border-solid transition-all duration-300 ease-in-out donace-button flex items-center cursor-pointer"
+                                            >
+                                              <div className="label">Check In</div>
+                                              <ScanLine className="mr-1.5 stroke-2 w-3.5 h-3.5 flex-shrink-0 block align-middle mt-0.5" />
+                                            </Button>
+                                            <Button as={Link} href={`/events/manage/${event.id}`} className="text-black-more-blur-light-theme dark:text-[rgba(255,255,255,0.64)] bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)] border-transparent border border-solid transition-all duration-300 ease-in-out donace-button flex items-center cursor-pointer">
+                                              <div className="label">Quản lý sự kiện</div>
+                                              <ArrowRight className="mr-1.5 stroke-2 w-3.5 h-3.5 flex-shrink-0 block align-middle" />
+                                            </Button>
+                                          </div>
+                                          :
+                                          <div className="gap-2 flex flex-col md:flex-row items-center justify-between w-full">
+                                            <Button
+                                              onClick={() => { openModalGenQr(); }}
+                                              className="text-black-more-blur-light-theme dark:text-[rgba(255,255,255,0.64)] bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)] border-transparent border border-solid transition-all duration-300 ease-in-out donace-button flex items-center cursor-pointer"
+                                            >
+                                              <div className="label">Xem mã QR</div>
+                                              <ScanLine className="mr-1.5 stroke-2 w-3.5 h-3.5 flex-shrink-0 block align-middle mt-0.5" />
+                                            </Button>
+                                            <Button as={Link} href={`/user/join-event/${event.id}`} className="text-black-more-blur-light-theme dark:text-[rgba(255,255,255,0.64)] bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)] border-transparent border border-solid transition-all duration-300 ease-in-out donace-button flex items-center cursor-pointer">
+                                              <div className="label">Xem sự kiện</div>
+                                              <ArrowRight className="mr-1.5 stroke-2 w-3.5 h-3.5 flex-shrink-0 block align-middle" />
+                                            </Button>
+                                          </div>
+                                      }
+
                                     </div>
                                   </div>
                                 </div>
@@ -284,7 +336,7 @@ export default function HomeEvents() {
                   </div>
                 </Tab>
                 <Tab key="past" title="Đã qua" className="font-semibold">
-                  <div className="zm-container p-[2rem_1rem_1rem] max-width-global margin-global">
+                  <div className="zm-container  max-width-global margin-global">
                     {pastEvents && pastEvents.length > 0 ? (
                       <div className="timeline">
                         {pastEvents?.map((event, index) => (
@@ -298,11 +350,11 @@ export default function HomeEvents() {
                                     <div className="text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)]">{DayOfWeek(CovertDate(event.startDate)[0])}</div>
                                   </div>
                                 </div>
-                                <div className="dot-outer-wrapper absolute top-1.5 right-[calc(-2rem-0.4375rem)] justify-center flex items-center">
+                                {/* <div className="dot-outer-wrapper absolute top-1.5 right-[calc(-2rem-0.4375rem)] justify-center flex items-center">
                                   <div className="dot-wrapper justify-center flex items-center">
                                     <div className="dot w-3 h-3 bg-[#f3f4f5] dark:bg-[rgb(19,21,23)] border-2 border-solid border-[rgba(19,21,23,0.2)] dark:border-[hsla(0,0%,100%,.32)] rounded-full"></div>
                                   </div>
-                                </div>
+                                </div> */}
                               </div>
                             </div>
                             <div className="min-w-0 flex-1">
@@ -312,8 +364,8 @@ export default function HomeEvents() {
                                   <div className="event-content gap-3 flex flex-col">
                                     <div className="info-and-cover flex-row-reverse gap-4 flex">
                                       <div className="cover-image pointer-events-none">
-                                        <div className="w-40 h-20">
-                                          <div className="img-aspect-ratio cover-event-image w-full h-full overflow-hidden relative rounded-lg bg-center bg-cover block ml-auto mr-auto">
+                                        <div className="w-40 h-40">
+                                          <div className="img-aspect-ratio cover-event-image w-full h-full  object-cover relative rounded-lg bg-center bg-cover block ml-auto mr-auto">
                                             <Image className="w-full h-full" alt="you are invited" src={event.cover} />
                                           </div>
                                         </div>
@@ -335,7 +387,7 @@ export default function HomeEvents() {
                                               &nbsp;
                                               <MapPin className="w-4 h-4 block align-middle mt-0.5" />
                                             </div>
-                                            <div className="text-base min-w-0">{event.addressName}</div>
+                                            <div className="text-base">{event.addressName}</div>
                                           </div>
                                           <div className="attribute text-base text-black-blur-light-theme dark:text-[hsla(0,0%,100%,.5)] gap-3 flex items-start">
                                             <div className="icon text-base flex items-center">

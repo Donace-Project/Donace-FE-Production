@@ -28,16 +28,16 @@ import {
   DropdownSection,
   DropdownTrigger,
 } from "@nextui-org/dropdown";
-import { ThemeSwitchWithText } from "./theme-switch";
+import { ThemeSwitch } from "./theme-switch";
 import ThoiGian from "./clock/clock";
 import { authHelper } from "../helpers/authHelper";
 import { useSession, signOut } from "next-auth/react";
 import { usePathname } from "next/navigation";
 import { AppUser } from "../types/DonaceType";
 
-
+import LogoDonace from "@/public/doanLogo.png";
 interface MenuItems {
-
+  icon?: string;
   name: string;
   path: string;
 
@@ -58,51 +58,53 @@ export default function NavbarComponents() {
   }, [status]);
 
   const items: MenuItems[] = [
-    { name: "Trang chủ", path: "home" },
-    { name: "Sự kiện", path: "home" },
-    { name: "Khám phá", path: "explore" },
-    { name: "Lịch", path: "calendars" },
-    { name: "Tạo sự kiện", path: "create" }];
+    { icon: "home", name: "Trang chủ", path: "home" },
+    { icon: "calendar-check", name: "Sự kiện", path: "home" },
+    { icon: "tv-2", name: "Khám phá", path: "explore" },
+    { icon: "calendar-days", name: "Lịch", path: "calendars" },
+    { icon: "calendar-plus", name: "Tạo sự kiện", path: "create" }];
 
   const handleLogout = () => {
     localStorage.clear();
 
     signOut({
       redirect: true,
-      callbackUrl: "auth/login",
+      callbackUrl: "/auth/login",
     });
   };
 
   return (
     <div>
-
       <Navbar
         position="sticky"
         maxWidth="full"
-        className="backdrop-blur-lg p-[0.75rem_1rem] hidden justify-between items-center h-20 bg-transparent md:flex"
+        className="p-2 hidden justify-between h-20 md:flex items-center bg-transparent backdrop-blur-lg shadow-medium"
       >
         <NavbarBrand as={"div"}>
           <Link
+            color="foreground"
             href="/home"
+
             aria-label="Donace Home"
             underline="none"
-            className="relative z-[1] transition-global cursor-pointer"
+            className="transition-global cursor-pointer"
           >
-            <NavbarContent className="logo-light transition-all duration-300 ease-in-out flex items-center">
-              <GraduationCap className="dark:text-[hsla(0,0%,100%,.5)] w-5 h-5 block align-middle text-black-blur-light-theme" />
-              <span className="dark:text-[hsla(0,0%,100%,.5)] font-medium text-base text-black-blur-light-theme">
+            <NavbarContent className="transition-all duration-300 ease-in-out flex items-center justify-between hover:text-[rgb(19,21,23)] dark:hover:text-[#fff]">
+              <img src={LogoDonace.src} className="w-8 h-8 rounded-full" />
+              {/* <p className="font-semibold text-2xl ">
                 Donace
-              </span>
+              </p> */}
             </NavbarContent>
           </Link>
           <NavbarContent
             as={"div"}
             className="center-wrapper flex justify-between items-center flex-1 max-w-[820px] min-w-0 pl-11"
           >
-            <NavbarItem className="center-links gap-6 p-[0px_1rem] text-sm flex items-baseline max-width-global m-[0_auto]">
+            <NavbarItem className="center-links gap-6 px-1 text-sm flex items-baseline max-width-global mx-auto">
               <Link
+                color="foreground"
                 href="/home"
-                className="dark:text-[hsla(0,0%,100%,.5)] text-black-blur-light-theme font-medium"
+                className="font-medium"
               >
                 <NavbarContent
                   as={"div"}
@@ -118,8 +120,9 @@ export default function NavbarComponents() {
                 </NavbarContent>
               </Link>
               <Link
+                color="foreground"
                 href="/calendars"
-                className={` dark:text-[hsla(0,0%,100%,.5)] text-black-blur-light-theme font-medium`}
+                className={`font-medium`}
               >
                 <NavbarContent
                   as={"div"}
@@ -138,7 +141,8 @@ export default function NavbarComponents() {
               </Link>
               <Link
                 href="/explore"
-                className="dark:text-[hsla(0,0%,100%,.5)] text-black-blur-light-theme font-medium "
+                color="foreground"
+                className="font-medium "
               >
                 <NavbarContent
                   as={"div"}
@@ -169,7 +173,9 @@ export default function NavbarComponents() {
             </NavbarItem>
             <Link
               href="/create"
-              className="dark:text-[hsla(0,0%,100%,.79)] text-black-more-blur-light-theme hover:text-[rgb(19,21,23)] dark:hover:text-[#fff] relative transition-all duration-300 ease-in-out font-medium rounded-lg justify-center flex items-center cursor-pointer"
+              color="foreground"
+              
+              className="hover:text-[rgb(19,21,23)] dark:hover:text-[#fff] relative transition-all duration-300 ease-in-out font-medium rounded-lg justify-center flex items-center cursor-pointer"
               underline="none"
             >
               <NavbarItem as={"div"} className="text-sm whitespace-nowrap">
@@ -179,9 +185,9 @@ export default function NavbarComponents() {
             </Link>
             <NavbarItem
               as={"div"}
-              className="avatar-wrapper -m-2 p-2 cursor-pointer transition-all duration-300 ease-in-out inline-flex min-w-0 items-center"
+              className="avatar-wrapper  p-2 cursor-pointer transition-all duration-300 ease-in-out inline-flex min-w-0 items-center"
             >
-              <Dropdown className="dark:bg-[rgba(33,35,37,0.8)] shadow-sm relative rounded-lg border border-solid border-[rgba(19,21,23,0.08)] overflow-auto">
+              <Dropdown className="dark:bg-[rgba(33,35,37,0.8)] shadow-sm rounded-lg border border-solid border-[rgba(19,21,23,0.08)] overflow-auto">
                 <DropdownTrigger>
                   <Avatar
                     src={
@@ -191,13 +197,14 @@ export default function NavbarComponents() {
                     }
                     radius="full"
                     name="Donace"
-                    className="w-[28px] h-[28px] bg-center bg-cover bg-white relative"
+                    className="w-8 h-8 bg-center bg-cover bg-white"
                   />
                 </DropdownTrigger>
                 <DropdownMenu as={"div"} className="switcher-menu">
                   <DropdownSection as={"div"} showDivider>
                     <DropdownItem as={"div"}>
                       <Link
+                      color="foreground"
                         href="/profile"
                         className="transition-all duration-300 ease-in-out cursor-pointer"
                         underline="none"
@@ -213,11 +220,11 @@ export default function NavbarComponents() {
                                   : "https://cdn.lu.ma/cdn-cgi/image/format=auto,fit=cover,dpr=2,background=white,quality=75,width=32,height=32/avatars-default/avatar_8.png"
                               }
                               name="Donace"
-                              className="w-[32px] h-[32px] bg-center bg-cover bg-[#fff] relative"
+                              className="w-[32px] h-[32px] bg-center bg-cover relative"
                             />
                           </div>
                           <div className="min-w-0 flex-1">
-                            <div className="name dark:text-[#fff] font-medium overflow-hidden text-ellipsis whitespace-nowrap text-black-light-theme max-w-[180px]">
+                            <div className="name dark:text-[#fff] font-medium overflow-hidden text-ellipsis whitespace-nowrap  max-w-[180px]">
                               {user?.userName}
                             </div>
                             <div className="desc text-xs gap-1 flex text-[rgba(19,21,23,0.36)]">
@@ -234,18 +241,19 @@ export default function NavbarComponents() {
                   </DropdownSection>
                   <DropdownItem as={"div"}>
                     <div className="transition-all duration-300 ease-in-out cursor-pointer">
-                      <div className="menu-row transition-all duration-300 ease-in-out text-sm gap-4 flex items-center text-black-more-blur-light-theme">
-                        <ThemeSwitchWithText />
+                      <div className="menu-row transition-all duration-300 ease-in-out text-sm gap-4 flex items-center ">
+                        <ThemeSwitch variant="withText" />
                       </div>
                     </div>
                   </DropdownItem>
                   <DropdownItem>
                     <Link
                       href="/profile"
+                      color="foreground"
                       className="transition-all duration-300 ease-in-out cursor-pointer"
                       underline="none"
                     >
-                      <div className="dark:text-[hsla(0,0%,100%,.79)] menu-row transition-all duration-300 ease-in-out text-sm gap-4 flex items-center text-black-more-blur-light-theme">
+                      <div className="dark:text-[hsla(0,0%,100%,.79)] menu-row transition-all duration-300 ease-in-out text-sm gap-4 flex items-center ">
                         <Contact2 className="w-4 h-4 align-middle block mt-0.5" />
                         <span className=" flex-1 font-medium">Trang cá nhân</span>
                       </div>
@@ -256,8 +264,9 @@ export default function NavbarComponents() {
                       href="/settings"
                       className="transition-all duration-300 ease-in-out cursor-pointer"
                       underline="none"
+                      color="foreground"
                     >
-                      <div className="dark:text-[hsla(0,0%,100%,.79)] menu-row transition-all duration-300 ease-in-out text-sm gap-4 flex items-center text-black-more-blur-light-theme">
+                      <div className="dark:text-[hsla(0,0%,100%,.79)] menu-row transition-all duration-300 ease-in-out text-sm gap-4 flex items-center ">
                         <Settings className="w-4 h-4 align-middle block mt-0.5" />
                         <span className=" flex-1 font-medium">Cài đặt</span>
                       </div>
@@ -267,10 +276,11 @@ export default function NavbarComponents() {
                     <Link
                       onClick={handleLogout}
                       href="/auth/login"
+                      color="foreground"
                       className="transition-all duration-300 ease-in-out cursor-pointer"
                       underline="none"
                     >
-                      <div className="dark:text-[hsla(0,0%,100%,.79)] menu-row transition-all duration-300 ease-in-out text-sm gap-4 flex items-center text-black-more-blur-light-theme">
+                      <div className="dark:text-[hsla(0,0%,100%,.79)] menu-row transition-all duration-300 ease-in-out text-sm gap-4 flex items-center ">
                         <LogOut className="w-4 h-4 align-middle block mt-0.5" />
                         <span className=" flex-1 font-medium">Đăng xuất</span>
                       </div>
@@ -282,7 +292,7 @@ export default function NavbarComponents() {
           </NavbarContent>
         </NavbarBrand>
       </Navbar>
-      <Navbar onMenuOpenChange={setIsMenuOpen} className="md:hidden flex">
+      <Navbar onMenuOpenChange={setIsMenuOpen} className="md:hidden flex items-center backdrop-blur-lg ">
         <NavbarContent>
           <NavbarMenuToggle
             aria-label={isMenuOpen ? "Close menu" : "Open menu"}
@@ -296,10 +306,12 @@ export default function NavbarComponents() {
               className="relative z-[1] transition-global cursor-pointer"
             >
               <NavbarContent className="logo-light transition-all duration-300 ease-in-out flex items-center">
-                <GraduationCap className="dark:text-[hsla(0,0%,100%,.5)] w-5 h-5 block align-middle text-black-blur-light-theme" />
-                <span className="dark:text-[hsla(0,0%,100%,.5)] font-medium text-base text-black-blur-light-theme">
+                {/* <GraduationCap className="dark:text-[hsla(0,0%,100%,.5)] w-5 h-5 block align-middle " /> */}
+
+                <img src={LogoDonace.src} className="w-8 h-8 rounded-full" />
+                <p className="dark:text-[#ffffff] font-semibold text-2xl ">
                   Donace
-                </span>
+                </p>
               </NavbarContent>
             </Link>
           </NavbarBrand>
@@ -342,7 +354,7 @@ export default function NavbarComponents() {
                           />
                         </div>
                         <div className="min-w-0 flex-1">
-                          <div className="name dark:text-[#fff] font-medium overflow-hidden text-ellipsis whitespace-nowrap text-black-light-theme max-w-[180px]">
+                          <div className="name dark:text-[#fff] font-medium overflow-hidden text-ellipsis whitespace-nowrap  max-w-[180px]">
                             {user?.userName}
                           </div>
                           <div className="desc text-xs gap-1 flex text-[rgba(19,21,23,0.36)]">
@@ -359,8 +371,8 @@ export default function NavbarComponents() {
                 </DropdownSection>
                 <DropdownItem as={"div"}>
                   <div className="transition-all duration-300 ease-in-out cursor-pointer">
-                    <div className="menu-row transition-all duration-300 ease-in-out text-sm gap-4 flex items-center text-black-more-blur-light-theme">
-                      <ThemeSwitchWithText />
+                    <div className="menu-row transition-all duration-300 ease-in-out text-sm gap-4 flex items-center ">
+                      <ThemeSwitch variant="withText" />
                     </div>
                   </div>
                 </DropdownItem>
@@ -370,7 +382,7 @@ export default function NavbarComponents() {
                     className="transition-all duration-300 ease-in-out cursor-pointer"
                     underline="none"
                   >
-                    <div className="dark:text-[hsla(0,0%,100%,.79)] menu-row transition-all duration-300 ease-in-out text-sm gap-4 flex items-center text-black-more-blur-light-theme">
+                    <div className="dark:text-[hsla(0,0%,100%,.79)] menu-row transition-all duration-300 ease-in-out text-sm gap-4 flex items-center ">
                       <Contact2 className="w-4 h-4 align-middle block mt-0.5" />
                       <span className=" flex-1 font-medium">Trang cá nhân</span>
                     </div>
@@ -382,7 +394,7 @@ export default function NavbarComponents() {
                     className="transition-all duration-300 ease-in-out cursor-pointer"
                     underline="none"
                   >
-                    <div className="dark:text-[hsla(0,0%,100%,.79)] menu-row transition-all duration-300 ease-in-out text-sm gap-4 flex items-center text-black-more-blur-light-theme">
+                    <div className="dark:text-[hsla(0,0%,100%,.79)] menu-row transition-all duration-300 ease-in-out text-sm gap-4 flex items-center ">
                       <Settings className="w-4 h-4 align-middle block mt-0.5" />
                       <span className=" flex-1 font-medium">Cài đặt</span>
                     </div>
@@ -395,7 +407,7 @@ export default function NavbarComponents() {
                     className="transition-all duration-300 ease-in-out cursor-pointer"
                     underline="none"
                   >
-                    <div className="dark:text-[hsla(0,0%,100%,.79)] menu-row transition-all duration-300 ease-in-out text-sm gap-4 flex items-center text-black-more-blur-light-theme">
+                    <div className="dark:text-[hsla(0,0%,100%,.79)] menu-row transition-all duration-300 ease-in-out text-sm gap-4 flex items-center ">
                       <LogOut className="w-4 h-4 align-middle block mt-0.5" />
                       <span className=" flex-1 font-medium">Đăng xuất</span>
                     </div>
@@ -413,10 +425,13 @@ export default function NavbarComponents() {
                   index === 2 ? "primary" : index === items.length - 1 ? "danger" : "foreground"
                 }
                 className="w-full"
-                href="#"
+                href={item.path}
                 size="lg"
               >
-                {item.name}
+                <div className="flex flex-row justify-start gap-2">
+
+                  {item.name}
+                </div>
               </Link>
             </NavbarMenuItem>
           ))}

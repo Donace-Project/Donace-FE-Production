@@ -8,15 +8,16 @@ import { useIsSSR } from "@react-aria/ssr";
 import clsx from "clsx";
 
 import { SunFilledIcon, MoonFilledIcon } from "@/components/icons";
-
 export interface ThemeSwitchProps {
 	className?: string;
 	classNames?: SwitchProps["classNames"];
+	variant?: 'default' | 'withText'; // Add a variant prop
 }
 
 export const ThemeSwitch: FC<ThemeSwitchProps> = ({
 	className,
 	classNames,
+	variant = 'default', // Set a default value for the variant
 }) => {
 	const { theme, setTheme } = useTheme();
 	const isSSR = useIsSSR();
@@ -51,91 +52,35 @@ export const ThemeSwitch: FC<ThemeSwitchProps> = ({
 			<VisuallyHidden>
 				<input {...getInputProps()} />
 			</VisuallyHidden>
-			<div
-				{...getWrapperProps()}
-				className={slots.wrapper({
-					class: clsx(
-						[
-							"w-auto h-auto",
-							"bg-transparent",
-							"rounded-lg",
-							"flex items-center justify-center",
-							"group-data-[selected=true]:bg-transparent",
-							"!text-default-500",
-							"pt-px",
-							"px-0",
-							"mx-0",
-						],
-						classNames?.wrapper
-					),
-				})}
-			>
-				{!isSelected || isSSR ? <SunFilledIcon size={22} /> : <MoonFilledIcon size={22} />}
+
+			<div className={`inline-flex items-center ${variant=="withText"?"justify-between gap-2":"justify-center"}`}>
+				<div
+					{...getWrapperProps()}
+					className={slots.wrapper({
+						class: clsx(
+							[
+								"w-auto h-auto",
+								"bg-transparent",
+								"rounded-lg",
+								"flex items-center justify-center",
+								"group-data-[selected=true]:bg-transparent",
+								"!text-default-500",
+								"pt-px",
+								"px-0",
+								"mx-0",
+							],
+							classNames?.wrapper
+						),
+					})}
+				>
+					{!isSelected || isSSR ? <SunFilledIcon size={22} color="#FFFB73" /> : <MoonFilledIcon size={22} color="#FFFB73" />}
+				</div>
+
+				{variant === 'withText' && (
+					<span className="text-foreground-900 font-medium">Đổi giao diện</span>
+				)}
 			</div>
-		</Component>
-	);
-};
 
-export const ThemeSwitchWithText: FC<ThemeSwitchProps> = ({
-	className,
-	classNames,
-}) => {
-	const { theme, setTheme } = useTheme();
-	const isSSR = useIsSSR();
-
-	const onChange = () => {
-		theme === "light" ? setTheme("dark") : setTheme("light");
-	};
-
-	const {
-		Component,
-		slots,
-		isSelected,
-		getBaseProps,
-		getInputProps,
-		getWrapperProps,
-	} = useSwitch({
-		isSelected: theme === "light" || isSSR,
-		"aria-label": `Switch to ${theme === "light" || isSSR ? "dark" : "light"} mode`,
-		onChange,
-	});
-
-	return (
-		<Component
-			{...getBaseProps({
-				className: clsx(
-					"px-px transition-opacity hover:opacity-80 cursor-pointer",
-					className,
-					classNames?.base
-				),
-			})}
-		>
-			<VisuallyHidden>
-				<input {...getInputProps()} />
-			</VisuallyHidden>
-			<div
-				{...getWrapperProps()}
-				className={slots.wrapper({
-					class: clsx(
-						[
-							"w-auto h-auto",
-							"bg-transparent",
-							"rounded-lg",
-							"flex items-center justify-center",
-							"group-data-[selected=true]:bg-transparent",
-							"!text-default-500",
-							"pt-px",
-							"px-0",
-							"mx-0",
-							"mr-2"
-						],
-						classNames?.wrapper
-					),
-				})}
-			>
-				{!isSelected || isSSR ? <SunFilledIcon size={22} /> : <MoonFilledIcon size={22} />}
-			</div>
-			<span className="dark:text-[hsla(0,0%,100%,.79)] flex-1 font-medium">Đổi giao diện</span>
 		</Component>
 	);
 };

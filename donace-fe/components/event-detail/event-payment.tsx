@@ -49,7 +49,7 @@ export default function EventPayment(props: any) {
                             </div>
                         </h1>
                         <Link
-                            href={`/events/detail/${eventDetail.id}`}
+                            href={`/user/join-event/${id}`}
                             target="_blank"
                             className="text-black-more-blur-light-theme dark:text-[rgba(255,255,255,0.64)] bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)] border-transparent border border-solid transition-all duration-300 ease-in-out donace-button-w-fit flex items-center cursor-pointer"
                             underline="none"
@@ -125,7 +125,7 @@ export default function EventPayment(props: any) {
                                         name="ticketType"
                                         value="free"
                                         onChange={handleTicketTypeChange}
-                                        defaultChecked
+                                        defaultChecked={eventDetail?.isFree}
                                         className="cursor-pointer mr-6"
                                     />
                                 </div>
@@ -138,6 +138,7 @@ export default function EventPayment(props: any) {
                                         id="paidTicket"
                                         name="ticketType"
                                         value="paid"
+                                        defaultChecked={!eventDetail?.isFree}
                                         onChange={handleTicketTypeChange}
                                         className="cursor-pointer mr-6"
                                     />

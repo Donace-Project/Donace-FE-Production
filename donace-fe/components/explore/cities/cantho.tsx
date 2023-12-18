@@ -151,27 +151,27 @@ export default function CanTho() {
   const gio = thoiGian.getHours();
   const buoi = gio >= 12 ? "PM" : "AM";
   return (
-    <div className="panel ">
-      <div className=" h-[400px] bg-gradient-to-r from-violet-300 to-cyan-300 ">
-        <div className="head w-[800px] m-auto h-[100%] grid grid-cols-2  overflow-hidden">
-          <div className="text z-50 grid grid-cols-1 content-center">
-            <h1 className="text-3xl font-medium text-[rgba(19,21,23,0.36)] dark:text-[hsla(0,0%,100%,.5)] mt-0 mb-4">
+    <div className="panel">
+      <div className="bg-gradient-to-r from-violet-300 to-cyan-300 ">
+        <div className="w-[50%] mx-auto flex-col flex md:flex-row">
+          <div className="text mx-auto md:mx-0 grid grid-cols-1 justify-center items-center content-center">
+            <h1 className="text-2xl content-center md:content-start font-medium text-[rgba(19,21,23,0.36)] dark:text-[hsla(0,0%,100%,.5)] mt-0 mb-4">
               Những sự kiện ở
             </h1>
             <h1
               id="title"
-              className="text-4xl font-semibold text-[rgb(19,21,23)] dark:text-[#fff] mb-0 mt-0"
+              className="text-3xl content-center md:content-start font-semibold text-[rgb(19,21,23)] dark:text-[#fff] mb-0 mt-0"
             >
               Cần Thơ
             </h1>
           </div>
-          <div className="img grid-cols-2">
+           <div className="ml-auto h-[350px] overflow-hidden">
             <img
-              src="https://res.cloudinary.com/deupkdvle/image/upload/v1701089728/15258986_284910391903920_7456347320762761216_n-removebg-preview_w8clu7.png"
-              alt=""
-              className=""
-            />
-          </div>
+                src="https://res.cloudinary.com/deupkdvle/image/upload/v1701089728/15258986_284910391903920_7456347320762761216_n-removebg-preview_w8clu7.png"
+                alt=""
+                className="w-[100%] h-[100%]"
+              />
+           </div>
         </div>
       </div>
       <div className="page-content">
