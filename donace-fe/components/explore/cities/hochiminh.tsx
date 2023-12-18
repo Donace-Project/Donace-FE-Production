@@ -204,9 +204,9 @@ export default function HoChiMinh() {
                           {futureEvents?.map((event, index) => (
                             <div
                               key={index}
-                              className="timeline-section relative flex w-full gap-16 pb-12"
+                              className="timeline-section relative flex flex-col md:flex-row w-full gap-5 md:gap-16 pb-12"
                             >
-                              <div className="line left-[calc(7rem+4rem/2)] dark:border-[rgba(255,255,255,0.08)]"></div>
+                              <div className="line left-[calc(7rem+4rem/2)] dark:border-[rgba(255,255,255,0.08)] hidden md:block"></div>
                               <div className="title always relative w-28">
                                 <div className="container sticky">
                                   <div className="timeline-title">
@@ -221,15 +221,15 @@ export default function HoChiMinh() {
                                       </div>
                                     </div>
                                   </div>
-                                  <div className="dot-outer-wrapper absolute top-1.5 right-[calc(-2rem-0.4375rem)] justify-center flex items-center">
+                                  <div className="dot-outer-wrapper absolute top-1.5 right-[calc(-2rem-0.4375rem)] justify-center hidden md:flex items-center">
                                     <div className="dot-wrapper justify-center flex items-center">
                                       <div className="dot w-3 h-3 bg-[#f3f4f5] dark:bg-[rgb(19,21,23)] border-2 border-solid border-[rgba(19,21,23,0.2)] dark:border-[hsla(0,0%,100%,.32)] rounded-full"></div>
                                     </div>
                                   </div>
                                 </div>
                               </div>
-                              <div className="min-w-0 flex-1">
-                                <div className="card-wrapper">
+                              <div className="min-w-min flex-1">
+                                <div className="card-wrapper !p-0 md:p-[0.75rem_0.75rem_0.75rem_1rem]">
                                   <div className="card-wrapper content-card cursor-pointer transition-all duration-300 ease-in-out relative rounded-xl bg-[#f3f4f5] dark:bg-[rgba(255,255,255,0.04)] border border-solid border-[#f3f4f5] dark:border-[rgba(255,255,255,0.04)]">
                                     <Link
                                       className="event-link absolute inset-0 transition-all duration-300 ease-in-out cursor-pointer"
