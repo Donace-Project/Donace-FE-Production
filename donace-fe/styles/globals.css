@@ -64,6 +64,24 @@
     width: 100%;
 }
 
+.donace-button-w-50 {
+    font-weight: 500;
+    border-radius: 0.5rem;
+    position: relative;
+    text-wrap: nowrap;
+    white-space-collapse: collapse;
+    justify-content: center;
+    outline-offset: .125rem;
+    outline: 2px;
+    outline-style: solid;
+    outline-color: transparent;
+    max-width: 100%;
+    font-size: 1rem;
+    padding: 0.625rem 0.875rem;
+    height: calc(2.25rem + 2 * 1px);
+    width: 50%;
+}
+
 .donace-button-w-fit {
     font-weight: 500;
     border-radius: 0.5rem;
@@ -147,9 +165,10 @@
 }
 
 .gradient-background {
-    background: linear-gradient(to right bottom, #2a0944, #651652, #992f57, #c55357, #e67f56, #ec8656, #f28e57, #f79657, #eb7658, #d9575d, #c03b63, #a12568);
     background-size: 360% 360%;
-    animation: gradient-animation 18s ease infinite;
+    animation: gradient-animation 5s ease infinite;
+    background: linear-gradient(to left top, #ffd84f, #ffa85c, #ff7a8d, #ff67cb, #b378ff);
+
 }
 
 @keyframes gradient-animation {
@@ -207,7 +226,7 @@
 .top-card-content {
     padding: 1.375rem 1.125rem 0.75rem 1.125rem;
 }
-
+/* 
 .start-here {
     display: inline-block;
     background-image: linear-gradient(to right bottom, #36ae7c, #00a58c, #009b98, #00909e, #00849e, #0680a9, #2e7ab1, #5072b3, #8769b6, #ba5ba4, #dd4e81, #eb5353);
@@ -216,7 +235,7 @@
     background-size: 360% 360%;
     animation: gradient-animation 10s ease infinite;
     -webkit-text-fill-color: transparent;
-}
+} */
 
 
 /*  */
@@ -253,4 +272,49 @@
 .button-52:hover:after {
     top: 0px;
     left: 0px;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    -webkit-background-clip: text;
+    transition: background-color 5000s ease-in-out 0s;
+}
+
+/* MANAGE -> CALENDARS -> PEOPLE */
+.simple-table-wrapper {
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgba(19, 21, 23, 0.08);
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+
+.live-bagde-animation::before {
+    animation: 2s ease 0s infinite normal none;
+    content: "";
+    width: 0.375rem;
+    height: 0.375rem;
+    margin-right: 0.375rem;
+    background-color: #ff9641;
+}
+
+@keyframes breath {
+    0% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+.value {
+    color: rgba(19, 21, 23, 0.36);
+    font-weight: 500;
 }

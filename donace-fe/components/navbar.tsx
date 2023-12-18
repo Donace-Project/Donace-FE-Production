@@ -1,17 +1,17 @@
 "use client";
 
-import React from "react";
-import { Button } from "@nextui-org/button";
-import { Input } from "@nextui-org/input";
+import React, { useEffect, useState } from "react";
 import { Link } from "@nextui-org/link";
 import {
   Navbar,
   NavbarBrand,
   NavbarContent,
   NavbarItem,
+  NavbarMenu,
+  NavbarMenuItem,
+  NavbarMenuToggle,
 } from "@nextui-org/navbar";
 import {
-  Bell,
   CalendarRange,
   Compass,
   Contact2,
@@ -20,7 +20,6 @@ import {
   Settings,
   Ticket,
 } from "lucide-react";
-import { SearchIcon } from "./icons";
 import { Avatar } from "@nextui-org/avatar";
 import {
   Dropdown,
@@ -29,203 +28,306 @@ import {
   DropdownSection,
   DropdownTrigger,
 } from "@nextui-org/dropdown";
-import { ThemeSwitchWithText } from "./theme-switch";
+import { ThemeSwitch } from "./theme-switch";
 import ThoiGian from "./clock/clock";
 import { authHelper } from "../helpers/authHelper";
-import { useSession } from "next-auth/react";
-import { usePathname } from 'next/navigation';
+import { useSession, signOut } from "next-auth/react";
+import { usePathname } from "next/navigation";
+import { AppUser } from "../types/DonaceType";
 
+import LogoDonace from "@/public/doanLogo.png";
+interface MenuItems {
+  icon?: string;
+  name: string;
+  path: string;
+
+}
 
 export default function NavbarComponents() {
-  const page = usePathname()?.split('/')[1];
-  if (authHelper.getToken() === null) {
-    const { data: session } = useSession();
-    authHelper.saveToken(session?.token);
-  }
+
+  const page = usePathname()?.split("/")[1];
+
+  let { data: session, status: status } = useSession();
+  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+  let [user, setUser] = useState<null | AppUser>(null);
+  useEffect(() => {
+    if (status === "authenticated") {
+      authHelper.saveToken(session?.token);
+      setUser(session?.user as any);
+    }
+  }, [status]);
+
+  const items: MenuItems[] = [
+    { icon: "home", name: "Trang chủ", path: "home" },
+    { icon: "calendar-check", name: "Sự kiện", path: "home" },
+    { icon: "tv-2", name: "Khám phá", path: "explore" },
+    { icon: "calendar-days", name: "Lịch", path: "calendars" },
+    { icon: "calendar-plus", name: "Tạo sự kiện", path: "create" }];
 
   const handleLogout = () => {
     localStorage.clear();
-    window.location.reload();
-  }
+
+    signOut({
+      redirect: true,
+      callbackUrl: "/auth/login",
+    });
+  };
 
   return (
-    <Navbar
-      position="sticky"
-      maxWidth="full"
-      className="backdrop-blur-lg p-[0.75rem_1rem] flex justify-between items-center h-20 bg-transparent"
-    >
-      <NavbarBrand as={"div"}>
-        <Link
-          href="/home"
-          aria-label="Donace Home"
-          underline="none"
-          className="relative z-[1] transition-global cursor-pointer"
-        >
-          <NavbarContent className="logo-light transition-all duration-300 ease-in-out flex items-center">
-            <GraduationCap className="dark:text-[hsla(0,0%,100%,.5)] w-5 h-5 block align-middle text-black-blur-light-theme" />
-            <span className="dark:text-[hsla(0,0%,100%,.5)] font-medium text-base text-black-blur-light-theme">
-              Donace
-            </span>
-          </NavbarContent>
-        </Link>
-        <NavbarContent
-          as={"div"}
-          className="center-wrapper flex justify-between items-center flex-1 max-w-[820px] min-w-0"
-        >
-          <NavbarItem className="center-links gap-6 p-[0px_1rem] text-sm flex items-baseline max-width-global m-[0_auto]">
-            <Link
-              href="/home"
-              className="dark:text-[hsla(0,0%,100%,.5)] text-black-blur-light-theme font-medium"
-            >
-              <NavbarContent
-                as={"div"}
-                className={`${page === "home" ? 'text-[rgb(19,21,23)]' : ''} dark:hover:text-[#fff] gap-2 flex items-center transition-all duration-300 ease-in-out hover:text-[rgb(19,21,23)] `}
-              >
-                <NavbarItem as={"div"} className="icon">
-                  <Ticket className="block w-4 h-4 align-middle mt-0.5" />
-                </NavbarItem>
-                <NavbarItem as={"div"} className="label">
-                  Sự kiện
-                </NavbarItem>
-              </NavbarContent>
-            </Link>
-            <Link
-              href="/calendars"
-              className={` dark:text-[hsla(0,0%,100%,.5)] text-black-blur-light-theme font-medium`}
-            >
-              <NavbarContent
-                as={"div"}
-                className={`${page === "calendars" ? 'text-[rgb(19,21,23)]' : ''} dark:hover:text-[#fff] gap-2 flex items-center transition-all duration-300 ease-in-out hover:text-[rgb(19,21,23)]`}
-              >
-                <NavbarItem as={"div"} className="icon">
-                  <CalendarRange className="block w-4 h-4 align-middle mt-0.5" />
-                </NavbarItem>
-                <NavbarItem as={"div"} className="label">
-                  Lịch
-                </NavbarItem>
-              </NavbarContent>
-            </Link>
-            <Link
-              href="/explore"
-              className="dark:text-[hsla(0,0%,100%,.5)] text-black-blur-light-theme font-medium "
-            >
-              <NavbarContent
-                as={"div"}
-                className={`${page === "explore" ? 'text-[rgb(19,21,23)]' : ''} dark:hover:text-[#fff] gap-2 flex items-center transition-all duration-300 ease-in-out hover:text-[rgb(19,21,23)]`}
-              >
-                <NavbarItem as={"div"} className="icon">
-                  <Compass className="block w-4 h-4 align-middle mt-0.5" />
-                </NavbarItem>
-                <NavbarItem as={"div"} className="label">
-                  Khám phá
-                </NavbarItem>
-              </NavbarContent>
-            </Link>
-          </NavbarItem>
-        </NavbarContent>
-        <NavbarContent
-          as={"div"}
-          className="right-wrapper flex items-center gap-4"
-          justify="end"
-        >
-          <NavbarItem
-            as={"div"}
-            className="dark:text-[hsla(0,0%,100%,.5)] text-black-blur-light-theme text-sm"
-          >
-            <ThoiGian />
-          </NavbarItem>
+    <div>
+      <Navbar
+        position="sticky"
+        maxWidth="full"
+        className="p-2 hidden justify-between h-20 md:flex items-center bg-transparent backdrop-blur-lg shadow-medium"
+      >
+        <NavbarBrand as={"div"}>
           <Link
-            href="/create"
-            className="dark:text-[hsla(0,0%,100%,.79)] text-black-more-blur-light-theme relative transition-all duration-300 ease-in-out font-medium rounded-lg justify-center flex items-center cursor-pointer"
+            color="foreground"
+            href="/home"
+
+            aria-label="Donace Home"
             underline="none"
+            className="transition-global cursor-pointer"
           >
-            <NavbarItem as={"div"} className="text-sm whitespace-nowrap">
-              Tạo
-              <span> Sự kiện</span>
-            </NavbarItem>
+            <NavbarContent className="transition-all duration-300 ease-in-out flex items-center justify-between hover:text-[rgb(19,21,23)] dark:hover:text-[#fff]">
+              <img src={LogoDonace.src} className="w-8 h-8 rounded-full" />
+              {/* <p className="font-semibold text-2xl ">
+                Donace
+              </p> */}
+            </NavbarContent>
           </Link>
-          <Input
-            classNames={{
-              base: "max-w-full sm:max-w-[10rem] h-10",
-              mainWrapper: "h-full",
-              input: "text-small",
-              inputWrapper:
-                "h-full font-normal text-default-500 bg-default-400/20 dark:bg-default-500/20",
-            }}
-            placeholder="Tìm kiếm..."
-            size="sm"
-            startContent={<SearchIcon size={18} />}
-            type="search"
-          />
-          <Dropdown>
-            <DropdownTrigger>
-              <Button className="lux-menu-trigger-wrapper	cursor-pointer notification-bell-button relative text-black-blur-light-theme transition-all duration-300 ease-in-out inline-flex min-w-0 font-medium rounded-lg bg-transparent border border-solid border-transparent leading-6 text-inherit">
+          <NavbarContent
+            as={"div"}
+            className="center-wrapper flex justify-between items-center flex-1 max-w-[820px] min-w-0 pl-11"
+          >
+            <NavbarItem className="center-links gap-6 px-1 text-sm flex items-baseline max-width-global mx-auto">
+              <Link
+                color="foreground"
+                href="/home"
+                className="font-medium"
+              >
                 <NavbarContent
                   as={"div"}
-                  className="cursor-pointer inline-flex min-w-0"
+                  className={`${page === "home" ? "text-[rgb(19,21,23)] dark:text-[#fff]" : ""
+                    } dark:hover:text-[#fff] gap-2 flex items-center transition-all duration-300 ease-in-out hover:text-[rgb(19,21,23)] `}
                 >
-                  <NavbarItem as={"div"} className="inline-flex relative">
-                    <NavbarItem as={"div"} className="icon">
-                        <Bell className="block w-4 h-4 align-middle" />
-                    </NavbarItem>
+                  <NavbarItem as={"div"} className="icon">
+                    <Ticket className="block w-4 h-4 align-middle mt-0.5" />
+                  </NavbarItem>
+                  <NavbarItem as={"div"} className="label">
+                    Sự kiện
                   </NavbarItem>
                 </NavbarContent>
-              </Button>
-            </DropdownTrigger>
-            <DropdownMenu className="dark:bg-[rgba(33,35,37,0.8)] w-80 max-w-[300px] min-h-[300px] max-h-[60vh] overflow-auto">
-              <DropdownItem className="text-sm">
-                <div className="noti-row relative p-[0.875rem_1rem]">
-                  <Link
-                    href="/my-calendars"
-                    className="text-inherit transition-all duration-300 ease-in-out cursor-pointer"
-                    underline="none"
-                  >
-                    <div className="gap-3 flex items-start">
-                      <div className="icon-wrapper relative mt-0.5">
-                        <div className="avatar">
-                          <Avatar
-                            isBordered
-                            color="primary"
-                            radius="full"
-                            src="https://avatars.githubusercontent.com/u/143386751?s=200&v=4"
-                            name="Donace"
-                            className="relative"
-                          />
+              </Link>
+              <Link
+                color="foreground"
+                href="/calendars"
+                className={`font-medium`}
+              >
+                <NavbarContent
+                  as={"div"}
+                  className={`${page === "calendars"
+                    ? "text-[rgb(19,21,23)] dark:text-[#fff]"
+                    : ""
+                    } dark:hover:text-[#fff] gap-2 flex items-center transition-all duration-300 ease-in-out hover:text-[rgb(19,21,23)]`}
+                >
+                  <NavbarItem as={"div"} className="icon">
+                    <CalendarRange className="block w-4 h-4 align-middle mt-0.5" />
+                  </NavbarItem>
+                  <NavbarItem as={"div"} className="label">
+                    Lịch
+                  </NavbarItem>
+                </NavbarContent>
+              </Link>
+              <Link
+                href="/explore"
+                color="foreground"
+                className="font-medium "
+              >
+                <NavbarContent
+                  as={"div"}
+                  className={`${page === "explore"
+                    ? "text-[rgb(19,21,23)] dark:text-[#fff]"
+                    : ""
+                    } dark:hover:text-[#fff] gap-2 flex items-center transition-all duration-300 ease-in-out hover:text-[rgb(19,21,23)]`}
+                >
+                  <NavbarItem as={"div"} className="icon">
+                    <Compass className="block w-4 h-4 align-middle mt-0.5" />
+                  </NavbarItem>
+                  <NavbarItem as={"div"} className="label">
+                    Khám phá
+                  </NavbarItem>
+                </NavbarContent>
+              </Link>
+            </NavbarItem>
+          </NavbarContent>
+          <NavbarContent
+            as={"div"}
+            className="right-wrapper flex items-center gap-4"
+            justify="end"
+          >
+            <NavbarItem
+            >
+              {/* @ts-ignore */}
+              {/* <ThoiGian /> */}
+            </NavbarItem>
+            <Link
+              href="/create"
+              color="foreground"
+              
+              className="hover:text-[rgb(19,21,23)] dark:hover:text-[#fff] relative transition-all duration-300 ease-in-out font-medium rounded-lg justify-center flex items-center cursor-pointer"
+              underline="none"
+            >
+              <NavbarItem as={"div"} className="text-sm whitespace-nowrap">
+
+                <span> Tạo sự kiện</span>
+              </NavbarItem>
+            </Link>
+            <NavbarItem
+              as={"div"}
+              className="avatar-wrapper  p-2 cursor-pointer transition-all duration-300 ease-in-out inline-flex min-w-0 items-center"
+            >
+              <Dropdown className="dark:bg-[rgba(33,35,37,0.8)] shadow-sm rounded-lg border border-solid border-[rgba(19,21,23,0.08)] overflow-auto">
+                <DropdownTrigger>
+                  <Avatar
+                    src={
+                      user?.avatar?.trim()
+                        ? user.avatar
+                        : "https://cdn.lu.ma/cdn-cgi/image/format=auto,fit=cover,dpr=2,background=white,quality=75,width=32,height=32/avatars-default/avatar_8.png"
+                    }
+                    radius="full"
+                    name="Donace"
+                    className="w-8 h-8 bg-center bg-cover bg-white"
+                  />
+                </DropdownTrigger>
+                <DropdownMenu as={"div"} className="switcher-menu">
+                  <DropdownSection as={"div"} showDivider>
+                    <DropdownItem as={"div"}>
+                      <Link
+                      color="foreground"
+                        href="/profile"
+                        className="transition-all duration-300 ease-in-out cursor-pointer"
+                        underline="none"
+                      >
+                        <div className="switcher-row cursor-pointer transition-all duration-300 ease-in-out flex items-center">
+                          <div className="avatar-wrapper">
+                            <Avatar
+                              isBordered
+                              radius="full"
+                              src={
+                                user?.avatar?.trim()
+                                  ? user.avatar
+                                  : "https://cdn.lu.ma/cdn-cgi/image/format=auto,fit=cover,dpr=2,background=white,quality=75,width=32,height=32/avatars-default/avatar_8.png"
+                              }
+                              name="Donace"
+                              className="w-[32px] h-[32px] bg-center bg-cover relative"
+                            />
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <div className="name dark:text-[#fff] font-medium overflow-hidden text-ellipsis whitespace-nowrap  max-w-[180px]">
+                              {user?.userName}
+                            </div>
+                            <div className="desc text-xs gap-1 flex text-[rgba(19,21,23,0.36)]">
+                              <div className="gap-1 min-w-0 flex items-center">
+                                <div className="dark:text-[hsla(0,0%,100%,.5)] overflow-hidden text-ellipsis whitespace-nowrap min-w-0 flex-1">
+                                  Cá nhân
+                                </div>
+                              </div>
+                            </div>
+                          </div>
                         </div>
-                      </div>
-                      <div className="main break-words min-w-0 flex-1 flex flex-col">
-                        <div>
-                          <span>
-                            <strong>Donace </strong>
-                            đã đăng ký
-                            <br />
-                            <strong className="font-medium">
-                              Đồ án tốt nghiệp
-                            </strong>
-                          </span>
-                          <br />
-                          <span className="dark:text-[hsla(0,0%,100%,.5)] text-black-blur-light-theme">
-                            5 tháng 9
-                          </span>
-                        </div>
+                      </Link>
+                    </DropdownItem>
+                  </DropdownSection>
+                  <DropdownItem as={"div"}>
+                    <div className="transition-all duration-300 ease-in-out cursor-pointer">
+                      <div className="menu-row transition-all duration-300 ease-in-out text-sm gap-4 flex items-center ">
+                        <ThemeSwitch variant="withText" />
                       </div>
                     </div>
-                  </Link>
-                </div>
-              </DropdownItem>
-            </DropdownMenu>
-          </Dropdown>
-          <NavbarItem
-            as={"div"}
-            className="avatar-wrapper -m-2 p-2 cursor-pointer transition-all duration-300 ease-in-out inline-flex min-w-0 items-center"
-          >
+                  </DropdownItem>
+                  <DropdownItem>
+                    <Link
+                      href="/profile"
+                      color="foreground"
+                      className="transition-all duration-300 ease-in-out cursor-pointer"
+                      underline="none"
+                    >
+                      <div className="dark:text-[hsla(0,0%,100%,.79)] menu-row transition-all duration-300 ease-in-out text-sm gap-4 flex items-center ">
+                        <Contact2 className="w-4 h-4 align-middle block mt-0.5" />
+                        <span className=" flex-1 font-medium">Trang cá nhân</span>
+                      </div>
+                    </Link>
+                  </DropdownItem>
+                  <DropdownItem>
+                    <Link
+                      href="/settings"
+                      className="transition-all duration-300 ease-in-out cursor-pointer"
+                      underline="none"
+                      color="foreground"
+                    >
+                      <div className="dark:text-[hsla(0,0%,100%,.79)] menu-row transition-all duration-300 ease-in-out text-sm gap-4 flex items-center ">
+                        <Settings className="w-4 h-4 align-middle block mt-0.5" />
+                        <span className=" flex-1 font-medium">Cài đặt</span>
+                      </div>
+                    </Link>
+                  </DropdownItem>
+                  <DropdownItem>
+                    <Link
+                      onClick={handleLogout}
+                      href="/auth/login"
+                      color="foreground"
+                      className="transition-all duration-300 ease-in-out cursor-pointer"
+                      underline="none"
+                    >
+                      <div className="dark:text-[hsla(0,0%,100%,.79)] menu-row transition-all duration-300 ease-in-out text-sm gap-4 flex items-center ">
+                        <LogOut className="w-4 h-4 align-middle block mt-0.5" />
+                        <span className=" flex-1 font-medium">Đăng xuất</span>
+                      </div>
+                    </Link>
+                  </DropdownItem>
+                </DropdownMenu>
+              </Dropdown>
+            </NavbarItem>
+          </NavbarContent>
+        </NavbarBrand>
+      </Navbar>
+      <Navbar onMenuOpenChange={setIsMenuOpen} className="md:hidden flex items-center backdrop-blur-lg ">
+        <NavbarContent>
+          <NavbarMenuToggle
+            aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+            className="sm:hidden"
+          />
+          <NavbarBrand>
+            <Link
+              href="/home"
+              aria-label="Donace Home"
+              underline="none"
+              className="relative z-[1] transition-global cursor-pointer"
+            >
+              <NavbarContent className="logo-light transition-all duration-300 ease-in-out flex items-center">
+                {/* <GraduationCap className="dark:text-[hsla(0,0%,100%,.5)] w-5 h-5 block align-middle " /> */}
+
+                <img src={LogoDonace.src} className="w-8 h-8 rounded-full" />
+                <p className="dark:text-[#ffffff] font-semibold text-2xl ">
+                  Donace
+                </p>
+              </NavbarContent>
+            </Link>
+          </NavbarBrand>
+        </NavbarContent>
+        <NavbarContent justify="end">
+          <NavbarItem>
             <Dropdown className="dark:bg-[rgba(33,35,37,0.8)] shadow-sm relative rounded-lg border border-solid border-[rgba(19,21,23,0.08)] overflow-auto">
               <DropdownTrigger>
                 <Avatar
-                  src="https://avatars.githubusercontent.com/u/143386751?s=200&v=4"
+                  src={
+                    user?.avatar?.trim()
+                      ? user.avatar
+                      : "https://cdn.lu.ma/cdn-cgi/image/format=auto,fit=cover,dpr=2,background=white,quality=75,width=32,height=32/avatars-default/avatar_8.png"
+                  }
                   radius="full"
                   name="Donace"
-                  isBordered
                   className="w-[28px] h-[28px] bg-center bg-cover bg-white relative"
                 />
               </DropdownTrigger>
@@ -233,7 +335,7 @@ export default function NavbarComponents() {
                 <DropdownSection as={"div"} showDivider>
                   <DropdownItem as={"div"}>
                     <Link
-                      href="/home"
+                      href="/profile"
                       className="transition-all duration-300 ease-in-out cursor-pointer"
                       underline="none"
                     >
@@ -241,15 +343,19 @@ export default function NavbarComponents() {
                         <div className="avatar-wrapper">
                           <Avatar
                             isBordered
-                            src="https://avatars.githubusercontent.com/u/143386751?s=200&v=4"
                             radius="full"
+                            src={
+                              user?.avatar?.trim()
+                                ? user.avatar
+                                : "https://cdn.lu.ma/cdn-cgi/image/format=auto,fit=cover,dpr=2,background=white,quality=75,width=32,height=32/avatars-default/avatar_8.png"
+                            }
                             name="Donace"
                             className="w-[32px] h-[32px] bg-center bg-cover bg-[#fff] relative"
                           />
                         </div>
                         <div className="min-w-0 flex-1">
-                          <div className="name dark:text-[#fff] font-medium overflow-hidden text-ellipsis whitespace-nowrap text-black-light-theme">
-                            Donace
+                          <div className="name dark:text-[#fff] font-medium overflow-hidden text-ellipsis whitespace-nowrap  max-w-[180px]">
+                            {user?.userName}
                           </div>
                           <div className="desc text-xs gap-1 flex text-[rgba(19,21,23,0.36)]">
                             <div className="gap-1 min-w-0 flex items-center">
@@ -265,8 +371,8 @@ export default function NavbarComponents() {
                 </DropdownSection>
                 <DropdownItem as={"div"}>
                   <div className="transition-all duration-300 ease-in-out cursor-pointer">
-                    <div className="menu-row transition-all duration-300 ease-in-out text-sm gap-4 flex items-center text-black-more-blur-light-theme">
-                      <ThemeSwitchWithText />
+                    <div className="menu-row transition-all duration-300 ease-in-out text-sm gap-4 flex items-center ">
+                      <ThemeSwitch variant="withText" />
                     </div>
                   </div>
                 </DropdownItem>
@@ -276,7 +382,7 @@ export default function NavbarComponents() {
                     className="transition-all duration-300 ease-in-out cursor-pointer"
                     underline="none"
                   >
-                    <div className="dark:text-[hsla(0,0%,100%,.79)] menu-row transition-all duration-300 ease-in-out text-sm gap-4 flex items-center text-black-more-blur-light-theme">
+                    <div className="dark:text-[hsla(0,0%,100%,.79)] menu-row transition-all duration-300 ease-in-out text-sm gap-4 flex items-center ">
                       <Contact2 className="w-4 h-4 align-middle block mt-0.5" />
                       <span className=" flex-1 font-medium">Trang cá nhân</span>
                     </div>
@@ -288,20 +394,20 @@ export default function NavbarComponents() {
                     className="transition-all duration-300 ease-in-out cursor-pointer"
                     underline="none"
                   >
-                    <div className="dark:text-[hsla(0,0%,100%,.79)] menu-row transition-all duration-300 ease-in-out text-sm gap-4 flex items-center text-black-more-blur-light-theme">
+                    <div className="dark:text-[hsla(0,0%,100%,.79)] menu-row transition-all duration-300 ease-in-out text-sm gap-4 flex items-center ">
                       <Settings className="w-4 h-4 align-middle block mt-0.5" />
                       <span className=" flex-1 font-medium">Cài đặt</span>
                     </div>
                   </Link>
                 </DropdownItem>
-                <DropdownItem >
+                <DropdownItem>
                   <Link
                     onClick={handleLogout}
                     href="/auth/login"
                     className="transition-all duration-300 ease-in-out cursor-pointer"
                     underline="none"
                   >
-                    <div className="dark:text-[hsla(0,0%,100%,.79)] menu-row transition-all duration-300 ease-in-out text-sm gap-4 flex items-center text-black-more-blur-light-theme">
+                    <div className="dark:text-[hsla(0,0%,100%,.79)] menu-row transition-all duration-300 ease-in-out text-sm gap-4 flex items-center ">
                       <LogOut className="w-4 h-4 align-middle block mt-0.5" />
                       <span className=" flex-1 font-medium">Đăng xuất</span>
                     </div>
@@ -311,7 +417,29 @@ export default function NavbarComponents() {
             </Dropdown>
           </NavbarItem>
         </NavbarContent>
-      </NavbarBrand>
-    </Navbar>
+        <NavbarMenu>
+          {items.map((item, index) => (
+            <NavbarMenuItem key={`${item}-${index}`}>
+              <Link
+                color={
+                  index === 2 ? "primary" : index === items.length - 1 ? "danger" : "foreground"
+                }
+                className="w-full"
+                href={item.path}
+                size="lg"
+              >
+                <div className="flex flex-row justify-start gap-2">
+
+                  {item.name}
+                </div>
+              </Link>
+            </NavbarMenuItem>
+          ))}
+
+        </NavbarMenu>
+      </Navbar>
+    </div>
+
+
   );
 }

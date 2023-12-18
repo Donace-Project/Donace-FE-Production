@@ -24,7 +24,9 @@ function ThoiGian() {
     const gio12 = gio > 12 ? gio - 12 : gio;
     return (
         <div>
-            <p>{gio12 < 10 ? '0' : ''}{gio12}:{phut < 10 ? '0' : ''}{phut} {buoi}</p>
+            <p className='text-black-more-blur-light-theme dark:text-[hsla(0,0%,100%,.5)] text-sm'>
+                {gio12 < 10 ? '0' : ''}{gio12}:{phut < 10 ? '0' : ''}{phut} {buoi}
+            </p>
         </div>
     );
 }

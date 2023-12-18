@@ -1,0 +1,22 @@
+.border-top-left div div div {
+  border-radius: 6px 0 0 6px;
+}
+
+.border-top-right div div div {
+  border-radius: 0 6px 6px 0;
+}
+
+.spinner-uploading {
+  transform: translateY(-4px);
+}
+
+.short-description {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 30ch;
+}
+
+.mapboxgl-canvas {
+  border-radius: 9px;
+}
