@@ -7,7 +7,7 @@ const nextConfig = {
   },
 
   env: {
-    BE_URL: "http://localhost:8000/"
+    BE_URL: "http://171.245.205.120:8082/"
   }
 };
 
