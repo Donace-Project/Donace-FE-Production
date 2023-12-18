@@ -9,7 +9,6 @@ import { UserProfile } from "@/types/DonaceType";
 import { fetchWrapper } from "@/helpers/fetch-wrapper";
 
 export default function SettingLandingPage() {
-  const placements = ["outside"];
 
   const handleClick = () => {
     location.reload(); // Làm mới trang khi nút được nhấn
@@ -92,13 +91,13 @@ export default function SettingLandingPage() {
   return (
     <div className="page-content">
       <div className="page-header opacity-[1] pt-12 pl-4 pr-4 max-width-global margin-global">
-        <div className="spread gap-2 mb-2 flex justify-between items-center">
+        <div className="spread gap-2 mb-2 flex justify-between items-center md:px-2 sm:px-2">
           <h1 className="tab-title text-4xl font-semibold mb-0 mt-0">
             Cài đặt
           </h1>
         </div>
       </div>
-      <div className="tab-wrapper m-auto pt-2">
+      <div className="tab-wrapper m-auto pt-2 md:px-2 sm:px-2">
         <div className="zm-container pt-1 max-width-global margin-global">
           <div className="page-header-tabs-wrapper flex justify-between items-baseline">
             <div className="flex max-w-full overflow-auto min-w-0 gap-4 flex-1">
@@ -124,7 +123,7 @@ export default function SettingLandingPage() {
         <div className="border-b border-solid border-[rgba(19,21,23,0.08)] dark:border-[rgba(255,255,255,0.08)] mb-7"></div>
       </div>
       <div className="main-container pl-4 pr-4 max-width-global margin-global">
-        <div className="can-divider with-divider medium">
+        <div className="can-divider with-divider medium md:px-2 sm:px-2">
           <div className="section-title-wrapper medium">
             <div className="spread mb-5 flex justify-between items-center">
               <h2 className="text-xl font-semibold text-black-light-theme dark:text-[#fff] mb-0 mt-0">
@@ -170,79 +169,73 @@ export default function SettingLandingPage() {
                   <div>
                     <div className="lux-input-wrapper max-width-global mb-4">
                       <div className="inner-wrapper inline-block w-full">
-                        {placements.map((placement) => (
-                          <Input
-                            key={placement}
-                            type="text"
-                            label="Tên"
-                            labelPlacement={"outside"}
-                            // placeholder="Tên của bạn là gì?"
-                            placeholder={
-                              userProfile?.result.userName
-                                ? userProfile.result.userName
-                                : "Tên của bạn là gì?"
-                            }
-                            autoCorrect="off"
-                            spellCheck="false"
-                            autoCapitalize="words"
-                            isInvalid={true}
-                            variant="faded"
-                            classNames={{
-                              inputWrapper: [
-                                "bg-[#fff]",
-                                "text-base",
-                                "h-auto",
-                                "w-full",
-                                "p-[0.625rem_0.875rem]",
-                                "dark:text-[#fff]",
-                                "dark:bg-[rgb(19,21,23)]",
-                              ],
-                            }}
-                            value={formData.userName}
-                            onChange={(e) =>
-                              setFormData({
-                                ...formData,
-                                userName: e.target.value,
-                              })
-                            }
-                          />
-                        ))}
+                        <Input
+                          type="text"
+                          label="Tên"
+                          labelPlacement={"outside"}
+                          // placeholder="Tên của bạn là gì?"
+                          placeholder={
+                            userProfile?.result.userName
+                              ? userProfile.result.userName
+                              : "Tên của bạn là gì?"
+                          }
+                          autoCorrect="off"
+                          spellCheck="false"
+                          autoCapitalize="words"
+                          isInvalid={true}
+                          variant="faded"
+                          classNames={{
+                            inputWrapper: [
+                              "bg-[#fff]",
+                              "text-base",
+                              "h-auto",
+                              "w-full",
+                              "p-[0.625rem_0.875rem]",
+                              "dark:text-[#fff]",
+                              "dark:bg-[rgb(19,21,23)]",
+                            ],
+                          }}
+                          value={formData.userName}
+                          onChange={(e) =>
+                            setFormData({
+                              ...formData,
+                              userName: e.target.value,
+                            })
+                          }
+                        />
                       </div>
                     </div>
                     <div className="lux-input-wrapper max-width-global mb-4">
                       <div className="inner-wrapper inline-block w-full">
-                        {placements.map((placement) => (
-                          <Textarea
-                            key={placement}
-                            type="text"
-                            label="Tiểu sử"
-                            labelPlacement={"outside"}
-                            placeholder={
-                              userProfile?.result.bio
-                                ? userProfile.result.bio
-                                : "Hãy cùng chia sẻ một chút về thông tin hoặc sở thích của bạn."
-                            }
-                            autoCorrect="off"
-                            spellCheck="false"
-                            autoCapitalize="words"
-                            variant="faded"
-                            minRows={2}
-                            classNames={{
-                              inputWrapper: [
-                                "bg-[#fff]",
-                                "text-base",
-                                "h-auto",
-                                "w-full",
-                                "dark:text-[#fff]",
-                                "dark:bg-[rgb(19,21,23)]",
-                              ],
-                            }}
-                            value={formData.bio}
-                            onChange={(e) =>
-                              setFormData({ ...formData, bio: e.target.value })
-                            }
-                          />
-                        ))}
+                        <Textarea
+                          type="text"
+                          label="Tiểu sử"
+                          labelPlacement={"outside"}
+                          placeholder={
+                            userProfile?.result.bio
+                              ? userProfile.result.bio
+                              : "Hãy cùng chia sẻ một chút về thông tin hoặc sở thích của bạn."
+                          }
+                          autoCorrect="off"
+                          spellCheck="false"
+                          autoCapitalize="words"
+                          variant="faded"
+                          minRows={2}
+                          classNames={{
+                            inputWrapper: [
+                              "bg-[#fff]",
+                              "text-base",
+                              "h-auto",
+                              "w-full",
+                              "dark:text-[#fff]",
+                              "dark:bg-[rgb(19,21,23)]",
+                            ],
+                          }}
+                          value={formData.bio}
+                          onChange={(e) =>
+                            setFormData({ ...formData, bio: e.target.value })
+                          }
+                        />
                       </div>
                     </div>
                     <div className="mt-6">
@@ -264,7 +257,7 @@ export default function SettingLandingPage() {
           </div>
         </div>
         {userProfile && userProfile.result ? (
-          <div className="can-divider with-divider medium mt-8 pt-8 border-t border-solid border-[rgba(19,21,23,0.08)] dark:border-[rgba(255,255,255,0.16)]">
+          <div className="can-divider with-divider medium md:px-2 sm:px-2 mt-8 pt-8 border-t border-solid border-[rgba(19,21,23,0.08)] dark:border-[rgba(255,255,255,0.16)]">
             <div className="section-title-wrapper medium">
               <div className="spread mb-5 flex justify-between items-center">
                 <h2 className="text-xl font-semibold text-black-light-theme dark:text-[#fff] mb-0 mt-0">
@@ -277,86 +270,73 @@ export default function SettingLandingPage() {
                 Donace và nhận những thông báo mới.
               </div>
             </div>
-            <div className="grid grid-cols-[1fr_1fr] gap-16">
+            <div className="grid grid-cols-2 gap-16">
               <form action={"#"} onSubmit={handleSubmit}>
-                <div className="input-wrapper max-width-global flex items-baseline">
-                  <div className="lux-input-wrapper max-width-global mr-4 flex-1">
-                    <div className="inner-wrapper inline-block w-full">
-                      {placements.map((placement) => (
-                        <Input
-                          value={value}
-                          isInvalid={isInvalid}
-                          color={isInvalid ? "danger" : "default"}
-                          errorMessage={
-                            isInvalid && "Please enter a valid email"
-                          }
-                          onValueChange={setValue}
-                          key={placement}
-                          type="email"
-                          label="Email"
-                          labelPlacement={"outside"}
-                          placeholder={
-                            userProfile?.result.email
-                              ? userProfile.result.email
-                              : "Điền email của bạn."
-                          }
-                          autoCorrect="off"
-                          spellCheck="false"
-                          autoCapitalize="words"
-                          variant="faded"
-                          classNames={{
-                            inputWrapper: [
-                              "bg-[#fff]",
-                              "text-base",
-                              "h-auto",
-                              "w-full",
-                              "p-[0.625rem_0.875rem]",
-                              "dark:text-[#fff]",
-                              "dark:bg-[rgb(19,21,23)]",
-                            ],
-                          }}
-                        />
-                      ))}
-                    </div>
-                  </div>
+                <div className="flex flex-col md:flex-row gap-2 items-center">
+                  <Input
+                    className="w-full"
+                    value={value}
+                    isInvalid={isInvalid}
+                    color={isInvalid ? "danger" : "default"}
+                    errorMessage={
+                      isInvalid && "Please enter a valid email"
+                    }
+                    onValueChange={setValue}
+                    type="email"
+                    label="Email"
+                    labelPlacement={"outside"}
+                    placeholder={
+                      userProfile?.result.email
+                        ? userProfile.result.email
+                        : "Điền email của bạn."
+                    }
+                    autoCorrect="off"
+                    spellCheck="false"
+                    autoCapitalize="words"
+                    variant="faded"
+                    classNames={{
+                      inputWrapper: [
+                        "bg-[#fff]",
+                        "text-base",
+                        "h-auto",
+                        "w-full",
+                        "p-[0.625rem_0.875rem]",
+                        "dark:text-[#fff]",
+                        "dark:bg-[rgb(19,21,23)]",
+                      ],
+                    }}
+                  />
                   <Button
                     type="submit"
-                    className="text-[#fff] dark:text-[rgb(19,21,23)] bg-[#333537] dark:bg-[#fff] border-[#333537] dark:border-[rgba(255,255,255,0.16)] border border-solid cursor-pointer transition-all duration-300 ease-in-out font-medium rounded-lg whitespace-nowrap justify-center outline-offset-[.125rem] outline-none max-w-full text-base p-[0.625rem_0.875rem] h-auto w-fit flex items-center m-0 top-[2.35rem]"
+                    className="text-background bg-foreground-900 border-[#333537] dark:border-[rgba(255,255,255,0.16)] border border-solid cursor-pointer transition-all duration-300 ease-in-out font-medium rounded-lg whitespace-nowrap justify-center outline-offset-[.125rem] outline-none text-base flex items-center m-0 translate-y-3"
                   >
                     <div className="label">Cập nhật</div>
                   </Button>
                 </div>
               </form>
               <form action={"#"} onSubmit={handleSubmit}>
-                <div className="input-wrapper max-width-global flex items-baseline">
-                  <div className="lux-input-wrapper max-width-global mr-4 flex-1">
-                    <div className="inner-wrapper inline-block w-full">
-                      {placements.map((placement) => (
-                        <Input
-                          key={placement}
-                          type="tel"
-                          label="Số điện thoại"
-                          labelPlacement={"outside"}
-                          placeholder="+84 123 456 789"
-                          variant="faded"
-                          classNames={{
-                            inputWrapper: [
-                              "bg-[#fff]",
-                              "text-base",
-                              "h-auto",
-                              "w-full",
-                              "p-[0.625rem_0.875rem]",
-                              "dark:text-[#fff]",
-                              "dark:bg-[rgb(19,21,23)]",
-                            ],
-                          }}
-                        />
-                      ))}
-                    </div>
-                  </div>
+                <div className="flex flex-col md:flex-row gap-2 items-center">
+                  <Input
+                    type="tel"
+                    label="Số điện thoại"
+                    labelPlacement={"outside"}
+                    placeholder="+84 123 456 789"
+                    variant="faded"
+                    classNames={{
+                      inputWrapper: [
+                        "bg-[#fff]",
+                        "text-base",
+                        "h-auto",
+                        "w-full",
+                        "p-[0.625rem_0.875rem]",
+                        "dark:text-[#fff]",
+                        "dark:bg-[rgb(19,21,23)]",
+                      ],
+                    }}
+                  />
                   <Button
                     type="submit"
-                    className="text-[#fff] dark:text-[rgb(19,21,23)] bg-[#333537] dark:bg-[#fff] border-[#333537] dark:border-[rgba(255,255,255,0.16)] border border-solid cursor-pointer transition-all duration-300 ease-in-out font-medium rounded-lg whitespace-nowrap justify-center outline-offset-[.125rem] outline-none max-w-full text-base p-[0.625rem_0.875rem] h-auto w-fit flex items-center m-0 top-[2.35rem]"
+                    className="text-background bg-foreground-900 border-[#333537] dark:border-[rgba(255,255,255,0.16)] border border-solid cursor-pointer transition-all duration-300 ease-in-out font-medium rounded-lg whitespace-nowrap justify-center outline-offset-[.125rem] outline-none text-base flex items-center m-0 translate-y-3"
                   >
                     <div className="label">Cập nhật</div>
                   </Button>
@@ -370,7 +350,7 @@ export default function SettingLandingPage() {
         ) : (
           <div></div>
         )}
-        <div className="can-divider with-divider medium mt-8 pt-8 border-t border-solid border-[rgba(19,21,23,0.08)] dark:border-[rgba(255,255,255,0.16)]">
+        <div className="can-divider with-divider medium md:px-2 sm:px-2 mt-8 pt-8 border-t border-solid border-[rgba(19,21,23,0.08)] dark:border-[rgba(255,255,255,0.16)]">
           <div className="section-title-wrapper medium">
             <div className="spread mb-5 flex justify-between items-center">
               <h2 className="text-xl font-semibold text-black-light-theme dark:text-[#fff] mb-0 mt-0">
