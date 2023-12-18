@@ -26,10 +26,16 @@ export const authOptions: NextAuthOptions = {
             },
             async authorize(credentials, req) {
                 const { email, password } = credentials as any;
-                return fetchWrapper.post("api/Authentication/login", {
-                    email,
-                    password
-                })
+                try {
+                    var output = await fetchWrapper.post("api/Authentication/login", {
+                        email,
+                        password
+                    })
+                    return output;
+                } catch (ex) {
+                    console.log(ex);
+                    return null;
+                }
             },
         }),
     ],

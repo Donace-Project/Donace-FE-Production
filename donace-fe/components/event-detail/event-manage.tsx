@@ -73,8 +73,6 @@ export default function EventManage(props: any) {
   let goongjs = useRef<any>(null);
   const [lat, setLat] = useState(10.8537915);
   const [lng, setLng] = useState(106.6234887);
-  const [addressLat, setAddressLat] = useState(null);
-  const [addressLng, setAddressLng] = useState(null);
   const [compoundLatCommune, setCompoundLatCommune] = useState(null);
   const [compoundLngCommune, setCompoundLngCommune] = useState(null);
   const [compoundLatDistrict, setCompoundLatDistrict] = useState(null);
@@ -133,15 +131,13 @@ export default function EventManage(props: any) {
     // console.log(eventDetailForUpdate);
     e.preventDefault();
     try {
+      debugger;
       const response = await fetchWrapper.post("/api/Event/Update", {
         ...eventDetailForUpdate,
         startDate: `${startDate.date}T${startDate.time}`,
         endDate: `${endDate.date}T${endDate.time}`,
       });
-      if (!response.success) {
-        console.error(`Lỗi khi tạo sự kiện: ${response.error}`);
-        return;
-      }
+
       modalEditEvent.onClose();
       setEventDetailForRender(response);
     } catch (error) {
@@ -698,54 +694,47 @@ export default function EventManage(props: any) {
                   <div className="location w-full mt-2">
                     <div className="time-title font-semibold text-lg">Chọn địa điểm</div>
                     <div className="gap-4 flex items-center " onClick={modalEditMap.onOpen}>
-                      {/* <Input
-                                                className="hidden"
-                                                value={eventReq.lat}
-                                                onChange={(e) =>
-                                                    setEventReq({
-                                                        ...eventReq,
-                                                        lat: e.target.value,
-                                                    })
-                                                }
-                                            />
-                                            <Input
-                                                className="hidden"
-                                                value={eventReq.long}
-                                                onChange={(e) =>
-                                                    setEventReq({
-                                                        ...eventReq,
-                                                        long: e.target.value,
-                                                    })
-                                                }
-                                            /> */}
                       <div
 
                         className="w-full p-[0.25rem_1rem_0.25rem] cursor-pointer transition-all duration-300 ease-in-out block relative rounded-xl bg-[#f3f4f5] dark:bg-[rgba(255,255,255,0.04)] border border-solid border-[#fff] dark:border-[rgba(255,255,255,0.04)] overflow-hidden"
                       >
                         <div className="font-medium">
-                          {addressLat && addressLng ? (
-                            <div>{addressLat}</div>
-                          ) : (
-                            "Chỉnh sửa địa điểm diễn ra sự kiện"
-                          )}
+                          {
+                            eventDetailForUpdate.isOnline ? (
+                              <>
+                                <div>{eventDetailForUpdate.linkMeet}</div>
+                              </>
+                            ) : (
+                              eventDetailForUpdate.addressName ? (
+                                <div>{eventDetailForUpdate.addressName}</div>
+                              ) : (
+                                "Chỉnh sửa địa điểm diễn ra sự kiện"
+                              )
+                            )
+                          }
+
                         </div>
-                        {compoundLatCommune &&
-                          compoundLngCommune &&
-                          compoundLatDistrict &&
-                          compoundLngDistrict &&
-                          compoundLatProvince &&
-                          compoundLngProvince ? (
-                          <div className="overflow-hidden text-ellipsis whitespace-nowrap text-sm  dark:text-[hsla(0,0%,100%,.79)] max-w-[19rem]">
-                            <p>
-                              {compoundLatCommune},{" "}
-                              {compoundLatDistrict},{" "}
-                              {compoundLatProvince}
-                            </p>
-                          </div>
+                        {eventDetailForUpdate.addressName ? (
+                          <>
+                            <div className="overflow-hidden text-ellipsis whitespace-nowrap text-sm  dark:text-[hsla(0,0%,100%,.79)] max-w-[19rem]">
+                              Sự kiện tổ chức Online hoặc Offline
+                            </div>
+                          </>
+
                         ) : (
-                          <div className="overflow-hidden text-ellipsis whitespace-nowrap text-sm  dark:text-[hsla(0,0%,100%,.79)] max-w-[19rem]">
-                            Sự kiện tổ chức Online hoặc Offline
-                          </div>
+
+                          <>
+                            <div className="overflow-hidden text-ellipsis whitespace-nowrap text-sm  dark:text-[hsla(0,0%,100%,.79)] max-w-[19rem]">
+                              Sự kiện tổ chức Online hoặc Offline
+                            </div>
+                          </>
+                          //   <div className="overflow-hidden text-ellipsis whitespace-nowrap text-sm  dark:text-[hsla(0,0%,100%,.79)] max-w-[19rem]">
+                          //   <p>
+                          //     {compoundLatCommune},{" "}
+                          //     {compoundLatDistrict},{" "}
+                          //     {compoundLatProvince}
+                          //   </p>
+                          // </div>
                         )}
                         {/* <div className="text-sm text-[#737577] dark:text-[#d2d4d7]">Online hoặc Offline</div> */}
                       </div>

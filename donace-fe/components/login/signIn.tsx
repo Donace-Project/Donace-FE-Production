@@ -37,7 +37,7 @@ export default function SignIn() {
       password: password,
       redirect: false,
     });
-
+    console.log(result)
     // debugger;
     if (result?.ok) {
       router.push("/home");
@@ -101,7 +101,7 @@ export default function SignIn() {
             </div>
             <Button
               isDisabled={isLoading}
-              
+
               color="default"
               onClick={onSubmit}
               type="button"
