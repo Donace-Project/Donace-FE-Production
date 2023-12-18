@@ -3,10 +3,37 @@ import { Player } from '@lottiefiles/react-lottie-player';
 import Animation from '../Animation-payment.json'
 import { Link } from '@nextui-org/link';
 import { Button } from '@nextui-org/react';
+import { useEffect } from 'react';
 
+import { fetchWrapper } from "@/helpers/fetch-wrapper";
 
-export default function ReturnPaymentURL() {
+interface ReturnPaymentURLProps {
+    orderId: string;
+    partId: string;
+    userId: string;
+}
 
+export default function ReturnPaymentURL({ orderId, partId, userId }: ReturnPaymentURLProps) {
+
+    const handdleApproval = async () => {
+        fetchWrapper.post('api/event/approval', {
+            idPart: partId,
+            status: 2,
+            qr: "",
+            userId: userId,
+            IsApproved: false,
+        }).catch(err => console.log(err))
+    }
+
+    const handleCallback = async () => {
+        fetchWrapper.post(`api/order/call-back?id=${orderId}`).catch(err => console.log(err))
+    }
+
+    useEffect(() => {
+        console.log(orderId, partId);
+        handdleApproval()
+        handleCallback();
+    }, [orderId, partId]);
 
     return (
         <div className="page-content max-w-[100dvw] overflow-x-hidden">

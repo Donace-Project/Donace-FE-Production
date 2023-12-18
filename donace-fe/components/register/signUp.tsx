@@ -9,10 +9,13 @@ import { UserPlus } from "lucide-react";
 import { Divider } from "@nextui-org/divider";
 import { fetchWrapper } from "../../helpers/fetch-wrapper";
 import { useRouter } from "next/navigation";
-import { signIn } from "next-auth/react";
 import { Spinner } from "@nextui-org/react";
+import { useSession } from "next-auth/react";
+
+import donaceLofo from "@/public/doanLogo.png";
 
 export default function SignUp() {
+  const { data: session } = useSession();
   const [isVisible, setIsVisible] = React.useState(false);
   const router = useRouter();
 
@@ -31,15 +34,14 @@ export default function SignUp() {
     return validateEmail(email) ? false : true;
   }, [email]);
 
-  const handleSignIn = async () => {
+  const handleSignIn = async (e:any) => {
+    e.preventDefault();
     if (email === "" || password === "") {
       setError("Vui lòng nhập đẩy đủ thông tin");
-      return;
     }
 
     if (isInvalidEmail) {
       setError("Vui lòng nhập email hợp lệ");
-      return;
     }
 
     // Đăng ký tài khoản
@@ -68,37 +70,49 @@ export default function SignUp() {
         "api/Calendar/create-calendar",
         {
           name: "Cá nhân",
-          avatar: 'https://cdn.lu.ma/cdn-cgi/image/format=auto,fit=cover,dpr=2,background=white,quality=75,width=64,height=64/avatars-default/community_avatar_13.png'
+          avatar: donaceLofo.src
         },
         resultRegister?.token
       );
 
-      // Dùng tài khoản đã đăng ký để login
-      const resultLogin = await signIn("credentials", {
-        email: email,
-        password: password,
-        callbackUrl: "/",
-      });
-
-      if (!resultLogin?.error) {
-        // Redirect the user after successful sign-in
-        // You can use router.push or any other navigation method
-        if (resultLogin && resultLogin.url) {
-          router.push(resultLogin.url);
-        }
+      if (session) {
+        // If already logged in, redirect to the home page or any default page
+        router.push('/');
       } else {
-        setError("Đăng ký thành công, nhưng tạm thời không đăng nhập được");
-        SetIsLoading(false);
+        // let callbackUrl = path?.get("callbackUrl");
+        // if (callbackUrl == undefined || callbackUrl == null || callbackUrl == "" || callbackUrl == " ") {
+        //   callbackUrl = "/"
+        // }
+        // // Dùng tài khoản đã đăng ký để login
+        // const resultLogin = await signIn("credentials", {
+        //   email: email,
+        //   password: password,
+        //   redirect: false,
+        //   callbackUrl: callbackUrl,
+        // });
+
+        // if (!resultLogin?.error) {
+        //   // Redirect the user after successful sign-in
+        //   // You can use router.push or any other navigation method
+        //   if (resultLogin && callbackUrl) {
+        //     router.push(callbackUrl);
+        //   }
+        // } else {
+        //   setError("Đăng ký thành công, nhưng tạm thời không đăng nhập được");
+        // }
+        router.push("/auth/login");
       }
     } catch (ex) {
       setError("Có lỗi xảy ra, vui lòng thử lại");
     }
+    SetIsLoading(false);
+
   };
 
   return (
     <div className="onboarding-page px-2">
       <form onSubmit={handleSignIn}>
-        <Card className="onboarding-card relative p-6 bg-background bg-opacity-70 backdrop-blur-lg rounded-3xl w-full">
+        <Card className="onboarding-card  relative flex p-6 bg-background bg-opacity-70  shadow-lg dark:shadow-slate-900 border border-background backdrop-blur-lg rounded-3xl  w-full">
           <CardHeader className=" ">
             <div className="icon relative w-16 h-16 flex items-center justify-center bg-background rounded-full">
               <UserPlus className="w-8 h-8  block align-middle ml-1" />
@@ -106,10 +120,10 @@ export default function SignUp() {
           </CardHeader>
           <CardBody className=" ">
             <div className="gap-2 pt-1 mb-4 flex flex-col">
-              <h1 className="font-semibold text-2xl mb-0 mt-0 leading-5  whitespace-nowrap">
+              <h1 className="font-semibold text-2xl mb-0 mt-0 leading-5 whitespace-nowrap">
                 Đăng ký
               </h1>
-              <div className="text-secondary p-1 text-sm whitespace-nowrap w-[300px]">
+              <div className="pt-4 pb-5 text-sm w-[300px]">
                 Tạo tài khoản mới để sử dụng dịch vụ.
               </div>
             </div>
@@ -126,7 +140,7 @@ export default function SignUp() {
                 isRequired
                 isClearable
                 placeholder="Email của bạn"
-                className="text-base transition-all duration-300 leading-4 rounded-lg w-full"
+                className="text-base h-auto transition-all duration-300 leading-4 rounded-lg w-full m-0"
                 classNames={{
                   errorMessage: ["text-base"],
                 }}
@@ -140,7 +154,7 @@ export default function SignUp() {
                 minLength={6}
                 labelPlacement={"inside"}
                 placeholder="Mật khẩu của bạn"
-                className="text-base  transition-all duration-300 leading-4 rounded-lg w-full"
+                className="pt-2 text-base h-auto transition-all duration-300 leading-4 rounded-lg w-full m-0 mb-4 transparentInput"
                 type={isVisible ? "text" : "password"}
               />
               <div className="mb-3 ml-1 w-[300px]">
@@ -154,11 +168,11 @@ export default function SignUp() {
                 variant="bordered"
                 isDisabled={isLoading}
                 type="submit"
-                className="bg-background bg-opacity-70 w-full cursor-pointer transition-all duration-300 ease-in-out font-medium rounded-lg relative whitespace-nowrap justify-center text-base  flex items-center leading-6"
+                className="bg-background bg-opacity-70 w-full cursor-pointer transition-all duration-300 ease-in-out font-medium relative whitespace-nowrap justify-center max-w-full text-base flex items-center leading-6"
               >
-                <div className="label  w-full">
+                <div className="label">
                   {isLoading ? (
-                    <div className="inline-flex flex-col gap-2 justify-between w-full">
+                    <div className="inline-flex justify-between gap-2 flex-row">
                       <Spinner
                         size="sm"
                         color="success"
@@ -168,7 +182,7 @@ export default function SignUp() {
                     </div>
                   ) : (
                     <>
-                      <div className="label">Đăng ký</div>
+                      <div >Đăng ký</div>
                     </>
                   )}
                 </div>

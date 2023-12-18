@@ -5,13 +5,12 @@ import { useDisclosure } from "@nextui-org/modal";
 import { Link, Radio, MapPin, Users2, ScanLine, ArrowRight } from "lucide-react";
 import { useState } from "react";
 import { AMorPM, ConvertDateTime } from "../clock/cover-data-time";
-import { EventDetailSorted } from "@/types/DonaceType";
+import { EventDetailModels, EventDetailSorted } from "@/types/DonaceType";
 import { Image } from "@nextui-org/image";
-import NextImage from "next/image";
 import donace from "@/public/doanLogo.png";
 
-interface EventCardProps {
-    event: EventDetailSorted;
+type EventCardProps = {
+    event: EventDetailModels;
 }
 
 const EventCard = ({ event }: EventCardProps) => {
@@ -45,7 +44,7 @@ const EventCard = ({ event }: EventCardProps) => {
                         <div className="info-and-cover flex-col md:flex-row-reverse gap-4 flex">
                             <Link href={`${event.isHost ? `/events/manage/${event.id}` : `/user/join-event/${event.id}`}`} className="block">
                                 <div className="aspect-square  md:w-40 md:h-40 rounded-lg">
-                                    <Image as={NextImage} className="block w-full h-full object-cover" alt="you are invited" width={400} height={400} src={event.cover ? event.cover : donace.src} />
+                                    <Image className="block w-full h-full object-cover" alt="you are invited" width={400} height={400} src={event.cover ? event.cover : donace.src} />
                                 </div>
                             </Link>
                             <div className="info gap-2 min-w-0 flex-1 flex flex-col">
@@ -116,19 +115,25 @@ const EventCard = ({ event }: EventCardProps) => {
                                         </Button>
                                     </div>
                                     :
-                                    <div className="gap-2 flex flex-col md:flex-row items-center justify-between w-full">
-                                        <Button
-                                            onClick={() => { openModalGenQr(); }}
-                                            className="text-black-more-blur-light-theme dark:text-[rgba(255,255,255,0.64)] bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)] border-transparent border border-solid transition-all duration-300 ease-in-out donace-button flex items-center cursor-pointer"
-                                        >
-                                            <div className="label">Xem mã QR</div>
-                                            <ScanLine className="mr-1.5 stroke-2 w-3.5 h-3.5 flex-shrink-0 block align-middle mt-0.5" />
-                                        </Button>
-                                        <Button as={Link} href={`/user/join-event/${event.id}`} className="text-black-more-blur-light-theme dark:text-[rgba(255,255,255,0.64)] bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)] border-transparent border border-solid transition-all duration-300 ease-in-out donace-button flex items-center cursor-pointer">
-                                            <div className="label">Xem sự kiện</div>
-                                            <ArrowRight className="mr-1.5 stroke-2 w-3.5 h-3.5 flex-shrink-0 block align-middle" />
-                                        </Button>
-                                    </div>
+                                    (
+
+                                        <>
+                                            {/* <div className="gap-2 flex flex-col md:flex-row items-center justify-between w-full">
+                                            <Button
+                                                onClick={() => { openModalGenQr(); }}
+                                                className="text-black-more-blur-light-theme dark:text-[rgba(255,255,255,0.64)] bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)] border-transparent border border-solid transition-all duration-300 ease-in-out donace-button flex items-center cursor-pointer"
+                                            >
+                                                <div className="label">Xem mã QR</div>
+                                                <ScanLine className="mr-1.5 stroke-2 w-3.5 h-3.5 flex-shrink-0 block align-middle mt-0.5" />
+                                            </Button>
+                                            <Button as={Link} href={`/user/join-event/${event.id}`} className="text-black-more-blur-light-theme dark:text-[rgba(255,255,255,0.64)] bg-[rgba(19,21,23,0.04)] dark:bg-[rgba(255,255,255,0.08)] border-transparent border border-solid transition-all duration-300 ease-in-out donace-button flex items-center cursor-pointer">
+                                                <div className="label">Xem sự kiện</div>
+                                                <ArrowRight className="mr-1.5 stroke-2 w-3.5 h-3.5 flex-shrink-0 block align-middle" />
+                                            </Button>
+                                        </div> */}
+                                        </>
+
+                                    )
                             }
 
                         </div>

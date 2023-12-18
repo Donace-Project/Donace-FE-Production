@@ -140,19 +140,20 @@ export type UploadImage = {
 
 // GET Calendar By ID in Manage Calendar
 export type GetCalendarById = {
-    sort: number;
-    id: string;
-    name: string;
-    cover: string;
-    avatar: string;
-    color: string;
-    publicURL: string;
-    lat: string;
-    long: string;
-    addressName: string;
-    totalSubcribed: number
-    isSub: boolean
-    isHost: boolean
+    id:              string;
+    name:            string;
+    description:     string;
+    cover:           string;
+    avatar:          string;
+    color:           string;
+    publicURL:       string;
+    lat:             string;
+    long:            string;
+    addressName:     string;
+    totalSubscriber: number;
+    isHost:          boolean;
+    isSub:           boolean;
+    sorted:          number;
 }
 // **************
 
@@ -361,28 +362,4 @@ export type EventDetailSorted = {
     isSub: string
     isAppro: string
     isLive: boolean
-}
-
-export type Item = {
-    id: string;
-    startDate: string;
-    endDate: string;
-    addressName: string;
-    lat: string;
-    long: string;
-    capacity: number;
-    isOverCapacity: boolean;
-    cover: string;
-    name: string;
-    theme: string;
-    color: string;
-    fontSize: number;
-    instructions: string;
-    isMultiSection: boolean;
-    duration: number;
-    totalGuest: number;
-    calendarId: string;
-    isLive: boolean;
-    isHost: boolean;
-    isOnline: boolean;
 }

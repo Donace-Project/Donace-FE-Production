@@ -9,7 +9,7 @@ import { signIn } from "next-auth/react";
 import { Divider } from "@nextui-org/divider";
 import { Link } from "@nextui-org/link";
 import { Spinner } from "@nextui-org/react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import {  useRouter, useSearchParams } from "next/navigation";
 import { on } from "events";
 // import { time } from "console";
 
@@ -59,7 +59,7 @@ export default function SignIn() {
       setIsLoading(true);
       let callbackUrl = path?.get("callbackUrl");
       try {
-        if (callbackUrl != undefined || callbackUrl == null || callbackUrl == "" || callbackUrl == " ") {
+        if (callbackUrl == undefined || callbackUrl == null || callbackUrl == "" || callbackUrl == " ") {
           callbackUrl = "/"
         }
         // debugger;
@@ -132,6 +132,7 @@ export default function SignIn() {
                 variant="bordered"
                 isRequired
                 value={password}
+                minLength={6}
                 onValueChange={setPassword}
                 labelPlacement={"inside"}
                 placeholder="Mật khẩu của bạn"
@@ -163,7 +164,7 @@ export default function SignIn() {
                     </div>
                   ) : (
                     <>
-                      <div id="label" className="">
+                      <div>
                         Đăng nhập
                       </div>
                     </>
